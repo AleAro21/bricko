@@ -3,9 +3,11 @@ import { useRouter } from 'next/navigation';
 import graylogo from '../../../assets/greylogo.png';
 import Image from 'next/image';
 import { useState } from 'react';
+
 const page = () => {
   const router = useRouter();
   const [childData, setChildData] = useState(null);
+
   const handleClick = (e, items) => {
     e.preventDefault();
     if (items?.items?.itemData == null) {
@@ -14,10 +16,12 @@ const page = () => {
       setChildData(items?.items?.itemData);
     }
   };
+
   const handleChildData = (e) => {
     e.preventDefault();
     router.push('/summary');
   };
+
   const data = [
     {
       title: 'Producto financiero (Banco, Seguro, Afore, Pension)',
@@ -83,7 +87,7 @@ const page = () => {
                     <div key={index} className=''>
                       <p
                         onClick={(e) => handleChildData(e, items)}
-                        className='text-style cursor-pointer p-4'
+                        className='text-style cursor-pointer p-4 hover:bg-[#FFDF4E] transition-colors'
                       >
                         {items.listTitle}
                       </p>
@@ -93,7 +97,7 @@ const page = () => {
                     <div key={index} className=''>
                       <p
                         onClick={(e) => handleClick(e, items)}
-                        className='text-style cursor-pointer p-4'
+                        className='text-style cursor-pointer p-4 hover:bg-[#FFDF4E] transition-colors'
                       >
                         {items.title}
                       </p>
@@ -104,7 +108,7 @@ const page = () => {
           <div className='w-full flex items-center justify-between'>
             <div
               onClick={() => router.back()}
-              className='flex items-center text-[14px] font-[500] gap-2  pt-1 text-[#9999] cursor-pointer border-b border-transparent hover:border-[#9999] transiton-all delay-150'
+              className='flex items-center text-[14px] font-[500] gap-2 pt-1 text-[#9999] cursor-pointer border-b border-transparent hover:border-[#9999] transition-all delay-150'
             >
               <svg
                 height={'14px'}
@@ -127,3 +131,4 @@ const page = () => {
 };
 
 export default page;
+  

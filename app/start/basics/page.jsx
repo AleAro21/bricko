@@ -7,8 +7,17 @@ const page = () => {
   const router = useRouter();
   const handleSubmit = (e) => {
     e.preventDefault();
+    const emailInput = document.getElementById('email').value;
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  
+    if (!emailRegex.test(emailInput)) {
+      alert("Por favor, ingresa un correo electrónico válido.");
+      return;
+    }
+  
     router.push('/start/password');
   };
+  
   return (
     <>
       <main className='container w-3/4 mx-auto flex flex-col h-full min-h-screen'>
@@ -39,8 +48,30 @@ const page = () => {
                     />
                   </div>
                   <div className='py-3'>
+                    <label for='fatherLastName' class='text-style'>
+                      Apellido Paterno
+                    </label>
+                    <input
+                      type='text'
+                      id='fatherLastName'
+                      class='bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-6'
+                      required
+                    />
+                  </div>
+                  <div className='py-3'>
+                    <label for='motherLastName' class='text-style'>
+                      Apellido Materno
+                    </label>
+                    <input
+                      type='text'
+                      id='motherLastName'
+                      class='bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-6'
+                      required
+                    />
+                  </div>          
+                  <div className='py-3'>
                     <label for='email' class='text-style'>
-                      Email Address
+                      Email
                     </label>
                     <input
                       type='email'
@@ -49,6 +80,10 @@ const page = () => {
                       required
                     />
                   </div>
+                  <p className='text-style py-4 flex items-center gap-3'>
+                    <input type='checkbox' className='h-[13px] w-[13px]' />
+                    Acepto los términos y condiciones de Testamento.mx
+                  </p>
                   <p className='text-style py-4 flex items-center gap-3'>
                     <input type='checkbox' className='h-[24px] w-[24px]' />
                     Deseo recibir correos electrónicos con consejos, ofertas y

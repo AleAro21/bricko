@@ -23,7 +23,7 @@ const WaitingList = () => {
               <div class='mb-6'>
                 <div className='py-3'>
                   <label for='country' class='text-style'>
-                    Pais de Residencia
+                    País de Residencia
                   </label>
                   <input
                     type='text'
