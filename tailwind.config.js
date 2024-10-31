@@ -14,7 +14,7 @@ module.exports = {
       },
       colors: {
         textColor: '#4a4a4a',
-        background: '#f7f7f7',
+        background: '#f5f5f7',
         footerColor: '#464A5A'
       }
     },

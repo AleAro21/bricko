@@ -20,7 +20,7 @@ const Start = ({ heading, linkNo, linkyes, titleNo, titleYes }) => {
           titleNo={titleNo}
           titleYes={titleYes}
         />
-        <div
+        {/* <div
           onClick={() => router.back()}
           className='flex transition-all delay-150 mr-auto ml-0 justify-start items-center text-[14px] font-[500] gap-2  pt-1 text-[#9999] cursor-pointer border-b border-transparent hover:border-[#9999]'
         >
@@ -36,7 +36,7 @@ const Start = ({ heading, linkNo, linkyes, titleNo, titleYes }) => {
             />
           </svg>
           Regresar
-        </div>
+        </div> */}
       </div>
     </>
   );
