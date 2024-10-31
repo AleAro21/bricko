@@ -94,7 +94,7 @@ const page = () => {
                 </div>
                 <button
                   type='submit'
-                  className='text-[14px] text-[#4a4a4a] font-[600] bg-[#FFDF4E] px-4 py-4 rounded-[5px] uppercase mt-4'
+                  className='text-[14px] text-[#4a4a4a] font-[600] bg-[#FFDF4E] px-4 py-4 rounded-[100px] uppercase mt-4'
                 >
                   CONTINUAR
                 </button>

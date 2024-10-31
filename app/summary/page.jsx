@@ -32,7 +32,7 @@ const page = () => {
                 ) : (
                   <button
                     onClick={() => router.push('/about-yourself/name')}
-                    className='text-[14px] text-[#4a4a4a] font-[600] bg-[#FFDF4E] px-4 py-4 rounded-[5px] uppercase mt-4'
+                    className='text-[14px] text-[#4a4a4a] font-[600] bg-[#FFDF4E] px-4 py-4 rounded-[100px] uppercase mt-4'
                   >
                     EMPECEMOS
                   </button>
@@ -54,7 +54,7 @@ const page = () => {
                 {paramValue == 'about-your-self' ? (
                   <button
                     onClick={() => router.push('/account-and-property')}
-                    className='text-[14px] text-[#4a4a4a] font-[600] bg-[#FFDF4E] px-4 py-4 rounded-[5px] uppercase mt-4'
+                    className='text-[14px] text-[#4a4a4a] font-[600] bg-[#FFDF4E] px-4 py-4 rounded-[100px] uppercase mt-4'
                   >
                     EMPECEMOS
                   </button>
@@ -84,7 +84,7 @@ const page = () => {
                 {paramValue == 'account-and-property' ? (
                   <button
                     onClick={() => router.push('/estate/introduction')}
-                    className='text-[14px] text-[#4a4a4a] font-[600] bg-[#FFDF4E] px-4 py-4 rounded-[5px] uppercase mt-4'
+                    className='text-[14px] text-[#4a4a4a] font-[600] bg-[#FFDF4E] px-4 py-4 rounded-[100px] uppercase mt-4'
                   >
                     EMPECEMOS
                   </button>
@@ -114,7 +114,7 @@ const page = () => {
                 {paramValue == 'estate' ? (
                   <button
                     onClick={() => router.push('/executers/introduction')}
-                    className='text-[14px] text-[#4a4a4a] font-[600] bg-[#FFDF4E] px-4 py-4 rounded-[5px] uppercase mt-4'
+                    className='text-[14px] text-[#4a4a4a] font-[600] bg-[#FFDF4E] px-4 py-4 rounded-[100px] uppercase mt-4'
                   >
                     EMPECEMOS
                   </button>
@@ -131,7 +131,7 @@ const page = () => {
                 <p className='text-style'>
                   Oportunidad de dejar regalos a personas especiales
                 </p>
-                <button className='text-[14px] text-[#8D9495] font-[600] border-2 border-gray-300 px-4 py-4 rounded-[5px] uppercase mt-4'>
+                <button className='text-[14px] text-[#8D9495] font-[600] border-2 border-gray-300 px-4 py-4 rounded-[100px] uppercase mt-4'>
                   Add gifts
                 </button>
               </div>
@@ -141,7 +141,7 @@ const page = () => {
                 <p className='text-style'>
                   Distribuye tus bienes o derechos digitales
                 </p>
-                <button  onClick={() => router.push('/digital-asset')} className='text-[14px] text-[#8D9495] font-[600] border-2 border-gray-300 px-4 py-4 rounded-[5px] uppercase mt-4'>
+                <button  onClick={() => router.push('/digital-asset')} className='text-[14px] text-[#8D9495] font-[600] border-2 border-gray-300 px-4 py-4 rounded-[100px] uppercase mt-4'>
                   COMPLETAR
                 </button>
               </div>

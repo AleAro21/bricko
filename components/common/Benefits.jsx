@@ -3,10 +3,12 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import graylogo from '../../assets/greylogo.png';
 import Image from 'next/image';
 import Link from 'next/link';
+
 const Benefit = () => {
   const router = useRouter();
   const params = useSearchParams();
   const recommedation = params.get('recommendation');
+
   return (
     <>
       <div className='py-4 '>
@@ -20,7 +22,7 @@ const Benefit = () => {
               : 'Crea tu Testamento Digital'}
           </p>
           <div className='py-2'>
-            <div className='border rounded-[5px] p-4 w-full'>
+            <div className='border rounded-[10px] p-4 w-full'>
               <div className='flex items-start py-2 gap-3'>
                 <svg
                   xmlns='http://www.w3.org/2000/svg'
@@ -62,24 +64,22 @@ const Benefit = () => {
                 </div>
               </div>
            
-              <div className='w-full text-[14px] text-[#4a4a4a] font-[600] bg-[#FFDF4E] px-4 py-4 mt-2 rounded-[5px] uppercase text-center'>
-                <Link
-                  href={
-                    recommedation == 'telephonic'
-                      ? '/booking/will??utm_source=sign_up_telephone'
-                      : '/start/basics'
-                  }
-                >
+              <Link
+                href={
+                  recommedation == 'telephonic'
+                    ? '/booking/will??utm_source=sign_up_telephone'
+                    : '/start/basics'
+                }
+              >
+                <div className='w-full text-[14px] text-[#4a4a4a] font-[600] bg-[#FFDF4E] px-4 py-4 mt-2 rounded-[100px] uppercase text-center cursor-pointer'>
                   {recommedation == 'telephonic'
                     ? 'Obtener más información'
-                    : 'Continue Online' }
-                </Link>
-              </div>
+                    : 'Continuar' }
+                </div>
+              </Link>
             </div>
-            
           </div>
         </div>
-      
       </div>
     </>
   );

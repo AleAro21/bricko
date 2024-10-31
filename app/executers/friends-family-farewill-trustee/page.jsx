@@ -142,7 +142,7 @@ const page = () => {
                   </div>
                   <button
                     onClick={() => router.push('/executers/choose')}
-                    className='text-[14px] text-[#8D9495] ml-auto mr-0 font-[600] bg-[#FFDF4E] px-4 py-4 rounded-[5px] uppercase mt-4'
+                    className='text-[14px] text-[#8D9495] ml-auto mr-0 font-[600] bg-[#FFDF4E] px-4 py-4 rounded-[100px] uppercase mt-4'
                   >
                     CONTINUAR
                   </button>
