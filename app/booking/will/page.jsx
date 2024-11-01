@@ -53,16 +53,16 @@ const page = () => {
                       required
                     />
                   </div>
-                  <button className='w-full text-[14px] text-[#4a4a4a] font-[600] bg-[#FFDF4E] px-4 py-4 rounded-[100px] uppercase'>
+                  <button className='w-full text-[14px] text-[#000000] font-[600] bg-[#FFDF4E] px-4 py-4 rounded-[100px] uppercase'>
                     Enviar
                   </button>
                   <p className='text-style py-4'>
                     Al hacer clic en “Enviar”, aceptas nuestros{' '}
-                    <a href='#' className='text-[#4a4a4a]'>
+                    <a href='#' className='text-[#000000]'>
                       Términos y Condiciones
                     </a>{' '}
                     y nuestra{' '}
-                    <a href='#' className='text-[#4a4a4a]'>
+                    <a href='#' className='text-[#000000]'>
                       Política de Privacidad
                     </a>
                     .

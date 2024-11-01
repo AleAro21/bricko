@@ -92,7 +92,7 @@ const page = () => {
                   </p>
                   <button
                     type="submit"
-                    className="w-full text-center text-[14px] text-[#4a4a4a] font-[600] bg-[#FFDF4E] px-4 py-4 rounded-[100px] uppercase cursor-pointer"
+                    className="w-full text-center text-[14px] text-[#000000] font-[600] bg-[#FFDF4E] px-4 py-4 rounded-[100px] uppercase cursor-pointer"
                   >
                     CONTINUAR
                   </button>

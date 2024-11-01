@@ -125,13 +125,13 @@ body {
 
 /* Existing styles */
 .title {
-  @apply text-[32px] font-[500] text-[#4a4a4a];
+  @apply text-[32px] font-[500] text-[#000000];
 }
 .sm-title {
-  @apply text-[24px] font-[500] text-[#4a4a4a];
+  @apply text-[24px] font-[500] text-[#000000];
 }
 .text-style {
-  @apply text-[18px] font-[500] text-[#4a4a4a];
+  @apply text-[18px] font-[500] text-[#000000];
 }
 .card-box-shadow:hover {
   box-shadow: 2px 4px 16px #00000029;

@@ -68,7 +68,7 @@ export default function Navbar() {
                         <Link href={item?.href} key={item.name}>
                           <span
                             className={classNames(
-                              'bg-white px-3 py-2 font-medium border-b border-transparent hover:border-[#4a4a4a]'
+                              'bg-white px-3 py-2 font-medium border-b border-transparent hover:border-[#000000]'
                             )}
                             aria-current={item.current ? 'page' : undefined}
                           >
@@ -130,7 +130,7 @@ export default function Navbar() {
                                   subItem.name=='Salir'?"border-t flex items-center justify-between":""
                                 )}
                               >
-                                {subItem.name} {subItem.name == 'Salir'? <svg width="14px" height="14px" viewBox="0 0 15 15" fill="#4a4a4a" xmlns="http://www.w3.org/2000/svg">
+                                {subItem.name} {subItem.name == 'Salir'? <svg width="14px" height="14px" viewBox="0 0 15 15" fill="#000000" xmlns="http://www.w3.org/2000/svg">
 <path fill-rule="evenodd" clip-rule="evenodd" d="M1 1L8 1V2L2 2L2 13H8V14H1L1 1ZM10.8536 4.14645L14.1932 7.48614L10.8674 11.0891L10.1326 10.4109L12.358 8L4 8V7L12.2929 7L10.1464 4.85355L10.8536 4.14645Z" fill="#000000"/>
 </svg>:<></>}
                               </span>

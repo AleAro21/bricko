@@ -70,7 +70,7 @@ const page = () => {
                         <path d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8m8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7" />
                       </svg>
                     )}
-                    <span className="text-[#4a4a4a]">
+                    <span className="text-[#000000]">
                       {showPassword ? "Hide" : "Mostrar"}
                     </span>
                   </div>
@@ -85,7 +85,7 @@ const page = () => {
                 </div>
                 <button
                   type="submit"
-                  className="w-full text-[14px] text-[#4a4a4a] font-[600] bg-[#FFDF4E] px-4 py-4 rounded-[100px] uppercase my-2"
+                  className="w-full text-[14px] text-[#000000] font-[600] bg-[#FFDF4E] px-4 py-4 rounded-[100px] uppercase my-2"
                 >
                   CONTINUAR
                 </button>

@@ -32,9 +32,9 @@ const page = () => {
                 ) : (
                   <button
                     onClick={() => router.push('/about-yourself/name')}
-                    className='text-[14px] text-[#4a4a4a] font-[600] bg-[#FFDF4E] px-4 py-4 rounded-[100px] uppercase mt-4'
+                    className='text-[14px] text-[#000000] font-[600] bg-[#FFDF4E] px-4 py-4 rounded-[100px] uppercase mt-4'
                   >
-                    EMPECEMOS
+                    Empecemos
                   </button>
                 )}
               </div>
@@ -54,9 +54,9 @@ const page = () => {
                 {paramValue == 'about-your-self' ? (
                   <button
                     onClick={() => router.push('/account-and-property')}
-                    className='text-[14px] text-[#4a4a4a] font-[600] bg-[#FFDF4E] px-4 py-4 rounded-[100px] uppercase mt-4'
+                    className='text-[14px] text-[#000000] font-[600] bg-[#FFDF4E] px-4 py-4 rounded-[100px] uppercase mt-4'
                   >
-                    EMPECEMOS
+                    Empecemos
                   </button>
                 ) : paramValue == 'account-and-property' ||
                   paramValue == 'executers' ||
@@ -84,9 +84,9 @@ const page = () => {
                 {paramValue == 'account-and-property' ? (
                   <button
                     onClick={() => router.push('/estate/introduction')}
-                    className='text-[14px] text-[#4a4a4a] font-[600] bg-[#FFDF4E] px-4 py-4 rounded-[100px] uppercase mt-4'
+                    className='text-[14px] text-[#000000] font-[600] bg-[#FFDF4E] px-4 py-4 rounded-[100px] uppercase mt-4'
                   >
-                    EMPECEMOS
+                    Empecemos
                   </button>
                 ) : paramValue == 'your-estate' ||
                   paramValue == 'executers' ||
@@ -114,9 +114,9 @@ const page = () => {
                 {paramValue == 'estate' ? (
                   <button
                     onClick={() => router.push('/executers/introduction')}
-                    className='text-[14px] text-[#4a4a4a] font-[600] bg-[#FFDF4E] px-4 py-4 rounded-[100px] uppercase mt-4'
+                    className='text-[14px] text-[#000000] font-[600] bg-[#FFDF4E] px-4 py-4 rounded-[100px] uppercase mt-4'
                   >
-                    EMPECEMOS
+                    Empecemos
                   </button>
                 ) : paramValue == 'executers' ? (
                   <p className='text-style pt-6'>Edit</p>

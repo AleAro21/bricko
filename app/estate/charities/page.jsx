@@ -71,7 +71,7 @@ const page = () => {
                 </div>
                 <button
                   onClick={() => router.push('/estate/share')}
-                  className='text-[14px] text-[#4a4a4a] font-[600] bg-[#FFDF4E] px-4 py-4 rounded-[100px] uppercase mt-4'
+                  className='text-[14px] text-[#000000] font-[600] bg-[#FFDF4E] px-4 py-4 rounded-[100px] uppercase mt-4'
                 >
                   CONTINUAR
                 </button>

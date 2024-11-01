@@ -1,13 +1,52 @@
 'use client';
 import DashboardLayout from '@/components/common/DashboardLayout';
 import { useRouter } from 'next/navigation';
+import { useState } from 'react';
+import { isValid, parse, differenceInYears } from 'date-fns';
 
-const page = () => {
+const Page = () => {
   const router = useRouter();
-  const handleSubmit = (e)=>{
-    e.preventDefault()
-  router.push('/about-yourself/basic')
-  }
+  const [formValues, setFormValues] = useState({
+    fullName: '',
+    preferredName: '',
+    day: '',
+    month: '',
+    year: '',
+  });
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const { fullName, day, month, year } = formValues;
+
+    // Check if all required fields are filled
+    if (!fullName || !day || !month || !year) {
+      alert('Por favor, complete todos los campos obligatorios');
+      return;
+    }
+
+    // Validate date format
+    const dateString = `${year}-${month}-${day}`;
+    const parsedDate = parse(dateString, 'yyyy-MM-dd', new Date());
+    if (!isValid(parsedDate)) {
+      alert('Por favor, introduzca una fecha válida');
+      return;
+    }
+
+    // Check age range (18 to 100 years)
+    const age = differenceInYears(new Date(), parsedDate);
+    if (age < 18 || age > 100) {
+      alert('La edad debe ser mayor a 18 y menor a 100 años');
+      return;
+    }
+
+    router.push('/about-yourself/basic');
+  };
+
+  const handleChange = (e) => {
+    const { id, value } = e.target;
+    setFormValues({ ...formValues, [id]: value });
+  };
+
   return (
     <DashboardLayout>
       <div className='container w-3/4 mx-auto flex flex-col h-full min-h-screen'>
@@ -18,35 +57,38 @@ const page = () => {
               <div className='w-full'>
                 <p className='sm-title pt-6'>¿Cuál es su nombre legal completo?</p>
                 <p className='text-style py-4'>
-                Este es el nombre que figura en su pasaporte o permiso de conducir.
+                  Este es el nombre que figura en su pasaporte o permiso de conducir.
                 </p>
                 <p className='text-style'>Su nombre legal completo</p>
-                <label htmlFor='country' className='text-style'>
+                <label htmlFor='fullName' className='text-style'>
                   {` Por ejemplo, Elizabeth Joy Smith.`}
                 </label>
                 <input
                   type='text'
-                  id='country'
+                  id='fullName'
+                  value={formValues.fullName}
+                  onChange={handleChange}
                   className='bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-6 my-2'
-                  requir
+                  required
                 />
               </div>
               <div className='w-full'>
                 <p className='sm-title pt-6'>
-                ¿Cómo te gustaría que te llamemos?
+                  ¿Cómo te gustaría que te llamemos?
                 </p>
                 <p className='text-style py-4'>
-                Por ejemplo, si le enviamos un correo electrónico o hablamos con usted por teléfono.
+                  Por ejemplo, si le enviamos un correo electrónico o hablamos con usted por teléfono.
                 </p>
                 <p className='text-style'>Tu nombre preferido (opcional)</p>
-                <label htmlFor='country' className='text-style'>
+                <label htmlFor='preferredName' className='text-style'>
                   {`Por ejemplo, Lizzie`}
                 </label>
                 <input
                   type='text'
-                  id='country'
+                  id='preferredName'
+                  value={formValues.preferredName}
+                  onChange={handleChange}
                   className='bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-6 my-2'
-                  requir
                 />
               </div>
               <div className='w-full border-t-2 mt-3'>
@@ -54,34 +96,40 @@ const page = () => {
                 <p className='text-style pb-4'>Por ejemplo, 19 12 1951</p>
                 <div className='flex w-full items-center justify-between'>
                   <div className='w-[25%]'>
-                    <label htmlFor='country' className='text-style'>
+                    <label htmlFor='day' className='text-style'>
                       {`Día`}
                     </label>
                     <input
                       type='text'
-                      id='country'
+                      id='day'
+                      value={formValues.day}
+                      onChange={handleChange}
                       className='bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-6 my-2'
                       required
                     />
                   </div>
                   <div className='w-[25%]'>
-                    <label htmlFor='country' className='text-style'>
+                    <label htmlFor='month' className='text-style'>
                       {`Mes`}
                     </label>
                     <input
                       type='text'
-                      id='country'
+                      id='month'
+                      value={formValues.month}
+                      onChange={handleChange}
                       className='bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-6 my-2'
                       required
                     />
                   </div>
                   <div className='w-[40%]'>
-                    <label htmlFor='country' className='text-style'>
+                    <label htmlFor='year' className='text-style'>
                       {`Año`}
                     </label>
                     <input
                       type='text'
-                      id='country'
+                      id='year'
+                      value={formValues.year}
+                      onChange={handleChange}
                       className='bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-6 my-2'
                       required
                     />
@@ -89,8 +137,8 @@ const page = () => {
                 </div>
                 <div className='flex justify-end py-4'>
                   <button
-                   type='submit'
-                    className='text-[14px] text-[#4a4a4a] font-[600] bg-[#FFDF4E] px-4 py-4 rounded-[100px] uppercase mt-4'
+                    type='submit'
+                    className='text-[14px] text-[#000000] font-[600] bg-[#FFDF4E] px-4 py-4 rounded-[100px] uppercase mt-4'
                   >
                     Guardar y continuar
                   </button>
@@ -104,4 +152,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;

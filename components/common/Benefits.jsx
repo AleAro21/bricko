@@ -71,7 +71,7 @@ const Benefit = () => {
                     : '/start/basics'
                 }
               >
-                <div className='w-full text-[14px] text-[#4a4a4a] font-[600] bg-[#FFDF4E] px-4 py-4 mt-2 rounded-[100px] uppercase text-center cursor-pointer'>
+                <div className='w-full text-[14px] text-[#000000] font-[600] bg-[#FFDF4E] px-4 py-4 mt-2 rounded-[100px] uppercase text-center cursor-pointer'>
                   {recommedation == 'telephonic'
                     ? 'Obtener más información'
                     : 'Continuar' }

@@ -9,7 +9,7 @@ const Card = ({ linkNo, linkyes, titleNo, titleYes }) => {
         style={{ transition: 'all 0.35s cubic-bezier(0.4, 0, 0.2, 1)' }}
       >
         <p className='text-[30px] font-[500]'>No</p>
-        <p className='text-[16px] text-[#4a4a4a] font-[400]'>{titleNo}</p>
+        <p className='text-[16px] text-[#000000] font-[400]'>{titleNo}</p>
       </Link>
       <Link
         href={linkyes}
@@ -17,7 +17,7 @@ const Card = ({ linkNo, linkyes, titleNo, titleYes }) => {
         style={{ transition: 'all 0.35s cubic-bezier(0.4, 0, 0.2, 1)' }}
       >
         <p className='text-[30px] font-[500]'>Sí</p>
-        <p className='text-[16px] text-[#4a4a4a] font-[400]'>{titleYes}</p>
+        <p className='text-[16px] text-[#000000] font-[400]'>{titleYes}</p>
       </Link>
     </div>
   );
