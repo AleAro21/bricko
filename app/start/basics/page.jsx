@@ -6,13 +6,20 @@ import Link from "next/link";
 
 const page = () => {
   const router = useRouter();
+
   const handleSubmit = (e) => {
     e.preventDefault();
     const emailInput = document.getElementById("email").value;
+    const termsCheckbox = document.getElementById("terms");
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
     if (!emailRegex.test(emailInput)) {
       alert("Por favor, ingresa un correo electrónico válido.");
+      return;
+    }
+
+    if (!termsCheckbox.checked) {
+      alert("Por favor, acepta los términos y condiciones para continuar.");
       return;
     }
 
@@ -82,7 +89,7 @@ const page = () => {
                     />
                   </div>
                   <p className="text-style py-4 flex items-center gap-3">
-                    <input type="checkbox" className="h-[13px] w-[13px]" />
+                    <input type="checkbox" id="terms" className="h-[13px] w-[13px]" />
                     Acepto los términos y condiciones de Testamento.mx
                   </p>
                   <p className="text-style py-4 flex items-center gap-3">

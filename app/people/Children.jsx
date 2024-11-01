@@ -63,7 +63,7 @@ const Children = ({ setShowModal, showModal }) => {
               onClick={() => setShowModal(false)}
               className='w-full text-[14px] text-[#000000] font-[600] bg-[#FFDF4E] px-4 py-4 rounded-[100px] uppercase mt-4'
             >
-              ahorrar
+              Agregar
             </button>
           </form>
         </div>
