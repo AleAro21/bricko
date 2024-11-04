@@ -93,7 +93,7 @@ const page = () => {
                             ? 'Nuestros especialistas comprobarán su testamento en un plazo de 5 días laborables. Si recomiendan algún cambio, realice las actualizaciones dentro de los 30 días y verificarán su testamento nuevamente. Simple.'
                             : index === 2
                             ? 'Para que su testamento sea legalmente vinculante, debe firmar una copia impresa frente a dos testigos. Puede optar por descargar e imprimir su testamento en casa o solicitar una copia impresa.'
-                            : 'Una vez que haya firmado su testamento, es importante actualizarlo cuando cambien las circunstancias. Tradicionalmente, eso significa pagar los honorarios de un abogado o el costo de un testamento completamente nuevo. Con Farewill puedes realizar cambios ilimitados por solo £10 al año; encontrarás la opción al finalizar la compra.'}
+                            : 'Una vez que haya firmado su testamento, es importante actualizarlo cuando cambien las circunstancias. Tradicionalmente, eso significa pagar los honorarios de un abogado o el costo de un testamento completamente nuevo. Con Testador puedes realizar cambios ilimitados por solo £10 al año; encontrarás la opción al finalizar la compra.'}
                         </p>
                       </div>
                     </div>
@@ -124,7 +124,7 @@ const page = () => {
                   >
                     <path d='M64 112c-8.8 0-16 7.2-16 16v22.1L220.5 291.7c20.7 17 50.4 17 71.1 0L464 150.1V128c0-8.8-7.2-16-16-16H64zM48 212.2V384c0 8.8 7.2 16 16 16H448c8.8 0 16-7.2 16-16V212.2L322 328.8c-38.4 31.5-93.7 31.5-132 0L48 212.2zM0 128C0 92.7 28.7 64 64 64H448c35.3 0 64 28.7 64 64V384c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64V128z' />
                   </svg>
-                  <p className='text-style'>Envíenos un correo electrónico a hello@farewill.com</p>
+                  <p className='text-style'>Envíenos un correo electrónico a hello@Testador.com</p>
                 </div>
               </div>
             </div>

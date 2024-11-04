@@ -62,7 +62,7 @@ const page = () => {
                       mencionen en su testamento.
                     </li>
                   </ul>
-                  <p className='title pt-4'>niños</p>
+                  <p className='title pt-4'>Niños</p>
                   <div
                     onClick={clickHandler}
                     className='bg-white rounded-lg overflow-hidden flex items-center justify-center cursor-pointer my-4'
@@ -76,10 +76,10 @@ const page = () => {
                       >
                         <path d='M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z' />
                       </svg>
-                      Agregar un niño
+                    
                     </p>
                   </div>
-                  <p className='title'>Persona</p>
+                  <p className='title'>Persona de confianza</p>
                   <div
                     onClick={handlePeople}
                     className='bg-white rounded-lg overflow-hidden flex items-center justify-center cursor-pointer my-4'
@@ -93,7 +93,7 @@ const page = () => {
                       >
                         <path d='M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z' />
                       </svg>
-                      Agregar una persona
+                     
                     </p>
                   </div>
                   <p className='title'>Mascota</p>
@@ -110,7 +110,7 @@ const page = () => {
                       >
                         <path d='M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z' />
                       </svg>
-                      Agregar una mascota
+             
                     </p>
                   </div>
                   <p className='title'>Caridad</p>
@@ -127,28 +127,12 @@ const page = () => {
                       >
                         <path d='M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z' />
                       </svg>
-                      Añadir una organización benéfica
+               
                     </p>
                   </div>
                 </div>
-                <div className='w-full flex items-center justify-between'>
-                  <div
-                    onClick={() => router.back()}
-                    className='flex items-center text-[14px] font-[500] gap-2  pt-1 text-[#9999] cursor-pointer border-b border-transparent hover:border-[#9999] transiton-all delay-150'
-                  >
-                    <svg
-                      height={'14px'}
-                      width={'14px'}
-                      xmlns='http://www.w3.org/2000/svg'
-                      viewBox='0 0 320 512'
-                    >
-                      <path
-                        fill='#0000FF'
-                        d='M9.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l192 192c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L77.3 256 246.6 86.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-192 192z'
-                      />
-                    </svg>
-                    Back
-                  </div>
+                <div className='w-full flex items-end justify-end'>
+                  
                   <button
                     onClick={() =>
                       router.push('/summary?completed=account-and-property')

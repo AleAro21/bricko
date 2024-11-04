@@ -128,7 +128,7 @@ const page = () => {
                   </div>
                   <div className='w-full py-3 flex gap-3'>
                     <p className='text-style'>
-                    No puede darse de baja de ciertos correos electrónicos de Farewill. Estos incluyen: verificación de testamentos, pago y actualizaciones de productos.
+                    No puede darse de baja de ciertos correos electrónicos de Testador. Estos incluyen: verificación de testamentos, pago y actualizaciones de productos.
                     </p>
                   </div>
                   <div className='flex py-4'>
