@@ -1,106 +1,118 @@
 "use client";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import graylogo from "../../../assets/greylogo.png";
 import Image from "next/image";
-import { useState } from "react";
-const page = () => {
+import { FaUser } from "react-icons/fa";
+import graylogo from "@/assets/greylogo.png";
+
+function OTPInput() {
+  const [otp, setOtp] = useState(new Array(6).fill(""));
+  const [timer, setTimer] = useState(30); // Set initial timer value in seconds
   const router = useRouter();
-  const [showPassword, setShowPassword] = useState(false);
-  const [password, setPassword] = useState("");
-  const pass = Number(password.length) * 10;
-  const handleSubmit = (e) => {
-    e.preventDefault();
+
+  const handleChange = (element, index) => {
+    if (isNaN(element.value)) return;
+
+    setOtp([...otp.map((d, idx) => (idx === index ? element.value : d))]);
+
+    if (element.nextSibling) {
+      element.nextSibling.focus();
+    }
+  };
+
+  const handleSubmit = () => {
     router.push("/start/congratulation");
   };
-  return (
-    <>
-      <main className="container w-3/4 mx-auto flex flex-col h-full min-h-screen">
-        <div className="py-4 ">
-          <Image src={graylogo} width={100} />
-        </div>
-        <div className="flex flex-col md:w-[50%] max-w-[500px] mx-auto items-center justify-center h-full">
-          <div className="">
-            <p className="title py-2 text-center md:w-[60%] mx-auto">
-              Crea tu contraseña
-            </p>
-            <p className="text-style py-4 text-center md:w-[60%] mx-auto">
-              Una contraseña fuerte es tu primera defensa. Asegúrate de no
-              compartirla
-            </p>
-            <form onSubmit={handleSubmit} className="">
-              <div className="mb-2">
-                <div className="py-3">
-                  <label htmlFor="country" className="text-style">
-                    {`Contraseña (mínimo 10 caracteres)`}
-                  </label>
-                  <input
-                    type={showPassword ? "text" : "password"}
-                    id="country"
-                    className="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-6"
-                    required
-                    minLength={10}
-                    onChange={(e) => setPassword(e.target.value)}
-                  />
-                  <div
-                    onClick={() => setShowPassword(!showPassword)}
-                    className="flex items-center justify-end text-style py-4 gap-2"
-                  >
-                    {showPassword ? (
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="16"
-                        height="16"
-                        fill="currentColor"
-                        class="bi bi-eye-slash-fill"
-                        viewBox="0 0 16 16"
-                      >
-                        <path d="m10.79 12.912-1.614-1.615a3.5 3.5 0 0 1-4.474-4.474l-2.06-2.06C.938 6.278 0 8 0 8s3 5.5 8 5.5a7 7 0 0 0 2.79-.588M5.21 3.088A7 7 0 0 1 8 2.5c5 0 8 5.5 8 5.5s-.939 1.721-2.641 3.238l-2.062-2.062a3.5 3.5 0 0 0-4.474-4.474z" />
-                        <path d="M5.525 7.646a2.5 2.5 0 0 0 2.829 2.829zm4.95.708-2.829-2.83a2.5 2.5 0 0 1 2.829 2.829zm3.171 6-12-12 .708-.708 12 12z" />
-                      </svg>
-                    ) : (
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="16"
-                        height="16"
-                        fill="currentColor"
-                        class="bi bi-eye-fill"
-                        viewBox="0 0 16 16"
-                      >
-                        <path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0" />
-                        <path d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8m8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7" />
-                      </svg>
-                    )}
-                    <span className="text-[#000000]">
-                      {showPassword ? "Hide" : "Mostrar"}
-                    </span>
-                  </div>
-                </div>
-                <div className="flex w-full h-[5px] bg-gray-500 rounded-lg items-center my-2">
-                  <div
-                    className={`${
-                      pass >= 100 ? "bg-green-700" : "bg-red-500"
-                    } h-full flex rounded-lg `}
-                    style={{ width: pass + "%" }}
-                  ></div>
-                </div>
-                <button
-                  type="submit"
-                  className="w-full text-[14px] text-[#000000] font-[600] bg-[#FFDF4E] px-4 py-4 rounded-[100px] uppercase my-2"
-                >
-                  CONTINUAR
-                </button>
-                <p className="text-style text-center pt-4">
-                  Creando una cuenta, aceptas estar en conformidad con nuestros
-                  Términos y Políticas de Privacidad.
-                </p>
-              </div>
-            </form>
-          </div>
-          <div className="w-full flex items-center justify-between"></div>
-        </div>
-      </main>
-    </>
-  );
-};
 
-export default page;
+  // Countdown timer logic
+  useEffect(() => {
+    if (timer > 0) {
+      const countdown = setInterval(() => {
+        setTimer((prevTime) => prevTime - 1);
+      }, 1000);
+
+      return () => clearInterval(countdown);
+    }
+  }, [timer]);
+
+  const resetTimer = () => {
+    setTimer(30); // Reset the timer to 30 seconds
+  };
+
+  return (
+    <div className="flex flex-col items-center justify-center min-h-screen relative">
+      {/* Logo positioned slightly to the right at the top */}
+      <div className="absolute top-4 left-40">
+        <Image src={graylogo} alt="Logo" width={100} />
+      </div>
+
+      <div className="container w-3/4 mx-auto flex flex-col">
+        <div className="flex flex-col lg:flex-row items-start lg:items-start space-y-8 lg:space-y-0 lg:space-x-8 mt-8">
+          {/* Left Section with Title and Information */}
+          <div className="lg:w-1/2 w-full">
+            <h2 className="text-gray-500 text-lg font-bold mb-2 uppercase">Verificación en 2 pasos</h2>
+            <p className="text-2xl font-semibold mb-4">Ingresa el código que te enviamos por SMS</p>
+            <p className="text-gray-600 mb-6">
+              Es un código de 6 dígitos enviado al teléfono terminado en 4558.
+            </p>
+
+            {/* Email Container with Icon */}
+            <div className="flex items-center mb-4 p-4 bg-gray-50 border border-gray-300 rounded-[100px] shadow-sm inline-flex">
+              <FaUser className="text-blue-600 text-xl mr-2" />
+              <span className="text-gray-700">055codigo@gmail.com</span>
+            </div>
+
+            <div className="border-b border-gray-300 my-4 w-full px-4"></div>
+
+            <a href="#" className="text-blue-600 text-sm">Necesito ayuda</a>
+          </div>
+
+          {/* Right Section with OTP Input and Button */}
+          <div className="lg:w-[70%] w-full max-w-xl p-8 bg-gray-50 rounded-lg shadow-md flex flex-col items-center">
+            <p className="text-sm text-gray-500 mb-2">Ingresa el código</p>
+            <div className="otp-inputs flex space-x-2 mb-4">
+              {otp.map((data, index) => (
+                <input
+                  className="w-12 h-12 border-2 rounded-lg text-center text-xl focus:outline-none focus:border-blue-500"
+                  type="text"
+                  maxLength="1"
+                  key={index}
+                  value={data}
+                  onChange={(e) => handleChange(e.target, index)}
+                  onFocus={(e) => e.target.select()}
+                />
+              ))}
+            </div>
+
+            <div className="flex w-full justify-start mb-4">
+              <p className="text-gray-500 text-sm">
+                {timer > 0 ? `Reenviar código en 00:${timer < 10 ? `0${timer}` : timer}` : (
+                  <span
+                    className="text-blue-600 cursor-pointer"
+                    onClick={resetTimer}
+                  >
+                    Reenviar código
+                  </span>
+                )}
+              </p>
+            </div>
+
+            <div className="flex w-full items-center justify-between">
+              <button
+                className="w-full text-[14px] text-[#000000] font-[600] bg-[#FFDF4E] px-4 py-4 rounded-[100px] uppercase"
+                onClick={handleSubmit}
+              >
+                Confirmar código
+              </button>
+              <a href="#" className="text-blue-600 text-sm ml-4 whitespace-nowrap">
+                Elegir otro método
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export default OTPInput;
