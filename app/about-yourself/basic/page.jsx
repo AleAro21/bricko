@@ -31,11 +31,11 @@ const Page = () => {
     <DashboardLayout>
       <div className="container w-3/4 mx-auto flex flex-col h-full min-h-screen">
         <div className="w-full flex flex-col py-12">
-          <p className="title py-4">Tus detalles de contacto</p>
+          <p className="title py-4">Detalles de contacto</p>
           <form onSubmit={handleSubmit} className="w-full flex">
             <div className="w-[50%] flex flex-col">
               <div className="w-full pb-4 border-b">
-                <p className="sm-title py-4">Su dirección</p>
+                <p className="sm-title py-4">Tu dirección</p>
                 <label htmlFor="address1" className="text-style">
                   {`Dirección Línea 1`}
                 </label>

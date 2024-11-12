@@ -3,6 +3,7 @@ import DashboardLayout from "@/components/common/DashboardLayout";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import Add from "./Add";
+import { sub } from "date-fns";
 
 const page = () => {
   const router = useRouter();
@@ -27,13 +28,8 @@ const page = () => {
   const data = [
     {
       title: "Soltero",
-      items: {
-        itemTiltle: "",
-        itemData: null,
-      },
-    },
-    {
-      title: "Vivir en pareja pero no casado",
+      subTitle:
+        "Libre de vínculos matrimoniales; puede contraer matrimonio si lo desea.",
       items: {
         itemTiltle: "",
         itemData: null,
@@ -41,58 +37,38 @@ const page = () => {
     },
     {
       title: "Casado",
+      subTitle:
+        "Unión legal entre dos personas; ambos asumen derechos y obligaciones.",
+      items: {
+        itemTiltle: "",
+        itemData: "/about-yourself/live-with-partner",
+      },
+    },
+
+    {
+      title: "Viudo",
+      subTitle:
+        "Matrimonio disuelto legalmente; cada uno retoma su estado de soltería.",
       items: {
         itemTiltle: "",
         itemData: "/about-yourself/live-with-partner",
       },
     },
     {
-      title: "Unión civil",
+      title: "Concubinato",
+      subTitle: "Estado de quien ha perdido a su cónyuge por fallecimiento.",
       items: {
         itemTiltle: "",
-        itemData: null,
-      },
-    },
-    {
-      title: "Comprometido",
-      items: {
-        itemTiltle: "",
-        itemData: null,
-      },
-    },
-    {
-      title: "Viudo",
-      items: {
-        itemTiltle: "",
-        itemData: null,
-      },
-    },
-    {
-      title: "Viudo y vuelto a casar",
-      items: {
-        itemTiltle: "",
-        itemData: null,
-      },
-    },
-    {
-      title: "Casado pero separado",
-      items: {
-        itemTiltle: "",
-        itemData: null,
-      },
-    },
-    {
-      title: "Unión civil pero separada",
-      items: {
-        itemTiltle: "",
-        itemData: null,
+        itemData: "/about-yourself/live-with-partner",
       },
     },
     {
       title: "Divorciado",
+      subTitle:
+        "Relación de hecho reconocida si la pareja vive junta y cumple ciertos requisitos.",
       items: {
         itemTiltle: "",
-        itemData: null,
+        itemData: "/about-yourself/live-with-partner",
       },
     },
   ];
@@ -122,6 +98,9 @@ const page = () => {
                           }`}
                         >
                           {items.title}
+                          <p className="text-gray-400 text-sm">
+                            {items.subTitle}
+                          </p>
                         </p>
                       </div>
                     ))}
@@ -135,12 +114,78 @@ const page = () => {
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         viewBox="0 0 448 512"
-                        width={"24px"}
-                        height={"24px"}
+                        width="24px"
+                        height="24px"
                       >
-                        <path d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z" />
+                        <path
+                          d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z"
+                          fill="#0066cc"
+                        />
                       </svg>
-                      Añade tu socio
+                      Agregar Pareja
+                    </p>
+                  </div>
+                )}
+                {selectedItem?.title == "Viudo" && (
+                  <div
+                    onClick={clickPartner}
+                    className="bg-white rounded-lg overflow-hidden flex items-center justify-center cursor-pointer my-4"
+                  >
+                    <p className="flex gap-2 py-10 text-style">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 448 512"
+                        width="24px"
+                        height="24px"
+                      >
+                        <path
+                          d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z"
+                          fill="#0066cc"
+                        />
+                      </svg>
+                      Agregar Pareja
+                    </p>
+                  </div>
+                )}
+                {selectedItem?.title == "Divorciado" && (
+                  <div
+                    onClick={clickPartner}
+                    className="bg-white rounded-lg overflow-hidden flex items-center justify-center cursor-pointer my-4"
+                  >
+                    <p className="flex gap-2 py-10 text-style">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 448 512"
+                        width="24px"
+                        height="24px"
+                      >
+                        <path
+                          d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z"
+                          fill="#0066cc"
+                        />
+                      </svg>
+                      Agregar Pareja
+                    </p>
+                  </div>
+                )}
+                {selectedItem?.title == "Concubinato" && (
+                  <div
+                    onClick={clickPartner}
+                    className="bg-white rounded-lg overflow-hidden flex items-center justify-center cursor-pointer my-4"
+                  >
+                    <p className="flex gap-2 py-10 text-style">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 448 512"
+                        width="24px"
+                        height="24px"
+                      >
+                        <path
+                          d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z"
+                          fill="#0066cc"
+                        />
+                      </svg>
+                      Agregar Pareja
                     </p>
                   </div>
                 )}

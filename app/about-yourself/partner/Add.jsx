@@ -5,7 +5,7 @@ const Add = ({ setShowModal, showModal }) => {
   return (
     <Modal setShowModal={setShowModal} showModal={showModal}>
       <div className='w-full min-w-[400px]'>
-        <p className='sm-title'>Agregar socio</p>
+        <p className='sm-title'>Agregar pareja</p>
         <div className='w-full'>
           <form className='mx-auto my-4'>
             <div className='w-full py-4'>
@@ -30,7 +30,7 @@ const Add = ({ setShowModal, showModal }) => {
                 required
               />
             </div>
-            <p className='sm-title'>Edad</p>
+            <p className='sm-title'>Fecha de nacimiento</p>
             <div className='flex items-center justify-start gap-3'>
               <div className='flex gap-3 items-center h-5 px-4 py-4 rounded-[24px]'>
                 <input
@@ -57,7 +57,7 @@ const Add = ({ setShowModal, showModal }) => {
               onClick={() => setShowModal(false)}
               className='w-full text-[14px] text-[#000000] font-[600] bg-[#FFDF4E] px-4 py-4 rounded-[100px] uppercase mt-4'
             >
-              ahorrar
+              Agregar
             </button>
           </form>
         </div>

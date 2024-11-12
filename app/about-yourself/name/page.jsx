@@ -8,7 +8,9 @@ const Page = () => {
   const router = useRouter();
   const [formValues, setFormValues] = useState({
     fullName: '',
-    preferredName: '',
+    secondName: '',
+    fatherLastName: '',
+    motherLastName: '',
     day: '',
     month: '',
     year: '',
@@ -59,10 +61,10 @@ const Page = () => {
                 <p className='text-style py-4'>
                   Este es el nombre que figura en su pasaporte o permiso de conducir.
                 </p>
-                <p className='text-style'>Su nombre legal completo</p>
-                <label htmlFor='fullName' className='text-style'>
+                <p className='text-style'>Nombre *</p>
+                {/* <label htmlFor='fullName' className='text-style'>
                   {` Por ejemplo, Elizabeth Joy Smith.`}
-                </label>
+                </label> */}
                 <input
                   type='text'
                   id='fullName'
@@ -73,27 +75,54 @@ const Page = () => {
                 />
               </div>
               <div className='w-full'>
-                <p className='sm-title pt-6'>
-                  ¿Cómo te gustaría que te llamemos?
-                </p>
-                <p className='text-style py-4'>
-                  Por ejemplo, si le enviamos un correo electrónico o hablamos con usted por teléfono.
-                </p>
-                <p className='text-style'>Tu nombre preferido (opcional)</p>
-                <label htmlFor='preferredName' className='text-style'>
-                  {`Por ejemplo, Lizzie`}
-                </label>
+               
+                <p className='text-style'>Segundo Nombre</p>
+                {/* <label htmlFor='fullName' className='text-style'>
+                  {` Por ejemplo, Elizabeth Joy Smith.`}
+                </label> */}
                 <input
                   type='text'
-                  id='preferredName'
-                  value={formValues.preferredName}
+                  id='secondName'
+                  value={formValues.secondName}
                   onChange={handleChange}
                   className='bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-6 my-2'
+                  required
                 />
               </div>
+              <div className='w-full'>
+            
+               
+                <p className='text-style'>Apellido Paterno *</p>
+                {/* <label htmlFor='fullName' className='text-style'>
+                  {` Por ejemplo, Elizabeth Joy Smith.`}
+                </label> */}
+                <input
+                  type='text'
+                  id='fatherLastName'
+                  value={formValues.fatherLastName}
+                  onChange={handleChange}
+                  className='bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-6 my-2'
+                  required
+                />
+              </div>
+              <div className='w-full'>
+                
+               
+                <p className='text-style'>Apellido Materno *</p>
+                {/*  */}
+                <input
+                  type='text'
+                  id='motherLastName'
+                  value={formValues.motherLastName}
+                  onChange={handleChange}
+                  className='bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-6 my-2'
+                  required
+                />
+              </div>
+        
               <div className='w-full border-t-2 mt-3'>
                 <p className='text-style pt-4'>Tu fecha de nacimiento</p>
-                <p className='text-style pb-4'>Por ejemplo, 19 12 1951</p>
+                <p className='text-style pb-4 '>dd / mm / aa</p>
                 <div className='flex w-full items-center justify-between'>
                   <div className='w-[25%]'>
                     <label htmlFor='day' className='text-style'>
