@@ -47,7 +47,7 @@ const page = () => {
                           onClick={(e) => handleClick(e, index)}
                           className={`text-style cursor-pointer px-4 py-6 ${
                             activeIndex === index
-                              ? 'bg-[#ffdf4e] text-white'
+                              ? 'bg-[#0171e3] text-white'
                               : ''
                           }`}
                         >
@@ -77,7 +77,7 @@ const page = () => {
                 </div>
                 <button
                   onClick={() => router.push('/about-yourself/pets')}
-                  className='text-[14px] text-[#000000] font-[600] bg-[#FFDF4E] px-4 py-4 rounded-[100px] uppercase mt-4'
+                  className='text-[14px] text-[#FFFFFF] font-[600] bg-[#0171e3] px-4 py-4 rounded-[100px] uppercase mt-4'
                 >
                   CONTINUAR
                 </button>

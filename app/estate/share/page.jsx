@@ -91,7 +91,7 @@ const Page = () => {
                       router.push("/estate/secondary");
                     }
                   }}
-                  className="text-[14px] text-[#000000] font-[600] bg-[#FFDF4E] px-4 py-4 rounded-[100px] uppercase mt-4"
+                  className="text-[14px] text-[#FFFFFF] font-[600] bg-[#0171e3] px-4 py-4 rounded-[100px] uppercase mt-4"
                   disabled={nameValue1 + nameValue2 !== 100}
                 >
                   CONTINUAR

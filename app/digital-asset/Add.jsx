@@ -21,7 +21,7 @@ const Add = ({ setShowModal, showModal }) => {
             </select>
             <button
               onClick={() => setShowModal(false)}
-              className='w-full text-[14px] text-[#000000] font-[600] bg-[#FFDF4E] px-4 py-4 rounded-[100px] uppercase mt-4'
+              className='w-full text-[14px] text-[#FFFFFF] font-[600] bg-[#0171e3] px-4 py-4 rounded-[100px] uppercase mt-4'
             >
               Agregar
             </button>

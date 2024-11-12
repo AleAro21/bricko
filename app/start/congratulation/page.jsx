@@ -87,7 +87,7 @@ const page = () => {
                     <div key={index} className="">
                       <p
                         onClick={(e) => handleChildData(e, items)}
-                        className="text-style cursor-pointer p-4 hover:bg-[#FFDF4E] transition-colors"
+                        className="text-style cursor-pointer p-4 hover:bg-[#0171e3] transition-colors"
                       >
                         {items.listTitle}
                       </p>
@@ -97,7 +97,7 @@ const page = () => {
                     <div key={index} className="">
                       <p
                         onClick={(e) => handleClick(e, items)}
-                        className="text-style cursor-pointer p-4 hover:bg-[#FFDF4E] transition-colors"
+                        className="text-style cursor-pointer p-4 hover:bg-[#0171e3] hover:text-white transition-colors"
                       >
                         {items.title}
                       </p>

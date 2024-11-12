@@ -34,50 +34,13 @@ const page = () => {
                     enormemente, por lo que es algo en lo que debe pensar antes
                     de decidir.
                   </p>
-                  <div className="w-full bg-white p-6 my-4 rounded-lg">
-                    <p className="sm-title">Fideicomisarios de despedida</p>
-                    <p className="text-style">
-                      Tarifa fija de <b> £1,000-£2,750</b>
-                    </p>
-                    <p className="text-style">
-                      (dependiendo de lo complicado que sea su patrimonio)
-                    </p>
-                    <p className="text-style py-2">
-                      Patrimonio administrado profesionalmente
-                    </p>
-                    <p className="text-style">
-                      Nos haremos a un lado sin problemas y sin honorarios si su
-                      patrimonio no necesita ayuda profesional.
-                    </p>
-                  </div>
-                  <div className="w-full bg-white p-6 my-4 rounded-lg">
-                    <p className="sm-title">Ejecutores profesionales típicos</p>
-                    <p className="text-style">
-                      <b>
-                        Tarifas por hora o tarifas fijas que están vinculadas al
-                        valor de su patrimonio (a menudo entre el 2 y el 4 %)
-                      </b>
-                    </p>
-                    <p className="text-style">
-                      Esto podría ser de hasta £ 20 000 si su patrimonio vale £
-                      500 000 cuando usted muera.
-                    </p>
-                    <p className="text-style py-2">
-                      Patrimonio administrado profesionalmente
-                    </p>
-                    <p className="text-style">
-                      A menudo hay molestias y una tarifa para lograr que se
-                      hagan a un lado si no se necesita ayuda. Pensar en elegir
-                      un albacea profesional.
-                    </p>
-                  </div>
                 </div>
                 <div className="w-full flex items-center justify-between">
                   <button
                     onClick={() =>
-                      router.push("/executers/friends-family-Testador-trustee")
+                      router.push("/executers/friends-family-farewill-trustee")
                     }
-                    className="text-[14px] text-[#000000] ml-auto mr-0 font-[600] bg-[#FFDF4E] px-4 py-4 rounded-[100px] uppercase mt-4"
+                    className="text-[14px] text-[#FFFFFF] ml-auto mr-0 font-[600] bg-[#0171e3] px-4 py-4 rounded-[100px] uppercase mt-4"
                   >
                     CONTINUAR
                   </button>

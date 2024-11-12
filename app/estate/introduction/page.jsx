@@ -11,9 +11,9 @@ const page = () => {
         <div className="container w-3/4 mx-auto flex flex-col h-full min-h-screen">
           <div className="w-full flex flex-col py-12">
             <div className="w-full flex">
-              <div className="w-[50%] flex flex-col">
+              <div className="w-[65%] flex flex-col">
                 <div className="">
-                  <p className="title py-2">Tu patrimonio</p>
+                  <p className="title py-2">Recomendaciones (Consultar abogados) </p>
                   <p className="text-style py-4">
                     Su patrimonio es todo lo que posee, excepto cualquier
                     obsequio específico que decida dejar a otras personas más
@@ -31,7 +31,7 @@ const page = () => {
                     <p className="sm-title py-4 flex gap-2">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
-                        viewBox="-10 -10 468 532"
+                        viewBox="-10 -10 532 532"
                         width="24px"
                         height="24px"
                       >
@@ -89,7 +89,7 @@ const page = () => {
                 <div className="w-full flex items-end justify-end">
                   <button
                     onClick={() => router.push("/estate/people")}
-                    className="text-[14px] text-[#000000] font-[600] bg-[#FFDF4E] px-4 py-4 rounded-[100px] uppercase mt-4"
+                    className="text-[14px] text-[#FFFFFF] font-[600] bg-[#0171e3] px-4 py-4 rounded-[100px] uppercase mt-4"
                   >
                     CONTINUAR
                   </button>

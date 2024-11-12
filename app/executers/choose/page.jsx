@@ -7,9 +7,26 @@ import { useState } from 'react';
 const page = () => {
   const router = useRouter();
   const [showModal, setShowModal] = useState(false);
+  const [activeIndex, setActiveIndex] = useState(1);
   const clickHandler = () => {
     setShowModal(true);
   };
+  const handleClick = (e, index) => {
+    e.preventDefault();
+    setActiveIndex(index === activeIndex ? null : index);
+  };
+
+  const data = [
+    {
+      title: "Amigos de la familia",
+    },
+    {
+      title: "Fideicomisarios de despedida",
+    },
+    {
+      title: "Amigos y familiares y fideicomisarios de Testador",
+    },
+  ];
 
   return (
     <>
@@ -19,7 +36,28 @@ const page = () => {
           <div className='w-full flex flex-col py-12'>
             <div className='w-full flex'>
               <div className='w-[50%] flex flex-col'>
+                
                 <div className=''>
+                <p className="title py-2 ">
+                    ¿A quién le gustaría elegir como su albacea?
+                  </p>
+                  <div className="bg-white rounded-lg overflow-hidden ">
+                    {data &&
+                      data?.map((items, index) => (
+                        <div key={index} className="">
+                          <p
+                            onClick={(e) => handleClick(e, index)}
+                            className={`text-style cursor-pointer px-4 py-6 ${
+                              activeIndex === index
+                                ? "bg-[#0171e3] text-white"
+                                : ""
+                            }`}
+                          >
+                            {items.title}
+                          </p>
+                        </div>
+                      ))}
+                  </div>
                   <p className='title py-2 '>
                     ¿A quién quieres como tus albaceas?
                   </p>
@@ -53,7 +91,7 @@ const page = () => {
                  
                   <button
                     onClick={() => router.push('/summary?completed=executers')}
-                    className='text-[14px] text-[#000000] ml-auto mr-0 font-[600] bg-[#FFDF4E] px-4 py-4 rounded-[100px] uppercase mt-4'
+                    className='text-[14px] text-[#FFFFFF] ml-auto mr-0 font-[600] bg-[#0171e3] px-4 py-4 rounded-[100px] uppercase mt-4'
                   >
                     CONTINUAR
                   </button>

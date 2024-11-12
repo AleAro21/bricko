@@ -10,7 +10,7 @@ const page = () => {
   const pass = Number(password.length) * 10;
   const handleSubmit = (e) => {
     e.preventDefault();
-    router.push("/start/otp");
+    router.push("/start/phoneNumber");
   };
   return (
     <>
@@ -85,7 +85,7 @@ const page = () => {
                 </div>
                 <button
                   type="submit"
-                  className="w-full text-[14px] text-[#000000] font-[600] bg-[#FFDF4E] px-4 py-4 rounded-[100px] uppercase my-2"
+                  className="w-full text-[14px] text-[#FFFFFF] font-[600] bg-[#0171e3] px-4 py-4 rounded-[100px] uppercase my-2"
                 >
                   CONTINUAR
                 </button>

@@ -49,7 +49,7 @@ const WaitingList = () => {
         </div>
         <div className='w-full flex items-end justify-end'>
           
-          <button className='text-[14px] text-[#000000] font-[600] bg-[#FFDF4E] px-4 py-2 rounded-[100px] uppercase'>
+          <button className='text-[14px] text-[#FFFFFF] font-[600] bg-[#0171e3] px-4 py-2 rounded-[100px] uppercase'>
             Enviar
           </button>
         </div>

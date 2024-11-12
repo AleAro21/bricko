@@ -35,7 +35,9 @@ const page = () => {
                         width={'24px'}
                         height={'24px'}
                       >
-                        <path d='M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z' />
+                        <path
+                          fill='#0171e3'
+                        d='M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z' />
                       </svg>
                       
                     </p>
@@ -45,7 +47,7 @@ const page = () => {
                   
                   <button
                     onClick={() => router.push('/summary')}
-                    className='text-[14px] text-[#000000] font-[600] bg-[#FFDF4E] px-4 py-4 rounded-[100px] uppercase mt-4'
+                    className='text-[14px] text-[#FFFFFF] font-[600] bg-[#0171e3] px-4 py-4 rounded-[100px] uppercase mt-4'
                   >
                     CONTINUAR
                   </button>

@@ -20,44 +20,44 @@ const page = () => {
           <div className="w-full flex">
             <div className="w-[50%] flex flex-col">
               <div className="border bg-white rounded-lg p-3 md:p-6 md:w-[80%] mt-4">
-                <p className="text-style">PASO 1 (2-4 minutos):</p>
+                <p className="text-style">Paso 1 (2-4 minutos):</p>
                 <p className="title py-1">Cuentanos sobre ti</p>
                 <p className="text-style">
                   Información para personalizar tu testamento.
                 </p>
                 <button
                   onClick={() => router.push("/about-yourself/name")}
-                  className="text-[14px] text-[#000000] font-[600] bg-[#FFDF4E] px-4 py-4 rounded-[100px] uppercase mt-4"
+                  className="text-[14px] text-[#FFFFFF] font-[600] bg-[#0171e3] px-4 py-4 rounded-[100px] uppercase mt-4"
                 >
                   Empecemos
                 </button>
               </div>
               <div className="border rounded-lg p-3 md:p-6 md:w-[80%] mt-4 bg-white">
-                <p className="text-style">PASO 2 (1-4 minutos):</p>
+                <p className="text-style">Paso 2 (1-4 minutos):</p>
                 <p className="title py-1">Cuentas y Propiedades</p>
                 <p className="text-style">Menciona donde estan tus activos</p>
                 <button
                   onClick={() => router.push("/account-and-property")}
-                  className="text-[14px] text-[#000000] font-[600] bg-[#FFDF4E] px-4 py-4 rounded-[100px] uppercase mt-4"
+                  className="text-[14px] text-[#FFFFFF] font-[600] bg-[#0171e3] px-4 py-4 rounded-[100px] uppercase mt-4"
                 >
                   Empecemos
                 </button>
               </div>
               <div className="border rounded-lg p-3 md:p-6 md:w-[80%] mt-4 bg-white">
-                <p className="text-style">PASO 3 (3-5 minutos):</p>
+                <p className="text-style">Paso 3 (3-5 minutos):</p>
                 <p className="title py-1">Herencia</p>
                 <p className="text-style">
                   Define a las personas o entidades que heredarán tus bienes.
                 </p>
                 <button
                   onClick={() => router.push("/estate/introduction")}
-                  className="text-[14px] text-[#000000] font-[600] bg-[#FFDF4E] px-4 py-4 rounded-[100px] uppercase mt-4"
+                  className="text-[14px] text-[#FFFFFF] font-[600] bg-[#0171e3] px-4 py-4 rounded-[100px] uppercase mt-4"
                 >
                   Empecemos
                 </button>
               </div>
               <div className="border rounded-lg p-3 md:p-6 md:w-[80%] mt-4 bg-white">
-                <p className="text-style">PASO 4 (3-5 minutos):</p>
+                <p className="text-style">Paso 4 (3-5 minutos):</p>
                 <p className="title py-1">Albaceas</p>
                 <p className="text-style">
                   Selecciona a la persona o personas encargadas de cumplir tus
@@ -65,7 +65,7 @@ const page = () => {
                 </p>
                 <button
                   onClick={() => router.push("/executers/introduction")}
-                  className="text-[14px] text-[#000000] font-[600] bg-[#FFDF4E] px-4 py-4 rounded-[100px] uppercase mt-4"
+                  className="text-[14px] text-[#FFFFFF] font-[600] bg-[#0171e3] px-4 py-4 rounded-[100px] uppercase mt-4"
                 >
                   Empecemos
                 </button>
@@ -78,7 +78,7 @@ const page = () => {
                   Oportunidad de dejar regalos a personas especiales
                 </p>
                 <button className="text-[14px] text-[#8D9495] font-[600] border-2 border-gray-300 px-4 py-4 rounded-[100px] uppercase mt-4">
-                  Add gifts
+                  Completar
                 </button>
               </div>
               <div className="border bg-white rounded-lg p-3 md:p-6 md:w-[80%] mt-4">
@@ -112,7 +112,7 @@ const page = () => {
                   <p className="title py-1">Tu voluntad</p>
                   <p className="text-style py-2">
                     La primera parte de su testamento tiene que ver contigo y tu
-                    familia. Completa la informacion en el paso 1 para avanzar
+                    familia. Completa la informacion en el Paso 1 para avanzar
                   </p>
                 </div>
               </div>
