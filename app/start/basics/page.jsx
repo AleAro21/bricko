@@ -2,7 +2,6 @@
 import { useRouter } from "next/navigation";
 import graylogo from "../../../assets/greylogo.png";
 import Image from "next/image";
-import Link from "next/link";
 
 const page = () => {
   const router = useRouter();
@@ -24,6 +23,10 @@ const page = () => {
     }
 
     router.push("/start/password");
+  };
+
+  const handleLoginClick = () => {
+    router.push("/start/login");
   };
 
   return (
@@ -104,14 +107,12 @@ const page = () => {
                     CONTINUAR
                   </button>
                   <div className="text-style pt-4 mb-10 text-center">
-                    <Link href="">
-                      <p className="cursor-pointer">
-                        Ya tengo cuenta{" "}
-                        <span className="text-blue-500 underline">
-                          Ingresar
-                        </span>
-                      </p>
-                    </Link>
+                    <p onClick={handleLoginClick} className="cursor-pointer">
+                      Ya tengo cuenta{" "}
+                      <span className="text-blue-500 underline">
+                        Ingresar
+                      </span>
+                    </p>
                   </div>
                 </div>
               </form>
