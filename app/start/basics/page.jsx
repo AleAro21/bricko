@@ -1,6 +1,9 @@
 "use client";
 import { useRouter } from "next/navigation";
 import graylogo from "../../../assets/greylogo.png";
+import Apple from "@/assets/Apple.png";
+import Facebook from "@/assets/Facebook.png";
+import Google from "@/assets/Google.png";
 import Image from "next/image";
 
 const page = () => {
@@ -35,9 +38,9 @@ const page = () => {
         <div className="py-4 ">
           <Image src={graylogo} width={100} />
         </div>
-        <div className="flex flex-col md:w-[50%] max-w-[500px] mx-auto items-center justify-center h-full ">
+        <div className="flex flex-col md:w-[60%] max-w-[500px] mx-auto items-center justify-center h-full ">
           <div className="">
-            <p className="title py-2 text-center md:w-[60%] mx-auto">
+            <p className="title py-2 text-center md:w-[80%] mx-auto">
               Crea tu Testamento Digital
             </p>
             <p className="text-style py-4 text-center md:w-[60%] mx-auto">
@@ -92,7 +95,11 @@ const page = () => {
                     />
                   </div>
                   <p className="text-style py-4 flex items-center gap-3">
-                    <input type="checkbox" id="terms" className="h-[13px] w-[13px]" />
+                    <input
+                      type="checkbox"
+                      id="terms"
+                      className="h-[13px] w-[13px]"
+                    />
                     Acepto los términos y condiciones de Testamento.mx
                   </p>
                   <p className="text-style py-4 flex items-center gap-3">
@@ -109,10 +116,33 @@ const page = () => {
                   <div className="text-style pt-4 mb-10 text-center">
                     <p onClick={handleLoginClick} className="cursor-pointer">
                       Ya tengo cuenta{" "}
-                      <span className="text-blue-500 underline">
-                        Ingresar
-                      </span>
+                      <span className="text-blue-500 underline">Ingresar</span>
                     </p>
+                  </div>
+
+                  {/* Divider */}
+                  <div className="flex items-center my-4">
+                    <div className="w-full h-[1px] bg-gray-300"></div>
+                    <span className="mx-3 text-gray-500">O</span>
+                    <div className="w-full h-[1px] bg-gray-300"></div>
+                  </div>
+
+                  {/* Social Buttons */}
+                  <div className="flex justify-center gap-4 mt-4">
+                    <button className="w-14 h-14 mr-4 mb-10 rounded-full bg-white flex items-center justify-center">
+                      <Image src={Google} width={20} height={20} alt="Google" />
+                    </button>
+                    <button className="w-14 h-14 mr-4 ml-4 mb-10 rounded-full bg-white flex items-center justify-center">
+                      <Image
+                        src={Facebook}
+                        width={12}
+                        height={12}
+                        alt="Facebook"
+                      />
+                    </button>
+                    <button className="w-14 h-14 ml-4 mb-10 rounded-full bg-white flex items-center justify-center">
+                      <Image src={Apple} width={24} height={24} alt="Apple" />
+                    </button>
                   </div>
                 </div>
               </form>

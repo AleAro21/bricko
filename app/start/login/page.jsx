@@ -2,6 +2,9 @@
 import { useRouter } from "next/navigation";
 import graylogo from "../../../assets/greylogo.png";
 import Image from "next/image";
+import Apple from "@/assets/Apple.png";
+import Facebook from "@/assets/Facebook.png";
+import Google from "@/assets/Google.png";
 
 const page = () => {
   const router = useRouter();
@@ -76,6 +79,30 @@ const page = () => {
                       No tengo cuenta{" "}
                       <span className="text-blue-500 underline">Registrar</span>
                     </p>
+                  </div>
+                  {/* Divider */}
+                  <div className="flex items-center my-4">
+                    <div className="w-full h-[1px] bg-gray-300"></div>
+                    <span className="mx-3 text-gray-500">O</span>
+                    <div className="w-full h-[1px] bg-gray-300"></div>
+                  </div>
+
+                  {/* Social Buttons */}
+                  <div className="flex justify-center gap-4 mt-4">
+                    <button className="w-14 h-14 mr-4 mb-10 rounded-full bg-white flex items-center justify-center">
+                      <Image src={Google} width={20} height={20} alt="Google" />
+                    </button>
+                    <button className="w-14 h-14 mr-4 ml-4 mb-10 rounded-full bg-white flex items-center justify-center">
+                      <Image
+                        src={Facebook}
+                        width={12}
+                        height={12}
+                        alt="Facebook"
+                      />
+                    </button>
+                    <button className="w-14 h-14 ml-4 mb-10 rounded-full bg-white flex items-center justify-center">
+                      <Image src={Apple} width={24} height={24} alt="Apple" />
+                    </button>
                   </div>
                 </div>
               </form>
