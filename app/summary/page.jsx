@@ -1,6 +1,7 @@
 "use client";
 import DashboardLayout from "@/components/common/DashboardLayout";
 import { useRouter, useSearchParams } from "next/navigation";
+import PrimaryButton from "@/components/reusables/PrimaryButton";
 
 const page = () => {
   const router = useRouter();
@@ -25,23 +26,21 @@ const page = () => {
                 <p className="text-style">
                   Información para personalizar tu testamento.
                 </p>
-                <button
+                <PrimaryButton
                   onClick={() => router.push("/about-yourself/name")}
-                  className="text-[14px] text-[#FFFFFF] font-[600] bg-[#0171e3] px-4 py-4 rounded-[100px] uppercase mt-4"
                 >
-                  Empecemos
-                </button>
+                  Continuar
+                </PrimaryButton>
               </div>
               <div className="border rounded-lg p-3 md:p-6 md:w-[80%] mt-4 bg-white">
                 <p className="text-style">Paso 2 (1-4 minutos):</p>
                 <p className="title py-1">Cuentas y Propiedades</p>
                 <p className="text-style">Menciona donde estan tus activos</p>
-                <button
+                <PrimaryButton
                   onClick={() => router.push("/account-and-property")}
-                  className="text-[14px] text-[#FFFFFF] font-[600] bg-[#0171e3] px-4 py-4 rounded-[100px] uppercase mt-4"
                 >
-                  Empecemos
-                </button>
+                  Continuar
+                </PrimaryButton>
               </div>
               <div className="border rounded-lg p-3 md:p-6 md:w-[80%] mt-4 bg-white">
                 <p className="text-style">Paso 3 (3-5 minutos):</p>
@@ -49,12 +48,11 @@ const page = () => {
                 <p className="text-style">
                   Define a las personas o entidades que heredarán tus bienes.
                 </p>
-                <button
+                <PrimaryButton
                   onClick={() => router.push("/estate/introduction")}
-                  className="text-[14px] text-[#FFFFFF] font-[600] bg-[#0171e3] px-4 py-4 rounded-[100px] uppercase mt-4"
                 >
-                  Empecemos
-                </button>
+                  Continuar
+                </PrimaryButton>
               </div>
               <div className="border rounded-lg p-3 md:p-6 md:w-[80%] mt-4 bg-white">
                 <p className="text-style">Paso 4 (3-5 minutos):</p>
@@ -63,12 +61,11 @@ const page = () => {
                   Selecciona a la persona o personas encargadas de cumplir tus
                   últimas voluntades.
                 </p>
-                <button
+                <PrimaryButton
                   onClick={() => router.push("/executers/introduction")}
-                  className="text-[14px] text-[#FFFFFF] font-[600] bg-[#0171e3] px-4 py-4 rounded-[100px] uppercase mt-4"
                 >
-                  Empecemos
-                </button>
+                  Continuar
+                </PrimaryButton>
               </div>
               <p className="sm-title pt-4">Opcional</p>
               <div className="border bg-white rounded-lg p-3 md:p-6 md:w-[80%] mt-4">
@@ -77,9 +74,9 @@ const page = () => {
                 <p className="text-style">
                   Oportunidad de dejar regalos a personas especiales
                 </p>
-                <button className="text-[14px] text-[#8D9495] font-[600] border-2 border-gray-300 px-4 py-4 rounded-[100px] uppercase mt-4">
-                  Completar
-                </button>
+                <PrimaryButton onClick={() => router.push("")}>
+                  Continuar
+                </PrimaryButton>
               </div>
               <div className="border bg-white rounded-lg p-3 md:p-6 md:w-[80%] mt-4">
                 <p className="text-style">Activos digitales (2-4 minutos)</p>
@@ -87,12 +84,9 @@ const page = () => {
                 <p className="text-style">
                   Distribuye tus bienes o derechos digitales
                 </p>
-                <button
-                  onClick={() => router.push("/digital-asset")}
-                  className="text-[14px] text-[#8D9495] font-[600] border-2 border-gray-300 px-4 py-4 rounded-[100px] uppercase mt-4"
-                >
-                  COMPLETAR
-                </button>
+                <PrimaryButton onClick={() => router.push("/digital-asset")}>
+                  Continuar
+                </PrimaryButton>
               </div>
             </div>
             <div className="w-[50%]">

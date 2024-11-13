@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import Add from "./Add";
 import { sub } from "date-fns";
+import PrimaryButton from "@/components/reusables/PrimaryButton";
 
 const page = () => {
   const router = useRouter();
@@ -87,21 +88,38 @@ const page = () => {
                 </p>
                 <div className="bg-white rounded-lg overflow-hidden">
                   {data &&
-                    data?.map((items, index) => (
-                      <div key={index} className="">
-                        <p
-                          onClick={(e) => handleClick(e, index, items)}
-                          className={`text-style cursor-pointer px-4 py-6 ${
+                    data.map((items, index) => (
+                      <div
+                        key={index}
+                        className="group cursor-pointer"
+                        onClick={(e) => handleClick(e, index, items)}
+                      >
+                        <div
+                          className={`px-4 py-6 ${
                             activeIndex === index
-                              ? "bg-[#0171e3] text-white"
+                              ? "bg-[#0171e3]"
                               : "hover:bg-[#0171e3]"
                           }`}
                         >
-                          {items.title}
-                          <p className="text-gray-400 text-sm">
+                          <p
+                            className={`text-lg ${
+                              activeIndex === index
+                                ? "text-white"
+                                : "text-gray-800 group-hover:text-white"
+                            }`}
+                          >
+                            {items.title}
+                          </p>
+                          <p
+                            className={`text-sm ${
+                              activeIndex === index
+                                ? "text-white"
+                                : "text-gray-400 group-hover:text-white"
+                            }`}
+                          >
                             {items.subTitle}
                           </p>
-                        </p>
+                        </div>
                       </div>
                     ))}
                 </div>
@@ -191,12 +209,9 @@ const page = () => {
                 )}
               </div>
               <div className="flex justify-end py-4">
-                <button
-                  type="submit"
-                  className="text-[14px] text-[#FFFFFF] font-[600] bg-[#0171e3] px-4 py-4 rounded-[100px] uppercase mt-4"
-                >
+                <PrimaryButton onClick={handleSave}>
                   Guardar y continuar
-                </button>
+                </PrimaryButton>
               </div>
             </div>
           </div>

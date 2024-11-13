@@ -2,6 +2,20 @@
 import DashboardLayout from '@/components/common/DashboardLayout';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
+import PrimaryButton from "@/components/reusables/PrimaryButton";
+
+const onClick = () => {
+  console.log('clicked');
+}
+
+const onSubmit = () => {
+  console.log('submitted');
+}
+
+const handleSubmit = () => {
+  console.log('submitted');
+}
+
 
 const page = () => {
   const router = useRouter();
@@ -55,12 +69,9 @@ const page = () => {
                     />
                   </div>
                   <div className='flex py-4'>
-                    <button
-                      type='submit'
-                      className='text-[14px] text-[#FFFFFF] font-[600] bg-[#0171e3] px-4 py-4 rounded-[100px] uppercase mt-4'
-                    >
-                      GUARDAR CAMBIOS
-                    </button>
+                  <PrimaryButton onClick={handleSubmit}>
+                    Guardar y continuar
+                  </PrimaryButton>
                   </div>
                 </div>
               </form>
@@ -91,12 +102,9 @@ const page = () => {
                     />
                   </div>
                   <div className='flex py-4'>
-                    <button
-                      type='submit'
-                      className='text-[14px] text-[#FFFFFF] font-[600] bg-[#0171e3] px-4 py-4 rounded-[100px] uppercase mt-4'
-                    >
-                      GUARDAR CAMBIOS
-                    </button>
+                  <PrimaryButton onClick={handleSubmit}>
+                    Guardar y continuar
+                  </PrimaryButton>
                   </div>
                 </div>
               </form>
@@ -132,12 +140,9 @@ const page = () => {
                     </p>
                   </div>
                   <div className='flex py-4'>
-                    <button
-                      type='submit'
-                      className='text-[14px] text-[#FFFFFF] font-[600] bg-[#0171e3] px-4 py-4 rounded-[100px] uppercase mt-4'
-                    >
-                      GUARDAR CAMBIOS
-                    </button>
+                  <PrimaryButton onClick={handleSubmit}>
+                    Guardar y continuar
+                  </PrimaryButton>
                   </div>
                 </div>
               </form>
@@ -150,12 +155,9 @@ const page = () => {
                     </p>
                   </div>
                   <div className='flex py-4'>
-                    <button
-                      type='submit'
-                      className='text-[14px] text-[#FFFFFF] font-[600] bg-[#0171e3] px-4 py-4 rounded-[100px] uppercase mt-4'
-                    >
-                     BORRAR CUENTA
-                    </button>
+                  <PrimaryButton onClick={handleSubmit}>
+                    Borrar
+                  </PrimaryButton>
                   </div>
                 </div>
               </form>

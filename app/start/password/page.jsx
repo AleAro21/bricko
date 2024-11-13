@@ -3,6 +3,7 @@ import { useRouter } from "next/navigation";
 import graylogo from "../../../assets/greylogo.png";
 import Image from "next/image";
 import { useState } from "react";
+import PrimaryButton from "@/components/reusables/PrimaryButton";
 const page = () => {
   const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
@@ -83,12 +84,9 @@ const page = () => {
                     style={{ width: pass + "%" }}
                   ></div>
                 </div>
-                <button
-                  type="submit"
-                  className="w-full text-[14px] text-[#FFFFFF] font-[600] bg-[#0171e3] px-4 py-4 rounded-[100px] uppercase my-2"
-                >
-                  CONTINUAR
-                </button>
+                <div className="flex justify-center " >
+                    <PrimaryButton>Continuar</PrimaryButton>
+                  </div>
                 <p className="text-style text-center pt-4">
                   Creando una cuenta, aceptas estar en conformidad con nuestros
                   Términos y Políticas de Privacidad.

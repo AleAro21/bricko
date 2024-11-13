@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { FaUser } from "react-icons/fa";
 import graylogo from "@/assets/greylogo.png";
+import PrimaryButton from "@/components/reusables/PrimaryButton";
 
 function OTPInput() {
   const [otp, setOtp] = useState(new Array(6).fill(""));
@@ -50,8 +51,12 @@ function OTPInput() {
         <div className="flex flex-col lg:flex-row items-start lg:items-start space-y-8 lg:space-y-0 lg:space-x-8 mt-8">
           {/* Left Section with Title and Information */}
           <div className="lg:w-1/2 w-full">
-            <h2 className="text-gray-500 text-lg font-bold mb-2 uppercase">Verificación en 2 pasos</h2>
-            <p className="text-2xl font-semibold mb-4">Ingresa el código que te enviamos por SMS</p>
+            <h2 className="text-gray-500 text-lg font-bold mb-2 uppercase">
+              Verificación en 2 pasos
+            </h2>
+            <p className="text-2xl font-semibold mb-4">
+              Ingresa el código que te enviamos por SMS
+            </p>
             <p className="text-gray-600 mb-6">
               Es un código de 6 dígitos enviado al teléfono terminado en 4558.
             </p>
@@ -59,12 +64,16 @@ function OTPInput() {
             {/* Email Container with Icon */}
             <div className="flex items-center mb-4 p-4 bg-gray-50 border border-gray-300 rounded-[100px] shadow-sm inline-flex">
               <FaUser className="text-blue-600 text-xl mr-2" />
-              <span className="text-gray-700">correodeusuario@testamento.com</span>
+              <span className="text-gray-700">
+                correodeusuario@testamento.com
+              </span>
             </div>
 
             <div className="border-b border-gray-300 my-4 w-full px-4"></div>
 
-            <a href="#" className="text-blue-600 text-sm">Necesito ayuda</a>
+            <a href="#" className="text-blue-600 text-sm">
+              Necesito ayuda
+            </a>
           </div>
 
           {/* Right Section with OTP Input and Button */}
@@ -86,7 +95,9 @@ function OTPInput() {
 
             <div className="flex w-full justify-start mb-4">
               <p className="text-gray-500 text-sm">
-                {timer > 0 ? `Reenviar código en 00:${timer < 10 ? `0${timer}` : timer}` : (
+                {timer > 0 ? (
+                  `Reenviar código en 00:${timer < 10 ? `0${timer}` : timer}`
+                ) : (
                   <span
                     className="text-blue-600 cursor-pointer"
                     onClick={resetTimer}
@@ -98,13 +109,13 @@ function OTPInput() {
             </div>
 
             <div className="flex w-full items-center justify-between">
-              <button
-                className="w-full text-[14px] text-[#FFFFFF] font-[600] bg-[#0171e3] px-4 py-4 rounded-[100px] uppercase"
-                onClick={handleSubmit}
+              <div className="flex justify-start ">
+                <PrimaryButton onClick={handleSubmit}>Continuar</PrimaryButton>
+              </div>
+              <a
+                href="#"
+                className="text-blue-600 text-sm ml-4 whitespace-nowrap"
               >
-                Confirmar código
-              </button>
-              <a href="#" className="text-blue-600 text-sm ml-4 whitespace-nowrap">
                 Elegir otro método
               </a>
             </div>

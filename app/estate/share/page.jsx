@@ -2,6 +2,7 @@
 import DashboardLayout from "@/components/common/DashboardLayout";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import PrimaryButton from "@/components/reusables/PrimaryButton";
 
 const Page = () => {
   const router = useRouter();
@@ -85,17 +86,15 @@ const Page = () => {
 
               {/* Navigation Buttons */}
               <div className="w-full flex items-end justify-end">
-                <button
+                <PrimaryButton
                   onClick={() => {
                     if (nameValue1 + nameValue2 === 100) {
                       router.push("/estate/secondary");
                     }
                   }}
-                  className="text-[14px] text-[#FFFFFF] font-[600] bg-[#0171e3] px-4 py-4 rounded-[100px] uppercase mt-4"
-                  disabled={nameValue1 + nameValue2 !== 100}
                 >
-                  CONTINUAR
-                </button>
+                  Guardar y continuar
+                </PrimaryButton>
               </div>
             </div>
           </div>

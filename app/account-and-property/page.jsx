@@ -3,6 +3,7 @@ import DashboardLayout from "@/components/common/DashboardLayout";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import Add from "./Add";
+import PrimaryButton from "@/components/reusables/PrimaryButton";
 
 const page = () => {
   const router = useRouter();
@@ -53,14 +54,13 @@ const page = () => {
                   </div>
                 </div>
                 <div className="w-full flex items-end justify-end">
-                  <button
+                  <PrimaryButton
                     onClick={() =>
                       router.push("/summary?completed=account-and-property")
                     }
-                    className="text-[14px] text-[#FFFFFF] font-[600] bg-[#0171e3] px-4 py-4 rounded-[100px] uppercase mt-4"
                   >
-                    CONTINUAR
-                  </button>
+                    Guardar y continuar
+                  </PrimaryButton>
                 </div>
               </div>
             </div>

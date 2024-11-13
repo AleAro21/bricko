@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
+import PrimaryButton from "@/components/reusables/PrimaryButton";
 
 const Page = () => {
   const router = useRouter();
@@ -86,7 +87,7 @@ const Page = () => {
                   {`Sólo te llamaremos para ayudarte con tu testamento`}
                 </label>
                 <PhoneInput
-                  country={"us"}
+                  country={"mx"}
                   value={phone}
                   onChange={handlePhoneChange}
                   inputProps={{
@@ -115,12 +116,9 @@ const Page = () => {
                 )}
               </div>
               <div className="flex justify-end py-4">
-                <button
-                  type="submit"
-                  className="text-[14px] text-[#FFFFFF] font-[600] bg-[#0171e3] px-4 py-4 rounded-[100px] uppercase mt-4"
-                >
+                <PrimaryButton onClick={handleSubmit}>
                   Guardar y continuar
-                </button>
+                </PrimaryButton>
               </div>
             </div>
           </form>

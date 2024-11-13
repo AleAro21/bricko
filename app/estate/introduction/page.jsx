@@ -1,6 +1,7 @@
 "use client";
 import DashboardLayout from "@/components/common/DashboardLayout";
 import { useRouter } from "next/navigation";
+import PrimaryButton from "@/components/reusables/PrimaryButton";
 
 const page = () => {
   const router = useRouter();
@@ -13,7 +14,9 @@ const page = () => {
             <div className="w-full flex">
               <div className="w-[65%] flex flex-col">
                 <div className="">
-                  <p className="title py-2">Recomendaciones (Consultar abogados) </p>
+                  <p className="title py-2">
+                    Recomendaciones (Consultar abogados){" "}
+                  </p>
                   <p className="text-style py-4">
                     Su patrimonio es todo lo que posee, excepto cualquier
                     obsequio específico que decida dejar a otras personas más
@@ -87,12 +90,9 @@ const page = () => {
                   </div>
                 </div>
                 <div className="w-full flex items-end justify-end">
-                  <button
-                    onClick={() => router.push("/estate/people")}
-                    className="text-[14px] text-[#FFFFFF] font-[600] bg-[#0171e3] px-4 py-4 rounded-[100px] uppercase mt-4"
-                  >
-                    CONTINUAR
-                  </button>
+                  <PrimaryButton onClick={() => router.push("/estate/people")}>
+                    Guardar y continuar
+                  </PrimaryButton>
                 </div>
               </div>
             </div>

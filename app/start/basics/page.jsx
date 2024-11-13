@@ -5,6 +5,7 @@ import Apple from "@/assets/Apple.png";
 import Facebook from "@/assets/Facebook.png";
 import Google from "@/assets/Google.png";
 import Image from "next/image";
+import PrimaryButton from "@/components/reusables/PrimaryButton";
 
 const page = () => {
   const router = useRouter();
@@ -107,12 +108,9 @@ const page = () => {
                     Deseo recibir correos electrónicos con consejos, ofertas y
                     actualizaciones ocasionales de Testamento.mx
                   </p>
-                  <button
-                    type="submit"
-                    className="w-full text-center text-[14px] text-[#FFFFFF] font-[600] bg-[#0171e3] px-4 py-4 rounded-[100px] uppercase cursor-pointer"
-                  >
-                    CONTINUAR
-                  </button>
+                  <div className="flex justify-center " >
+                    <PrimaryButton>Continuar</PrimaryButton>
+                  </div>
                   <div className="text-style pt-4 mb-10 text-center">
                     <p onClick={handleLoginClick} className="cursor-pointer">
                       Ya tengo cuenta{" "}
