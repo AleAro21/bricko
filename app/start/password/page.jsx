@@ -4,39 +4,50 @@ import graylogo from "../../../assets/greylogo.png";
 import Image from "next/image";
 import { useState } from "react";
 import PrimaryButton from "@/components/reusables/PrimaryButton";
+
 const page = () => {
   const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
   const [password, setPassword] = useState("");
-  const pass = Number(password.length) * 10;
+  const pass = Math.min(password.length * 10, 100); // Limits progress to 100%
+  const strengthLabel = pass < 40 ? "Débil" : pass < 70 ? "Mediana" : "Fuerte";
+
   const handleSubmit = (e) => {
     e.preventDefault();
     router.push("/start/phoneNumber");
   };
+
+  // Dynamic color based on pass value, transitioning from red to green
+  const getColor = () => {
+    const red = Math.max(255 - (pass * 2), 0); // Decrease red as pass increases
+    const green = Math.min(pass * 2, 128); // Increase green as pass increases
+    return `rgb(${red}, ${green}, 0)`; // Resulting color
+  };
+
   return (
     <>
       <main className="container w-3/4 mx-auto flex flex-col h-full min-h-screen">
-        <div className="py-4 ">
+        <div className="py-4">
           <Image src={graylogo} width={100} />
         </div>
         <div className="flex flex-col md:w-[50%] max-w-[500px] mx-auto items-center justify-center h-full">
-          <div className="">
+          <div>
             <p className="title py-2 text-center md:w-[60%] mx-auto">
               Crea tu contraseña
             </p>
             <p className="text-style py-4 text-center md:w-[60%] mx-auto">
               Una contraseña fuerte es tu primera defensa. Asegúrate de no
-              compartirla
+              compartirla.
             </p>
             <form onSubmit={handleSubmit} className="">
               <div className="mb-2">
                 <div className="py-3">
-                  <label htmlFor="country" className="text-style">
+                  <label htmlFor="password" className="text-style">
                     {`Contraseña (mínimo 10 caracteres)`}
                   </label>
                   <input
                     type={showPassword ? "text" : "password"}
-                    id="country"
+                    id="password"
                     className="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-6"
                     required
                     minLength={10}
@@ -44,7 +55,7 @@ const page = () => {
                   />
                   <div
                     onClick={() => setShowPassword(!showPassword)}
-                    className="flex items-center justify-end text-style py-4 gap-2"
+                    className="flex items-center justify-end text-style py-4 gap-2 cursor-pointer"
                   >
                     {showPassword ? (
                       <svg
@@ -52,7 +63,7 @@ const page = () => {
                         width="16"
                         height="16"
                         fill="currentColor"
-                        class="bi bi-eye-slash-fill"
+                        className="bi bi-eye-slash-fill"
                         viewBox="0 0 16 16"
                       >
                         <path d="m10.79 12.912-1.614-1.615a3.5 3.5 0 0 1-4.474-4.474l-2.06-2.06C.938 6.278 0 8 0 8s3 5.5 8 5.5a7 7 0 0 0 2.79-.588M5.21 3.088A7 7 0 0 1 8 2.5c5 0 8 5.5 8 5.5s-.939 1.721-2.641 3.238l-2.062-2.062a3.5 3.5 0 0 0-4.474-4.474z" />
@@ -64,7 +75,7 @@ const page = () => {
                         width="16"
                         height="16"
                         fill="currentColor"
-                        class="bi bi-eye-fill"
+                        className="bi bi-eye-fill"
                         viewBox="0 0 16 16"
                       >
                         <path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0" />
@@ -76,17 +87,31 @@ const page = () => {
                     </span>
                   </div>
                 </div>
-                <div className="flex w-full h-[5px] bg-gray-500 rounded-lg items-center my-2">
+                <div className="relative mt-4 w-full h-3 rounded-full bg-gray-200 overflow-hidden">
                   <div
-                    className={`${
-                      pass >= 100 ? "bg-green-700" : "bg-red-500"
-                    } h-full flex rounded-lg `}
-                    style={{ width: pass + "%" }}
+                    className="h-full transition-all duration-500 rounded-full"
+                    style={{
+                      width: `${pass}%`,
+                      backgroundColor: getColor(),
+                    }}
                   ></div>
                 </div>
-                <div className="flex justify-center " >
-                    <PrimaryButton>Continuar</PrimaryButton>
-                  </div>
+                <div className="flex justify-center mt-2">
+                  <span
+                    className={`text-sm ${
+                      pass >= 70
+                        ? "text-green-600"
+                        : pass >= 40
+                        ? "text-yellow-600"
+                        : "text-red-600"
+                    }`}
+                  >
+                    {strengthLabel}
+                  </span>
+                </div>
+                <div className="flex justify-center mt-4">
+                  <PrimaryButton>Continuar</PrimaryButton>
+                </div>
                 <p className="text-style text-center pt-4">
                   Creando una cuenta, aceptas estar en conformidad con nuestros
                   Términos y Políticas de Privacidad.
@@ -94,7 +119,6 @@ const page = () => {
               </div>
             </form>
           </div>
-          <div className="w-full flex items-center justify-between"></div>
         </div>
       </main>
     </>
