@@ -5,10 +5,11 @@ import { useState } from "react";
 import Add from "./Add";
 import PrimaryButton from "@/components/reusables/PrimaryButton";
 
-const page = () => {
+const Page: React.FC = () => {
   const router = useRouter();
-  const [showModal, setShowModal] = useState(false);
-  const clickHandler = () => {
+  const [showModal, setShowModal] = useState<boolean>(false);
+  
+  const clickHandler = (): void => {
     setShowModal(true);
   };
 
@@ -22,18 +23,24 @@ const page = () => {
               <div className="w-[50%] flex flex-col">
                 <div className="">
                   <p className="title py-2 ">
-                    Enumere sus cuentas y propiedades
+                    ¿Quién le gustaría que heredara su patrimonio?
                   </p>
                   <p className="text-style py-4">
-                    Esto incluye cuentas bancarias, pensiones, pólizas de
-                    seguros de propiedad y de vida. Ayuda a tus albaceas, las
-                    personas que se ocuparán de su patrimonio después de su
-                    muerte, a saber con qué proveedores comunicarse.
+                    Puedes decidir cuánto recibe cada persona en el siguiente
+                    paso. También podrás elegir copias de seguridad en caso de
+                    que alguno de ellos muera antes que tú.
                   </p>
-                  <p className="text-style py-4">
-                    No solicitaremos detalles específicos como números de
-                    cuenta.
-                  </p>
+                  <div className="bg-white w-full rounded-lg my-4 px-4 py-6 flex justify-between items-center">
+                    <div className="">
+                      <p className="sm-title">
+                        Herederos legales por partes iguales
+                      </p>
+                      <p className="text-style"></p>
+                    </div>
+                    <div className="">
+                      <input type="checkbox" className="w-6 h-6 bg-white" />
+                    </div>
+                  </div>
                   <div
                     onClick={clickHandler}
                     className="bg-white rounded-lg overflow-hidden flex items-center justify-center cursor-pointer"
@@ -46,8 +53,8 @@ const page = () => {
                         height="24px"
                       >
                         <path
+                          fill="#0171e3"
                           d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z"
-                          fill="#0066cc"
                         />
                       </svg>
                     </p>
@@ -55,9 +62,7 @@ const page = () => {
                 </div>
                 <div className="w-full flex items-end justify-end">
                   <PrimaryButton
-                    onClick={() =>
-                      router.push("/summary?completed=account-and-property")
-                    }
+                    onClick={() => router.push("/estate/charities")}
                   >
                     Guardar y continuar
                   </PrimaryButton>
@@ -71,4 +76,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;

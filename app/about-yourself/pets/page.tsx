@@ -1,19 +1,26 @@
 "use client";
+import { FC, useState } from 'react';
 import DashboardLayout from "@/components/common/DashboardLayout";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
 import PrimaryButton from "@/components/reusables/PrimaryButton";
 
-const Page = () => {
-  const router = useRouter();
-  const [activeIndex, setActiveIndex] = useState(null);
+interface PetOption {
+  title: string;
+}
 
-  const handleClick = (e, index) => {
+const PetsPage: FC = () => {
+  const router = useRouter();
+  const [activeIndex, setActiveIndex] = useState<number | null>(null);
+
+  const handleClick = (e: React.MouseEvent<HTMLDivElement>, index: number): void => {
     e.preventDefault();
     setActiveIndex(index === activeIndex ? null : index);
   };
 
-  const data = [{ title: "Sí" }, { title: "No" }];
+  const data: PetOption[] = [
+    { title: "Sí" },
+    { title: "No" }
+  ];
 
   return (
     <DashboardLayout>
@@ -28,32 +35,31 @@ const Page = () => {
                   sección.
                 </p>
                 <div className="bg-white rounded-lg overflow-hidden">
-                  {data &&
-                    data.map((item, index) => (
+                  {data.map((item, index) => (
+                    <div
+                      key={index}
+                      onClick={(e) => handleClick(e, index)}
+                      className="group cursor-pointer"
+                    >
                       <div
-                        key={index}
-                        onClick={(e) => handleClick(e, index)}
-                        className="group cursor-pointer"
+                        className={`px-4 py-6 ${
+                          activeIndex === index
+                            ? "bg-[#0171e3] text-white"
+                            : "group-hover:bg-[#0171e3] group-hover:text-white text-gray-800"
+                        }`}
                       >
-                        <div
-                          className={`px-4 py-6 ${
+                        <p
+                          className={`text-lg ${
                             activeIndex === index
-                              ? "bg-[#0171e3] text-white"
-                              : "group-hover:bg-[#0171e3] group-hover:text-white text-gray-800"
+                              ? "text-white"
+                              : "group-hover:text-white"
                           }`}
                         >
-                          <p
-                            className={`text-lg ${
-                              activeIndex === index
-                                ? "text-white"
-                                : "group-hover:text-white"
-                            }`}
-                          >
-                            {item.title}
-                          </p>
-                        </div>
+                          {item.title}
+                        </p>
                       </div>
-                    ))}
+                    </div>
+                  ))}
                 </div>
               </div>
               <div className="w-full flex items-center justify-between">
@@ -77,4 +83,4 @@ const Page = () => {
   );
 };
 
-export default Page;
+export default PetsPage;

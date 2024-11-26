@@ -1,7 +1,22 @@
 import Modal from '@/components/common/Modal';
 import React from 'react';
 
-const Add = ({ setShowModal, showModal }) => {
+interface AddProps {
+  setShowModal: (show: boolean) => void;
+  showModal: boolean;
+}
+
+interface FormElements extends HTMLFormControlsCollection {
+  country: HTMLInputElement;
+  relation: HTMLInputElement;
+  remember: HTMLInputElement;
+}
+
+interface AddFormElement extends HTMLFormElement {
+  readonly elements: FormElements;
+}
+
+const Add: React.FC<AddProps> = ({ setShowModal, showModal }) => {
   return (
     <Modal setShowModal={setShowModal} showModal={showModal}>
       <div className='w-full min-w-[400px]'>
@@ -36,7 +51,7 @@ const Add = ({ setShowModal, showModal }) => {
               </label>
               <input
                 type='text'
-                id='relation' 
+                id='relation'
                 className='bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-6 my-2'
                 required
               />
@@ -48,6 +63,7 @@ const Add = ({ setShowModal, showModal }) => {
                   id='remember'
                   type='radio'
                   value=''
+                  name='age'
                   className='w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-blue-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-blue-600 dark:ring-offset-gray-800'
                   required
                 />
@@ -58,6 +74,7 @@ const Add = ({ setShowModal, showModal }) => {
                   id='remember'
                   type='radio'
                   value=''
+                  name='age'
                   className='w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-blue-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-blue-600 dark:ring-offset-gray-800'
                   required
                 />
@@ -65,6 +82,7 @@ const Add = ({ setShowModal, showModal }) => {
               </div>
             </div>
             <button
+              type="button"
               onClick={() => setShowModal(false)}
               className='w-full text-[14px] text-[#FFFFFF] font-[600] bg-[#0171e3] px-4 py-4 rounded-[100px] uppercase mt-4'
             >

@@ -1,13 +1,23 @@
 "use client";
+import { FC, FormEvent, useState } from 'react';
 import DashboardLayout from "@/components/common/DashboardLayout";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
 import { isValid, parse, differenceInYears } from "date-fns";
 import PrimaryButton from "@/components/reusables/PrimaryButton";
 
-const Page = () => {
+interface FormValues {
+  fullName: string;
+  secondName: string;
+  fatherLastName: string;
+  motherLastName: string;
+  day: string;
+  month: string;
+  year: string;
+}
+
+const NamePage: FC = () => {
   const router = useRouter();
-  const [formValues, setFormValues] = useState({
+  const [formValues, setFormValues] = useState<FormValues>({
     fullName: "",
     secondName: "",
     fatherLastName: "",
@@ -17,7 +27,7 @@ const Page = () => {
     year: "",
   });
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
     const { fullName, day, month, year } = formValues;
 
@@ -45,9 +55,9 @@ const Page = () => {
     router.push("/about-yourself/basic");
   };
 
-  const handleChange = (e) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
     const { id, value } = e.target;
-    setFormValues({ ...formValues, [id]: value });
+    setFormValues((prev) => ({ ...prev, [id]: value }));
   };
 
   return (
@@ -66,9 +76,6 @@ const Page = () => {
                   conducir.
                 </p>
                 <p className="text-style">Nombre *</p>
-                {/* <label htmlFor='fullName' className='text-style'>
-                  {` Por ejemplo, Elizabeth Joy Smith.`}
-                </label> */}
                 <input
                   type="text"
                   id="fullName"
@@ -80,9 +87,6 @@ const Page = () => {
               </div>
               <div className="w-full">
                 <p className="text-style">Segundo Nombre</p>
-                {/* <label htmlFor='fullName' className='text-style'>
-                  {` Por ejemplo, Elizabeth Joy Smith.`}
-                </label> */}
                 <input
                   type="text"
                   id="secondName"
@@ -94,9 +98,6 @@ const Page = () => {
               </div>
               <div className="w-full">
                 <p className="text-style">Apellido Paterno *</p>
-                {/* <label htmlFor='fullName' className='text-style'>
-                  {` Por ejemplo, Elizabeth Joy Smith.`}
-                </label> */}
                 <input
                   type="text"
                   id="fatherLastName"
@@ -108,7 +109,6 @@ const Page = () => {
               </div>
               <div className="w-full">
                 <p className="text-style">Apellido Materno *</p>
-                {/*  */}
                 <input
                   type="text"
                   id="motherLastName"
@@ -121,11 +121,11 @@ const Page = () => {
 
               <div className="w-full border-t-2 mt-3">
                 <p className="text-style pt-4">Tu fecha de nacimiento</p>
-                <p className="text-style pb-4 ">dd / mm / aa</p>
+                <p className="text-style pb-4">dd / mm / aa</p>
                 <div className="flex w-full items-center justify-between">
                   <div className="w-[25%]">
                     <label htmlFor="day" className="text-style">
-                      {`Día`}
+                      Día
                     </label>
                     <input
                       type="text"
@@ -138,7 +138,7 @@ const Page = () => {
                   </div>
                   <div className="w-[25%]">
                     <label htmlFor="month" className="text-style">
-                      {`Mes`}
+                      Mes
                     </label>
                     <input
                       type="text"
@@ -151,7 +151,7 @@ const Page = () => {
                   </div>
                   <div className="w-[40%]">
                     <label htmlFor="year" className="text-style">
-                      {`Año`}
+                      Año
                     </label>
                     <input
                       type="text"
@@ -164,7 +164,7 @@ const Page = () => {
                   </div>
                 </div>
                 <div className="flex justify-end py-4">
-                  <PrimaryButton onClick={handleSubmit}>
+                  <PrimaryButton type="submit">
                     Guardar y continuar
                   </PrimaryButton>
                 </div>
@@ -177,4 +177,4 @@ const Page = () => {
   );
 };
 
-export default Page;
+export default NamePage;

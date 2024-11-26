@@ -1,14 +1,16 @@
 "use client";
+import { FC } from 'react';
 import DashboardLayout from "@/components/common/DashboardLayout";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import Add from "./Add";
 import PrimaryButton from "@/components/reusables/PrimaryButton";
 
-const page = () => {
+const DigitalAssetsPage: FC = () => {
   const router = useRouter();
-  const [showModal, setShowModal] = useState(false);
-  const clickHandler = () => {
+  const [showModal, setShowModal] = useState<boolean>(false);
+
+  const handleAddAsset = (): void => {
     setShowModal(true);
   };
 
@@ -21,20 +23,20 @@ const page = () => {
             <div className="w-full flex">
               <div className="w-[50%] flex flex-col">
                 <div className="">
-                  <p className="title py-2 ">¿Tiene algún activo digital?</p>
+                  <p className="title py-2">¿Tiene algún activo digital?</p>
                   <p className="text-style py-4">
                     Seleccionar activos digitales
                   </p>
                   <div
-                    onClick={clickHandler}
+                    onClick={handleAddAsset}
                     className="bg-white rounded-lg overflow-hidden flex items-center justify-center cursor-pointer"
                   >
                     <p className="flex gap-2 py-10 text-style">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         viewBox="0 0 448 512"
-                        width={"24px"}
-                        height={"24px"}
+                        width="24px"
+                        height="24px"
                       >
                         <path
                           fill="#0171e3"
@@ -58,4 +60,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default DigitalAssetsPage;

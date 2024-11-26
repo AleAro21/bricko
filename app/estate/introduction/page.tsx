@@ -1,9 +1,10 @@
 "use client";
+import { FC } from 'react';
 import DashboardLayout from "@/components/common/DashboardLayout";
 import { useRouter } from "next/navigation";
 import PrimaryButton from "@/components/reusables/PrimaryButton";
 
-const page = () => {
+const IntroductionPage: FC = () => {
   const router = useRouter();
 
   return (
@@ -64,8 +65,8 @@ const page = () => {
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         viewBox="0 0 512 512"
-                        width={"24px"}
-                        height={"24px"}
+                        width="24px"
+                        height="24px"
                       >
                         <path
                           fill="#D00E01"
@@ -103,4 +104,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default IntroductionPage;

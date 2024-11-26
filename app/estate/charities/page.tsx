@@ -1,19 +1,24 @@
 'use client';
+import { FC } from 'react';
 import DashboardLayout from '@/components/common/DashboardLayout';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import PrimaryButton from "@/components/reusables/PrimaryButton";
 
-const Page = () => {
-  const router = useRouter();
-  const [activeIndex, setActiveIndex] = useState(null);
+interface CharityOption {
+  title: string;
+}
 
-  const handleClick = (e, index) => {
+const CharitiesPage: FC = () => {
+  const router = useRouter();
+  const [activeIndex, setActiveIndex] = useState<number | null>(null);
+
+  const handleClick = (e: React.MouseEvent<HTMLDivElement>, index: number): void => {
     e.preventDefault();
     setActiveIndex(index === activeIndex ? null : index);
   };
 
-  const data = [
+  const charityOptions: CharityOption[] = [
     { title: 'Sí' },
     { title: 'No' },
   ];
@@ -33,7 +38,7 @@ const Page = () => {
                   benéficas para contribuir a causas que les apasionan.
                 </p>
                 <div className='bg-white rounded-lg overflow-hidden'>
-                  {data.map((item, index) => (
+                  {charityOptions.map((item, index) => (
                     <div
                       key={index}
                       onClick={(e) => handleClick(e, index)}
@@ -53,9 +58,9 @@ const Page = () => {
                 </div>
               </div>
               <div className='w-full flex items-end justify-end'>
-              <PrimaryButton  onClick={() => router.push('/estate/share')}>
-                    Guardar y continuar
-                  </PrimaryButton>
+                <PrimaryButton onClick={() => router.push('/estate/share')}>
+                  Guardar y continuar
+                </PrimaryButton>
               </div>
             </div>
           </div>
@@ -65,4 +70,4 @@ const Page = () => {
   );
 };
 
-export default Page;
+export default CharitiesPage;
