@@ -1,0 +1,76 @@
+"use client";
+import { FC } from 'react';
+import DashboardLayout from "@/components/common/DashboardLayout";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import Add from "./Add";
+import PrimaryButton from "@/components/reusables/PrimaryButton";
+
+const AccountAndPropertyPage: FC = () => {
+  const router = useRouter();
+  const [showModal, setShowModal] = useState<boolean>(false);
+
+  const handleAddClick = (): void => {
+    setShowModal(true);
+  };
+
+  return (
+    <>
+      <Add setShowModal={setShowModal} showModal={showModal} />
+      <DashboardLayout>
+        <div className="container w-3/4 mx-auto flex flex-col h-full min-h-screen">
+          <div className="w-full flex flex-col py-12">
+            <div className="w-full flex">
+              <div className="w-[50%] flex flex-col">
+                <div className="">
+                  <p className="title py-2">
+                    Enumere sus cuentas y propiedades
+                  </p>
+                  <p className="text-style py-4">
+                    Esto incluye cuentas bancarias, pensiones, pólizas de
+                    seguros de propiedad y de vida. Ayuda a tus albaceas, las
+                    personas que se ocuparán de su patrimonio después de su
+                    muerte, a saber con qué proveedores comunicarse.
+                  </p>
+                  <p className="text-style py-4">
+                    No solicitaremos detalles específicos como números de
+                    cuenta.
+                  </p>
+                  <div
+                    onClick={handleAddClick}
+                    className="bg-white rounded-lg overflow-hidden flex items-center justify-center cursor-pointer"
+                  >
+                    <p className="flex gap-2 py-10 text-style">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 448 512"
+                        width="24px"
+                        height="24px"
+                      >
+                        <path
+                          d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z"
+                          fill="#0066cc"
+                        />
+                      </svg>
+                    </p>
+                  </div>
+                </div>
+                <div className="w-full flex items-end justify-end">
+                  <PrimaryButton
+                    onClick={() =>
+                      router.push("/summary?completed=account-and-property")
+                    }
+                  >
+                    Guardar y continuar
+                  </PrimaryButton>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </DashboardLayout>
+    </>
+  );
+};
+
+export default AccountAndPropertyPage;

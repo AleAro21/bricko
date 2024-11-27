@@ -1,0 +1,86 @@
+"use client";
+import { FC, useState } from 'react';
+import DashboardLayout from "@/components/common/DashboardLayout";
+import { useRouter } from "next/navigation";
+import PrimaryButton from "@/components/reusables/PrimaryButton";
+
+interface PetOption {
+  title: string;
+}
+
+const PetsPage: FC = () => {
+  const router = useRouter();
+  const [activeIndex, setActiveIndex] = useState<number | null>(null);
+
+  const handleClick = (e: React.MouseEvent<HTMLDivElement>, index: number): void => {
+    e.preventDefault();
+    setActiveIndex(index === activeIndex ? null : index);
+  };
+
+  const data: PetOption[] = [
+    { title: "Sí" },
+    { title: "No" }
+  ];
+
+  return (
+    <DashboardLayout>
+      <div className="container w-3/4 mx-auto flex flex-col h-full min-h-screen">
+        <div className="w-full flex flex-col py-12">
+          <div className="w-full flex">
+            <div className="w-[50%] flex flex-col">
+              <div>
+                <p className="title py-2">¿Tiene mascotas?</p>
+                <p className="text-style py-4">
+                  Puedes elegir tutores para tus mascotas en la siguiente
+                  sección.
+                </p>
+                <div className="bg-white rounded-lg overflow-hidden">
+                  {data.map((item, index) => (
+                    <div
+                      key={index}
+                      onClick={(e) => handleClick(e, index)}
+                      className="group cursor-pointer"
+                    >
+                      <div
+                        className={`px-4 py-6 ${
+                          activeIndex === index
+                            ? "bg-[#0171e3] text-white"
+                            : "group-hover:bg-[#0171e3] group-hover:text-white text-gray-800"
+                        }`}
+                      >
+                        <p
+                          className={`text-lg ${
+                            activeIndex === index
+                              ? "text-white"
+                              : "group-hover:text-white"
+                          }`}
+                        >
+                          {item.title}
+                        </p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              <div className="w-full flex items-center justify-between">
+                <div
+                  onClick={() => router.back()}
+                  className="flex items-center text-[14px] font-[500] gap-2 pt-1 text-[#9999] cursor-pointer border-b border-transparent hover:border-[#9999] transition-all delay-150"
+                ></div>
+                <PrimaryButton
+                  onClick={() =>
+                    router.push("/summary?completed=about-your-self")
+                  }
+                >
+                  Guardar y continuar
+                </PrimaryButton>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </DashboardLayout>
+  );
+};
+
+export default PetsPage;
