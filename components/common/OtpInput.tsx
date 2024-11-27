@@ -1,30 +1,42 @@
-"use client";
-import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
-import Image from "next/image";
-import { FaUser, FaPhoneAlt, FaSms } from "react-icons/fa";
-import { motion, AnimatePresence } from "framer-motion";
-import graylogo from "@/assets/greylogo.png";
-import PrimaryButton from "@/components/reusables/PrimaryButton";
+'use client';
 
-function OTPInput() {
-  const [otp, setOtp] = useState(new Array(6).fill(""));
-  const [timer, setTimer] = useState(30);
-  const [showPopup, setShowPopup] = useState(false);
+import React, { useState, useEffect, ChangeEvent } from 'react';
+import { useRouter } from 'next/navigation';
+import Image from 'next/image';
+import { FaUser, FaPhoneAlt, FaSms } from 'react-icons/fa';
+import { motion, AnimatePresence } from 'framer-motion';
+import graylogo from '@/assets/greylogo.png';
+import PrimaryButton from '@/components/reusables/PrimaryButton';
+
+interface OTPInputProps {
+  length?: number;
+  onComplete?: (otp: string) => void;
+}
+
+const OTPInput: React.FC<OTPInputProps> = ({ length = 6, onComplete }) => {
+  const [otp, setOtp] = useState<string[]>(new Array(length).fill(''));
+  const [timer, setTimer] = useState<number>(30);
+  const [showPopup, setShowPopup] = useState<boolean>(false);
   const router = useRouter();
 
-  const handleChange = (element, index) => {
-    if (isNaN(element.value)) return;
+  const handleChange = (element: HTMLInputElement, index: number): void => {
+    if (isNaN(Number(element.value))) return;
 
-    setOtp([...otp.map((d, idx) => (idx === index ? element.value : d))]);
+    const newOtp = [...otp];
+    newOtp[index] = element.value;
+    setOtp(newOtp);
 
     if (element.nextSibling) {
-      element.nextSibling.focus();
+      (element.nextSibling as HTMLInputElement).focus();
     }
   };
 
-  const handleSubmit = () => {
-    router.push("/start/congratulation");
+  const handleSubmit = (): void => {
+    const otpString = otp.join('');
+    if (onComplete) {
+      onComplete(otpString);
+    }
+    router.push('/start/congratulation');
   };
 
   useEffect(() => {
@@ -36,11 +48,11 @@ function OTPInput() {
     }
   }, [timer]);
 
-  const resetTimer = () => {
+  const resetTimer = (): void => {
     setTimer(30);
   };
 
-  const togglePopup = () => {
+  const togglePopup = (): void => {
     setShowPopup(!showPopup);
   };
 
@@ -81,10 +93,10 @@ function OTPInput() {
                 <input
                   className="w-12 h-12 border rounded-lg text-center text-xl focus:outline-none focus:border-blue-500 border-gray-300"
                   type="text"
-                  maxLength="1"
+                  maxLength={1}
                   key={index}
                   value={data}
-                  onChange={(e) => handleChange(e.target, index)}
+                  onChange={(e: ChangeEvent<HTMLInputElement>) => handleChange(e.target, index)}
                   onFocus={(e) => e.target.select()}
                 />
               ))}
@@ -116,7 +128,6 @@ function OTPInput() {
               </a>
             </div>
 
-            {/* Animate presence for the small box appearing beside the main container */}
             <AnimatePresence>
               {showPopup && (
                 <motion.div
@@ -151,6 +162,6 @@ function OTPInput() {
       </div>
     </div>
   );
-}
+};
 
 export default OTPInput;
