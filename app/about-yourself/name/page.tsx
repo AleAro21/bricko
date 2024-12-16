@@ -4,15 +4,15 @@ import DashboardLayout from "@/components/common/DashboardLayout";
 import { useRouter } from "next/navigation";
 import { isValid, parse, differenceInYears } from "date-fns";
 import PrimaryButton from "@/components/reusables/PrimaryButton";
+import Calendar from "@/components/common/calendar/Calendar";
+import { validateAge } from "@/components/common/calendar/dateValidation";
 
 interface FormValues {
   fullName: string;
   secondName: string;
   fatherLastName: string;
   motherLastName: string;
-  day: string;
-  month: string;
-  year: string;
+  birthDate: Date | null;
 }
 
 const NamePage: FC = () => {
@@ -22,33 +22,23 @@ const NamePage: FC = () => {
     secondName: "",
     fatherLastName: "",
     motherLastName: "",
-    day: "",
-    month: "",
-    year: "",
+    birthDate: null,
   });
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
-    const { fullName, day, month, year } = formValues;
+    const { fullName, fatherLastName, motherLastName, birthDate } = formValues;
 
-    // Check if all required fields are filled
-    if (!fullName || !day || !month || !year) {
+    // Check if required fields are filled
+    if (!fullName || !fatherLastName || !motherLastName) {
       alert("Por favor, complete todos los campos obligatorios");
       return;
     }
 
-    // Validate date format
-    const dateString = `${year}-${month}-${day}`;
-    const parsedDate = parse(dateString, "yyyy-MM-dd", new Date());
-    if (!isValid(parsedDate)) {
-      alert("Por favor, introduzca una fecha válida");
-      return;
-    }
-
-    // Check age range (18 to 100 years)
-    const age = differenceInYears(new Date(), parsedDate);
-    if (age < 18 || age > 100) {
-      alert("La edad debe ser mayor a 18 y menor a 100 años");
+    // Validate age
+    const ageError = validateAge(birthDate);
+    if (ageError) {
+      alert(ageError);
       return;
     }
 
@@ -58,6 +48,10 @@ const NamePage: FC = () => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
     const { id, value } = e.target;
     setFormValues((prev) => ({ ...prev, [id]: value }));
+  };
+
+  const handleDateChange = (date: Date | null): void => {
+    setFormValues((prev) => ({ ...prev, birthDate: date }));
   };
 
   return (
@@ -93,7 +87,6 @@ const NamePage: FC = () => {
                   value={formValues.secondName}
                   onChange={handleChange}
                   className="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-6 my-2"
-                  required
                 />
               </div>
               <div className="w-full">
@@ -120,49 +113,14 @@ const NamePage: FC = () => {
               </div>
 
               <div className="w-full border-t-2 mt-3">
-                <p className="text-style pt-4">Tu fecha de nacimiento</p>
-                <p className="text-style pb-4">dd / mm / aa</p>
-                <div className="flex w-full items-center justify-between">
-                  <div className="w-[25%]">
-                    <label htmlFor="day" className="text-style">
-                      Día
-                    </label>
-                    <input
-                      type="text"
-                      id="day"
-                      value={formValues.day}
-                      onChange={handleChange}
-                      className="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-6 my-2"
-                      required
-                    />
-                  </div>
-                  <div className="w-[25%]">
-                    <label htmlFor="month" className="text-style">
-                      Mes
-                    </label>
-                    <input
-                      type="text"
-                      id="month"
-                      value={formValues.month}
-                      onChange={handleChange}
-                      className="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-6 my-2"
-                      required
-                    />
-                  </div>
-                  <div className="w-[40%]">
-                    <label htmlFor="year" className="text-style">
-                      Año
-                    </label>
-                    <input
-                      type="text"
-                      id="year"
-                      value={formValues.year}
-                      onChange={handleChange}
-                      className="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-6 my-2"
-                      required
-                    />
-                  </div>
-                </div>
+                <p className="text-style pt-4">Tu fecha de nacimiento *</p>
+                <Calendar
+                  selectedDate={formValues.birthDate}
+                  onChange={handleDateChange}
+                  minDate={new Date(1923, 0, 1)}
+                  maxDate={new Date()}
+                  placeholderText="Seleccionar fecha de nacimiento"
+                />
                 <div className="flex justify-end py-4">
                   <PrimaryButton type="submit">
                     Guardar y continuar

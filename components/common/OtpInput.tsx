@@ -3,7 +3,7 @@
 import React, { useState, useEffect, ChangeEvent } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
-import { FaUser, FaPhoneAlt, FaSms } from 'react-icons/fa';
+import { FaUser, FaPhoneAlt, FaSms, FaWhatsapp } from 'react-icons/fa';
 import { motion, AnimatePresence } from 'framer-motion';
 import graylogo from '@/assets/greylogo.png';
 import PrimaryButton from '@/components/reusables/PrimaryButton';
@@ -13,11 +13,31 @@ interface OTPInputProps {
   onComplete?: (otp: string) => void;
 }
 
+interface VerificationMethod {
+  id: string;
+  icon: React.ReactNode;
+  label: string;
+}
+
 const OTPInput: React.FC<OTPInputProps> = ({ length = 6, onComplete }) => {
   const [otp, setOtp] = useState<string[]>(new Array(length).fill(''));
   const [timer, setTimer] = useState<number>(30);
   const [showPopup, setShowPopup] = useState<boolean>(false);
+  const [currentMethodIndex, setCurrentMethodIndex] = useState<number>(0);
   const router = useRouter();
+
+  const verificationMethods: VerificationMethod[] = [
+    { id: 'whatsapp', icon: <FaWhatsapp className="text-2xl" />, label: 'WhatsApp' },
+    { id: 'sms', icon: <FaSms className="text-2xl" />, label: 'SMS' },
+    { id: 'call', icon: <FaPhoneAlt className="text-2xl" />, label: 'Llamada' },
+  ];
+
+  const rotateVerificationMethod = () => {
+    setCurrentMethodIndex((prevIndex) => 
+      (prevIndex + 1) % verificationMethods.length
+    );
+    resetTimer();
+  };
 
   const handleChange = (element: HTMLInputElement, index: number): void => {
     if (isNaN(Number(element.value))) return;
@@ -26,7 +46,7 @@ const OTPInput: React.FC<OTPInputProps> = ({ length = 6, onComplete }) => {
     newOtp[index] = element.value;
     setOtp(newOtp);
 
-    if (element.nextSibling) {
+    if (element.nextSibling && element.value !== '') {
       (element.nextSibling as HTMLInputElement).focus();
     }
   };
@@ -56,6 +76,8 @@ const OTPInput: React.FC<OTPInputProps> = ({ length = 6, onComplete }) => {
     setShowPopup(!showPopup);
   };
 
+  const currentMethod = verificationMethods[currentMethodIndex];
+
   return (
     <div className="flex flex-col items-center justify-center min-h-screen relative bg-gray-100">
       <div className="absolute top-4 left-40">
@@ -69,7 +91,7 @@ const OTPInput: React.FC<OTPInputProps> = ({ length = 6, onComplete }) => {
               Verificación en 2 pasos
             </h2>
             <p className="text-2xl font-semibold mb-4">
-              Ingresa el código que te enviamos por WhatsApp
+              Ingresa el código que te enviamos por {currentMethod.label}
             </p>
             <p className="text-gray-600 mb-6">
               Es un código de 6 dígitos enviado al teléfono terminado en 4558.
@@ -87,7 +109,21 @@ const OTPInput: React.FC<OTPInputProps> = ({ length = 6, onComplete }) => {
           </div>
 
           <div className="lg:w-[70%] w-full max-w-xl p-8 bg-white rounded-2xl shadow-lg flex flex-col items-center relative">
-            <p className="text-sm text-gray-500 mb-2">Ingresa el código</p>
+            <motion.div 
+              key={currentMethod.id}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              className="flex items-center space-x-2 mb-6"
+            >
+              <div className="text-blue-600">
+                {currentMethod.icon}
+              </div>
+              <span className="text-gray-700 font-medium">
+                Código por {currentMethod.label}
+              </span>
+            </motion.div>
+
             <div className="otp-inputs flex space-x-2 mb-4">
               {otp.map((data, index) => (
                 <input
@@ -102,7 +138,7 @@ const OTPInput: React.FC<OTPInputProps> = ({ length = 6, onComplete }) => {
               ))}
             </div>
 
-            <div className="flex w-full justify-start mb-4">
+            <div className="flex w-full justify-between items-center mb-4">
               <p className="text-gray-500 text-sm">
                 {timer > 0 ? (
                   `Reenviar código en 00:${timer < 10 ? `0${timer}` : timer}`
@@ -115,6 +151,12 @@ const OTPInput: React.FC<OTPInputProps> = ({ length = 6, onComplete }) => {
                   </span>
                 )}
               </p>
+              <button
+                onClick={rotateVerificationMethod}
+                className="text-blue-600 text-sm hover:text-blue-700 transition-colors"
+              >
+                Cambiar método de verificación
+              </button>
             </div>
 
             <div className="flex w-full items-center justify-between">
@@ -146,14 +188,22 @@ const OTPInput: React.FC<OTPInputProps> = ({ length = 6, onComplete }) => {
                   >
                     &times;
                   </button>
-                  <div className="flex items-center mb-6 cursor-pointer hover:bg-gray-100 p-3 rounded-lg w-full">
-                    <FaPhoneAlt className="text-blue-600 mr-3" />
-                    <span className="text-gray-800">Mandar por llamada</span>
-                  </div>
-                  <div className="flex items-center cursor-pointer hover:bg-gray-100 p-3 rounded-lg w-full">
-                    <FaSms className="text-blue-600 mr-3" />
-                    <span className="text-gray-800">Mandar por SMS</span>
-                  </div>
+                  {verificationMethods.map((method) => (
+                    <div
+                      key={method.id}
+                      className="flex items-center mb-4 cursor-pointer hover:bg-gray-100 p-3 rounded-lg w-full"
+                      onClick={() => {
+                        setCurrentMethodIndex(verificationMethods.findIndex(m => m.id === method.id));
+                        togglePopup();
+                        resetTimer();
+                      }}
+                    >
+                      <div className="text-blue-600 mr-3">{method.icon}</div>
+                      <span className="text-gray-800">
+                        Mandar por {method.label}
+                      </span>
+                    </div>
+                  ))}
                 </motion.div>
               )}
             </AnimatePresence>

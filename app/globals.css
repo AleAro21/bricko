@@ -1,6 +1,7 @@
 /* globals.css */
 
 /* Import all Aileron font styles and weights */
+
 @font-face {
   font-family: 'Aileron';
   src: url('../assets/fonts/Aileron-Regular.otf') format('opentype');
@@ -111,6 +112,35 @@
   src: url('../assets/fonts/Aileron-UltraLightItalic.otf') format('opentype');
   font-weight: 100;
   font-style: italic;
+}
+
+
+.react-datepicker-wrapper {
+  width: 100%;
+}
+
+.react-datepicker__input-container {
+  width: 100%;
+}
+
+.react-datepicker {
+  font-family: inherit;
+  border-radius: 0.5rem;
+  border: 1px solid #e5e7eb;
+}
+
+.react-datepicker__header {
+  background-color: #f3f4f6;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.react-datepicker__day--selected {
+  background-color: #3b82f6 !important;
+  color: white !important;
+}
+
+.react-datepicker__day:hover {
+  background-color: #93c5fd !important;
 }
 
 /* Tailwind base styles */
