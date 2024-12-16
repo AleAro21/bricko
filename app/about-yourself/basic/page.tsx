@@ -5,26 +5,55 @@ import { useRouter } from "next/navigation";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
 import PrimaryButton from "@/components/reusables/PrimaryButton";
+import AddressAutocomplete, { AddressData } from "@/components/common/address/AddressAutocomplete";
+
+interface FormValues {
+  address1: string;
+  address2: string;
+  city: string;
+  postalCode: string;
+  phone: string;
+}
 
 const BasicPage: FC = () => {
   const router = useRouter();
-  const [phone, setPhone] = useState<string>("");
+  const [formValues, setFormValues] = useState<FormValues>({
+    address1: "",
+    address2: "",
+    city: "",
+    postalCode: "",
+    phone: "",
+  });
   const [isPhoneValid, setIsPhoneValid] = useState<boolean>(true);
 
   const handlePhoneChange = (value: string): void => {
-    setPhone(value);
+    setFormValues(prev => ({ ...prev, phone: value }));
     setIsPhoneValid(value.length >= 10 && value.length <= 15);
+  };
+
+  const handleAddressSelect = (addressData: AddressData): void => {
+    setFormValues(prev => ({
+      ...prev,
+      address1: addressData.streetAddress,
+      city: addressData.city,
+      postalCode: addressData.postalCode,
+    }));
   };
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
 
-    if (phone && !isPhoneValid) {
+    if (formValues.phone && !isPhoneValid) {
       alert("Por favor, introduzca un número de teléfono válido");
       return;
     }
 
     router.push("/about-yourself/partner");
+  };
+
+  const handleManualChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
+    const { id, value } = e.target;
+    setFormValues(prev => ({ ...prev, [id]: value }));
   };
 
   return (
@@ -36,15 +65,16 @@ const BasicPage: FC = () => {
             <div className="w-[50%] flex flex-col">
               <div className="w-full pb-4 border-b">
                 <p className="sm-title py-4">Tu dirección</p>
-                <label htmlFor="address1" className="text-style">
-                  Dirección Línea 1
-                </label>
-                <input
-                  type="text"
-                  id="address1"
-                  className="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-6 my-2"
-                  required
-                />
+                <div className="mb-4">
+                  <label htmlFor="address-input" className="text-style">
+                    Dirección Línea 1
+                  </label>
+                  <AddressAutocomplete
+                    onAddressSelect={handleAddressSelect}
+                    defaultValue={formValues.address1}
+                    required
+                  />
+                </div>
                 <div className="w-full my-2">
                   <label htmlFor="address2" className="text-style mt-4">
                     Dirección Línea 2
@@ -52,6 +82,8 @@ const BasicPage: FC = () => {
                   <input
                     type="text"
                     id="address2"
+                    value={formValues.address2}
+                    onChange={handleManualChange}
                     className="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-6 my-2"
                   />
                 </div>
@@ -63,6 +95,8 @@ const BasicPage: FC = () => {
                     <input
                       type="text"
                       id="city"
+                      value={formValues.city}
+                      onChange={handleManualChange}
                       className="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-6 my-2"
                       required
                     />
@@ -74,6 +108,8 @@ const BasicPage: FC = () => {
                     <input
                       type="text"
                       id="postalCode"
+                      value={formValues.postalCode}
+                      onChange={handleManualChange}
                       className="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-6 my-2"
                       required
                     />
@@ -89,21 +125,21 @@ const BasicPage: FC = () => {
                   <input
                     type="tel"
                     id="phone"
-                    value={phone}
+                    value={formValues.phone}
                     onChange={(e) => handlePhoneChange(e.target.value)}
                     className={`bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-6 my-2 ${
-                      !isPhoneValid && phone ? 'border-red-500' : ''
+                      !isPhoneValid && formValues.phone ? 'border-red-500' : ''
                     }`}
                   />
                 </div>
-                {!isPhoneValid && phone && (
+                {!isPhoneValid && formValues.phone && (
                   <p className="text-red-500 text-sm">
                     Por favor, introduzca un número de teléfono válido
                   </p>
                 )}
               </div>
               <div className="flex justify-end py-4">
-                <PrimaryButton type="submit" onClick={() => {}}>
+                <PrimaryButton type="submit">
                   Guardar y continuar
                 </PrimaryButton>
               </div>
