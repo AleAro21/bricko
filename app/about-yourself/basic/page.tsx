@@ -2,17 +2,17 @@
 import { FC, FormEvent, useState } from 'react';
 import DashboardLayout from "@/components/common/DashboardLayout";
 import { useRouter } from "next/navigation";
-import PhoneInput from "react-phone-input-2";
-import "react-phone-input-2/lib/style.css";
-import PrimaryButton from "@/components/reusables/PrimaryButton";
+import PhoneInput from 'react-phone-number-input';
+import 'react-phone-number-input/style.css';
 import AddressAutocomplete, { AddressData } from "@/components/common/address/AddressAutocomplete";
+import type { E164Number } from 'libphonenumber-js/core';
 
 interface FormValues {
   address1: string;
   address2: string;
   city: string;
   postalCode: string;
-  phone: string;
+  phone: E164Number | undefined;
 }
 
 const BasicPage: FC = () => {
@@ -22,13 +22,11 @@ const BasicPage: FC = () => {
     address2: "",
     city: "",
     postalCode: "",
-    phone: "",
+    phone: undefined,
   });
-  const [isPhoneValid, setIsPhoneValid] = useState<boolean>(true);
 
-  const handlePhoneChange = (value: string): void => {
+  const handlePhoneChange = (value: E164Number | undefined): void => {
     setFormValues(prev => ({ ...prev, phone: value }));
-    setIsPhoneValid(value.length >= 10 && value.length <= 15);
   };
 
   const handleAddressSelect = (addressData: AddressData): void => {
@@ -42,12 +40,6 @@ const BasicPage: FC = () => {
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
-
-    if (formValues.phone && !isPhoneValid) {
-      alert("Por favor, introduzca un número de teléfono válido");
-      return;
-    }
-
     router.push("/about-yourself/partner");
   };
 
@@ -58,93 +50,112 @@ const BasicPage: FC = () => {
 
   return (
     <DashboardLayout>
-      <div className="container w-3/4 mx-auto flex flex-col h-full min-h-screen">
-        <div className="w-full flex flex-col py-12">
-          <p className="title py-4">Detalles de contacto</p>
-          <form onSubmit={handleSubmit} className="w-full flex">
-            <div className="w-[50%] flex flex-col">
-              <div className="w-full pb-4 border-b">
-                <p className="sm-title py-4">Tu dirección</p>
-                <div className="mb-4">
-                  <label htmlFor="address-input" className="text-style">
-                    Dirección Línea 1
-                  </label>
-                  <AddressAutocomplete
-                    onAddressSelect={handleAddressSelect}
-                    defaultValue={formValues.address1}
-                    required
-                  />
-                </div>
-                <div className="w-full my-2">
-                  <label htmlFor="address2" className="text-style mt-4">
-                    Dirección Línea 2
-                  </label>
-                  <input
-                    type="text"
-                    id="address2"
-                    value={formValues.address2}
-                    onChange={handleManualChange}
-                    className="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-6 my-2"
-                  />
-                </div>
-                <div className="w-full my-4 flex items-center justify-between gap-4">
-                  <div className="w-[60%]">
-                    <label htmlFor="city" className="text-style mt-4">
-                      Ciudad
-                    </label>
-                    <input
-                      type="text"
-                      id="city"
-                      value={formValues.city}
-                      onChange={handleManualChange}
-                      className="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-6 my-2"
-                      required
-                    />
-                  </div>
-                  <div className="w-[40%]">
-                    <label htmlFor="postalCode" className="text-style mt-4">
-                      Código postal
-                    </label>
-                    <input
-                      type="text"
-                      id="postalCode"
-                      value={formValues.postalCode}
-                      onChange={handleManualChange}
-                      className="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-6 my-2"
-                      required
-                    />
-                  </div>
-                </div>
-              </div>
-              <div className="w-full border-t-2 pt-4">
-                <p className="text-style">Tu número de teléfono (opcional)</p>
-                <label htmlFor="phone" className="text-style">
-                  Sólo te llamaremos para ayudarte con tu testamento
-                </label>
-                <div className="phone-input-container">
-                  <input
-                    type="tel"
-                    id="phone"
-                    value={formValues.phone}
-                    onChange={(e) => handlePhoneChange(e.target.value)}
-                    className={`bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-6 my-2 ${
-                      !isPhoneValid && formValues.phone ? 'border-red-500' : ''
-                    }`}
-                  />
-                </div>
-                {!isPhoneValid && formValues.phone && (
-                  <p className="text-red-500 text-sm">
-                    Por favor, introduzca un número de teléfono válido
+      <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div className="space-y-8">
+          <div>
+            <h1 className="text-3xl font-semibold text-gray-900">Detalles de Contacto</h1>
+            <p className="mt-4 text-lg text-gray-600">
+              Necesitamos tu información de contacto para completar el testamento.
+            </p>
+          </div>
+
+          <div className="bg-white rounded-2xl p-8 shadow-sm border border-gray-100">
+            <form onSubmit={handleSubmit} className="space-y-8">
+              <div className="space-y-6">
+                <div>
+                  <h2 className="text-xl font-semibold text-gray-900 mb-4">
+                    Tu Dirección
+                  </h2>
+                  <p className="text-sm text-gray-600 mb-6">
+                    Ingresa la dirección donde resides actualmente.
                   </p>
-                )}
+                  
+                  <div className="space-y-4">
+                    <div>
+                      <label htmlFor="address-input" className="block text-sm font-medium text-gray-700 mb-2">
+                        Dirección Línea 1 <span className="text-red-500">*</span>
+                      </label>
+                      <AddressAutocomplete
+                        onAddressSelect={handleAddressSelect}
+                        defaultValue={formValues.address1}
+                        required
+                      />
+                    </div>
+
+                    <div>
+                      <label htmlFor="address2" className="block text-sm font-medium text-gray-700 mb-2">
+                        Dirección Línea 2
+                      </label>
+                      <input
+                        type="text"
+                        id="address2"
+                        value={formValues.address2}
+                        onChange={handleManualChange}
+                        className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-shadow text-base"
+                        placeholder="Apartamento, suite, unidad, etc."
+                      />
+                    </div>
+
+                    <div>
+                      <label htmlFor="city" className="block text-sm font-medium text-gray-700 mb-2">
+                        Ciudad <span className="text-red-500">*</span>
+                      </label>
+                      <input
+                        type="text"
+                        id="city"
+                        value={formValues.city}
+                        onChange={handleManualChange}
+                        className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-shadow text-base"
+                        required
+                      />
+                    </div>
+
+                    <div>
+                      <label htmlFor="postalCode" className="block text-sm font-medium text-gray-700 mb-2">
+                        Código Postal <span className="text-red-500">*</span>
+                      </label>
+                      <input
+                        type="text"
+                        id="postalCode"
+                        value={formValues.postalCode}
+                        onChange={handleManualChange}
+                        className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-shadow text-base"
+                        required
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <div className="pt-6 border-t border-gray-100">
+                  <h2 className="text-xl font-semibold text-gray-900 mb-4">
+                    Número de Teléfono
+                  </h2>
+                  <p className="text-sm text-gray-600 mb-6">
+                    Sólo te llamaremos si necesitamos ayudarte con tu testamento.
+                  </p>
+                  <div className="mt-4">
+                    <PhoneInput
+                      international
+                      defaultCountry="MX"
+                      value={formValues.phone}
+                      onChange={handlePhoneChange}
+                      placeholder="Opcional"
+                      className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-shadow text-base"
+                    />
+                  </div>
+                </div>
               </div>
-              <div className="flex justify-end py-4">
-                <PrimaryButton type="submit">
+
+              <div className="pt-6 flex justify-end">
+                <button
+                  type="submit"
+                  className="inline-flex justify-center px-6 py-3 rounded-xl bg-blue-600 text-white text-base font-medium hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
+                >
                   Guardar y continuar
-                </PrimaryButton>
+                </button>
               </div>
-            </div>
-          </form>
+            </form>
+          </div>
         </div>
       </div>
     </DashboardLayout>

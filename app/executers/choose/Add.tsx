@@ -4,47 +4,50 @@ import Modal from '@/components/common/Modal';
 interface AddProps {
   setShowModal: (show: boolean) => void;
   showModal: boolean;
-  onAddHeir: (heir: HeirData) => void;
 }
 
-export interface HeirData {
+export interface ExecutorData {
   id: string;
   name: string;
+  email: string;
+  phone?: string;
   relationship: string;
-  percentage: number;
-  backupHeir?: string;
+  isBackupExecutor: boolean;
 }
 
 const relationshipOptions = [
-  { value: 'spouse', label: 'Cónyuge' },
-  { value: 'child', label: 'Hijo/a' },
-  { value: 'parent', label: 'Padre/Madre' },
-  { value: 'sibling', label: 'Hermano/a' },
+  { value: 'family', label: 'Familiar' },
+  { value: 'friend', label: 'Amigo' },
+  { value: 'professional', label: 'Profesional' },
+  { value: 'lawyer', label: 'Abogado' },
+  { value: 'accountant', label: 'Contador' },
   { value: 'other', label: 'Otro' },
 ];
 
-const Add: FC<AddProps> = ({ setShowModal, showModal, onAddHeir }) => {
+const Add: FC<AddProps> = ({ setShowModal, showModal }) => {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
     const form = e.target as HTMLFormElement;
     const formData = new FormData(form);
     
-    const newHeir: HeirData = {
+    const newExecutor: ExecutorData = {
       id: crypto.randomUUID(),
       name: formData.get('name') as string,
+      email: formData.get('email') as string,
+      phone: formData.get('phone') as string,
       relationship: formData.get('relationship') as string,
-      percentage: Number(formData.get('percentage')),
-      backupHeir: formData.get('backupHeir') as string,
+      isBackupExecutor: formData.get('isBackupExecutor') === 'true',
     };
 
-    onAddHeir(newHeir);
+    // Here you would typically handle the new executor data
+    // For now we just close the modal
     setShowModal(false);
   };
 
   return (
     <Modal setShowModal={setShowModal} showModal={showModal}>
       <div className="w-full min-w-[400px]">
-        <h2 className="text-xl font-semibold text-gray-900 mb-4">Agregar Heredero</h2>
+        <h2 className="text-xl font-semibold text-gray-900 mb-4">Agregar Albacea</h2>
         <div className="w-full">
           <form className="space-y-4" onSubmit={handleSubmit}>
             <div>
@@ -57,7 +60,34 @@ const Add: FC<AddProps> = ({ setShowModal, showModal, onAddHeir }) => {
                 name="name"
                 required
                 className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-shadow text-base"
-                placeholder="Nombre del heredero"
+                placeholder="Nombre del albacea"
+              />
+            </div>
+
+            <div>
+              <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
+                Correo electrónico <span className="text-red-500">*</span>
+              </label>
+              <input
+                type="email"
+                id="email"
+                name="email"
+                required
+                className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-shadow text-base"
+                placeholder="correo@ejemplo.com"
+              />
+            </div>
+
+            <div>
+              <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-2">
+                Teléfono
+              </label>
+              <input
+                type="tel"
+                id="phone"
+                name="phone"
+                className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-shadow text-base"
+                placeholder="(opcional)"
               />
             </div>
 
@@ -81,40 +111,24 @@ const Add: FC<AddProps> = ({ setShowModal, showModal, onAddHeir }) => {
               </select>
             </div>
 
-            <div>
-              <label htmlFor="percentage" className="block text-sm font-medium text-gray-700 mb-2">
-                Porcentaje de herencia <span className="text-red-500">*</span>
-              </label>
+            <div className="flex items-center gap-2">
               <input
-                type="number"
-                id="percentage"
-                name="percentage"
-                required
-                min="0"
-                max="100"
-                className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-shadow text-base"
-                placeholder="0"
+                type="checkbox"
+                id="isBackupExecutor"
+                name="isBackupExecutor"
+                value="true"
+                className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
               />
-            </div>
-
-            <div>
-              <label htmlFor="backupHeir" className="block text-sm font-medium text-gray-700 mb-2">
-                Heredero de respaldo
+              <label htmlFor="isBackupExecutor" className="text-sm font-medium text-gray-700">
+                Designar como albacea suplente
               </label>
-              <input
-                type="text"
-                id="backupHeir"
-                name="backupHeir"
-                className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-shadow text-base"
-                placeholder="Nombre del heredero de respaldo"
-              />
             </div>
 
             <button
               type="submit"
               className="w-full inline-flex justify-center px-6 py-3 rounded-xl bg-blue-600 text-white text-base font-medium hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
             >
-              Agregar Heredero
+              Agregar Albacea
             </button>
           </form>
         </div>

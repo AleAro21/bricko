@@ -4,52 +4,54 @@ import Modal from '@/components/common/Modal';
 interface AddProps {
   setShowModal: (show: boolean) => void;
   showModal: boolean;
-  onAddHeir: (heir: HeirData) => void;
+  onAddCharity: (charity: CharityData) => void;
 }
 
-export interface HeirData {
+export interface CharityData {
   id: string;
   name: string;
-  relationship: string;
+  cause: string;
   percentage: number;
-  backupHeir?: string;
+  registrationNumber?: string;
 }
 
-const relationshipOptions = [
-  { value: 'spouse', label: 'Cónyuge' },
-  { value: 'child', label: 'Hijo/a' },
-  { value: 'parent', label: 'Padre/Madre' },
-  { value: 'sibling', label: 'Hermano/a' },
-  { value: 'other', label: 'Otro' },
+const causeOptions = [
+  { value: 'health', label: 'Salud' },
+  { value: 'education', label: 'Educación' },
+  { value: 'environment', label: 'Medio Ambiente' },
+  { value: 'social', label: 'Causas Sociales' },
+  { value: 'animals', label: 'Protección Animal' },
+  { value: 'culture', label: 'Arte y Cultura' },
+  { value: 'other', label: 'Otra Causa' },
 ];
 
-const Add: FC<AddProps> = ({ setShowModal, showModal, onAddHeir }) => {
+const Add: FC<AddProps> = ({ setShowModal, showModal, onAddCharity }) => {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
     const form = e.target as HTMLFormElement;
     const formData = new FormData(form);
     
-    const newHeir: HeirData = {
+    const newCharity: CharityData = {
       id: crypto.randomUUID(),
       name: formData.get('name') as string,
-      relationship: formData.get('relationship') as string,
+      cause: formData.get('cause') as string,
       percentage: Number(formData.get('percentage')),
-      backupHeir: formData.get('backupHeir') as string,
+      registrationNumber: formData.get('registrationNumber') as string,
     };
 
-    onAddHeir(newHeir);
+    onAddCharity(newCharity);
     setShowModal(false);
   };
 
   return (
     <Modal setShowModal={setShowModal} showModal={showModal}>
       <div className="w-full min-w-[400px]">
-        <h2 className="text-xl font-semibold text-gray-900 mb-4">Agregar Heredero</h2>
+        <h2 className="text-xl font-semibold text-gray-900 mb-4">Agregar Organización Benéfica</h2>
         <div className="w-full">
           <form className="space-y-4" onSubmit={handleSubmit}>
             <div>
               <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
-                Nombre completo <span className="text-red-500">*</span>
+                Nombre de la organización <span className="text-red-500">*</span>
               </label>
               <input
                 type="text"
@@ -57,23 +59,23 @@ const Add: FC<AddProps> = ({ setShowModal, showModal, onAddHeir }) => {
                 name="name"
                 required
                 className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-shadow text-base"
-                placeholder="Nombre del heredero"
+                placeholder="Nombre de la organización benéfica"
               />
             </div>
 
             <div>
-              <label htmlFor="relationship" className="block text-sm font-medium text-gray-700 mb-2">
-                Relación <span className="text-red-500">*</span>
+              <label htmlFor="cause" className="block text-sm font-medium text-gray-700 mb-2">
+                Causa <span className="text-red-500">*</span>
               </label>
               <select
-                id="relationship"
-                name="relationship"
+                id="cause"
+                name="cause"
                 required
                 className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-shadow text-base"
                 defaultValue=""
               >
-                <option value="" disabled>Seleccionar relación</option>
-                {relationshipOptions.map((option) => (
+                <option value="" disabled>Seleccionar causa</option>
+                {causeOptions.map((option) => (
                   <option key={option.value} value={option.value}>
                     {option.label}
                   </option>
@@ -83,7 +85,7 @@ const Add: FC<AddProps> = ({ setShowModal, showModal, onAddHeir }) => {
 
             <div>
               <label htmlFor="percentage" className="block text-sm font-medium text-gray-700 mb-2">
-                Porcentaje de herencia <span className="text-red-500">*</span>
+                Porcentaje de donación <span className="text-red-500">*</span>
               </label>
               <input
                 type="number"
@@ -98,15 +100,15 @@ const Add: FC<AddProps> = ({ setShowModal, showModal, onAddHeir }) => {
             </div>
 
             <div>
-              <label htmlFor="backupHeir" className="block text-sm font-medium text-gray-700 mb-2">
-                Heredero de respaldo
+              <label htmlFor="registrationNumber" className="block text-sm font-medium text-gray-700 mb-2">
+                Número de registro (opcional)
               </label>
               <input
                 type="text"
-                id="backupHeir"
-                name="backupHeir"
+                id="registrationNumber"
+                name="registrationNumber"
                 className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-shadow text-base"
-                placeholder="Nombre del heredero de respaldo"
+                placeholder="Número de registro de la organización"
               />
             </div>
 
@@ -114,7 +116,7 @@ const Add: FC<AddProps> = ({ setShowModal, showModal, onAddHeir }) => {
               type="submit"
               className="w-full inline-flex justify-center px-6 py-3 rounded-xl bg-blue-600 text-white text-base font-medium hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
             >
-              Agregar Heredero
+              Agregar Organización
             </button>
           </form>
         </div>

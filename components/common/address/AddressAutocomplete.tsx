@@ -25,8 +25,8 @@ const StyledWrapper = styled.div`
 
   .autocomplete-input {
     width: 100%;
-    padding: 10px 24px;
-     min-height: 70px;
+    padding: 0px 16px;
+     min-height: 50px;
     font-size: 16px;
     border: 1px solid #e4e4e4;
     border-radius: 12px;

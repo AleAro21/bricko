@@ -20,7 +20,7 @@ interface AccountData {
 }
 
 const navigation: NavigationItem[] = [
-  { name: 'Tu Progreso', href: '/wills', current: true },
+  // { name: 'Tu Progreso', href: '/wills', current: true },
   { name: 'Testamento', href: '/summary', current: false },
   { name: 'Personas', href: '/people', current: false },
 ];

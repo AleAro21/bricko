@@ -143,21 +143,21 @@ const BasicsPage: FC = () => {
                   {/* Social Buttons */}
                   <div className="flex justify-center gap-4 mt-4">
                     <SocialButton
-                      src={Google}
+                      src={Google.src}
                       width={20}
                       height={20}
                       alt="Google"
                       className="mr-4 mb-10"
                     />
-                    <SocialButton
-                      src={Facebook}
+                    {/* <SocialButton
+                      src={Facebook.src}
                       width={12}
                       height={12}
                       alt="Facebook"
                       className="mr-4 ml-4 mb-10"
-                    />
+                    /> */}
                     <SocialButton
-                      src={Apple}
+                      src={Apple.src}
                       width={24}
                       height={24}
                       alt="Apple"

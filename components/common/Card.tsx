@@ -9,29 +9,23 @@ interface CardProps {
 }
 
 const Card: React.FC<CardProps> = ({ linkNo, linkyes, titleNo, titleYes }) => {
-  const cardBaseClasses = 'bg-white border border-gray-200 w-full max-w-[220px] py-4 px-4 rounded-[20px] transition-transform duration-300 ease-out transform hover:-translate-y-2 hover:shadow-lg';
-  const transitionStyle = { transition: 'all 0.35s cubic-bezier(0.4, 0, 0.2, 1)' };
-
   return (
-    <div className='flex justify-center gap-3 w-full text-center'>
-      <Link
-        href={linkNo}
-        className={cardBaseClasses}
-        style={transitionStyle}
-      >
-        <p className='text-[30px] font-[500]'>No</p>
-        <p className='text-[16px] text-[#000000] font-[400]'>{titleNo}</p>
+    <div className="w-full flex flex-col sm:flex-row gap-4">
+      <Link href={linkyes} className="flex-1">
+        <div className="bg-white hover:bg-gray-50 border border-gray-200 rounded-2xl p-6 transition-all duration-300 transform hover:scale-[1.02] min-h-[160px] flex flex-col">
+          <h3 className="text-2xl font-semibold mb-2 text-gray-900">Sí</h3>
+          <p className="text-gray-600 flex-1">{titleYes}</p>
+        </div>
       </Link>
-      <Link
-        href={linkyes}
-        className={cardBaseClasses}
-        style={transitionStyle}
-      >
-        <p className='text-[30px] font-[500]'>Sí</p>
-        <p className='text-[16px] text-[#000000] font-[400]'>{titleYes}</p>
+      
+      <Link href={linkNo} className="flex-1">
+        <div className="bg-white hover:bg-gray-50 border border-gray-200 rounded-2xl p-6 transition-all duration-300 transform hover:scale-[1.02] min-h-[160px] flex flex-col">
+          <h3 className="text-2xl font-semibold mb-2 text-gray-900">No</h3>
+          <p className="text-gray-600 flex-1">{titleNo}</p>
+        </div>
       </Link>
     </div>
   );
-};
+}
 
 export default Card;

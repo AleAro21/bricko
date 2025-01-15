@@ -7,6 +7,7 @@ import { FaUser, FaPhoneAlt, FaSms, FaWhatsapp } from 'react-icons/fa';
 import { motion, AnimatePresence } from 'framer-motion';
 import graylogo from '@/assets/greylogo.png';
 import PrimaryButton from '@/components/reusables/PrimaryButton';
+import User from "@/assets/TrustPerson.png"
 
 interface OTPInputProps {
   length?: number;
@@ -96,8 +97,8 @@ const OTPInput: React.FC<OTPInputProps> = ({ length = 6, onComplete }) => {
             <p className="text-gray-600 mb-6">
               Es un código de 6 dígitos enviado al teléfono terminado en 4558.
             </p>
-            <div className="flex items-center mb-4 p-4 bg-gray-50 border border-gray-300 rounded-full shadow-sm">
-              <FaUser className="text-blue-600 text-xl mr-2" />
+            <div className="flex items-center mb-4 p-4  pr-12 bg-gray-50 border border-gray-300 rounded-full shadow-sm">
+            <Image src={User} width={30} height={30} alt="Partner icon" />
               <span className="text-gray-700">
                 correodeusuario@testamento.com
               </span>

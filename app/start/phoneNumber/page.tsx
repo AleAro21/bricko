@@ -49,7 +49,7 @@ const PhoneNumberPage: FC = () => {
                 />
               </div>
               <div className="flex justify-center">
-                <PrimaryButton onClick={handleSubmit}>Continuar</PrimaryButton>
+                <PrimaryButton type="submit">Continuar</PrimaryButton>
               </div>
               <p className="text-style text-center pt-4">
                 Creando una cuenta, aceptas estar en conformidad con nuestros

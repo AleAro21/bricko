@@ -10,6 +10,7 @@ const ChildrenPage: FC = () => {
         linkyes={'/start/property'} 
         titleNo={'Esto también incluye tener solo hijos adoptivos'} 
         titleYes={'Selecciona esto si tienes hijos biológicos'} 
+        box={'Tu situación actual nos ayuda a personalizar tu testamento de acuerdo a tus necesidades específicas. Al comprender mejor tu situación familiar, podemos asegurarnos de que tu testamento cubra todas las necesidades y consideraciones importantes para ti y tus seres queridos.'}
       />
     </main>
   );
