@@ -16,7 +16,7 @@ const PrimaryButton: FC<PrimaryButtonProps> = ({
     <button
       type={type}
       onClick={onClick}
-      className="w-[200px] text-center text-[14px] text-[#FFFFFF] font-[600] bg-[#0171e3] px-4 py-4 mt-4 rounded-[100px] cursor-pointer"
+      className="w-[200px] text-center text-[14px] text-[#FFFFFF] font-[400] bg-[#0171e3] py-3 px-12 rounded-lg cursor-pointer"
       {...props}
     >
       {children}

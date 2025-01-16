@@ -3,16 +3,10 @@
 import { useState } from 'react';
 import CardStart from "@/components/common/CardStart";
 import { FaHeart, FaUser, FaUsers, FaHome } from 'react-icons/fa';
-import Image from 'next/image';
-import graylogo from '../assets/greylogo.png';
 import { useRouter } from 'next/navigation';
 import PrimaryButton from '@/components/reusables/PrimaryButton';
-import Partner from "@/assets/Ring.png"
-import Single from "@/assets/TrustPerson.png"
-import Family from "@/assets/Family.png"
-import Living from "@/assets/face_square.png"
-
-
+import graylogo from '../assets/greylogo.png';
+import Image from 'next/image';
 
 export default function Home() {
   const router = useRouter();
@@ -20,22 +14,22 @@ export default function Home() {
 
   const cards = [
     {
-      icon: <Image src={Partner} width={70} height={70} alt="Partner icon" />,  
-      title: "En Pareja",
-      description: "Incluye compromiso, en unión libre o viviendo con tu pareja",
+      icon: <FaHeart size={70} />,
+      title: "Save with Apple Trade In.",
+      description: "Get $180-$650 in credit toward iPhone 16 or iPhone 16 Pro when you trade in iPhone 12 or higher.",
     },
     {
-      icon: <Image src={Single} width={70} height={70} alt="Single icon" />,
+      icon: <FaHeart size={70} />,
       title: "Soltero",
       description: "Para personas que no están en una relación actualmente",
     },
     {
-      icon: <Image src={Family} width={70} height={70} alt="Family icon" />,
+      icon: <FaHeart size={70} />,
       title: "Familia",
       description: "Para familias con hijos o dependientes",
     },
     {
-      icon: <Image src={Living} width={70} height={70} alt="Living icon" />,
+      icon: <FaHeart size={70} />,
       title: "Convivencia",
       description: "Para personas que comparten vivienda",
     }
@@ -61,20 +55,22 @@ export default function Home() {
         <a href='https://testador.mx'>
           <Image 
             src={graylogo} 
-            width={100} 
-            height={100} 
+            width={100}
+            height={100}
             alt="Testador Logo"
           />
         </a>
       </div>
-      <div className='flex flex-col items-center justify-center min-h-[80vh] w-full max-w-6xl mx-auto'>
-        <h1 className='text-3xl font-medium mb-5 text-center'>
-          Cuentanos un poco sobre ti
-        </h1>
-        <p className="text-lg text-gray-600 text-center mb-10 md:w-3/4 mx-auto">
-          Selecciona las opciones que mejor describan tu situación actual
-        </p>
-        <div className='flex flex-wrap justify-center gap-5 w-full px-5 mb-10'>
+      <div className='flex flex-col justify-center min-h-[80vh] w-full max-w-6xl mx-auto'>
+        <div className="px-5 mb-[30px]">
+          <h1 className='text-[40px] font-[400] tracking-normal mb-[15px] text-start text-[#1d1d1f]'>
+            Cuéntanos un poco sobre ti
+          </h1>
+          <p className="text-[17px] font-[200] tracking-normal text-[#1d1d1f] text-start mb-[30px]">
+            Selecciona las opciones que mejor describan tu situación actual
+          </p>
+        </div>
+        <div className='flex flex-wrap justify-between w-full px-5 mb-10'>
           {cards.map((card, index) => (
             <div key={index} className="w-64">
               <CardStart
@@ -87,7 +83,7 @@ export default function Home() {
             </div>
           ))}
         </div>
-        <div className="flex flex-col gap-5">
+        <div className="flex flex-col items-end w-full px-5 gap-4">
           <PrimaryButton 
             type="button"
             onClick={handleContinue}
@@ -95,11 +91,14 @@ export default function Home() {
             Continuar
           </PrimaryButton>
           <button 
-          onClick={handleContinue}
-          className="mt-4 text-blue-500 hover:text-blue-500 transition-colors duration-200"
-        >
-          Ninguna aplica
-        </button>
+            onClick={handleContinue}
+            className="text-[14px] font-[400] text-[#0066CC] hover:text-[#0066CC] hover:underline transition-colors duration-200 flex items-center gap-1"
+          >
+            Ninguna aplica
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mt-[1px]" viewBox="0 0 20 20" fill="currentColor">
+              <path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clipRule="evenodd" />
+            </svg>
+          </button>
         </div>
       </div>
     </main>

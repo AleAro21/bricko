@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import Image from 'next/image';
 import Card from '@/components/common/Card';
 import { motion } from 'framer-motion';
@@ -24,6 +24,7 @@ const Start: React.FC<StartProps> = ({
   box,
 }) => {
   const dynamicTitle = heading.split("¿")[1]?.split("?")[0] || heading;
+  const [isExpanded, setIsExpanded] = useState(false); // Add this state
 
   return (
     <main className='container mx-auto flex flex-col min-h-screen'>
@@ -57,24 +58,35 @@ const Start: React.FC<StartProps> = ({
         </div>
 
         <motion.div 
-          className="w-full max-w-2xl"
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.3 }}
+        className="w-full max-w-2xl"
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.3 }}
+      >
+        <motion.div 
+          className="bg-gradient-to-r from-blue-50 to-blue-100 rounded-xl p-5 border border-blue-500/20 overflow-hidden cursor-pointer group"
+          whileHover={{ y: -2 }}
+          animate={{ height: isExpanded ? "auto" : "auto" }}
+          transition={{ duration: 0.2 }}   
+          onClick={() => setIsExpanded(!isExpanded)}       
         >
-          <motion.div 
-            className="bg-blue-500/10 rounded-xl p-5 border border-blue-500/20 overflow-hidden cursor-pointer group"
-            whileHover={{ y: -2 }}
-            transition={{ duration: 0.2 }}
+          <h2 className="text-xl font-medium text-gray-900 mb-5">
+            ¿Cómo afecta mi testamento?
+          </h2>
+          <motion.p 
+            className="text-gray-600 transform origin-top transition-all duration-200 ease-out opacity-80 group-hover:opacity-100"
+            animate={{ height: isExpanded ? "auto" : "100px" }}
+            style={{ overflow: "hidden" }}
           >
-            <h2 className="text-xl font-medium text-gray-900 mb-5">
-              ¿Cómo afecta mi testamento?
-              {/* {dynamicTitle.toLowerCase()} */}
-       
-            </h2>
-            <p className="text-gray-600 transform origin-top transition-all duration-200 ease-out opacity-80 group-hover:opacity-100">
-              {box}
-            </p>
+            {box}
+          </motion.p>
+          <motion.div 
+            className="mt-2 text-blue-600 text-sm"
+            animate={{ opacity: 1 }}
+          >
+            {isExpanded ? "Ver menos" : "Ver más"}
+             
+          </motion.div>
           </motion.div>
         </motion.div>
       </div>

@@ -67,7 +67,22 @@ const AccountAndPropertyPage: FC = () => {
                     cuenta.
                   </p>
                 </div>
-
+                <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <h2 className="text-xl font-semibold text-gray-900">
+                        Herederos legales por partes iguales
+                      </h2>
+                    </div>
+                    <div>
+                      <input
+                        type="checkbox"
+                        onChange={(e) => router.push('/estate/charities')}
+                        className="h-6 w-6 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                      />
+                    </div>
+                  </div>
+                </div>
                 <div
                   onClick={handleAddClick}
                   className="bg-white rounded-2xl shadow-sm border border-gray-100 hover:border-blue-500 transition-colors cursor-pointer overflow-hidden"

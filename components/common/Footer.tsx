@@ -37,7 +37,7 @@ const Footer: React.FC = () => {
             className='max-w-[100px] max-h-[50px] my-auto' 
           />
           <p className='text-[14px] text-[#9999]'>
-            © {currentYear} Testador.mx
+            © {currentYear} Testamento.mx
           </p>
         </div>
         <div className="flex items-center gap-4">

@@ -13,10 +13,13 @@ module.exports = {
           "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
       },
       colors: {
-        textColor: '#000000',
-        background: '#f5f5f7',
-        footerColor: '#464A5A'
-      }
+        textColor: "#000000",
+        background: "#f5f5f7",
+        footerColor: "#464A5A",
+      },
+      fontFamily: {
+        sans: ['"Helvetica Neue"', "Arial", "sans-serif"], // Set Helvetica Neue as the default sans font
+      },
     },
   },
   plugins: [],
