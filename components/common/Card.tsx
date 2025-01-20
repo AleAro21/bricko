@@ -1,5 +1,5 @@
 import React from 'react';
-import Link from 'next/link';
+import { FaCheck, FaTimes } from 'react-icons/fa';
 
 interface CardProps {
   linkNo: string;
@@ -9,21 +9,62 @@ interface CardProps {
 }
 
 const Card: React.FC<CardProps> = ({ linkNo, linkyes, titleNo, titleYes }) => {
+  const [selectedCard, setSelectedCard] = React.useState<'yes' | 'no' | null>(null);
+
+  const handleCardClick = (type: 'yes' | 'no') => {
+    setSelectedCard(type);
+    if (type === 'yes') {
+      window.location.href = linkyes;
+    } else {
+      window.location.href = linkNo;
+    }
+  };
+
   return (
-    <div className="w-full flex flex-col sm:flex-row gap-4">
-      <Link href={linkyes} className="flex-1">
-        <div className="bg-white hover:bg-gray-50 border border-gray-200 rounded-2xl p-6 transition-all duration-300 transform hover:scale-[1.02] min-h-[160px] flex flex-col">
-          <h3 className="text-2xl font-semibold mb-2 text-gray-900">Sí</h3>
-          <p className="text-gray-600 flex-1">{titleYes}</p>
+    <div className="grid grid-cols-1 sm:flex sm:justify-center gap-6">
+      <div
+        onClick={() => handleCardClick('yes')}
+        className={`relative flex flex-col items-start p-4 sm:p-4 rounded-xl transition-all duration-200 cursor-pointer w-full sm:w-[260px] h-auto min-h-[150px] sm:h-[280px]
+          ${selectedCard === 'yes'
+            ? 'bg-blue-50 border border-blue-500' 
+            : 'bg-white hover:bg-gray-50'
+          }`}
+      >
+        {selectedCard === 'yes' && (
+          <div className="absolute top-4 right-4 w-5 h-5 rounded-full bg-blue-500 flex items-center justify-center">
+            <FaCheck className="text-white text-xs" />
+          </div>
+        )}
+        <div className="flex items-center mb-3">
+          <div className="w-10 h-10 flex items-center justify-center text-xl text-[#333336]">
+            <FaCheck size={40} />
+          </div>
         </div>
-      </Link>
-      
-      <Link href={linkNo} className="flex-1">
-        <div className="bg-white hover:bg-gray-50 border border-gray-200 rounded-2xl p-6 transition-all duration-300 transform hover:scale-[1.02] min-h-[160px] flex flex-col">
-          <h3 className="text-2xl font-semibold mb-2 text-gray-900">No</h3>
-          <p className="text-gray-600 flex-1">{titleNo}</p>
+        <h3 className="text-[18px] text-[#1d1d1f] font-[500] mb-2 pr-2 tracking-[0.1px] leading-[1.3]">Sí</h3>
+        <p className="text-[14px] font-[300] text-[#1d1d1f] mb-0 pr-4 tracking-[0.1px] leading-[1.3]">{titleYes}</p>
+      </div>
+
+      <div
+        onClick={() => handleCardClick('no')}
+        className={`relative flex flex-col items-start p-4 sm:p-4 rounded-xl transition-all duration-200 cursor-pointer w-full sm:w-[260px] h-auto min-h-[150px] sm:h-[280px]
+          ${selectedCard === 'no' 
+            ? 'bg-blue-50 border border-blue-500' 
+            : 'bg-white hover:bg-gray-50'
+          }`}
+      >
+        {selectedCard === 'no' && (
+          <div className="absolute top-4 right-4 w-5 h-5 rounded-full bg-blue-500 flex items-center justify-center">
+            <FaCheck className="text-white text-xs" />
+          </div>
+        )}
+        <div className="flex items-center mb-3">
+          <div className="w-10 h-10 flex items-center justify-center text-xl text-[#333336]">
+            <FaTimes size={40} />
+          </div>
         </div>
-      </Link>
+        <h3 className="text-[18px] text-[#1d1d1f] font-[500] mb-2 pr-2 tracking-[0.1px] leading-[1.3]">No</h3>
+        <p className="text-[14px] font-[300] text-[#1d1d1f] mb-0 pr-4 tracking-[0.1px] leading-[1.3]">{titleNo}</p>
+      </div>
     </div>
   );
 }
