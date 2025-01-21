@@ -23,6 +23,6 @@
         "@root/*": ["./*"]
       }
     },
-    "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "app/estate/introduction/page.jsx", "app/about-yourself/basic/page.jsx"],
+    "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "app/estate/introduction/page.jsx", "app/about-yourself/basic/page.jsx", "aws-exports.js"],
     "exclude": ["node_modules"]
   }

@@ -7,9 +7,11 @@ import { useRouter } from 'next/navigation';
 import PrimaryButton from '@/components/reusables/PrimaryButton';
 import graylogo from '../assets/greylogo.png';
 import Image from 'next/image';
+import { useAuthenticator } from '@aws-amplify/ui-react';
 
 export default function Home() {
   const router = useRouter();
+  const { user } = useAuthenticator();
   const [selectedCards, setSelectedCards] = useState<number[]>([]);
 
   const cards = [
@@ -46,6 +48,12 @@ export default function Home() {
   };
 
   const handleContinue = () => {
+    if (!user) {
+      // Redirect to sign in if not authenticated
+      // router.push('/auth-test');
+      router.push('/start/childern');
+      return;
+    }
     router.push('/start/childern');
   };
 

@@ -1,18 +1,22 @@
 import { Suspense } from 'react';
+import { Inter } from 'next/font/google';
+import AmplifyProvider from '@/components/providers/AmplifyProvider';
 import './globals.css';
+
+const inter = Inter({ subsets: ['latin'] });
+
+export const metadata = {
+  title: 'Testamento',
+  description: 'Create Your Will',
+};
 
 type RootLayoutProps = {
   children: React.ReactNode;
 };
 
-export const metadata = {
-  title: 'Testamento',
-  description: 'Create You will',
-};
-
 export default function RootLayout({ children }: RootLayoutProps) {
   return (
-    <html lang='en'>
+    <html lang="en">
       <head>
         <link
           rel="icon"
@@ -21,10 +25,12 @@ export default function RootLayout({ children }: RootLayoutProps) {
           sizes="<generated>"
         />
       </head>
-      <body>
-        <Suspense fallback={"loading..."}>
-          <div className='bg-background'>{children}</div>
-        </Suspense>
+      <body className={inter.className}>
+        <AmplifyProvider>
+          <Suspense fallback="loading...">
+            <div className="bg-background">{children}</div>
+          </Suspense>
+        </AmplifyProvider>
       </body>
     </html>
   );

@@ -1,4 +1,5 @@
-"use client";
+'use client';
+
 import { FC, FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
@@ -17,7 +18,7 @@ interface SocialButtonProps {
 }
 
 const SocialButton: FC<SocialButtonProps> = ({ src, alt, width, height, className = "" }) => (
-  <button className={`w-14 h-14 rounded-full bg-white flex items-center justify-center ${className}`}>
+  <button className={`w-14 h-14 rounded-full bg-white flex items-center justify-center shadow-sm hover:shadow-md transition-shadow ${className}`}>
     <Image src={src} width={width} height={height} alt={alt} />
   </button>
 );
@@ -49,128 +50,146 @@ const BasicsPage: FC = () => {
   };
 
   return (
-    <>
-      <main className="container w-3/4 mx-auto flex flex-col h-full min-h-screen">
-        <div className="py-4">
-          <Image src={graylogo} width={100} alt="Gray Logo" />
+    <main className='container mx-auto flex flex-col min-h-screen bg-[#f5f5f7]'>
+      <div className='w-full max-w-6xl mx-auto flex flex-col min-h-screen'>
+        <div className='py-5 px-4 sm:px-5'>
+          <a href='https://testador.mx'>
+            <Image
+              src={graylogo}
+              width={100}
+              height={100}
+              alt="Testador Logo"
+            />
+          </a>
         </div>
-        <div className="flex flex-col md:w-[60%] max-w-[500px] mx-auto items-center justify-center h-full">
-          <div>
-            <p className="title py-2 text-center md:w-[80%] mx-auto">
-              Crea tu Testamento Digital
-            </p>
-            <p className="text-style py-4 text-center md:w-[60%] mx-auto">
-              Nuestros usuarios pueden tardar 25 minutos en completar su
-              testamento
-            </p>
-            <div>
-              <form onSubmit={handleSubmit}>
-                <div className="mb-2">
-                  <div className="py-3">
-                    <label htmlFor="country" className="text-style">
-                      Nombre
-                    </label>
-                    <input
-                      type="text"
-                      id="country"
-                      className="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-6"
-                      required
-                    />
-                  </div>
-                  <div className="py-3">
-                    <label htmlFor="fatherLastName" className="text-style">
-                      Apellido Paterno
-                    </label>
-                    <input
-                      type="text"
-                      id="fatherLastName"
-                      className="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-6"
-                      required
-                    />
-                  </div>
-                  <div className="py-3">
-                    <label htmlFor="motherLastName" className="text-style">
-                      Apellido Materno
-                    </label>
-                    <input
-                      type="text"
-                      id="motherLastName"
-                      className="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-6"
-                      required
-                    />
-                  </div>
-                  <div className="py-3">
-                    <label htmlFor="email" className="text-style">
-                      Email
-                    </label>
-                    <input
-                      type="email"
-                      id="email"
-                      className="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-6"
-                      required
-                    />
-                  </div>
-                  <p className="text-style py-4 flex items-center gap-3">
-                    <input
-                      type="checkbox"
-                      id="terms"
-                      className="h-[13px] w-[13px]"
-                    />
-                    Acepto los términos y condiciones de Testamento.mx
-                  </p>
-                  <p className="text-style py-4 flex items-center gap-3">
-                    <input type="checkbox" className="h-[24px] w-[24px]" />
-                    Deseo recibir correos electrónicos con consejos, ofertas y
-                    actualizaciones ocasionales de Testamento.mx
-                  </p>
-                  <div className="flex justify-center">
-                    <PrimaryButton type="submit" onClick={() => {}}>Continuar</PrimaryButton>
-                  </div>
-                  <div className="text-style pt-4 mb-10 text-center">
-                    <p onClick={handleLoginClick} className="cursor-pointer">
-                      Ya tengo cuenta{" "}
-                      <span className="text-blue-500 underline">Ingresar</span>
-                    </p>
+        <div className='px-4 sm:px-5 flex-grow'>
+          <div className='flex flex-col lg:flex-row gap-12 lg:gap-24 h-full'>
+            {/* Left column - Title section */}
+            <div className="lg:w-1/3">
+              <h1 className='text-[32px] sm:text-[46px] font-[500] tracking-[-1.5px] leading-[1.2] sm:leading-[52px] mt-14 mb-[5px] text-[#1d1d1f]'>
+                Crea tu Testamento Digital
+              </h1>
+              <p className="text-[18px] sm:text-[20px] font-[400] tracking-[-0.1px] leading-[1.3] text-[#1d1d1f] mb-6">
+                Nuestros usuarios pueden tardar 25 minutos en completar su testamento
+              </p>
+            </div>
+
+            {/* Right column - Form in white container */}
+            <div className='lg:w-2/3 flex items-center'>
+              <div className="bg-white rounded-2xl p-8 shadow-sm w-full">
+                <form onSubmit={handleSubmit} className="space-y-6">
+                  <div className="space-y-6">
+                    <div>
+                      <label htmlFor="country" className="block text-[17px] font-[400] text-[#1d1d1f] mb-2">
+                        Nombre
+                      </label>
+                      <input
+                        type="text"
+                        id="country"
+                        className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                        required
+                      />
+                    </div>
+                    <div>
+                      <label htmlFor="fatherLastName" className="block text-[17px] font-[400] text-[#1d1d1f] mb-2">
+                        Apellido Paterno
+                      </label>
+                      <input
+                        type="text"
+                        id="fatherLastName"
+                        className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                        required
+                      />
+                    </div>
+                    <div>
+                      <label htmlFor="motherLastName" className="block text-[17px] font-[400] text-[#1d1d1f] mb-2">
+                        Apellido Materno
+                      </label>
+                      <input
+                        type="text"
+                        id="motherLastName"
+                        className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                        required
+                      />
+                    </div>
+                    <div>
+                      <label htmlFor="email" className="block text-[17px] font-[400] text-[#1d1d1f] mb-2">
+                        Email
+                      </label>
+                      <input
+                        type="email"
+                        id="email"
+                        className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                        required
+                      />
+                    </div>
                   </div>
 
-                  {/* Divider */}
+                  <div className="space-y-4">
+                    <label className="flex items-start gap-3 cursor-pointer group">
+                      <input
+                        type="checkbox"
+                        id="terms"
+                        className="mt-1 h-4 w-4 rounded border-gray-300 text-blue-500 focus:ring-blue-500 transition-all"
+                      />
+                      <span className="text-[14px] text-[#1d1d1f]">
+                        Acepto los términos y condiciones de Testamento.mx
+                      </span>
+                    </label>
+                    <label className="flex items-start gap-3 cursor-pointer group">
+                      <input
+                        type="checkbox"
+                        className="mt-1 h-4 w-4 rounded border-gray-300 text-blue-500 focus:ring-blue-500 transition-all"
+                      />
+                      <span className="text-[14px] text-[#1d1d1f]">
+                        Deseo recibir correos electrónicos con consejos, ofertas y actualizaciones ocasionales de Testamento.mx
+                      </span>
+                    </label>
+                  </div>
+
+                  <div className="flex justify-end">
+                    <PrimaryButton type="submit">
+                      Continuar
+                    </PrimaryButton>
+                  </div>
+
+                  <div className="text-center">
+                    <button
+                      type="button"
+                      onClick={handleLoginClick}
+                      className="text-[14px] text-[#1d1d1f] hover:underline"
+                    >
+                      Ya tengo cuenta <span className="text-blue-500">Ingresar</span>
+                    </button>
+                  </div>
+
                   <div className="flex items-center my-4">
                     <div className="w-full h-[1px] bg-gray-300"></div>
                     <span className="mx-3 text-gray-500">O</span>
                     <div className="w-full h-[1px] bg-gray-300"></div>
                   </div>
 
-                  {/* Social Buttons */}
-                  <div className="flex justify-center gap-4 mt-4">
+                  <div className="flex justify-center gap-4">
                     <SocialButton
                       src={Google.src}
                       width={20}
                       height={20}
                       alt="Google"
-                      className="mr-4 mb-10"
                     />
-                    {/* <SocialButton
-                      src={Facebook.src}
-                      width={12}
-                      height={12}
-                      alt="Facebook"
-                      className="mr-4 ml-4 mb-10"
-                    /> */}
                     <SocialButton
                       src={Apple.src}
                       width={24}
                       height={24}
                       alt="Apple"
-                      className="ml-4 mb-10"
                     />
                   </div>
-                </div>
-              </form>
+                </form>
+              </div>
             </div>
           </div>
         </div>
-      </main>
-    </>
+      </div>
+    </main>
   );
 };
 

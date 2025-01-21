@@ -44,7 +44,7 @@ const Start: React.FC<StartProps> = ({
         </div>
         <div className='flex flex-col justify-start min-h-[80vh] px-4 sm:px-5'>
           <div className="mb-8 sm:mb-[30px] py-14">
-            <h1 className='text-[32px] sm:text-[46px] font-[500] tracking-[-1.5px] leading-[1.2] sm:leading-[52px] mb-[5px] mt-[10px] text-start text-[#1d1d1f]'>
+            <h1 className='text-[32px] sm:text-[46px] font-[500] tracking-[-1.5px] leading-[1.2] sm:leading-[52px] mb-[5px] mt-[0px] text-start text-[#1d1d1f]'>
               {heading}
             </h1>
             <p className="text-[18px] sm:text-[20px] font-[400] tracking-[-0.1px] leading-[1.3] text-[#1d1d1f] text-start">
@@ -62,26 +62,25 @@ const Start: React.FC<StartProps> = ({
           </div>
 
           <motion.div 
-            className="w-full max-w-2xl mx-auto mt-auto"
+            className="w-full max-w-2xl mx-auto mt-8 mb-12 px-4"
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.3 }}
           >
             <motion.div 
-              className="bg-[#D8F1FF] rounded-xl p-6 border border-blue-500/20 overflow-hidden cursor-pointer group shadow-sm hover:shadow-md transition-all duration-200"
-              whileHover={{ y: -2 }}
-              animate={{ height: isExpanded ? "auto" : "auto" }}
-              transition={{ duration: 0.2 }}   
+              className="bg-gradient-to-br from-[#E8F7FF] to-[#D8F1FF] rounded-2xl p-7 border border-blue-400/30 overflow-hidden cursor-pointer group hover:shadow-lg hover:shadow-blue-100 transition-all duration-300 relative"
+              whileHover={{ y: -3 }}
+              transition={{ duration: 0.3 }}   
               onClick={() => setIsExpanded(!isExpanded)}       
             >
-              <div className="flex items-start justify-between">
-                <h2 className="text-[18px] sm:text-[20px] text-[#1d1d1f] font-[500] mb-2 tracking-[0.1px] leading-[1.3]">
+              <div className="flex items-start justify-between gap-4">
+                <h2 className="text-[18px] sm:text-[20px] text-[#1d1d1f] font-[600] tracking-[0.1px] leading-[1.3]">
                   ¿Cómo afecta mi testamento?
                 </h2>
                 <motion.div 
                   animate={{ rotate: isExpanded ? 180 : 0 }}
-                  transition={{ duration: 0.2 }}
-                  className="text-[#0066CC] mt-1"
+                  transition={{ duration: 0.3 }}
+                  className="text-blue-600 mt-1 bg-white/50 rounded-full p-1 border border-blue-200/50"
                 >
                   <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                     <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
@@ -89,14 +88,16 @@ const Start: React.FC<StartProps> = ({
                 </motion.div>
               </div>
               <motion.div
+                initial={false}
                 animate={{ 
-                  height: isExpanded ? "auto" : "100px",
-                  opacity: isExpanded ? 1 : 0.9
+                  height: isExpanded ? "auto" : 0,
+                  opacity: isExpanded ? 1 : 0,
+                  marginTop: isExpanded ? "12px" : "0px"
                 }}
-                transition={{ duration: 0.2 }}
+                transition={{ duration: 0.3 }}
                 className="overflow-hidden"
               >
-                <p className="text-[14px] font-[300] text-[#1d1d1f] tracking-[0.1px] leading-[1.5] transform origin-top transition-all duration-200 ease-out">
+                <p className="text-[15px] font-[400] text-gray-700 tracking-[0.1px] leading-[1.6]">
                   {box}
                 </p>
               </motion.div>
