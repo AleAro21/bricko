@@ -1,8 +1,9 @@
 "use client";
-import { FC, useState } from "react";
+import { FC, useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import graylogo from "../../../assets/greylogo.png";
+import { useUser } from "@/context/UserContext";
 
 interface ItemData {
   listTitle: string;
@@ -21,6 +22,19 @@ interface DataItem {
 const CongratulationsPage: FC = () => {
   const router = useRouter();
   const [childData, setChildData] = useState<ItemData[] | null>(null);
+  const { user, refreshUser } = useUser();
+
+  useEffect(() => {
+    // Refresh user data when the component mounts
+    refreshUser();
+  }, [refreshUser]);
+
+  // If user is not loaded, redirect to login
+  useEffect(() => {
+    if (!user && !sessionStorage.getItem('userId')) {
+      router.push('/start/login');
+    }
+  }, [user, router]);
 
   const handleClick = (e: React.MouseEvent<HTMLParagraphElement>, items: DataItem): void => {
     e.preventDefault();
@@ -85,12 +99,12 @@ const CongratulationsPage: FC = () => {
     <>
       <main className="container w-3/4 mx-auto flex flex-col h-full min-h-screen">
         <div className="py-4">
-          <Image src={graylogo} width={100} alt="Logo" />
+          <Image src={graylogo} width={150} height={150} alt="Logo" />
         </div>
         <div className="flex flex-col md:w-[50%] max-w-[500px] mx-auto items-center justify-center h-full min-h-[80vh]">
           <div>
             <p className="title py-2 text-center mx-auto">
-              ¡Felicidades! Estás un paso más cerca de la tranquilidad.
+              ¡Felicidades {user?.firstName}! Estás un paso más cerca de la tranquilidad.
             </p>
             <p className="text-style py-4 text-center mx-auto">
               Nos encantaría saber, ¿cómo descubriste Testamento.mx?

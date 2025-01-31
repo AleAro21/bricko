@@ -20,7 +20,7 @@ const PhoneNumberPage: FC = () => {
     <>
       <main className="container w-3/4 mx-auto flex flex-col h-full min-h-screen">
         <div className="py-4">
-          <Image src={graylogo} width={100} alt="Gray Logo" />
+          <Image src={graylogo} width={150} height={150} alt="Gray Logo" />
         </div>
         <div className="flex flex-col md:w-[50%] max-w-[500px] mx-auto items-center justify-center h-full">
           <div>

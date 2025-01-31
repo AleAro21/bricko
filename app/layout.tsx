@@ -1,6 +1,7 @@
 import { Suspense } from 'react';
 import { Inter } from 'next/font/google';
 import AmplifyProvider from '@/components/providers/AmplifyProvider';
+import { UserProvider } from '@/context/UserContext';
 import './globals.css';
 
 const inter = Inter({ subsets: ['latin'] });
@@ -27,9 +28,11 @@ export default function RootLayout({ children }: RootLayoutProps) {
       </head>
       <body className={inter.className}>
         <AmplifyProvider>
-          <Suspense fallback="loading...">
-            <div className="bg-background">{children}</div>
-          </Suspense>
+          <UserProvider>
+            <Suspense fallback="loading...">
+              <div className="bg-background">{children}</div>
+            </Suspense>
+          </UserProvider>
         </AmplifyProvider>
       </body>
     </html>

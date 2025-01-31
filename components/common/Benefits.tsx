@@ -70,7 +70,7 @@ const Benefits: React.FC = () => {
   return (
     <>
       <div className="py-4">
-        <Image src={graylogo} width={100} alt="Gray Logo" />
+        <Image src={graylogo} width={150} height={150} alt="Gray Logo" />
       </div>
       <div className="flex flex-col md:w-[50%] max-w-[500px] mx-auto items-center justify-center py-6 h-full min-h-[80vh]">
         <div>

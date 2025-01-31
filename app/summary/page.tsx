@@ -1,5 +1,5 @@
 'use client';
-import { FC } from 'react';
+import { FC, useEffect } from 'react';
 import { useRouter, useSearchParams } from "next/navigation";
 import DashboardLayout from "@/components/common/DashboardLayout";
 import PrimaryButton from "@/components/reusables/PrimaryButton";
@@ -8,6 +8,7 @@ import Living from "@/assets/Ball.png"
 import Estate from "@/assets/Safeestate.png"
 import Payment from "@/assets/Payment.png"
 import Executers from "@/assets/Trust.png"
+import { useUser } from "@/context/UserContext";
 
 interface StepCardProps {
   stepNumber: number;
@@ -220,9 +221,16 @@ const calculateTotalProgress = () => {
 };
 
 const SummaryPage: FC = () => {
-  const router = useRouter();
   const params = useSearchParams();
   const totalProgress = calculateTotalProgress();
+  const router = useRouter();
+  const { user } = useUser();
+
+  useEffect(() => {
+    if (!user && !sessionStorage.getItem('userId')) {
+      router.push('/start/login');
+    }
+  }, [user, router]);
 
   const handlePaymentClick = () => {
     router.push("/payment");
@@ -233,7 +241,9 @@ const SummaryPage: FC = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="flex flex-col lg:flex-row gap-12">
           <div className="lg:w-3/5">
-            <h1 className="text-3xl font-semibold text-gray-900 mb-2">Tu Testamento</h1>
+            <h1 className="text-3xl font-semibold text-gray-900 mb-2">
+              Tu Testamento, {user?.firstName || 'Usuario'}
+            </h1>
             <p className="text-gray-600 mb-8">
               Te guiamos en cada etapa para asegurar que tu voluntad se refleje con claridad.
             </p>

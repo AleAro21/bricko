@@ -2,36 +2,37 @@
 
 import { useState } from 'react';
 import CardStart from "@/components/common/CardStart";
-import { FaHeartbeat, FaHeadset, FaHourglassStart, FaCcVisa } from 'react-icons/fa';
+import { Heartbeat, Headphones, HourglassMedium, CreditCard } from 'phosphor-react';
 import { useRouter } from 'next/navigation';
 import PrimaryButton from '@/components/reusables/PrimaryButton';
 import graylogo from '../assets/greylogo.png';
 import Image from 'next/image';
 import { useAuthenticator } from '@aws-amplify/ui-react';
+import { motion } from 'framer-motion';
 
 export default function Home() {
   const router = useRouter();
-  const { user } = useAuthenticator();
+  
   const [selectedCards, setSelectedCards] = useState<number[]>([]);
 
   const cards = [
     {
-      icon: <FaHeartbeat size={70} />,
-      title: "Save with Apple Trade In.",
-      description: "Get $180-$650 in credit toward iPhone 16 or iPhone 16 Pro when you trade in iPhone 12 or higher.",
+      icon: <Heartbeat size={70} weight="thin" />,
+      title: "Save ",
+      description: "Get $180-$650 in credit toward iPhone 16 or iPhone 16 Pro ",
     },
     {
-      icon: <FaHeadset size={70} />,
+      icon: <Headphones size={70} weight="thin" />,
       title: "Soltero",
       description: "Para personas que no están en una relación actualmente",
     },
     {
-      icon: <FaHourglassStart size={40} />,
+      icon: <HourglassMedium size={40} weight="thin" />,
       title: "Familia",
       description: "Para familias con hijos o dependientes",
     },
     {
-      icon: <FaCcVisa size={70} />,
+      icon: <CreditCard size={70} weight="thin" />,
       title: "Convivencia",
       description: "Para personas que comparten vivienda",
     }
@@ -48,24 +49,24 @@ export default function Home() {
   };
 
   const handleContinue = () => {
-    if (!user) {
-      // Redirect to sign in if not authenticated
-      // router.push('/auth-test');
-      router.push('/start/childern');
-      return;
-    }
     router.push('/start/childern');
   };
 
   return (
-    <main className='container mx-auto flex flex-col min-h-screen'>
+    <motion.main 
+      className='container mx-auto flex flex-col min-h-screen'
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 1.2 }}
+    >
       <div className='w-full max-w-6xl mx-auto'>
         <div className='py-5 px-4 sm:px-5'>
           <a href='https://testador.mx'>
             <Image 
               src={graylogo} 
-              width={100}
-              height={100}
+              width={150}
+              height={150}
               alt="Testador Logo"
             />
           </a>
@@ -76,7 +77,7 @@ export default function Home() {
               Cuéntanos de ti
             </h1>
             <p className="text-[18px] sm:text-[20px] font-[400] tracking-[-0.1px] leading-[1.3] text-[#1d1d1f] text-start mb-6 sm:mb-[55px]">
-              Selecciona las opciones que <br className="hidden sm:block" /> mejor describan tu situación
+              Selecciona las opciones que mejor describan tu situación
             </p>
           </div>
           <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 w-full mb-8 sm:mb-10'>
@@ -111,6 +112,6 @@ export default function Home() {
           </div>
         </div>
       </div>
-    </main>
+    </motion.main>
   );
 }

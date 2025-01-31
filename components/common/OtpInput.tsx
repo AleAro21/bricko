@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import React, { useState, useEffect, ChangeEvent } from 'react';
 import { useRouter } from 'next/navigation';
@@ -7,7 +7,10 @@ import { FaUser, FaPhoneAlt, FaSms, FaWhatsapp } from 'react-icons/fa';
 import { motion, AnimatePresence } from 'framer-motion';
 import graylogo from '@/assets/greylogo.png';
 import PrimaryButton from '@/components/reusables/PrimaryButton';
-import User from "@/assets/TrustPerson.png"
+import User from "@/assets/TrustPerson.png";
+import { confirmSignUp, resendSignUpCode, fetchAuthSession, signIn } from "aws-amplify/auth";
+import { apiService } from '@/app/apiService';
+import { useUser } from '@/context/UserContext';
 
 interface OTPInputProps {
   length?: number;
@@ -26,6 +29,7 @@ const OTPInput: React.FC<OTPInputProps> = ({ length = 6, onComplete }) => {
   const [showPopup, setShowPopup] = useState<boolean>(false);
   const [currentMethodIndex, setCurrentMethodIndex] = useState<number>(0);
   const router = useRouter();
+  const { setUser } = useUser();
 
   const verificationMethods: VerificationMethod[] = [
     { id: 'whatsapp', icon: <FaWhatsapp className="text-2xl" />, label: 'WhatsApp' },
@@ -34,7 +38,7 @@ const OTPInput: React.FC<OTPInputProps> = ({ length = 6, onComplete }) => {
   ];
 
   const rotateVerificationMethod = () => {
-    setCurrentMethodIndex((prevIndex) => 
+    setCurrentMethodIndex((prevIndex) =>
       (prevIndex + 1) % verificationMethods.length
     );
     resetTimer();
@@ -52,12 +56,77 @@ const OTPInput: React.FC<OTPInputProps> = ({ length = 6, onComplete }) => {
     }
   };
 
-  const handleSubmit = (): void => {
-    const otpString = otp.join('');
-    if (onComplete) {
-      onComplete(otpString);
+  const handleSubmit = async (): Promise<void> => {
+    const otpString = otp.join("");
+    const email = sessionStorage.getItem("email");
+    
+    if (!email) {
+      alert("No se encontró el correo electrónico. Por favor, regresa al paso anterior.");
+      return;
     }
-    router.push('/start/congratulation');
+
+    try {
+      // Confirm signup
+      await confirmSignUp({ username: email, confirmationCode: otpString });
+      
+      // Sign in
+      const password = sessionStorage.getItem("password");
+      if (!password) {
+        throw new Error("Password not found in session storage");
+      }
+
+      const { isSignedIn } = await signIn({ username: email, password });
+      if (!isSignedIn) {
+        throw new Error("Sign in failed");
+      }
+
+      // Get tokens
+      const { tokens } = await fetchAuthSession();
+      if (!tokens?.accessToken) {
+        throw new Error("Failed to retrieve tokens");
+      }
+
+      // Set token in API service
+      apiService.setToken(tokens.accessToken.toString());
+
+      // Create user
+      const userData = {
+        firstName: sessionStorage.getItem("firstName"),
+        lastName: sessionStorage.getItem("lastName"),
+        middleName: sessionStorage.getItem("middleName"),
+        email,
+        acceptTerms: true,
+        acceptOffers: true,
+      };
+
+      const createdUser = await apiService.createUser(userData);
+      
+      // Store user ID and set user in context
+      sessionStorage.setItem('userId', createdUser.id);
+      setUser(createdUser);
+
+      router.push("/start/congratulation");
+    } catch (error: any) {
+      console.error("Error during confirmation process:", error);
+      alert(error.message || "An error occurred during confirmation");
+    }
+  };
+
+  const handleResendCode = async (): Promise<void> => {
+    const email = sessionStorage.getItem("email");
+    if (!email) {
+      alert("No se encontró el correo electrónico.");
+      return;
+    }
+
+    try {
+      await resendSignUpCode({ username: email });
+      alert("Código de verificación reenviado.");
+      resetTimer();
+    } catch (error: any) {
+      console.error("Failed to resend code", error);
+      alert(error.message || "Failed to resend code. Please try again.");
+    }
   };
 
   useEffect(() => {
@@ -79,6 +148,7 @@ const OTPInput: React.FC<OTPInputProps> = ({ length = 6, onComplete }) => {
 
   const currentMethod = verificationMethods[currentMethodIndex];
 
+
   return (
     <main className='container mx-auto flex flex-col min-h-screen bg-[#f5f5f7]'>
       <div className='w-full max-w-6xl mx-auto flex flex-col min-h-screen'>
@@ -86,8 +156,8 @@ const OTPInput: React.FC<OTPInputProps> = ({ length = 6, onComplete }) => {
           <a href='https://testador.mx'>
             <Image
               src={graylogo}
-              width={100}
-              height={100}
+              width={150}
+              height={150}
               alt="Testador Logo"
             />
           </a>
@@ -101,15 +171,16 @@ const OTPInput: React.FC<OTPInputProps> = ({ length = 6, onComplete }) => {
                   Verificación en 2 pasos
                 </h2>
                 <p className="text-2xl font-semibold mb-4">
-                  Ingresa el código que te enviamos por {currentMethod.label}
+                  Ingresa el código que te enviamos por correo
+                  {/* {currentMethod.label} */}
                 </p>
                 <p className="text-gray-600 mb-6">
-                  Es un código de 6 dígitos enviado al teléfono terminado en 4558.
+                  Es un código de 6 dígitos enviado a
                 </p>
                 <div className="flex items-center mb-4 p-4 pr-12 bg-gray-50 border border-gray-300 rounded-full shadow-sm">
                   <Image src={User} width={30} height={30} alt="Partner icon" />
                   <span className="text-gray-700 ml-3">
-                    correodeusuario@testamento.com
+                    {sessionStorage.getItem("email")}
                   </span>
                 </div>
                 <div className="border-b border-gray-300 my-4 w-full"></div>
@@ -121,7 +192,7 @@ const OTPInput: React.FC<OTPInputProps> = ({ length = 6, onComplete }) => {
               {/* Right column - OTP Form in white container */}
               <div className='lg:w-2/3'>
                 <div className="bg-white rounded-2xl p-8 shadow-sm w-full">
-                  <motion.div 
+                  <motion.div
                     key={currentMethod.id}
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
@@ -132,7 +203,8 @@ const OTPInput: React.FC<OTPInputProps> = ({ length = 6, onComplete }) => {
                       {currentMethod.icon}
                     </div>
                     <span className="text-gray-700 font-medium">
-                      Código por {currentMethod.label}
+                      Código por correo electrónico
+                      {/* {currentMethod.label} */}
                     </span>
                   </motion.div>
 
@@ -157,7 +229,7 @@ const OTPInput: React.FC<OTPInputProps> = ({ length = 6, onComplete }) => {
                       ) : (
                         <span
                           className="text-blue-600 cursor-pointer"
-                          onClick={resetTimer}
+                          onClick={handleResendCode}
                         >
                           Reenviar código
                         </span>

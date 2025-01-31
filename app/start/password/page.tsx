@@ -1,6 +1,7 @@
 "use client";
 import { FC, FormEvent, useState, ChangeEvent } from "react";
 import { useRouter } from "next/navigation";
+import { signUp } from 'aws-amplify/auth'; // Import signUp from AWS Amplify
 import graylogo from "../../../assets/greylogo.png";
 import Image from "next/image";
 import PrimaryButton from "@/components/reusables/PrimaryButton";
@@ -14,6 +15,7 @@ const PasswordPage: FC = () => {
   const router = useRouter();
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [password, setPassword] = useState<string>("");
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const pass: number = Math.min(password.length * 10, 100);
 
   const getStrengthDetails = (pass: number): PasswordStrength => {
@@ -24,10 +26,44 @@ const PasswordPage: FC = () => {
 
   const strengthDetails = getStrengthDetails(pass);
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>): void => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
-    router.push("/start/phoneNumber");
+  
+    const email = sessionStorage.getItem("email");
+    if (!email) {
+      setErrorMessage("No se encontró el correo electrónico. Por favor, regresa al paso anterior.");
+      return;
+    }
+  
+    if (password.length < 10) {
+      setErrorMessage("La contraseña debe tener al menos 10 caracteres.");
+      return;
+    }
+  
+    try {
+      // Store password in session storage
+      sessionStorage.setItem("password", password);
+  
+      const { isSignUpComplete, nextStep } = await signUp({
+        username: email,
+        password: password,
+        options: {
+          userAttributes: { email },
+        },
+      });
+  
+      if (isSignUpComplete) {
+        console.log("User signed up successfully:", nextStep);
+        router.push("/start/otp"); // Redirect to OTP verification
+      } else if (nextStep.signUpStep === "CONFIRM_SIGN_UP") {
+        router.push("/start/otp");
+      }
+    } catch (error: any) {
+      console.error("Sign up failed", error);
+      setErrorMessage(error.message || "Registration failed. Please try again.");
+    }
   };
+  
 
   const handlePasswordChange = (e: ChangeEvent<HTMLInputElement>): void => {
     setPassword(e.target.value);
@@ -44,7 +80,7 @@ const PasswordPage: FC = () => {
     <>
       <main className="container w-3/4 mx-auto flex flex-col h-full min-h-screen">
         <div className="py-4">
-          <Image src={graylogo} width={100} alt="Gray Logo" />
+          <Image src={graylogo} width={150} height={100}  alt="Gray Logo" />
         </div>
         <div className="flex flex-col md:w-[50%] max-w-[500px] mx-auto items-center justify-center h-full">
           <div>
@@ -117,6 +153,7 @@ const PasswordPage: FC = () => {
                     {strengthDetails.label}
                   </span>
                 </div>
+                {errorMessage && <p className="text-red-500 text-center mt-2">{errorMessage}</p>}
                 <div className="flex justify-center mt-4">
                   <PrimaryButton type="submit">Continuar</PrimaryButton>
                 </div>
