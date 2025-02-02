@@ -7,6 +7,7 @@ import graylogo from "../../../assets/greylogo.png";
 import Apple from "@/assets/Apple.png";
 import Google from "@/assets/Google.png";
 import PrimaryButton from "@/components/reusables/PrimaryButton";
+import FooterTwo from '@/components/common/FooterTwo';
 
 interface SocialButtonProps {
   src: string;
@@ -17,7 +18,7 @@ interface SocialButtonProps {
 }
 
 const SocialButton: FC<SocialButtonProps> = ({ src, alt, width, height, className = "" }) => (
-  <button className={`w-14 h-14 rounded-full bg-white flex items-center justify-center shadow-sm hover:shadow-md transition-shadow ${className}`}>
+  <button className={`w-14 h-14 rounded-full bg-white flex items-center justify-center shadow-sm hover:shadow-md transition-shadow border border-gray-100 ${className}`}>
     <Image src={src} width={width} height={height} alt={alt} />
   </button>
 );
@@ -65,34 +66,37 @@ const BasicsPage: FC = () => {
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 1 }}
+      className="flex flex-col min-h-screen"
     >
-      <main className='container mx-auto flex flex-col min-h-screen bg-[#f5f5f7]'>
-        <div className='w-full max-w-6xl mx-auto flex flex-col min-h-screen mb-6'>
-          <div className='py-5 px-4 sm:px-5'>
+      <main className='container mx-auto flex flex-col flex-grow bg-[#f5f5f7] overflow-hidden'>
+        <div className='w-full max-w-6xl mx-auto flex flex-col min-h-[75vh] mb-4'>
+          <div className='py-4 px-4 sm:px-5'>
             <a href='https://testador.mx'>
               <Image src={graylogo} width={150} height={150} alt="Testador Logo" />
             </a>
           </div>
           <div className='px-4 sm:px-5 flex-grow'>
-            <div className='flex flex-col lg:flex-row gap-12 lg:gap-24 h-full'>
+            <div className='flex flex-col lg:flex-row gap-8 lg:gap-24 h-full'>
               {/* Left column - Title section - Hidden on mobile */}
               <div className="hidden lg:block lg:w-1/3">
-                <h1 className='text-[32px] sm:text-[38px] font-[500] tracking-[-1.5px] leading-[1.2] sm:leading-[52px] mt-14 mb-[5px] text-[#1d1d1f]'>
+                <div className="inline-flex items-center h-[32px] bg-[#047aff] bg-opacity-10 px-[12px] py-[6px] rounded-md mb-2.5 mt-5">
+                  <span className="text-[#047aff] text-[14px] font-[400]">CREA TU CUENTA</span>
+                </div>
+
+                <h1 className='text-[32px] sm:text-[38px] font-[500] tracking-[-1.5px] leading-[1.2] sm:leading-[52px] mb-[15px] text-[#1d1d1f]'>
                   Testamento digital
                 </h1>
-                <p className="text-[17px] sm:text-[20px] font-[300] tracking-[-0.1px] leading-[1.3] text-[#1d1d1f] mb-6">
-                  Regitrate, nuestros usuarios pueden tardar 25 minutos en completar su testamento
-                </p>
+
                 <ul className="space-y-4 mb-8">
                   {[
-                    "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-                    "Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-                    "Ut enim ad minim veniam, quis nostrud exercitation."
+                    "Poco tiempo",
+                    "Seguro",
+                    "Legal"
                   ].map((text, index) => (
                     <li key={index} className="flex items-start gap-3">
-                      <div className="flex-shrink-0 w-6 h-6 rounded-full bg-[#047aff]/10 flex items-center justify-center mt-0.5">
+                      <div className="flex-shrink-0 w-6 h-6 rounded-full bg-[#047aff] flex items-center justify-center mt-0.5">
                         <svg
-                          className="w-3.5 h-3.5 text-[#047aff]"
+                          className="w-3.5 h-3.5 text-[#FFFFFF]"
                           fill="none"
                           viewBox="0 0 24 24"
                           stroke="currentColor"
@@ -112,13 +116,16 @@ const BasicsPage: FC = () => {
               </div>
 
               {/* Right column - Form in white container */}
-              <div className='w-full lg:w-3/5 flex items-center'>
-                <div className="bg-white rounded-2xl px-12 py-8 shadow-sm w-full max-w-xl mx-auto">
-                  <h2 className="text-[26px] font-[500] text-[#1d1d1f] mb-6 whitespace-nowrap">Crear cuenta en Testamento.mx</h2>
-                  <form onSubmit={handleSubmit} className="space-y-6">
-                    <div className="space-y-6">
+              <div className='w-full lg:w-3/5 flex items-center mt-[30px] lg:mt-0'>
+                <div className="bg-white rounded-2xl px-4 sm:px-8 md:px-12 py-8 shadow-lg w-full max-w-xl mx-auto">
+                  <h2 className="text-[22px] sm:text-[26px] font-[500] text-[#1d1d1f] mb-5 break-words sm:whitespace-nowrap">
+                    <span className="lg:hidden">Registrate</span>
+                    <span className="hidden lg:inline">Registrate en Testamento.mx</span>
+                  </h2>
+                  <form onSubmit={handleSubmit} className="space-y-5">
+                    <div className="space-y-5">
                       <div>
-                        <label htmlFor="name" className="block text-[17px] font-[400] text-[#1d1d1f] mb-2">
+                        <label htmlFor="name" className="block text-[17px] font-[400] text-[#1d1d1f] mb-2.5">
                           Nombre
                         </label>
                         <input
@@ -129,7 +136,7 @@ const BasicsPage: FC = () => {
                         />
                       </div>
                       <div>
-                        <label htmlFor="fatherLastName" className="block text-[17px] font-[400] text-[#1d1d1f] mb-2">
+                        <label htmlFor="fatherLastName" className="block text-[17px] font-[400] text-[#1d1d1f] mb-2.5">
                           Apellido Paterno
                         </label>
                         <input
@@ -140,7 +147,7 @@ const BasicsPage: FC = () => {
                         />
                       </div>
                       <div>
-                        <label htmlFor="motherLastName" className="block text-[17px] font-[400] text-[#1d1d1f] mb-2">
+                        <label htmlFor="motherLastName" className="block text-[17px] font-[400] text-[#1d1d1f] mb-2.5">
                           Apellido Materno
                         </label>
                         <input
@@ -151,7 +158,7 @@ const BasicsPage: FC = () => {
                         />
                       </div>
                       <div>
-                        <label htmlFor="email" className="block text-[17px] font-[400] text-[#1d1d1f] mb-2">
+                        <label htmlFor="email" className="block text-[17px] font-[400] text-[#1d1d1f] mb-2.5">
                           Email
                         </label>
                         <input
@@ -164,23 +171,23 @@ const BasicsPage: FC = () => {
                     </div>
 
                     <div className="space-y-4">
-                      <label className="flex items-start gap-3 cursor-pointer group">
+                      <label className="flex items-center gap-3 cursor-pointer group">
                         <input
                           type="checkbox"
                           id="terms"
-                          className="mt-1 h-4 w-4 rounded border-gray-300 text-blue-500 focus:ring-blue-500 transition-all"
+                          className="self-center h-3 w-3 rounded border-gray-300 text-blue-500 focus:ring-blue-500 mt-2.5 transition-all"
                         />
-                        <span className="text-[14px] text-[#1d1d1f]">
-                          Acepto los términos y condiciones de Testamento.mx
+                        <span className="text-[12px] pt-2.5 text-[#1d1d1f]">
+                          Acepto los <a href="https://www.testamento.mx/terminos" className="text-blue-500 underline">términos y condiciones</a> y <a href="https://www.testamento.mx/privacidad" className="text-blue-500 underline">políticas de privacidad</a> de Testamento.mx
                         </span>
                       </label>
                     </div>
 
-                    <div className="flex justify-center">
+                    <div className="flex justify-center pt-2.5">
                       <PrimaryButton type="submit">Continuar</PrimaryButton>
                     </div>
 
-                    <div className="text-center">
+                    <div className="text-center mt-5">
                       <button
                         type="button"
                         onClick={handleLoginClick}
@@ -190,7 +197,7 @@ const BasicsPage: FC = () => {
                       </button>
                     </div>
 
-                    <div className="flex items-center my-4">
+                    <div className="flex items-center my-5">
                       <div className="w-full h-[1px] bg-gray-300"></div>
                       <div className="w-full h-[1px] bg-gray-300"></div>
                     </div>
@@ -209,6 +216,10 @@ const BasicsPage: FC = () => {
                         alt="Apple"
                       />
                     </div>
+
+                    <div className="text-center text-sm text-gray-500 mt-5">
+                      ¿Problemas para registrarte? <a href="mailto: ayuda@testamento.mx" className="text-blue-500 underline">Contáctanos</a>
+                    </div>
                   </form>
                 </div>
               </div>
@@ -216,6 +227,7 @@ const BasicsPage: FC = () => {
           </div>
         </div>
       </main>
+      <FooterTwo />
     </motion.div>
   );
 };
