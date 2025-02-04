@@ -1,8 +1,9 @@
-import { FC, useEffect, useState } from 'react';
+'use client';
+
+import { FC } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X } from 'phosphor-react';
 import PrimaryButton from "@/components/reusables/PrimaryButton";
-import { createPortal } from 'react-dom';
 
 interface AddProps {
   showModal: boolean;
@@ -10,25 +11,17 @@ interface AddProps {
 }
 
 const Add: FC<AddProps> = ({ showModal, setShowModal }) => {
-  const [isBrowser, setIsBrowser] = useState(false);
-
-  useEffect(() => {
-    setIsBrowser(true);
-  }, []);
-
-  if (!isBrowser) return null;
-
-  return createPortal(
+  return (
     <AnimatePresence>
       {showModal && (
         <>
-          {/* Backdrop without blur */}
+          {/* Backdrop */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={() => setShowModal(false)}
-            className="fixed inset-0 bg-black/40 z-40"
+            className="fixed inset-0 bg-black/40 backdrop-blur-sm z-40"
           />
 
           {/* Modal */}
@@ -48,9 +41,9 @@ const Add: FC<AddProps> = ({ showModal, setShowModal }) => {
                 >
                   <X size={24} weight="bold" />
                 </button>
-                <h2 className="text-[22px] font-[500] text-[#1d1d1f]">Agregar Pareja</h2>
+                <h2 className="text-[22px] font-[500] text-[#1d1d1f]">Agregar Mascota</h2>
                 <p className="text-[14px] text-[#6e6e73] mt-1">
-                  Ingresa los datos de tu pareja para incluirla en el testamento
+                  Ingresa los datos de tu mascota para incluirla en el testamento
                 </p>
               </div>
 
@@ -59,10 +52,7 @@ const Add: FC<AddProps> = ({ showModal, setShowModal }) => {
                 <form className="space-y-6">
                   <div className="space-y-4">
                     <div>
-                      <label
-                        htmlFor="name"
-                        className="block text-[17px] font-[400] text-[#1d1d1f] mb-2"
-                      >
+                      <label htmlFor="name" className="block text-[17px] font-[400] text-[#1d1d1f] mb-2">
                         Nombre <span className="text-[#047aff]">*</span>
                       </label>
                       <input
@@ -74,32 +64,44 @@ const Add: FC<AddProps> = ({ showModal, setShowModal }) => {
                     </div>
 
                     <div>
-                      <label
-                        htmlFor="lastName"
-                        className="block text-[17px] font-[400] text-[#1d1d1f] mb-2"
+                      <label htmlFor="type" className="block text-[17px] font-[400] text-[#1d1d1f] mb-2">
+                        Tipo de mascota <span className="text-[#047aff]">*</span>
+                      </label>
+                      <select
+                        id="type"
+                        className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:border-[#047aff] transition-all"
+                        required
                       >
-                        Apellidos <span className="text-[#047aff]">*</span>
+                        <option value="">Seleccionar tipo</option>
+                        <option value="dog">Perro</option>
+                        <option value="cat">Gato</option>
+                        <option value="bird">Ave</option>
+                        <option value="other">Otro</option>
+                      </select>
+                    </div>
+
+                    <div>
+                      <label htmlFor="age" className="block text-[17px] font-[400] text-[#1d1d1f] mb-2">
+                        Edad <span className="text-[#047aff]">*</span>
                       </label>
                       <input
-                        type="text"
-                        id="lastName"
+                        type="number"
+                        id="age"
+                        min="0"
                         className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:border-[#047aff] transition-all"
                         required
                       />
                     </div>
 
                     <div>
-                      <label
-                        htmlFor="birthdate"
-                        className="block text-[17px] font-[400] text-[#1d1d1f] mb-2"
-                      >
-                        Fecha de nacimiento <span className="text-[#047aff]">*</span>
+                      <label htmlFor="description" className="block text-[17px] font-[400] text-[#1d1d1f] mb-2">
+                        Descripción
                       </label>
-                      <input
-                        type="date"
-                        id="birthdate"
+                      <textarea
+                        id="description"
+                        rows={3}
                         className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:border-[#047aff] transition-all"
-                        required
+                        placeholder="Características especiales, necesidades, etc."
                       />
                     </div>
                   </div>
@@ -122,8 +124,7 @@ const Add: FC<AddProps> = ({ showModal, setShowModal }) => {
           </motion.div>
         </>
       )}
-    </AnimatePresence>,
-    document.body
+    </AnimatePresence>
   );
 };
 

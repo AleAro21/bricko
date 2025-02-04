@@ -1,8 +1,12 @@
-"use client";
+'use client';
+
 import { FC, useState } from 'react';
+import { motion } from 'framer-motion';
 import DashboardLayout from "@/components/common/DashboardLayout";
 import { useRouter } from "next/navigation";
 import Add from "./Add";
+import PrimaryButton from "@/components/reusables/PrimaryButton";
+import ProgressIndicator from "@/components/reusables/ProgressIndicator";
 
 interface MaritalStatusItem {
   title: string;
@@ -81,9 +85,9 @@ const PartnerPage: FC = () => {
       return (
         <div
           onClick={handlePartnerClick}
-          className="bg-white rounded-xl border border-gray-200 hover:border-blue-500 transition-colors cursor-pointer mt-4"
+          className="bg-white rounded-xl border border-gray-200 hover:border-[#047aff] transition-colors cursor-pointer mt-4"
         >
-          <div className="flex items-center justify-center gap-2 py-4 text-blue-600 font-medium">
+          <div className="flex items-center justify-center gap-2 py-4 text-[#047aff] font-medium">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 448 512"
@@ -104,67 +108,91 @@ const PartnerPage: FC = () => {
   return (
     <DashboardLayout>
       <Add setShowModal={setShowModal} showModal={showModal} />
-      <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="space-y-8">
-          <div>
-            <h1 className="text-3xl font-semibold text-gray-900">¿Cuál es tu estado civil?</h1>
-            <p className="mt-4 text-lg text-gray-600">
-              Seleccione su estado legal actual, incluso si sabe que va a
-              cambiar pronto. Siempre podrás actualizar esto en el futuro.
-            </p>
-          </div>
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        transition={{ duration: 1 }}
+        className="container mx-auto flex flex-col flex-grow bg-[#f5f5f7] overflow-hidden"
+      >
+        <div className="w-full max-w-6xl mx-auto flex flex-col min-h-[100vh] mb-4 px-4 sm:px-5">
+          <div className="flex flex-col lg:flex-row gap-8 lg:gap-24 h-full py-12">
+            {/* Left column - Title section */}
+            <div className="lg:w-1/3">
+              <div className="inline-flex items-center h-[32px] bg-[#047aff] bg-opacity-10 px-[12px] py-[6px] rounded-md mb-2.5">
+                <span className="text-[#047aff] text-[14px] font-[400]">ESTADO CIVIL</span>
+              </div>
 
-          <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-            {data.map((items, index) => (
-              <div
-                key={index}
-                className="cursor-pointer transition-colors"
-                onClick={(e) => handleClick(e, index, items)}
-              >
-                <div
-                  className={`px-6 py-4 ${
-                    index !== 0 ? 'border-t border-gray-100' : ''
-                  } ${
-                    activeIndex === index
-                      ? 'bg-blue-600'
-                      : 'hover:bg-blue-50'
-                  }`}
-                >
-                  <h3
-                    className={`text-lg font-medium ${
-                      activeIndex === index
-                        ? 'text-white'
-                        : 'text-gray-900'
-                    }`}
-                  >
-                    {items.title}
-                  </h3>
-                  <p
-                    className={`mt-1 text-sm ${
-                      activeIndex === index
-                        ? 'text-blue-100'
-                        : 'text-gray-500'
-                    }`}
-                  >
-                    {items.subTitle}
-                  </p>
+              <h1 className='text-[32px] sm:text-[38px] font-[500] tracking-[-1.5px] leading-[1.2] sm:leading-[52px] mb-[15px]'>
+                <span className='text-[#1d1d1f]'>¿Cuál es tu </span>
+                <span className='bg-gradient-to-r from-[#3d9bff] to-[#047aff] inline-block text-transparent bg-clip-text'>estado civil</span>
+                <span className='text-[#1d1d1f]'>?</span>
+              </h1>
+
+              <p className="text-[16px] text-[#1d1d1f] leading-6 mb-8">
+                Seleccione su estado legal actual, incluso si sabe que va a
+                cambiar pronto. Siempre podrás actualizar esto en el futuro.
+              </p>
+
+              <ProgressIndicator
+                currentSection={3}
+                totalSections={5}
+                title="Progreso de la sección"
+              />
+            </div>
+
+            {/* Right column - Form in white container */}
+            <div className='w-full lg:w-3/5'>
+              <div className="bg-white rounded-2xl px-4 sm:px-8 md:px-12 py-8 shadow-lg">
+                <div className="space-y-4">
+                  {data.map((items, index) => (
+                    <div
+                      key={index}
+                      className="cursor-pointer transition-colors"
+                      onClick={(e) => handleClick(e, index, items)}
+                    >
+                      <div
+                        className={`px-6 py-4 rounded-xl border ${
+                          activeIndex === index
+                            ? 'bg-[#047aff] border-[#047aff]'
+                            : 'border-gray-200 hover:border-[#047aff]'
+                        }`}
+                      >
+                        <h3
+                          className={`text-[17px] font-[400] ${
+                            activeIndex === index
+                              ? 'text-white'
+                              : 'text-[#1d1d1f]'
+                          }`}
+                        >
+                          {items.title}
+                        </h3>
+                        <p
+                          className={`mt-1 text-[14px] ${
+                            activeIndex === index
+                              ? 'text-blue-100'
+                              : 'text-[#6e6e73]'
+                          }`}
+                        >
+                          {items.subTitle}
+                        </p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                {selectedItem && renderAddPartnerButton(selectedItem.title)}
+
+                <div className="flex justify-center pt-6 mt-8">
+                  <PrimaryButton onClick={handleSave}>
+                    Guardar y continuar
+                  </PrimaryButton>
                 </div>
               </div>
-            ))}
-          </div>
-
-          {selectedItem && renderAddPartnerButton(selectedItem.title)}
-
-          <div className="pt-6 flex justify-end">
-            <button
-              onClick={handleSave}
-              className="inline-flex justify-center px-6 py-3 rounded-xl bg-blue-600 text-white text-base font-medium hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
-            >
-              Guardar y continuar
-            </button>
+            </div>
           </div>
         </div>
-      </div>
+      </motion.div>
     </DashboardLayout>
   );
 };

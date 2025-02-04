@@ -5,20 +5,21 @@ import { Disclosure, Menu, Transition } from '@headlessui/react';
 import Link from 'next/link';
 import Image from 'next/image';
 import blacklogo from '../../assets/blacklogo.png';
+import CustomerSupport from '../../assets/CustomerSupport.png';
 import { signOut } from 'aws-amplify/auth';
 import { Amplify } from 'aws-amplify';
 import awsConfig from "@/aws-exports";
-import { useRouter } from 'next/navigation'; // ✅ Use useRouter from next/navigation
+import { useRouter } from 'next/navigation';
 
 Amplify.configure(awsConfig);
 
 const Navbar: React.FC = () => {
-  const router = useRouter(); // ✅ Use the router hook inside the component
+  const router = useRouter();
 
   const handleLogout = async () => {
     try {
       await signOut();
-      router.push("/start/login"); // ✅ Navigate correctly
+      router.push("/start/login");
     } catch (error) {
       console.error("Error logging out:", error);
     }
@@ -35,7 +36,6 @@ const Navbar: React.FC = () => {
   }
 
   interface AccountData {
-    name: string;
     items: AccountItem[];
   }
 
@@ -45,7 +45,6 @@ const Navbar: React.FC = () => {
   ];
 
   const accountData: AccountData = {
-    name: 'Cuenta',
     items: [
       { name: 'Configuración', href: '/account', current: false },
       { name: 'Mensajes', href: '/messages', current: false },
@@ -58,22 +57,30 @@ const Navbar: React.FC = () => {
   };
 
   return (
-    <Disclosure as="nav" className="bg-white border-b">
+    <Disclosure as="nav" className="bg-white border-b border-gray-100">
       {({ open }) => (
         <>
-          <div className="container w-3/4 mx-auto">
+          <div className="max-w-6xl mx-auto px-4 sm:px-5">
             <div className="relative flex h-16 items-center justify-between">
               <div className="flex items-center justify-between sm:items-stretch sm:justify-start">
                 <div className="hidden sm:block">
-                  <div className="flex items-center space-x-4">
-                    <div className="flex font-bold text-lg mx-auto items-center justify-center">
-                      <Image src={blacklogo} width={30} height={30} alt="Logo" />
-                    </div>
+                  <div className="flex items-center space-x-8">
+                    <Link href="/" className="flex items-center">
+                      <Image 
+                        src={blacklogo} 
+                        width={150}
+                        height={150}
+                        alt="Logo"
+                        className="h-8 w-auto"
+                      />
+                    </Link>
                     {navigation.map((item) => (
-                      <Link href={item.href} key={item.name}>
-                        <span className="bg-white px-3 py-2 font-medium border-b border-transparent hover:border-[#000000]">
-                          {item.name}
-                        </span>
+                      <Link 
+                        href={item.href} 
+                        key={item.name}
+                        className="text-[14px] font-[400] text-[#1d1d1f] hover:text-[#047aff] transition-colors duration-200"
+                      >
+                        {item.name}
                       </Link>
                     ))}
                   </div>
@@ -82,31 +89,41 @@ const Navbar: React.FC = () => {
               <div className="flex items-center justify-end gap-2">
                 <Menu as="div" className="relative ml-3">
                   <div>
-                    <Menu.Button className="relative flex items-center">
-                      <span className="bg-white rounded-md px-3 py-2 font-medium flex items-center">
-                        {accountData.name}
-                      </span>
+                    <Menu.Button className="relative flex rounded-full bg-white text-sm focus:outline-none">
+                      <Image
+                        src={CustomerSupport}
+                        alt="Profile"
+                        width={32}
+                        height={32}
+                        className="rounded-full object-cover"
+                      />
                     </Menu.Button>
                   </div>
                   <Transition
                     as={Fragment}
-                    enter="transition ease-out duration-100"
+                    enter="transition ease-out duration-200"
                     enterFrom="transform opacity-0 scale-95"
                     enterTo="transform opacity-100 scale-100"
-                    leave="transition ease-in duration-75"
+                    leave="transition ease-in duration-150"
                     leaveFrom="transform opacity-100 scale-100"
                     leaveTo="transform opacity-0 scale-95"
                   >
-                    <Menu.Items className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                    <Menu.Items className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-xl bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
                       {accountData.items.map((subItem) => (
                         <Menu.Item key={subItem.name}>
                           {({ active }) => (
-                            <span
-                              onClick={subItem.name === 'Salir' ? subItem.onClick : undefined}
-                              className={`block px-4 py-2 text-gray-700 cursor-pointer ${active ? 'bg-gray-100' : ''}`}
+                            <div
+                              onClick={subItem.onClick}
+                              className={`
+                                block px-4 py-2 text-[14px] font-[400] cursor-pointer
+                                ${active 
+                                  ? 'bg-gradient-to-r from-blue-50 to-blue-100 text-[#047aff]' 
+                                  : 'text-[#1d1d1f]'
+                                }
+                              `}
                             >
                               {subItem.name}
-                            </span>
+                            </div>
                           )}
                         </Menu.Item>
                       ))}

@@ -46,7 +46,7 @@ const LoginPage: FC = () => {
 
     try {
       const { isSignedIn } = await signIn({ username: emailInput, password: passwordInput });
-      
+
       if (isSignedIn) {
         const { tokens } = await fetchAuthSession();
         if (!tokens?.accessToken) {
@@ -96,15 +96,16 @@ const LoginPage: FC = () => {
                     <span className="text-[#047aff] text-[14px] font-[400]">INICIAR SESIÓN</span>
                   </div>
 
-                  <h1 className='text-[32px] sm:text-[38px] font-[500] tracking-[-1.5px] leading-[1.2] sm:leading-[52px] mb-[15px] text-[#1d1d1f]'>
-                    Bienvenido de nuevo
+                  <h1 className='text-[32px] sm:text-[38px] font-[500] tracking-[-1.5px] leading-[1.2] sm:leading-[52px] mb-[15px]'>
+                    <span className='text-[#1d1d1f]'>Administra tu </span>
+                    <span className='bg-gradient-to-r from-[#3d9bff] to-[#047aff] inline-block text-transparent bg-clip-text'>testamento</span>
                   </h1>
 
                   <ul className="space-y-4 mb-8">
                     {[
-                      "Accede a tu testamento",
-                      "Modifica cuando quieras",
-                      "100% Seguro"
+                      "Edita y actualiza en cualquier momento",
+                      "Añade o cambia beneficiarios y activos",
+                      "Elige quién y cuándo lo recibe",
                     ].map((text, index) => (
                       <li key={index} className="flex items-start gap-3">
                         <div className="flex-shrink-0 w-6 h-6 rounded-full bg-[#047aff] flex items-center justify-center mt-0.5">
@@ -126,8 +127,10 @@ const LoginPage: FC = () => {
                       </li>
                     ))}
                   </ul>
+                  <p className="text-gray-500 text-[14px]">
+                    En Testamento.mx, usamos cifrado <span className="font-bold">AES-256</span> <span className="font-bold">blockchain</span> para garantizar la seguridad, integridad y privacidad de tu información.
+                  </p>
                 </div>
-
                 {/* Right column - Form in white container */}
                 <div className='w-full lg:w-3/5 flex items-center mt-[30px] lg:mt-0'>
                   <div className="bg-white/90 backdrop-blur-sm rounded-2xl px-4 sm:px-8 md:px-12 py-8 shadow-lg w-full max-w-xl mx-auto">
@@ -217,8 +220,15 @@ const LoginPage: FC = () => {
                 </div>
               </div>
             </div>
+            <div className="px-4 py-6 text-center lg:hidden">
+              <p className="text-gray-500 text-[12px]">
+                En Testamento.mx, usamos cifrado <span className="font-bold">AES-256</span> <span className="font-bold">blockchain</span> para garantizar la seguridad, integridad y privacidad de tu información.
+              </p>
+            </div>
           </div>
         </main>
+        {/* Security note visible only on mobile */}
+
         <FooterTwo />
       </motion.div>
     </div>

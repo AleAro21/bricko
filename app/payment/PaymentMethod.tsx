@@ -17,19 +17,21 @@ const PaymentMethod: FC<PaymentMethodProps> = ({ method, selected, onSelect }) =
   return (
     <div
       onClick={onSelect}
-      className={`p-4 rounded-lg border-2 cursor-pointer transition-all ${
+      className={`p-6 rounded-2xl shadow-md cursor-pointer transition-all ${
         selected 
-          ? 'border-[#0171e3] bg-[#0171e3]/5' 
-          : 'border-gray-200 hover:border-[#0171e3]'
+          ? 'bg-[#047aff] text-white' 
+          : 'bg-white hover:bg-[#047aff] hover:bg-opacity-5'
       }`}
     >
       <div className="flex items-center gap-4">
-        <div className={`p-3 rounded-full ${selected ? 'bg-[#0171e3] text-white' : 'bg-gray-100'}`}>
-          <Icon size={24} />
+        <div className={`p-3 rounded-full ${selected ? 'bg-white bg-opacity-20' : 'bg-[#f5f5f7]'}`}>
+          <Icon size={24} className={selected ? 'text-white' : 'text-[#047aff]'} />
         </div>
         <div>
-          <h3 className="font-semibold text-lg">{title}</h3>
-          <p className="text-gray-600">{description}</p>
+          <h3 className="text-[17px] font-[500]">{title}</h3>
+          <p className={`text-[14px] ${selected ? 'text-white text-opacity-80' : 'text-gray-500'}`}>
+            {description}
+          </p>
         </div>
       </div>
     </div>

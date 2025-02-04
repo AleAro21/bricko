@@ -52,7 +52,7 @@ const LiveWithPartnerPage: FC = () => {
               <div className='w-full flex items-center justify-between'>
                 <div
                   onClick={() => router.back()}
-                  className='flex items-center text-[14px] font-[500] gap-2 pt-1 text-[#9999] cursor-pointer border-b border-transparent hover:border-[#9999] transition-all delay-150'
+                  className='flex items-center text-[14px] font-[500] gap-2 pt-1 text-[#1F202780] cursor-pointer border-b border-transparent hover:border-[#1F202780] transition-all delay-150'
                 >
                   <svg
                     height='14px'

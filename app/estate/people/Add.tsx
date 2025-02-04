@@ -1,5 +1,6 @@
 import { FC } from 'react';
 import Modal from '@/components/common/Modal';
+import PrimaryButton from "@/components/reusables/PrimaryButton";
 
 interface AddProps {
   setShowModal: (show: boolean) => void;
@@ -43,33 +44,40 @@ const Add: FC<AddProps> = ({ setShowModal, showModal, onAddHeir }) => {
 
   return (
     <Modal setShowModal={setShowModal} showModal={showModal}>
-      <div className="w-full min-w-[400px]">
-        <h2 className="text-xl font-semibold text-gray-900 mb-4">Agregar Heredero</h2>
+      <div className="w-full min-w-[400px] max-w-2xl mx-auto">
+        <div className="inline-flex items-center h-[32px] bg-[#047aff] bg-opacity-10 px-[12px] py-[6px] rounded-md mb-2.5">
+          <span className="text-[#047aff] text-[14px] font-[400]">NUEVO HEREDERO</span>
+        </div>
+
+        <h2 className="text-[22px] font-[500] text-[#1d1d1f] mb-6">
+          Agregar nuevo heredero
+        </h2>
+
         <div className="w-full">
-          <form className="space-y-4" onSubmit={handleSubmit}>
+          <form className="space-y-6" onSubmit={handleSubmit}>
             <div>
-              <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
-                Nombre completo <span className="text-red-500">*</span>
+              <label htmlFor="name" className="block text-[17px] font-[400] text-[#1d1d1f] mb-2.5">
+                Nombre completo <span className="text-[#047aff]">*</span>
               </label>
               <input
                 type="text"
                 id="name"
                 name="name"
                 required
-                className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-shadow text-base"
+                className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:border-[#047aff] transition-all text-[16px]"
                 placeholder="Nombre del heredero"
               />
             </div>
 
             <div>
-              <label htmlFor="relationship" className="block text-sm font-medium text-gray-700 mb-2">
-                Relación <span className="text-red-500">*</span>
+              <label htmlFor="relationship" className="block text-[17px] font-[400] text-[#1d1d1f] mb-2.5">
+                Relación <span className="text-[#047aff]">*</span>
               </label>
               <select
                 id="relationship"
                 name="relationship"
                 required
-                className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-shadow text-base"
+                className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:border-[#047aff] transition-all text-[16px]"
                 defaultValue=""
               >
                 <option value="" disabled>Seleccionar relación</option>
@@ -82,8 +90,8 @@ const Add: FC<AddProps> = ({ setShowModal, showModal, onAddHeir }) => {
             </div>
 
             <div>
-              <label htmlFor="percentage" className="block text-sm font-medium text-gray-700 mb-2">
-                Porcentaje de herencia <span className="text-red-500">*</span>
+              <label htmlFor="percentage" className="block text-[17px] font-[400] text-[#1d1d1f] mb-2.5">
+                Porcentaje de herencia <span className="text-[#047aff]">*</span>
               </label>
               <input
                 type="number"
@@ -92,30 +100,29 @@ const Add: FC<AddProps> = ({ setShowModal, showModal, onAddHeir }) => {
                 required
                 min="0"
                 max="100"
-                className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-shadow text-base"
+                className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:border-[#047aff] transition-all text-[16px]"
                 placeholder="0"
               />
             </div>
 
             <div>
-              <label htmlFor="backupHeir" className="block text-sm font-medium text-gray-700 mb-2">
+              <label htmlFor="backupHeir" className="block text-[17px] font-[400] text-[#1d1d1f] mb-2.5">
                 Heredero de respaldo
               </label>
               <input
                 type="text"
                 id="backupHeir"
                 name="backupHeir"
-                className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-shadow text-base"
+                className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:border-[#047aff] transition-all text-[16px]"
                 placeholder="Nombre del heredero de respaldo"
               />
             </div>
 
-            <button
-              type="submit"
-              className="w-full inline-flex justify-center px-6 py-3 rounded-xl bg-blue-600 text-white text-base font-medium hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
-            >
-              Agregar Heredero
-            </button>
+            <div className="pt-2">
+              <PrimaryButton type="submit" className="w-full">
+                Agregar
+              </PrimaryButton>
+            </div>
           </form>
         </div>
       </div>

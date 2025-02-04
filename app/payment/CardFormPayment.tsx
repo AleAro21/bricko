@@ -7,59 +7,69 @@ interface CardFormPaymentProps {
 
 const CardFormPayment: FC<CardFormPaymentProps> = ({ onSubmit }) => {
   return (
-    <form onSubmit={onSubmit} className="space-y-4">
+    <form onSubmit={onSubmit} className="space-y-6">
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">
-          Número de Tarjeta
+        <label htmlFor="cardNumber" className="block text-[17px] font-[400] text-[#1d1d1f] mb-2.5">
+          Número de Tarjeta <span className="text-[#047aff]">*</span>
         </label>
         <input
           type="text"
-          className="w-full px-4 py-2 border rounded-lg focus:ring-[#0171e3] focus:border-[#0171e3]"
-          placeholder="1234 5678 9012 3456"
+          id="cardNumber"
+          name="cardNumber"
           required
+          className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:border-[#047aff] transition-all text-[16px]"
+          placeholder="1234 5678 9012 3456"
         />
       </div>
 
       <div className="grid grid-cols-2 gap-4">
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            Fecha de Expiración
+          <label htmlFor="expiry" className="block text-[17px] font-[400] text-[#1d1d1f] mb-2.5">
+            Fecha de Expiración <span className="text-[#047aff]">*</span>
           </label>
           <input
             type="text"
-            className="w-full px-4 py-2 border rounded-lg focus:ring-[#0171e3] focus:border-[#0171e3]"
-            placeholder="MM/YY"
+            id="expiry"
+            name="expiry"
             required
+            className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:border-[#047aff] transition-all text-[16px]"
+            placeholder="MM/YY"
           />
         </div>
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            CVV
+          <label htmlFor="cvv" className="block text-[17px] font-[400] text-[#1d1d1f] mb-2.5">
+            CVV <span className="text-[#047aff]">*</span>
           </label>
           <input
             type="text"
-            className="w-full px-4 py-2 border rounded-lg focus:ring-[#0171e3] focus:border-[#0171e3]"
-            placeholder="123"
+            id="cvv"
+            name="cvv"
             required
+            className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:border-[#047aff] transition-all text-[16px]"
+            placeholder="123"
           />
         </div>
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">
-          Nombre en la Tarjeta
+        <label htmlFor="cardName" className="block text-[17px] font-[400] text-[#1d1d1f] mb-2.5">
+          Nombre en la Tarjeta <span className="text-[#047aff]">*</span>
         </label>
         <input
           type="text"
-          className="w-full px-4 py-2 border rounded-lg focus:ring-[#0171e3] focus:border-[#0171e3]"
-          placeholder="Juan Pérez"
+          id="cardName"
+          name="cardName"
           required
+          className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:border-[#047aff] transition-all text-[16px]"
+          placeholder="Juan Pérez"
         />
       </div>
 
-      <PrimaryButton type="submit" className="w-full">
-        Pagar Ahora
-      </PrimaryButton>
+      <div className="pt-2">
+        <PrimaryButton type="submit" className="w-full">
+          Pagar Ahora
+        </PrimaryButton>
+      </div>
     </form>
   );
 }

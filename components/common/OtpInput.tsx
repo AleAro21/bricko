@@ -1,16 +1,18 @@
-"use client";
+'use client';
 
 import React, { useState, useEffect, ChangeEvent } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
-import { FaUser, FaPhoneAlt, FaSms, FaWhatsapp } from 'react-icons/fa';
+import { Envelope, Phone, ChatCircle } from 'phosphor-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import graylogo from '@/assets/greylogo.png';
 import PrimaryButton from '@/components/reusables/PrimaryButton';
 import User from "@/assets/TrustPerson.png";
+import CustomerSupport from "@/assets/CustomerSupport.png";
 import { confirmSignUp, resendSignUpCode, fetchAuthSession, signIn } from "aws-amplify/auth";
 import { apiService } from '@/app/apiService';
 import { useUser } from '@/context/UserContext';
+import FooterTwo from '@/components/common/FooterTwo';
 
 interface OTPInputProps {
   length?: number;
@@ -32,9 +34,9 @@ const OTPInput: React.FC<OTPInputProps> = ({ length = 6, onComplete }) => {
   const { setUser } = useUser();
 
   const verificationMethods: VerificationMethod[] = [
-    { id: 'whatsapp', icon: <FaWhatsapp className="text-2xl" />, label: 'WhatsApp' },
-    { id: 'sms', icon: <FaSms className="text-2xl" />, label: 'SMS' },
-    { id: 'call', icon: <FaPhoneAlt className="text-2xl" />, label: 'Llamada' },
+    { id: 'email', icon: <Envelope size={24} weight="regular" />, label: 'Email' },
+    { id: 'sms', icon: <ChatCircle size={24} weight="regular" />, label: 'SMS' },
+    { id: 'call', icon: <Phone size={24} weight="regular" />, label: 'Llamada' },
   ];
 
   const rotateVerificationMethod = () => {
@@ -148,70 +150,61 @@ const OTPInput: React.FC<OTPInputProps> = ({ length = 6, onComplete }) => {
 
   const currentMethod = verificationMethods[currentMethodIndex];
 
-
   return (
-    <main className='container mx-auto flex flex-col min-h-screen bg-[#f5f5f7]'>
-      <div className='w-full max-w-6xl mx-auto flex flex-col min-h-screen'>
-        <div className='py-5 px-4 sm:px-5'>
-          <a href='https://testador.mx'>
-            <Image
-              src={graylogo}
-              width={150}
-              height={150}
-              alt="Testador Logo"
-            />
-          </a>
-        </div>
-        <div className='px-4 sm:px-5 flex-grow'>
-          <div className="mb-8 sm:mb-[30px] py-14">
-            <div className='flex flex-col lg:flex-row gap-12 lg:gap-24'>
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 1 }}
+      className="flex flex-col min-h-screen"
+    >
+      <main className='container mx-auto flex flex-col flex-grow bg-[#f5f5f7] overflow-hidden'>
+        <div className='w-full max-w-6xl mx-auto flex flex-col min-h-[75vh] mb-4'>
+          <div className='py-4 px-4 sm:px-5'>
+            <a href='https://testador.mx'>
+              <Image src={graylogo} width={150} height={150} alt="Testador Logo" />
+            </a>
+          </div>
+          <div className='px-4 sm:px-5 flex-grow'>
+            <div className='flex flex-col lg:flex-row gap-8 lg:gap-24 h-full'>
               {/* Left column - Title section */}
-              <div className="lg:w-1/3 lg:sticky lg:top-8 lg:self-start">
-                <h2 className="text-gray-500 text-lg font-bold mb-2 uppercase">
-                  Verificación en 2 pasos
-                </h2>
-                <p className="text-2xl font-semibold mb-4">
-                  Ingresa el código que te enviamos por correo
-                  {/* {currentMethod.label} */}
-                </p>
-                <p className="text-gray-600 mb-6">
-                  Es un código de 6 dígitos enviado a
-                </p>
-                <div className="flex items-center mb-4 p-4 pr-12 bg-gray-50 border border-gray-300 rounded-full shadow-sm">
-                  <Image src={User} width={30} height={30} alt="Partner icon" />
-                  <span className="text-gray-700 ml-3">
-                    {sessionStorage.getItem("email")}
-                  </span>
+              <div className="lg:w-1/3">
+                <div className="inline-flex items-center h-[32px] bg-[#047aff] bg-opacity-10 px-[12px] py-[6px] rounded-md mb-2.5 mt-5">
+                  <span className="text-[#047aff] text-[14px] font-[400]">VERIFICACIÓN EN 2 PASOS</span>
                 </div>
-                <div className="border-b border-gray-300 my-4 w-full"></div>
-                <a href="#" className="text-blue-600 text-sm">
-                  Necesito ayuda
-                </a>
+
+                <h1 className='text-[32px] sm:text-[38px] font-[500] tracking-[-1.5px] leading-[1.2] sm:leading-[52px] mb-[15px]'>
+                  <span className='text-[#1d1d1f]'>Ingresa tu código de </span>
+                  <span className='bg-gradient-to-r from-[#3d9bff] to-[#047aff] inline-block text-transparent bg-clip-text'>verificación</span>
+                </h1>
+                <p className="text-[16px] text-[#1d1d1f] leading-6 mb-4">
+                  Es un código de 6 dígitos enviado a {" "}
+                  <span className="font-bold">{sessionStorage.getItem("email")}</span>
+                </p>
               </div>
 
               {/* Right column - OTP Form in white container */}
-              <div className='lg:w-2/3'>
-                <div className="bg-white rounded-2xl p-8 shadow-sm w-full">
+              <div className='w-full lg:w-3/5 flex items-center mt-[0px] lg:mt-0'>
+                <div className="bg-white rounded-2xl px-4 sm:px-8 md:px-12 py-8 shadow-lg w-full max-w-xl mx-auto">
                   <motion.div
                     key={currentMethod.id}
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -20 }}
-                    className="flex items-center space-x-2 mb-6"
+                    className="flex items-center space-x-2 mb-8"
                   >
-                    <div className="text-blue-600">
-                      {currentMethod.icon}
+                    <div className="text-[#047aff]">
+                      <Envelope size={24} weight="regular" />
                     </div>
-                    <span className="text-gray-700 font-medium">
+                    <span className="text-[#1d1d1f] text-[17px] font-[400]">
                       Código por correo electrónico
-                      {/* {currentMethod.label} */}
                     </span>
                   </motion.div>
 
-                  <div className="otp-inputs flex space-x-2 mb-4">
+                  <div className="flex justify-start space-x-4 mb-8">
                     {otp.map((data, index) => (
                       <input
-                        className="w-12 h-12 border rounded-lg text-center text-xl focus:outline-none focus:border-blue-500 border-gray-300"
+                        className="w-12 h-12 border rounded-lg text-center text-xl focus:outline-none focus:border-[#047aff] border-gray-300 transition-all"
                         type="text"
                         maxLength={1}
                         key={index}
@@ -222,13 +215,13 @@ const OTPInput: React.FC<OTPInputProps> = ({ length = 6, onComplete }) => {
                     ))}
                   </div>
 
-                  <div className="flex w-full justify-between items-center mb-4">
-                    <p className="text-gray-500 text-sm">
+                  <div className="flex w-full justify-between items-center mb-8">
+                    <p className="text-[14px] text-[#1d1d1f]">
                       {timer > 0 ? (
                         `Reenviar código en 00:${timer < 10 ? `0${timer}` : timer}`
                       ) : (
                         <span
-                          className="text-blue-600 cursor-pointer"
+                          className="text-[#047aff] cursor-pointer hover:underline"
                           onClick={handleResendCode}
                         >
                           Reenviar código
@@ -237,21 +230,36 @@ const OTPInput: React.FC<OTPInputProps> = ({ length = 6, onComplete }) => {
                     </p>
                     <button
                       onClick={rotateVerificationMethod}
-                      className="text-blue-600 text-sm hover:text-blue-700 transition-colors"
+                      className="text-[#047aff] text-[14px] hover:underline transition-colors"
                     >
                       Cambiar método de verificación
                     </button>
                   </div>
 
-                  <div className="flex w-full items-center justify-between">
-                    <PrimaryButton onClick={handleSubmit}>Continuar</PrimaryButton>
-                    <a
-                      href="#"
-                      onClick={togglePopup}
-                      className="text-blue-600 text-sm ml-4 whitespace-nowrap"
-                    >
-                      Elegir otro método
-                    </a>
+                  <div className="flex w-full flex-col sm:flex-row sm:items-center sm:justify-between items-center gap-4">
+                    <div className="w-full sm:w-auto flex justify-center">
+                      <PrimaryButton onClick={handleSubmit}>Continuar</PrimaryButton>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 h-8 rounded-full overflow-hidden">
+                        <Image
+                          src={CustomerSupport}
+                          alt="Customer Support"
+                          width={32}
+                          height={32}
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
+                      <div className="flex flex-col">
+                        <span className="text-[#1d1d1f] text-[14px]">¿Necesitas ayuda?</span>
+                        <a
+                          href="mailto:ayuda@testamento.mx"
+                          className="text-[#047aff] text-[14px] hover:underline"
+                        >
+                          Contáctanos
+                        </a>
+                      </div>
+                    </div>
                   </div>
 
                   <AnimatePresence>
@@ -263,7 +271,7 @@ const OTPInput: React.FC<OTPInputProps> = ({ length = 6, onComplete }) => {
                         transition={{ duration: 0.3, ease: "easeOut" }}
                         className="absolute right-0 top-0 mt-8 bg-white rounded-2xl shadow-lg p-6 w-64 z-50"
                       >
-                        <h3 className="text-lg font-semibold mb-6 text-gray-700">
+                        <h3 className="text-[18px] font-[500] mb-6 text-[#1d1d1f]">
                           Elegir método
                         </h3>
                         <button
@@ -282,8 +290,8 @@ const OTPInput: React.FC<OTPInputProps> = ({ length = 6, onComplete }) => {
                               resetTimer();
                             }}
                           >
-                            <div className="text-blue-600 mr-3">{method.icon}</div>
-                            <span className="text-gray-800">
+                            <div className="text-[#047aff] mr-3">{method.icon}</div>
+                            <span className="text-[#1d1d1f] text-[14px]">
                               Mandar por {method.label}
                             </span>
                           </div>
@@ -296,8 +304,9 @@ const OTPInput: React.FC<OTPInputProps> = ({ length = 6, onComplete }) => {
             </div>
           </div>
         </div>
-      </div>
-    </main>
+      </main>
+      <FooterTwo />
+    </motion.div>
   );
 };
 

@@ -25,7 +25,7 @@ const CardLink: React.FC<CardLinkProps> = ({ href, title, description }) => (
 const BackButton: React.FC<{ onClick: () => void }> = ({ onClick }) => (
   <div
     onClick={onClick}
-    className='flex items-center text-[14px] font-[500] gap-2 pt-1 text-[#9999] cursor-pointer border-b border-transparent hover:border-[#9999] transition-all delay-150'
+    className='flex items-center text-[14px] font-[500] gap-2 pt-1 text-[#1F202780] cursor-pointer border-b border-transparent hover:border-[#1F202780] transition-all delay-150'
   >
     <svg
       xmlns='http://www.w3.org/2000/svg'
@@ -34,7 +34,7 @@ const BackButton: React.FC<{ onClick: () => void }> = ({ onClick }) => (
       width={18}
     >
       <path
-        fill='#9999'
+        fill='#1F202780'
         d='M9.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.2 288 416 288c17.7 0 32-14.3 32-32s-14.3-32-32-32l-306.7 0L214.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z'
       />
     </svg>

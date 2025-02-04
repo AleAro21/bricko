@@ -1,5 +1,6 @@
 import { FC } from 'react';
 import Modal from '@/components/common/Modal';
+import PrimaryButton from "@/components/reusables/PrimaryButton";
 
 interface AddProps {
   setShowModal: (show: boolean) => void;
@@ -52,18 +53,25 @@ const Add: FC<AddProps> = ({ setShowModal, showModal, onAddProperty }) => {
 
   return (
     <Modal setShowModal={setShowModal} showModal={showModal}>
-      <div className="w-full min-w-[400px]">
-        <h2 className="text-xl font-semibold text-gray-900 mb-4">Agregar nueva cuenta o propiedad</h2>
+      <div className="w-full min-w-[400px] max-w-2xl mx-auto">
+        <div className="inline-flex items-center h-[32px] bg-[#047aff] bg-opacity-10 px-[12px] py-[6px] rounded-md mb-2.5">
+          <span className="text-[#047aff] text-[14px] font-[400]">NUEVO ACTIVO</span>
+        </div>
+
+        <h2 className="text-[22px] font-[500] text-[#1d1d1f] mb-6">
+          Agregar nueva cuenta o propiedad
+        </h2>
+
         <div className="w-full">
-          <form className="space-y-4" onSubmit={handleSubmit}>
+          <form className="space-y-6" onSubmit={handleSubmit}>
             <div>
-              <label htmlFor="assetType" className="block text-sm font-medium text-gray-700 mb-2">
-                Tipo de activo <span className="text-red-500">*</span>
+              <label htmlFor="assetType" className="block text-[17px] font-[400] text-[#1d1d1f] mb-2.5">
+                Tipo de activo <span className="text-[#047aff]">*</span>
               </label>
               <select
                 id="assetType"
                 name="assetType"
-                className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-shadow text-base"
+                className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:border-[#047aff] transition-all text-[16px]"
                 required
                 defaultValue=""
               >
@@ -77,22 +85,22 @@ const Add: FC<AddProps> = ({ setShowModal, showModal, onAddProperty }) => {
             </div>
 
             <div>
-              <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
-                Nombre del activo <span className="text-red-500">*</span>
+              <label htmlFor="name" className="block text-[17px] font-[400] text-[#1d1d1f] mb-2.5">
+                Nombre del activo <span className="text-[#047aff]">*</span>
               </label>
               <input
                 type="text"
                 id="name"
                 name="name"
                 required
-                className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-shadow text-base"
+                className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:border-[#047aff] transition-all text-[16px]"
                 placeholder="Ej: Casa Principal, Cuenta BBVA"
               />
             </div>
 
             <div>
-              <label htmlFor="value" className="block text-sm font-medium text-gray-700 mb-2">
-                Valor estimado (MXN) <span className="text-red-500">*</span>
+              <label htmlFor="value" className="block text-[17px] font-[400] text-[#1d1d1f] mb-2.5">
+                Valor estimado (MXN) <span className="text-[#047aff]">*</span>
               </label>
               <input
                 type="number"
@@ -101,43 +109,42 @@ const Add: FC<AddProps> = ({ setShowModal, showModal, onAddProperty }) => {
                 required
                 min="0"
                 step="0.01"
-                className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-shadow text-base"
+                className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:border-[#047aff] transition-all text-[16px]"
                 placeholder="0.00"
               />
             </div>
 
             <div>
-              <label htmlFor="location" className="block text-sm font-medium text-gray-700 mb-2">
+              <label htmlFor="location" className="block text-[17px] font-[400] text-[#1d1d1f] mb-2.5">
                 Ubicación o Institución
               </label>
               <input
                 type="text"
                 id="location"
                 name="location"
-                className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-shadow text-base"
+                className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:border-[#047aff] transition-all text-[16px]"
                 placeholder="Ej: BBVA, Av. Reforma 123"
               />
             </div>
 
             <div>
-              <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-2">
+              <label htmlFor="description" className="block text-[17px] font-[400] text-[#1d1d1f] mb-2.5">
                 Descripción o notas adicionales
               </label>
               <textarea
                 id="description"
                 name="description"
                 rows={3}
-                className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-shadow text-base"
+                className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:border-[#047aff] transition-all text-[16px] resize-none"
                 placeholder="Información adicional relevante"
               />
             </div>
 
-            <button
-              type="submit"
-              className="w-full inline-flex justify-center px-6 py-3 rounded-xl bg-blue-600 text-white text-base font-medium hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
-            >
-              Agregar
-            </button>
+            <div className="pt-2">
+              <PrimaryButton type="submit" className="w-full">
+                Agregar
+              </PrimaryButton>
+            </div>
           </form>
         </div>
       </div>

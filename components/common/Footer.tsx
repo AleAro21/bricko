@@ -36,7 +36,7 @@ const Footer: React.FC = () => {
             height={50} 
             className='max-w-[100px] max-h-[50px] my-auto' 
           />
-          <p className='text-[14px] text-[#9999]'>
+          <p className='text-[14px] text-[#1F202780] font-[300]'>
             © {currentYear} Testamento.mx
           </p>
         </div>
@@ -47,7 +47,7 @@ const Footer: React.FC = () => {
               href={link.href}
               target="_blank"
               rel="noopener noreferrer"
-              className='text-[14px] text-[#9999] border-b border-transparent hover:border-b hover:border-[#9999]'
+              className='text-[14px] font-[300] text-[#1F202780] border-b border-transparent hover:border-b hover:border-[#1F202780]'
             >
               {link.text}
             </a>

@@ -1,88 +1,160 @@
-"use client";
+'use client';
+
 import { FC, useState } from 'react';
+import { motion } from 'framer-motion';
 import DashboardLayout from "@/components/common/DashboardLayout";
 import { useRouter } from "next/navigation";
+import PrimaryButton from "@/components/reusables/PrimaryButton";
+import ProgressIndicator from "@/components/reusables/ProgressIndicator";
 
 interface ChildOption {
   title: string;
+  subTitle: string;
 }
 
 const ChildrenPage: FC = () => {
   const router = useRouter();
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
+  const [showAddChild, setShowAddChild] = useState<boolean>(false);
 
   const handleClick = (e: React.MouseEvent<HTMLDivElement>, index: number): void => {
     e.preventDefault();
     setActiveIndex(index === activeIndex ? null : index);
+    setShowAddChild(index === 0); // Show add child button only when "Sí" is selected
   };
 
   const data: ChildOption[] = [
-    { title: "Sí" },
-    { title: "No" },
+    {
+      title: "Sí",
+      subTitle: "Tengo hijos biológicos o legalmente adoptados.",
+    },
+    {
+      title: "No",
+      subTitle: "No tengo hijos biológicos ni legalmente adoptados.",
+    },
   ];
+
+  const renderAddChildButton = (): JSX.Element | null => {
+    if (showAddChild) {
+      return (
+        <div
+          className="bg-white rounded-xl border border-gray-200 hover:border-[#047aff] transition-colors cursor-pointer mt-4"
+        >
+          <div className="flex items-center justify-center gap-2 py-4 text-[#047aff] font-medium">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 448 512"
+              width="20"
+              height="20"
+              className="fill-current"
+            >
+              <path d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z" />
+            </svg>
+            Agregar Hijo
+          </div>
+        </div>
+      );
+    }
+    return null;
+  };
 
   return (
     <DashboardLayout>
-      <div className="min-h-screen bg-gray-50">
-        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-          <div className="space-y-8">
-            <div>
-              <h1 className="text-3xl font-semibold text-gray-900">¿Tienes hijos?</h1>
-              <p className="mt-4 text-lg text-gray-600">
-                Si su primer hijo está en camino, seleccione "No" por ahora.
-                Siempre podrás actualizar esto en el futuro.
-              </p>
-              <p className="mt-4 text-lg text-gray-600">
-                Agregue todos sus hijos biológicos y legalmente adoptados,
-                quiera o no dejarles cosas en su testamento.
-              </p>
-              <p className="mt-4 text-lg text-gray-600">
-                No agregue ningún hijastro aquí. Puede agregarlos más tarde si
-                desea dejarlos como parte de su patrimonio.
-              </p>
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        transition={{ duration: 1 }}
+        className="container mx-auto flex flex-col flex-grow bg-[#f5f5f7] overflow-hidden"
+      >
+        <div className="w-full max-w-6xl mx-auto flex flex-col min-h-[100vh] mb-4 px-4 sm:px-5">
+          <div className="flex flex-col lg:flex-row gap-8 lg:gap-24 h-full py-12">
+            {/* Left column - Title section */}
+            <div className="lg:w-1/3">
+              <div className="inline-flex items-center h-[32px] bg-[#047aff] bg-opacity-10 px-[12px] py-[6px] rounded-md mb-2.5">
+                <span className="text-[#047aff] text-[14px] font-[400]">HIJOS</span>
+              </div>
+
+              <h1 className='text-[32px] sm:text-[38px] font-[500] tracking-[-1.5px] leading-[1.2] sm:leading-[52px] mb-[15px]'>
+                <span className='text-[#1d1d1f]'>¿Tienes </span>
+                <span className='bg-gradient-to-r from-[#3d9bff] to-[#047aff] inline-block text-transparent bg-clip-text'>hijos</span>
+                <span className='text-[#1d1d1f]'>?</span>
+              </h1>
+
+              <div className="space-y-4 mb-5">
+                <p className="text-[16px] text-[#1d1d1f] leading-6">
+                  Si su primer hijo está en camino, seleccione "No" por ahora.
+                  Siempre podrás actualizar esto en el futuro.
+                </p>
+                <p className="text-[16px] text-[#1d1d1f] leading-6">
+                  Agregue todos sus hijos biológicos y legalmente adoptados,
+                  quiera o no dejarles cosas en su testamento.
+                </p>
+                <p className="text-[16px] text-[#1d1d1f] leading-6 mb-8">
+                  No agregue ningún hijastro aquí. Puede agregarlos más tarde si
+                  desea dejarlos como parte de su patrimonio.
+                </p>
+              </div>
+
+              <ProgressIndicator
+                currentSection={4}
+                totalSections={5}
+                title="Progreso de la sección"
+              />
             </div>
 
-            <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-              {data.map((item, index) => (
-                <div
-                  key={index}
-                  className="cursor-pointer transition-colors"
-                  onClick={(e) => handleClick(e, index)}
-                >
-                  <div
-                    className={`px-6 py-4 ${
-                      index !== 0 ? 'border-t border-gray-100' : ''
-                    } ${
-                      activeIndex === index
-                        ? 'bg-blue-600'
-                        : 'hover:bg-blue-50'
-                    }`}
-                  >
-                    <h3
-                      className={`text-lg font-medium ${
-                        activeIndex === index
-                          ? 'text-white'
-                          : 'text-gray-900'
-                      }`}
+            {/* Right column - Form in white container */}
+            <div className='w-full lg:w-3/5'>
+              <div className="bg-white rounded-2xl px-4 sm:px-8 md:px-12 py-8 shadow-lg">
+                <div className="space-y-4">
+                  {data.map((item, index) => (
+                    <div
+                      key={index}
+                      className="cursor-pointer transition-colors"
+                      onClick={(e) => handleClick(e, index)}
                     >
-                      {item.title}
-                    </h3>
-                  </div>
+                      <div
+                        className={`px-6 py-4 rounded-xl border ${
+                          activeIndex === index
+                            ? 'bg-[#047aff] border-[#047aff]'
+                            : 'border-gray-200 hover:border-[#047aff]'
+                        }`}
+                      >
+                        <h3
+                          className={`text-[17px] font-[400] ${
+                            activeIndex === index
+                              ? 'text-white'
+                              : 'text-[#1d1d1f]'
+                          }`}
+                        >
+                          {item.title}
+                        </h3>
+                        <p
+                          className={`mt-1 text-[14px] ${
+                            activeIndex === index
+                              ? 'text-blue-100'
+                              : 'text-[#6e6e73]'
+                          }`}
+                        >
+                          {item.subTitle}
+                        </p>
+                      </div>
+                    </div>
+                  ))}
                 </div>
-              ))}
-            </div>
 
-            <div className="pt-6 flex justify-end">
-              <button
-                onClick={() => router.push("/about-yourself/pets")}
-                className="inline-flex justify-center px-6 py-3 rounded-xl bg-blue-600 text-white text-base font-medium hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
-              >
-                Guardar y continuar
-              </button>
+                {renderAddChildButton()}
+
+                <div className="flex justify-center pt-6 mt-8">
+                  <PrimaryButton onClick={() => router.push("/about-yourself/pets")}>
+                    Guardar y continuar
+                  </PrimaryButton>
+                </div>
+              </div>
             </div>
           </div>
         </div>
-      </div>
+      </motion.div>
     </DashboardLayout>
   );
 };

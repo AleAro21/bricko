@@ -1,14 +1,23 @@
 'use client';
+
 import { FC, useEffect } from 'react';
 import { useRouter, useSearchParams } from "next/navigation";
 import DashboardLayout from "@/components/common/DashboardLayout";
 import PrimaryButton from "@/components/reusables/PrimaryButton";
-import { FaLock, FaChevronRight } from 'react-icons/fa';
-import Living from "@/assets/Ball.png"
-import Estate from "@/assets/Safeestate.png"
-import Payment from "@/assets/Payment.png"
-import Executers from "@/assets/Trust.png"
+import { 
+  LockSimple, 
+  CaretRight, 
+  Heart, 
+  Buildings, 
+  Coins, 
+  Users, 
+  Gift, 
+  Globe,
+  Check,
+  PencilSimple
+} from 'phosphor-react';
 import { useUser } from "@/context/UserContext";
+import { motion } from 'framer-motion';
 
 interface StepCardProps {
   stepNumber: number;
@@ -19,7 +28,7 @@ interface StepCardProps {
   onClick: () => void;
   isOptional?: boolean;
   progress?: number;
-  icon?: string;
+  icon?: React.ReactNode;
 }
 
 interface ProgressBarProps {
@@ -28,13 +37,13 @@ interface ProgressBarProps {
 }
 
 const getProgressColor = (progress: number): string => {
-  if (progress === 100) return '#22c55e'; // verde para 100%
-  if (progress >= 11) return '#f97316'; // naranja para 11-99%
-  return '#ef4444'; // rojo para 0-10%
+  if (progress === 100) return '#047aff';
+  if (progress >= 11) return '#f97316';
+  return '#ef4444';
 };
 
 const getProgressBadgeColor = (progress: number): { bg: string; text: string } => {
-  if (progress === 100) return { bg: 'bg-green-100', text: 'text-green-800' };
+  if (progress === 100) return { bg: 'bg-blue-100', text: 'text-blue-800' };
   if (progress >= 11) return { bg: 'bg-orange-100', text: 'text-orange-800' };
   return { bg: 'bg-red-100', text: 'text-red-800' };
 };
@@ -78,40 +87,35 @@ const StepCard: FC<StepCardProps> = ({
   return (
     <div 
       onClick={onClick}
-      className="bg-white rounded-2xl p-6 md:w-[90%] mt-4 transition-all duration-200 hover:shadow-lg cursor-pointer border border-gray-100"
+      className="bg-white rounded-xl p-6 transition-all duration-500 cursor-pointer w-full shadow-md hover:shadow-lg relative"
     >
       <div className="flex justify-between items-start">
         <div className="flex-1">
           <div className="flex items-center gap-3 mb-2">
-            {icon && (
-              <img
-                src={icon}
-                alt={`${title} icon`}
-                width={32}
-                height={32}
-                className="object-contain"
-              />
-            )}
+            <div className="text-[#047aff] w-8 h-8 flex items-center justify-center">
+              {icon}
+            </div>
             <div className="flex items-center gap-2">
               <p className="text-sm font-medium text-gray-500">
                 {isOptional ? title : `Paso ${stepNumber} • ${duration}`}
               </p>
             </div>
           </div>
-          <h3 className="text-xl font-semibold text-gray-900 mb-2">
+          <h3 className="text-[24px] sm:text-[28px] text-[#000000] font-[500] mb-2 pr-2 tracking-[0.1px] leading-[1.3]">
             {isOptional ? description : title}
           </h3>
-          <p className="text-sm text-gray-600">
-            {isOptional ? duration : description}
-          </p>
+          <div className="flex justify-between items-center">
+            <p className="text-[14px] sm:text-[15px] font-[300] text-[#1d1d1f] mb-0 tracking-[0.1px] leading-[1.3]">
+              {isOptional ? duration : description}
+            </p>
+          </div>
         </div>
-        <div className="flex flex-col items-end gap-1">
+        <div className="flex flex-col items-end gap-4">
           {progress > 0 && (
             <>
               <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${badgeColors.bg} ${badgeColors.text}`}>
                 {progress}% completado
               </span>
-              <div className="h-1"></div>
               <div className="w-full" style={{ width: 'calc(98%)' }}>
                 <div className="w-full h-[4px] bg-gray-100 rounded-full">
                   <div
@@ -123,6 +127,14 @@ const StepCard: FC<StepCardProps> = ({
                   ></div>
                 </div>
               </div>
+              {progress === 100 && (
+                <div className="flex items-center gap-2">
+                  <div className="w-6 h-6 rounded-full bg-[#047aff] flex items-center justify-center">
+                    <Check weight="bold" className="text-white w-4 h-4" />
+                  </div>
+                  <PencilSimple className="text-[#047aff] w-5 h-5" />
+                </div>
+              )}
             </>
           )}
         </div>
@@ -135,24 +147,31 @@ const PaymentSection: FC<{ onClick: () => void }> = ({ onClick }) => {
   return (
     <div 
       onClick={onClick}
-      className="mt-8 rounded-2xl p-6 cursor-pointer transition-all duration-200 hover:shadow-lg bg-gradient-to-r from-blue-50 to-blue-100"
+      className="mt-8 rounded-xl p-6 cursor-pointer transition-all duration-500 hover:shadow-lg bg-gradient-to-r from-blue-50 to-blue-100"
     >
-      <div className="flex items-center justify-between mb-4">
+      <div className="flex items-start justify-between mb-4">
         <div className="flex-1">
-          <h3 className="text-xl font-semibold text-blue-600 mb-2">
-            Asegura tu Testamento
-          </h3>
-          <p className="text-sm text-gray-600">
+          <div className="flex items-center gap-4 mb-2">
+          <div className="bg-white p-3 rounded-full shadow-sm">
+              <LockSimple weight="thin" className="text-blue-600 w-6 h-6" />
+            </div>
+            <h3 className="text-[24px] sm:text-[20px] text-blue-600 font-[500] tracking-[0.1px] leading-[1.3]">
+              Legaliza tu Testamento
+            </h3>
+            
+          </div>
+          <p className="text-[14px] sm:text-[15px] font-[300] text-[#1d1d1f] mb-0 tracking-[0.1px] leading-[1.3]">
             Completa tu proceso realizando el pago para generar tu testamento oficial
           </p>
         </div>
-        <div className="bg-white p-3 rounded-full shadow-sm">
-          <FaLock className="text-blue-600 w-6 h-6" />
-        </div>
       </div>
-      <div className="flex items-center text-blue-600">
-        <span className="text-sm font-medium">Proceder al pago</span>
-        <FaChevronRight className="w-4 h-4 ml-2" />
+      <div className="flex items-center justify-start text-blue-600">
+        <PrimaryButton 
+          type="button"
+          onClick={onClick}
+        >
+          Proceder al pago
+        </PrimaryButton>
       </div>
     </div>
   );
@@ -166,7 +185,7 @@ const mainSteps = [
     duration: "2-4 minutos",
     route: "/about-yourself/name",
     progress: 75,
-    icon: <img src={Living.src} width={40} height={40} alt="Partner icon" />
+    icon: <Heart size={32} weight="thin" />
   },
   {
     stepNumber: 2,
@@ -175,7 +194,7 @@ const mainSteps = [
     duration: "1-4 minutos",
     route: "/account-and-property",
     progress: 30,
-    icon: <img src={Estate.src} width={40} height={40} alt="Partner icon" />
+    icon: <Buildings size={32} weight="thin" />
   },
   {
     stepNumber: 3,
@@ -184,7 +203,7 @@ const mainSteps = [
     duration: "3-5 minutos",
     route: "/estate/introduction",
     progress: 100,
-    icon: <img src={Payment.src} width={40} height={40} alt="Partner icon" />
+    icon: <Coins size={32} weight="thin" />
   },
   {
     stepNumber: 4,
@@ -193,24 +212,26 @@ const mainSteps = [
     duration: "3-5 minutos",
     route: "/executers/introduction",
     progress: 5,
-    icon: <img src={Executers.src} width={40} height={40} alt="Partner icon" />
+    icon: <Users size={32} weight="thin" />
   }
 ];
 
 const optionalSteps = [
   {
-    title: "Regalos",
+    title: "",
     description: "Regalos Especiales",
     duration: "Oportunidad de dejar regalos a personas especiales",
     route: "",
-    progress: 0
+    progress: 0,
+    icon: <Gift size={32} weight="thin" />
   },
   {
-    title: "Activos Digitales",
+    title: "",
     description: "Activos Digitales",
     duration: "Distribuye tus bienes o derechos digitales",
     route: "/digital-asset",
-    progress: 0
+    progress: 0,
+    icon: <Globe size={32} weight="thin" />
   }
 ];
 
@@ -226,25 +247,28 @@ const SummaryPage: FC = () => {
   const router = useRouter();
   const { user } = useUser();
 
-  useEffect(() => {
-    if (!user && !sessionStorage.getItem('userId')) {
-      router.push('/start/login');
-    }
-  }, [user, router]);
-
   const handlePaymentClick = () => {
     router.push("/payment");
   };
 
   return (
     <DashboardLayout>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <motion.div 
+        className="max-w-6xl mx-auto px-4 sm:px-5 py-12"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        transition={{ duration: 1.2 }}
+      >
         <div className="flex flex-col lg:flex-row gap-12">
           <div className="lg:w-3/5">
-            <h1 className="text-3xl font-semibold text-gray-900 mb-2">
-              Tu Testamento, {user?.firstName || 'Usuario'}
+            <h1 className='text-[32px] sm:text-[46px] font-[500] tracking-[-1.5px] leading-[1.2] sm:leading-[52px] mb-[15px]'>
+              <span className='text-[#1d1d1f]'>Hola </span>
+              <span className='bg-gradient-to-r from-[#3d9bff] to-[#047aff] inline-block text-transparent bg-clip-text'>
+                {user?.firstName || 'Usuario'}
+              </span>
             </h1>
-            <p className="text-gray-600 mb-8">
+            <p className="text-[15px] sm:text-[17px] font-[400] tracking-[-0.1px] leading-[1.3] text-[#1d1d1f] text-start mb-6 sm:mb-[55px]">
               Te guiamos en cada etapa para asegurar que tu voluntad se refleje con claridad.
             </p>
             
@@ -254,11 +278,12 @@ const SummaryPage: FC = () => {
                   key={step.stepNumber}
                   {...step}
                   onClick={() => router.push(step.route)}
-                  icon={step.icon.props.src}
                 />
               ))}
               
-              <h2 className="text-xl font-semibold text-gray-900 pt-8 pb-4">Pasos Opcionales</h2>
+              <h2 className="text-[24px] sm:text-[28px] font-[500] text-[#1d1d1f] pt-8 pb-4 tracking-[0.1px] leading-[1.3]">
+                Pasos Opcionales
+              </h2>
               {optionalSteps.map((step, index) => (
                 <StepCard
                   key={index}
@@ -273,11 +298,13 @@ const SummaryPage: FC = () => {
 
           <div className="lg:w-2/5">
             <div className="sticky top-8">
-              <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
+              <div className="bg-white rounded-xl p-6 shadow-md">
                 <ProgressBar progress={totalProgress} />
                 
-                <h2 className="text-2xl font-semibold text-gray-900 mt-8 mb-4">Tu Voluntad</h2>
-                <p className="text-gray-600 mb-6">
+                <h2 className="text-[24px] sm:text-[28px] font-[500] text-[#1d1d1f] mt-8 mb-4 tracking-[0.1px] leading-[1.3]">
+                  Tu Voluntad
+                </h2>
+                <p className="text-[14px] sm:text-[17px] font-[300] text-[#1d1d1f] mb-6 tracking-[0.1px] leading-[1.3]">
                   La primera parte de tu testamento tiene que ver contigo y tu familia. 
                   Completa la información en el Paso 1 para avanzar.
                 </p>
@@ -287,7 +314,7 @@ const SummaryPage: FC = () => {
             </div>
           </div>
         </div>
-      </div>
+      </motion.div>
     </DashboardLayout>
   );
 };

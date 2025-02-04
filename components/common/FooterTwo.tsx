@@ -30,7 +30,7 @@ const FooterTwo: React.FC = () => {
       <div className='container w-3/4 mx-auto flex border-t py-4 items-center justify-between'>
         <div className="flex gap-4 items-center">
 
-          <p className='text-[14px] text-[#9999]'>
+          <p className='text-[14px] text-[#1F202780] font-[300]'>
             © {currentYear} Testamento.mx
           </p>
         </div>
@@ -41,7 +41,7 @@ const FooterTwo: React.FC = () => {
               href={link.href}
               target="_blank"
               rel="noopener noreferrer"
-              className='text-[14px] text-[#9999] border-b border-transparent hover:border-b hover:border-[#9999]'
+              className='text-[14px] text-[#1F202780] border-b border-transparent hover:border-b hover:border-[#1F202780]'
             >
               {link.text}
             </a>

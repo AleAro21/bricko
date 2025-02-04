@@ -83,15 +83,16 @@ const BasicsPage: FC = () => {
                   <span className="text-[#047aff] text-[14px] font-[400]">CREA TU CUENTA</span>
                 </div>
 
-                <h1 className='text-[32px] sm:text-[38px] font-[500] tracking-[-1.5px] leading-[1.2] sm:leading-[52px] mb-[15px] text-[#1d1d1f]'>
-                  Testamento digital
-                </h1>
+                <h1 className='text-[32px] sm:text-[38px] font-[500] tracking-[-1.5px] leading-[1.2] sm:leading-[52px] mb-[15px]'>
+                    <span className='text-[#1d1d1f]'>Testamento digital en </span>
+                    <span className='bg-gradient-to-r from-[#3d9bff] to-[#047aff] inline-block text-transparent bg-clip-text'>México</span>
+                  </h1>
 
                 <ul className="space-y-4 mb-8">
                   {[
-                    "Poco tiempo",
-                    "Seguro",
-                    "Legal"
+                    "Desde $599 MXN",
+                    "No requiere abogado ni notario",
+                    "100 seguro y legal"
                   ].map((text, index) => (
                     <li key={index} className="flex items-start gap-3">
                       <div className="flex-shrink-0 w-6 h-6 rounded-full bg-[#047aff] flex items-center justify-center mt-0.5">
