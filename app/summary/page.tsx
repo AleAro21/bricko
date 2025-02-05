@@ -54,7 +54,7 @@ const ProgressBar: FC<ProgressBarProps> = ({ progress, showLabel = true }) => {
   return (
     <div className="w-full">
       {showLabel && (
-        <p className="font-medium text-[15px] mb-3" style={{ color }}>
+        <p className="font-medium text-[15px] mb-5" style={{ color }}>
           Completado: {progress}%
         </p>
       )}
@@ -85,58 +85,52 @@ const StepCard: FC<StepCardProps> = ({
   const color = getProgressColor(progress);
 
   return (
-    <div 
-      onClick={onClick}
-      className="bg-white rounded-xl p-6 transition-all duration-500 cursor-pointer w-full shadow-md hover:shadow-lg relative"
-    >
-      <div className="flex justify-between items-start">
-        <div className="flex-1">
-          <div className="flex items-center gap-3 mb-2">
-            <div className="text-[#047aff] w-8 h-8 flex items-center justify-center">
-              {icon}
+    <div className="relative pt-8">
+      <div className="absolute top-0 left-0 z-10">
+        <div className={`inline-flex items-center h-[32px] ${isOptional ? 'bg-gray-200' : 'bg-[#047aff] bg-opacity-10'} px-[15px] py-[5px] rounded-t-md`}>
+          <span className={`${isOptional ? 'text-gray-600' : 'text-[#047aff]'} text-[14px] font-[400]`}>
+            {isOptional ? 'Opcional' : `Paso ${stepNumber} • ${duration}`}
+          </span>
+        </div>
+      </div>
+      <div 
+        onClick={onClick}
+        className="bg-white rounded-xl p-[25px] transition-all duration-500 cursor-pointer w-full shadow-md hover:shadow-lg relative"
+        style={{
+          borderTopLeftRadius: '0'
+        }}
+      >
+        <div className="flex justify-between items-start">
+          <div className="flex-1">
+            <div className="flex items-center gap-5 mb-5">
+              <div className="text-[#047aff] w-8 h-8 flex items-center justify-center">
+                {icon}
+              </div>
+              <h3 className="text-[24px] sm:text-[24px] text-[#000000] font-[500] mb-0 pr-5 tracking-[0.1px] leading-[1.3]">
+                {isOptional ? description : title}
+              </h3>
             </div>
-            <div className="flex items-center gap-2">
-              <p className="text-sm font-medium text-gray-500">
-                {isOptional ? title : `Paso ${stepNumber} • ${duration}`}
-              </p>
-            </div>
-          </div>
-          <h3 className="text-[24px] sm:text-[28px] text-[#000000] font-[500] mb-2 pr-2 tracking-[0.1px] leading-[1.3]">
-            {isOptional ? description : title}
-          </h3>
-          <div className="flex justify-between items-center">
-            <p className="text-[14px] sm:text-[15px] font-[300] text-[#1d1d1f] mb-0 tracking-[0.1px] leading-[1.3]">
+            <p className="text-[14px] sm:text-[14px] font-[300] text-[#1d1d1f] mb-0 tracking-[0.1px] leading-[1.3]">
               {isOptional ? duration : description}
             </p>
           </div>
-        </div>
-        <div className="flex flex-col items-end gap-4">
-          {progress > 0 && (
-            <>
-              <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${badgeColors.bg} ${badgeColors.text}`}>
-                {progress}% completado
-              </span>
-              <div className="w-full" style={{ width: 'calc(98%)' }}>
-                <div className="w-full h-[4px] bg-gray-100 rounded-full">
-                  <div
-                    className="h-full rounded-full transition-all duration-300 ease-out"
-                    style={{ 
-                      width: `${progress}%`, 
-                      backgroundColor: color 
-                    }}
-                  ></div>
-                </div>
-              </div>
-              {progress === 100 && (
-                <div className="flex items-center gap-2">
-                  <div className="w-6 h-6 rounded-full bg-[#047aff] flex items-center justify-center">
-                    <Check weight="bold" className="text-white w-4 h-4" />
+          <div className="flex flex-col items-end gap-5">
+            {progress > 0 && (
+              <>
+                <span className={`inline-flex items-center px-[10px] py-[5px] rounded-full text-xs font-medium ${badgeColors.bg} ${badgeColors.text}`}>
+                  {progress}% completado
+                </span>
+                {progress === 100 && (
+                  <div className="flex items-center gap-5">
+                    <div className="w-6 h-6 rounded-full bg-[#047aff] flex items-center justify-center">
+                      <Check weight="bold" className="text-white w-4 h-4" />
+                    </div>
+                    <PencilSimple className="text-[#047aff] w-5 h-5" />
                   </div>
-                  <PencilSimple className="text-[#047aff] w-5 h-5" />
-                </div>
-              )}
-            </>
-          )}
+                )}
+              </>
+            )}
+          </div>
         </div>
       </div>
     </div>
@@ -147,31 +141,32 @@ const PaymentSection: FC<{ onClick: () => void }> = ({ onClick }) => {
   return (
     <div 
       onClick={onClick}
-      className="mt-8 rounded-xl p-6 cursor-pointer transition-all duration-500 hover:shadow-lg bg-gradient-to-r from-blue-50 to-blue-100"
+      className="mt-10 rounded-xl cursor-pointer group"
     >
-      <div className="flex items-start justify-between mb-4">
-        <div className="flex-1">
-          <div className="flex items-center gap-4 mb-2">
-          <div className="bg-white p-3 rounded-full shadow-sm">
-              <LockSimple weight="thin" className="text-blue-600 w-6 h-6" />
+      <div className="p-[1px] bg-gradient-to-br from-[#047aff] via-[#3d9bff] to-[#047aff] rounded-xl">
+        <div className="bg-white rounded-[11px] p-[25px] hover:bg-gradient-to-br hover:from-[#f8faff] hover:to-white transition-all duration-500">
+          <div className="flex items-start gap-5">
+            <div className="bg-gradient-to-br from-[#047aff] to-[#3d9bff] p-[15px] rounded-xl shadow-md group-hover:scale-105 transition-transform duration-300">
+              <LockSimple weight="thin" className="text-white w-6 h-6" />
             </div>
-            <h3 className="text-[24px] sm:text-[20px] text-blue-600 font-[500] tracking-[0.1px] leading-[1.3]">
-              Legaliza tu Testamento
-            </h3>
-            
+            <div className="flex-1">
+              <div className="mb-5">
+                <h3 className="text-[22px] text-[#1d1d1f] font-[500] tracking-[-0.5px] leading-[1.3] mb-5">
+                  Legaliza tu Testamento
+                </h3>
+                <p className="text-[15px] font-[300] text-[#1d1d1f]/80 tracking-[0.1px] leading-[1.3]">
+                  Completa tu proceso realizando el pago para generar tu testamento oficial
+                </p>
+              </div>
+              <div className="flex justify-end">
+                <button className="bg-gradient-to-r from-[#047aff] to-[#3d9bff] text-white px-[25px] py-[10px] rounded-lg font-medium text-sm hover:shadow-md transition-all duration-300 flex items-center gap-5">
+                  Proceder al pago
+                  <CaretRight weight="bold" className="w-4 h-4" />
+                </button>
+              </div>
+            </div>
           </div>
-          <p className="text-[14px] sm:text-[15px] font-[300] text-[#1d1d1f] mb-0 tracking-[0.1px] leading-[1.3]">
-            Completa tu proceso realizando el pago para generar tu testamento oficial
-          </p>
         </div>
-      </div>
-      <div className="flex items-center justify-start text-blue-600">
-        <PrimaryButton 
-          type="button"
-          onClick={onClick}
-        >
-          Proceder al pago
-        </PrimaryButton>
       </div>
     </div>
   );
@@ -254,25 +249,25 @@ const SummaryPage: FC = () => {
   return (
     <DashboardLayout>
       <motion.div 
-        className="max-w-6xl mx-auto px-4 sm:px-5 py-12"
+        className="w-full max-w-6xl mx-auto px-[25px] sm:px-[25px] py-[25px] sm:py-[25px] overflow-x-hidden"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
         transition={{ duration: 1.2 }}
       >
-        <div className="flex flex-col lg:flex-row gap-12">
+        <div className="flex flex-col lg:flex-row gap-[25px]">
           <div className="lg:w-3/5">
-            <h1 className='text-[32px] sm:text-[46px] font-[500] tracking-[-1.5px] leading-[1.2] sm:leading-[52px] mb-[15px]'>
+            <h1 className='text-[32px] sm:text-[46px] font-[500] tracking-[-1.5px] leading-[1.2] sm:leading-[52px] mb-5'>
               <span className='text-[#1d1d1f]'>Hola </span>
               <span className='bg-gradient-to-r from-[#3d9bff] to-[#047aff] inline-block text-transparent bg-clip-text'>
                 {user?.firstName || 'Usuario'}
               </span>
             </h1>
-            <p className="text-[15px] sm:text-[17px] font-[400] tracking-[-0.1px] leading-[1.3] text-[#1d1d1f] text-start mb-6 sm:mb-[55px]">
+            <p className="text-[15px] sm:text-[17px] font-[400] tracking-[-0.1px] leading-[1.3] text-[#1d1d1f] text-start mb-[25px]">
               Te guiamos en cada etapa para asegurar que tu voluntad se refleje con claridad.
             </p>
             
-            <div className="space-y-6">
+            <div className="space-y-[25px]">
               {mainSteps.map((step) => (
                 <StepCard
                   key={step.stepNumber}
@@ -281,7 +276,7 @@ const SummaryPage: FC = () => {
                 />
               ))}
               
-              <h2 className="text-[24px] sm:text-[28px] font-[500] text-[#1d1d1f] pt-8 pb-4 tracking-[0.1px] leading-[1.3]">
+              <h2 className="text-[24px] sm:text-[28px] font-[500] text-[#1d1d1f] mt-[25px] mb-[15px] tracking-[0.1px] leading-[1.3]">
                 Pasos Opcionales
               </h2>
               {optionalSteps.map((step, index) => (
@@ -297,14 +292,14 @@ const SummaryPage: FC = () => {
           </div>
 
           <div className="lg:w-2/5">
-            <div className="sticky top-8">
-              <div className="bg-white rounded-xl p-6 shadow-md">
+            <div className="sticky top-[25px]">
+              <div className="bg-white rounded-xl p-[25px] shadow-md">
                 <ProgressBar progress={totalProgress} />
                 
-                <h2 className="text-[24px] sm:text-[28px] font-[500] text-[#1d1d1f] mt-8 mb-4 tracking-[0.1px] leading-[1.3]">
+                <h2 className="text-[24px] sm:text-[22px] font-[500] text-[#1d1d1f] mt-[25px] mb-2.5 tracking-[0.1px] leading-[1.3]">
                   Tu Voluntad
                 </h2>
-                <p className="text-[14px] sm:text-[17px] font-[300] text-[#1d1d1f] mb-6 tracking-[0.1px] leading-[1.3]">
+                <p className="text-[14px] sm:text-[14px] font-[300] text-[#1d1d1f] mb-2.5 tracking-[0.1px] leading-[1.3]">
                   La primera parte de tu testamento tiene que ver contigo y tu familia. 
                   Completa la información en el Paso 1 para avanzar.
                 </p>

@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import Add from "./Add";
 import PrimaryButton from "@/components/reusables/PrimaryButton";
 import ProgressIndicator from "@/components/reusables/ProgressIndicator";
+import Link from "next/link";
 
 interface PetOption {
   title: string;
@@ -48,15 +49,17 @@ const PetsPage: FC = () => {
           className="bg-white rounded-xl border border-gray-200 hover:border-[#047aff] transition-colors cursor-pointer mt-4"
         >
           <div className="flex items-center justify-center gap-2 py-4 text-[#047aff] font-medium">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 448 512"
-              width="20"
-              height="20"
-              className="fill-current"
-            >
-              <path d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z" />
-            </svg>
+            <div className="bg-[#047aff] rounded-full p-1">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 448 512"
+                width="16"
+                height="16"
+                className="fill-white"
+              >
+                <path d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z" />
+              </svg>
+            </div>
             Agregar Mascota
           </div>
         </div>
@@ -80,8 +83,13 @@ const PetsPage: FC = () => {
             <div className="flex flex-col lg:flex-row gap-8 lg:gap-24 h-full py-12">
               {/* Left column - Title section */}
               <div className="lg:w-1/3">
-                <div className="inline-flex items-center h-[32px] bg-[#047aff] bg-opacity-10 px-[12px] py-[6px] rounded-md mb-2.5">
-                  <span className="text-[#047aff] text-[14px] font-[400]">MASCOTAS</span>
+                <div className="flex items-center gap-2 mb-2.5">
+                  <div className="inline-flex items-center h-[32px] bg-[#047aff] bg-opacity-10 px-[12px] py-[6px] rounded-md">
+                    <span className="text-[#047aff] text-[14px] font-[400]">MASCOTAS</span>
+                  </div>
+                  <Link href="#" className="inline-flex items-center h-[32px] text-[#047aff] hover:text-[#0456b0]">
+                    <span className="w-5 h-5 inline-flex items-center justify-center rounded-full border border-[#047aff] text-sm">?</span>
+                  </Link>
                 </div>
 
                 <h1 className='text-[32px] sm:text-[38px] font-[500] tracking-[-1.5px] leading-[1.2] sm:leading-[52px] mb-[15px]'>
@@ -151,7 +159,7 @@ const PetsPage: FC = () => {
 
                   {renderAddPetButton()}
 
-                  <div className="flex justify-center pt-6 mt-8">
+                  <div className="flex justify-end pt-4 mt-4">
                     <PrimaryButton onClick={() => router.push("/summary?completed=about-your-self")}>
                       Guardar y continuar
                     </PrimaryButton>

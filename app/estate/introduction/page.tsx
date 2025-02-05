@@ -4,6 +4,7 @@ import DashboardLayout from "@/components/common/DashboardLayout";
 import { useRouter } from "next/navigation";
 import { motion } from 'framer-motion';
 import PrimaryButton from "@/components/reusables/PrimaryButton";
+import Link from "next/link";
 
 const IntroductionPage: FC = () => {
   const router = useRouter();
@@ -22,8 +23,13 @@ const IntroductionPage: FC = () => {
             {/* Left Column - Title and Description */}
             <div className="space-y-8">
               <div>
-                <div className="inline-flex items-center h-[32px] bg-[#047aff] bg-opacity-10 px-[12px] py-[6px] rounded-md mb-2.5">
-                  <span className="text-[#047aff] text-[14px] font-[400]">RECOMENDACIONES</span>
+                <div className="flex items-center gap-2 mb-2.5">
+                  <div className="inline-flex items-center h-[32px] bg-[#047aff] bg-opacity-10 px-[12px] py-[6px] rounded-md">
+                    <span className="text-[#047aff] text-[14px] font-[400]">RECOMENDACIONES</span>
+                  </div>
+                  <Link href="#" className="inline-flex items-center h-[32px] text-[#047aff] hover:text-[#0456b0]">
+                    <span className="w-5 h-5 inline-flex items-center justify-center rounded-full border border-[#047aff] text-sm">?</span>
+                  </Link>
                 </div>
 
                 <h1 className="text-[32px] sm:text-[38px] font-[500] tracking-[-1.5px] leading-[1.2] sm:leading-[52px] mb-[15px]">
@@ -35,12 +41,12 @@ const IntroductionPage: FC = () => {
 
                 <div className="space-y-4">
                   <p className="text-[16px] text-[#1d1d1f] leading-6">
-                    Su patrimonio es todo lo que posee, excepto cualquier
+                    Tu patrimonio es todo lo que posee, excepto cualquier
                     obsequio específico que decida dejar a otras personas más
                     adelante. Esto se conoce como patrimonio residual.
                   </p>
                   <p className="text-[16px] text-[#1d1d1f] leading-6">
-                    En esta sección podrá dividir su patrimonio residual entre
+                    En esta sección podrá dividir tu patrimonio residual entre
                     personas e incluso organizaciones benéficas.
                   </p>
                   <p className="text-[16px] text-[#1d1d1f] leading-6">
@@ -74,7 +80,7 @@ const IntroductionPage: FC = () => {
                     </svg>
                   </div>
                   <h2 className="text-[22px] font-[500] text-[#1d1d1f]">
-                    Qué incluye su patrimonio residual
+                    Qué incluye tu patrimonio residual
                   </h2>
                 </div>
                 <div className="space-y-4">
@@ -107,7 +113,7 @@ const IntroductionPage: FC = () => {
                     </svg>
                   </div>
                   <h2 className="text-[22px] font-[500] text-[#1d1d1f]">
-                    Lo que no incluye su patrimonio residual
+                    Lo que no incluye tu patrimonio residual
                   </h2>
                 </div>
                 <div className="space-y-4">

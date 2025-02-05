@@ -60,7 +60,7 @@ const TransferForm: FC = () => {
             href="mailto:pagos@testamentos.com" 
             className="text-[#047aff] font-[500] hover:text-[#047aff]/80 transition-colors"
           >
-            pagos@testamentos.com
+            pago@testamento.com
           </a>
         </p>
       </div>

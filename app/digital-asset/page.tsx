@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import Add, { DigitalAssetData } from "./Add";
 import { motion } from 'framer-motion';
 import PrimaryButton from "@/components/reusables/PrimaryButton";
+import Link from "next/link";
 import {
   Users,
   Envelope,
@@ -37,6 +38,17 @@ const DigitalAssetsPage: FC = () => {
     other: <Question className="w-6 h-6" weight="thin" />,
   };
 
+  const assetTypeNames: Record<string, string> = {
+    social: "Redes Sociales",
+    email: "Correo Electrónico",
+    crypto: "Criptomonedas",
+    cloud: "Almacenamiento en la Nube",
+    subscription: "Suscripciones",
+    domain: "Dominios Web",
+    gaming: "Juegos",
+    other: "Otros",
+  };
+
   return (
     <>
       <Add setShowModal={setShowModal} showModal={showModal} onAddAsset={handleAddAsset} />
@@ -49,11 +61,16 @@ const DigitalAssetsPage: FC = () => {
           transition={{ duration: 1.2 }}
         >
           <div className="max-w-6xl mx-auto px-4 sm:px-5 py-12">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-24">
+            <div className="grid grid-cols-1 lg:grid-cols-[1.5fr,1fr] gap-8 lg:gap-24">
               <div className="space-y-8">
                 <div>
-                  <div className="inline-flex items-center h-[32px] bg-[#047aff] bg-opacity-10 px-[12px] py-[6px] rounded-md mb-2.5">
-                    <span className="text-[#047aff] text-[14px] font-[400]">ACTIVOS DIGITALES</span>
+                  <div className="flex items-center gap-2 mb-2.5">
+                    <div className="inline-flex items-center h-[32px] bg-[#047aff] bg-opacity-10 px-[12px] py-[6px] rounded-md">
+                      <span className="text-[#047aff] text-[14px] font-[400]">ACTIVOS DIGITALES</span>
+                    </div>
+                    <Link href="#" className="inline-flex items-center h-[32px] text-[#047aff] hover:text-[#0456b0]">
+                      <span className="w-5 h-5 inline-flex items-center justify-center rounded-full border border-[#047aff] text-sm">?</span>
+                    </Link>
                   </div>
 
                   <h1 className="text-[32px] sm:text-[38px] font-[500] tracking-[-1.5px] leading-[1.2] sm:leading-[52px] mb-[15px]">
@@ -76,23 +93,12 @@ const DigitalAssetsPage: FC = () => {
                 >
                   <div className="flex items-center justify-center gap-2 py-8">
                     <div className="w-8 h-8 rounded-full bg-[#047aff] flex items-center justify-center">
-                      <Plus className="w-4 h-4 text-white"/>
+                      <Plus className="w-5 h-5 text-white"/>
                     </div>
                     <span className="text-[#047aff] font-[500]">Agregar Activo Digital</span>
                   </div>
                 </div>
 
-                <div className="pt-6 flex justify-end">
-                  <PrimaryButton
-                    onClick={() => router.push("/summary?completed=digital-assets")}
-                  >
-                    Guardar y continuar
-                  </PrimaryButton>
-                </div>
-              </div>
-
-              {/* Right column with assets summary */}
-              <div className="space-y-8">
                 {assets.length > 0 && (
                   <div className="bg-white rounded-2xl shadow-md overflow-hidden">
                     <div className="p-6">
@@ -111,6 +117,7 @@ const DigitalAssetsPage: FC = () => {
                                 <div className="flex justify-between items-start">
                                   <div>
                                     <h3 className="text-[17px] font-[500] text-[#1d1d1f]">{asset.platform}</h3>
+                                    <p className="text-[14px] text-gray-500">{assetTypeNames[asset.type]}</p>
                                     <p className="text-[14px] text-gray-500">{asset.accountName}</p>
                                   </div>
                                   {asset.hasBackupCodes && (
@@ -137,6 +144,65 @@ const DigitalAssetsPage: FC = () => {
                     </div>
                   </div>
                 )}
+
+                <div className="pt-6 flex justify-end">
+                  <PrimaryButton
+                    onClick={() => router.push("/summary?completed=digital-assets")}
+                  >
+                    Guardar y continuar
+                  </PrimaryButton>
+                </div>
+              </div>
+
+              <div className="bg-white rounded-2xl shadow-md p-6 h-fit lg:sticky lg:top-6">
+                <h2 className="text-[20px] font-[500] text-[#1d1d1f] mb-4">¿Qué son los activos digitales?</h2>
+                <div className="space-y-4">
+                  <p className="text-[15px] text-[#1d1d1f] leading-6">
+                    Los activos digitales son cualquier contenido o cuenta que existe en formato digital:
+                  </p>
+                  <ul className="space-y-3">
+                    <li className="flex items-start gap-3">
+                      <div className="flex-shrink-0 w-5 h-5 rounded-full bg-[#047aff] flex items-center justify-center mt-0.5">
+                        <svg className="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
+                        </svg>
+                      </div>
+                      <span className="text-[15px] text-[#1d1d1f] leading-6">
+                        Redes sociales y cuentas de correo electrónico
+                      </span>
+                    </li>
+                    <li className="flex items-start gap-3">
+                      <div className="flex-shrink-0 w-5 h-5 rounded-full bg-[#047aff] flex items-center justify-center mt-0.5">
+                        <svg className="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
+                        </svg>
+                      </div>
+                      <span className="text-[15px] text-[#1d1d1f] leading-6">
+                        Criptomonedas y activos digitales financieros
+                      </span>
+                    </li>
+                    <li className="flex items-start gap-3">
+                      <div className="flex-shrink-0 w-5 h-5 rounded-full bg-[#047aff] flex items-center justify-center mt-0.5">
+                        <svg className="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
+                        </svg>
+                      </div>
+                      <span className="text-[15px] text-[#1d1d1f] leading-6">
+                        Almacenamiento en la nube y documentos digitales
+                      </span>
+                    </li>
+                    <li className="flex items-start gap-3">
+                      <div className="flex-shrink-0 w-5 h-5 rounded-full bg-[#047aff] flex items-center justify-center mt-0.5">
+                        <svg className="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
+                        </svg>
+                      </div>
+                      <span className="text-[15px] text-[#1d1d1f] leading-6">
+                        Suscripciones y servicios digitales
+                      </span>
+                    </li>
+                  </ul>
+                </div>
               </div>
             </div>
           </div>

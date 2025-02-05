@@ -112,18 +112,33 @@ const Navbar: React.FC = () => {
                       {accountData.items.map((subItem) => (
                         <Menu.Item key={subItem.name}>
                           {({ active }) => (
-                            <div
-                              onClick={subItem.onClick}
-                              className={`
-                                block px-4 py-2 text-[14px] font-[400] cursor-pointer
-                                ${active 
-                                  ? 'bg-gradient-to-r from-blue-50 to-blue-100 text-[#047aff]' 
-                                  : 'text-[#1d1d1f]'
-                                }
-                              `}
-                            >
-                              {subItem.name}
-                            </div>
+                            subItem.onClick ? (
+                              <div
+                                onClick={subItem.onClick}
+                                className={`
+                                  block px-4 py-2 text-[14px] font-[400] cursor-pointer
+                                  ${active 
+                                    ? 'bg-gradient-to-r from-blue-50 to-blue-100 text-[#047aff]' 
+                                    : 'text-[#1d1d1f]'
+                                  }
+                                `}
+                              >
+                                {subItem.name}
+                              </div>
+                            ) : (
+                              <Link
+                                href={subItem.href}
+                                className={`
+                                  block px-4 py-2 text-[14px] font-[400] cursor-pointer
+                                  ${active 
+                                    ? 'bg-gradient-to-r from-blue-50 to-blue-100 text-[#047aff]' 
+                                    : 'text-[#1d1d1f]'
+                                  }
+                                `}
+                              >
+                                {subItem.name}
+                              </Link>
+                            )
                           )}
                         </Menu.Item>
                       ))}

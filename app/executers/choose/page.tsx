@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import Add, { ExecutorData } from "./Add";
 import { motion } from 'framer-motion';
 import PrimaryButton from "@/components/reusables/PrimaryButton";
+import Link from "next/link";
 
 interface ExecutorOption {
   title: string;
@@ -62,8 +63,13 @@ const ChooseExecutorsPage: FC = () => {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-24">
               <div className="space-y-8">
                 <div>
-                  <div className="inline-flex items-center h-[32px] bg-[#047aff] bg-opacity-10 px-[12px] py-[6px] rounded-md mb-2.5 mt-5">
-                    <span className="text-[#047aff] text-[14px] font-[400]">ALBACEAS</span>
+                  <div className="flex items-center gap-2 mb-2.5">
+                    <div className="inline-flex items-center h-[32px] bg-[#047aff] bg-opacity-10 px-[12px] py-[6px] rounded-md">
+                      <span className="text-[#047aff] text-[14px] font-[400]">ALBACEAS</span>
+                    </div>
+                    <Link href="#" className="inline-flex items-center h-[32px] text-[#047aff] hover:text-[#0456b0]">
+                      <span className="w-5 h-5 inline-flex items-center justify-center rounded-full border border-[#047aff] text-sm">?</span>
+                    </Link>
                   </div>
 
                   <h1 className='text-[32px] sm:text-[38px] font-[500] tracking-[-1.5px] leading-[1.2] sm:leading-[52px] mb-[15px]'>

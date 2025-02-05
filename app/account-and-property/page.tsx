@@ -6,6 +6,7 @@ import Add, { PropertyData } from "./Add";
 import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from 'recharts';
 import { motion } from 'framer-motion';
 import PrimaryButton from "@/components/reusables/PrimaryButton";
+import Link from "next/link";
 
 // Updated colors to be variations of blue
 const COLORS = ['#047aff', '#3d9bff', '#66b2ff', '#8fc7ff', '#b8dcff', '#e0f0ff', '#f0f7ff'];
@@ -114,8 +115,13 @@ const AccountAndPropertyPage: FC = () => {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-24">
               <div className="space-y-8">
                 <div>
-                  <div className="inline-flex items-center h-[32px] bg-[#047aff] bg-opacity-10 px-[12px] py-[6px] rounded-md mb-2.5">
-                    <span className="text-[#047aff] text-[14px] font-[400]">CUENTAS Y PROPIEDADES</span>
+                  <div className="flex items-center gap-2 mb-2.5">
+                    <div className="inline-flex items-center h-[32px] bg-[#047aff] bg-opacity-10 px-[12px] py-[6px] rounded-md">
+                      <span className="text-[#047aff] text-[14px] font-[400]">CUENTAS Y PROPIEDADES</span>
+                    </div>
+                    <Link href="#" className="inline-flex items-center h-[32px] text-[#047aff] hover:text-[#0456b0]">
+                      <span className="w-5 h-5 inline-flex items-center justify-center rounded-full border border-[#047aff] text-sm">?</span>
+                    </Link>
                   </div>
 
                   <h1 className="text-[32px] sm:text-[38px] font-[500] tracking-[-1.5px] leading-[1.2] sm:leading-[52px] mb-[15px]">
@@ -126,7 +132,7 @@ const AccountAndPropertyPage: FC = () => {
                   </h1>
                   <p className="text-[16px] text-[#1d1d1f] leading-6 mb-4">
                     Esto incluye cuentas bancarias, pensiones, pólizas de seguros de propiedad y de vida. 
-                    Ayuda a tus albaceas, las personas que se ocuparán de su patrimonio después de su muerte, 
+                    Ayuda a tus albaceas, las personas que se ocuparán de su patrimonio después de tu muerte, 
                     a saber con qué proveedores comunicarse.
                   </p>
                   <p className="text-[16px] text-[#1d1d1f] leading-6">

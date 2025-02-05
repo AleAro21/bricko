@@ -8,12 +8,14 @@ import PrimaryButton from "@/components/reusables/PrimaryButton";
 import Calendar from "@/components/common/calendar/Calendar";
 import { validateAge } from "@/components/common/calendar/dateValidation";
 import ProgressIndicator from "@/components/reusables/ProgressIndicator";
+import Link from "next/link";
 
 interface FormValues {
   fullName: string;
   secondName: string;
   fatherLastName: string;
   motherLastName: string;
+  taxId: string;
   birthDate: Date | null;
 }
 
@@ -24,15 +26,16 @@ const NamePage: FC = () => {
     secondName: "",
     fatherLastName: "",
     motherLastName: "",
+    taxId: "",
     birthDate: null,
   });
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
-    const { fullName, fatherLastName, motherLastName, birthDate } = formValues;
+    const { fullName, fatherLastName, motherLastName, taxId, birthDate } = formValues;
 
-    if (!fullName || !fatherLastName || !motherLastName) {
+    if (!fullName || !fatherLastName || !motherLastName || !taxId) {
       setErrorMessage("Por favor, complete todos los campos obligatorios");
       return;
     }
@@ -70,8 +73,13 @@ const NamePage: FC = () => {
           <div className="flex flex-col lg:flex-row gap-8 lg:gap-24 h-full py-12">
             {/* Left column - Title section */}
             <div className="lg:w-1/3">
-              <div className="inline-flex items-center h-[32px] bg-[#047aff] bg-opacity-10 px-[12px] py-[6px] rounded-md mb-2.5">
-                <span className="text-[#047aff] text-[14px] font-[400]">DATOS PERSONALES</span>
+              <div className="flex items-center gap-2 mb-2.5">
+                <div className="inline-flex items-center h-[32px] bg-[#047aff] bg-opacity-10 px-[12px] py-[6px] rounded-md">
+                  <span className="text-[#047aff] text-[14px] font-[400]">DATOS PERSONALES</span>
+                </div>
+                <Link href="#" className="inline-flex items-center h-[32px] text-[#047aff] hover:text-[#0456b0]">
+                  <span className="w-5 h-5 inline-flex items-center justify-center rounded-full border border-[#047aff] text-sm">?</span>
+                </Link>
               </div>
 
               <h1 className='text-[32px] sm:text-[38px] font-[500] tracking-[-1.5px] leading-[1.2] sm:leading-[52px] mb-[15px]'>
@@ -92,18 +100,18 @@ const NamePage: FC = () => {
 
             {/* Right column - Form in white container */}
             <div className='w-full lg:w-3/5'>
-              <div className="bg-white rounded-2xl px-4 sm:px-8 md:px-12 py-8 shadow-lg">
-                <form onSubmit={handleSubmit} className="space-y-8">
-                  <div className="space-y-6">
+              <div className="bg-white rounded-2xl px-4 sm:px-8 md:px-12 py-10 shadow-lg">
+                <form onSubmit={handleSubmit} className="space-y-4">
+                  <div className="space-y-7">
                     <div>
-                      <h2 className="text-[22px] font-[500] text-[#1d1d1f] mb-4">
-                        ¿Cuál es su nombre legal completo?
+                      <h2 className="text-[20px] font-[500] text-[#1d1d1f] mb-2">
+                        ¿Cuál es tu nombre legal completo?
                       </h2>
-                      <p className="text-[14px] text-[#6e6e73] mb-8">
-                        Este es el nombre que figura en su pasaporte o permiso de conducir.
+                      <p className="text-[14px] text-[#6e6e73] mb-5">
+                        Este es el nombre que figura en tu pasaporte o permiso de conducir.
                       </p>
 
-                      <div className="space-y-5">
+                      <div className="space-y-7">
                         <div>
                           <label htmlFor="fullName" className="block text-[17px] font-[400] text-[#1d1d1f] mb-2.5">
                             Nombre <span className="text-[#047aff]">*</span>
@@ -158,10 +166,26 @@ const NamePage: FC = () => {
                             required
                           />
                         </div>
+                        <div>
+                          <label htmlFor="taxId" className="block text-[17px] font-[400] text-[#1d1d1f] mb-2.5">
+                            RFC <span className="text-[#047aff]">*</span>
+                            <Link href="#" className="inline-block ml-2 text-[#047aff] hover:text-[#0456b0]">
+                              <span className="w-5 h-5 inline-flex items-center justify-center rounded-full border border-[#047aff] text-sm">?</span>
+                            </Link>
+                          </label>
+                          <input
+                            type="text"
+                            id="taxId"
+                            value={formValues.taxId}
+                            onChange={handleChange}
+                            className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:border-[#047aff] transition-all"
+                            required
+                          />
+                        </div>
                       </div>
                     </div>
-                    <div className="pt-8 border-t border-gray-100">
-                      <h2 className="text-[22px] font-[500] text-[#1d1d1f] mb-4">
+                    <div className="pt-5 mt-  border-t border-gray-100">
+                      <h2 className="text-[20px] font-[500] text-[#1d1d1f] mb-2">
                         Fecha de nacimiento
                       </h2>
                       <div className="mt-4">
@@ -178,10 +202,10 @@ const NamePage: FC = () => {
                   </div>
 
                   {errorMessage && (
-                    <p className="text-red-500 text-[14px] text-center mt-4">{errorMessage}</p>
+                    <p className="text-red-500 text-[14px] text-center mt-0">{errorMessage}</p>
                   )}
 
-                  <div className="flex justify-center pt-6">
+                  <div className="flex justify-end pt-6">
                     <PrimaryButton type="submit">
                       Guardar y continuar
                     </PrimaryButton>
