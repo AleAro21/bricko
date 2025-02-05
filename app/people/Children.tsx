@@ -15,14 +15,14 @@ interface DateInputProps {
 
 const DateInput: FC<DateInputProps> = ({ label, id, placeholder, className = 'w-[25%]' }) => (
   <div className={className}>
-    <label htmlFor={id} className='text-style'>
+    <label htmlFor={id} className="block text-sm font-medium text-gray-700 mb-1">
       {label}
     </label>
     <input
-      type='text'
+      type="text"
       id={id}
       placeholder={placeholder}
-      className='bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-6 my-2'
+      className="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 p-2.5"
       required
     />
   </div>
@@ -36,49 +36,41 @@ const Children: FC<ChildrenProps> = ({ setShowModal, showModal }) => {
 
   return (
     <Modal setShowModal={setShowModal} showModal={showModal}>
-      <div className='w-full min-w-[400px]'>
-        <p className='sm-title'>Agregar un niño</p>
-        <div className='w-full'>
-          <form className='mx-auto my-4' onSubmit={handleSubmit}>
-            <label htmlFor='fullName' className='text-style'>
+      <div className="w-full max-w-lg">
+        <h2 className="text-2xl font-semibold text-gray-900 mb-6">Agregar un niño</h2>
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <div>
+            <label htmlFor="fullName" className="block text-sm font-medium text-gray-700 mb-1">
               El nombre completo de su hijo
             </label>
             <input
-              type='text'
-              id='fullName'
-              className='bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-6 my-4'
+              type="text"
+              id="fullName"
+              className="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 p-2.5"
               required
-              minLength={10}
+              minLength={2}
             />
-            <p className='text-style'>La fecha de nacimiento de su hijo</p>
-            <p className='text-style'>Por ejemplo, 27 10 1983</p>
-            <div className='flex w-full items-center justify-between my-2'>
-              <DateInput
-                label="Día"
-                id="birthDay"
-                placeholder="DD"
-              />
-              <DateInput
-                label="Mes"
-                id="birthMonth"
-                placeholder="MM"
-              />
-              <DateInput
-                label="Año"
-                id="birthYear"
-                placeholder="YYYY"
-                className="w-[40%]"
-              />
-            </div>
+          </div>
 
-            <button
-              type="submit"
-              className='w-full text-[14px] text-[#FFFFFF] font-[600] bg-[#0171e3] px-4 py-4 rounded-[100px] uppercase mt-4'
-            >
-              Agregar
-            </button>
-          </form>
-        </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              La fecha de nacimiento de su hijo
+            </label>
+            <p className="text-sm text-gray-500 mb-2">Por ejemplo, 27 10 1983</p>
+            <div className="flex gap-4">
+              <DateInput label="Día" id="birthDay" placeholder="DD" />
+              <DateInput label="Mes" id="birthMonth" placeholder="MM" />
+              <DateInput label="Año" id="birthYear" placeholder="YYYY" className="w-[40%]" />
+            </div>
+          </div>
+
+          <button
+            type="submit"
+            className="w-full bg-[#047aff] text-white px-4 py-2.5 rounded-lg hover:bg-[#0171e3] transition-colors duration-200"
+          >
+            Agregar
+          </button>
+        </form>
       </div>
     </Modal>
   );

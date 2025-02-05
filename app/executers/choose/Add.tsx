@@ -1,9 +1,11 @@
+"use client";
 import { FC } from 'react';
 import Modal from '@/components/common/Modal';
 
 interface AddProps {
   setShowModal: (show: boolean) => void;
   showModal: boolean;
+  onAddExecutor?: (executor: ExecutorData) => void;
 }
 
 export interface ExecutorData {
@@ -24,7 +26,7 @@ const relationshipOptions = [
   { value: 'other', label: 'Otro' },
 ];
 
-const Add: FC<AddProps> = ({ setShowModal, showModal }) => {
+const Add: FC<AddProps> = ({ setShowModal, showModal, onAddExecutor }) => {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
     const form = e.target as HTMLFormElement;
@@ -39,19 +41,18 @@ const Add: FC<AddProps> = ({ setShowModal, showModal }) => {
       isBackupExecutor: formData.get('isBackupExecutor') === 'true',
     };
 
-    // Here you would typically handle the new executor data
-    // For now we just close the modal
+    onAddExecutor?.(newExecutor);
     setShowModal(false);
   };
 
   return (
     <Modal setShowModal={setShowModal} showModal={showModal}>
       <div className="w-full min-w-[400px]">
-        <h2 className="text-xl font-semibold text-gray-900 mb-4">Agregar Albacea</h2>
+        <h2 className="text-[22px] font-[500] text-[#1d1d1f] mb-4">Agregar Albacea</h2>
         <div className="w-full">
           <form className="space-y-4" onSubmit={handleSubmit}>
             <div>
-              <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
+              <label htmlFor="name" className="block text-[14px] font-[400] text-[#1d1d1f] mb-2">
                 Nombre completo <span className="text-red-500">*</span>
               </label>
               <input
@@ -59,13 +60,13 @@ const Add: FC<AddProps> = ({ setShowModal, showModal }) => {
                 id="name"
                 name="name"
                 required
-                className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-shadow text-base"
+                className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:border-[#047aff] focus:ring-1 focus:ring-[#047aff] transition-all text-[16px]"
                 placeholder="Nombre del albacea"
               />
             </div>
 
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
+              <label htmlFor="email" className="block text-[14px] font-[400] text-[#1d1d1f] mb-2">
                 Correo electrónico <span className="text-red-500">*</span>
               </label>
               <input
@@ -73,33 +74,33 @@ const Add: FC<AddProps> = ({ setShowModal, showModal }) => {
                 id="email"
                 name="email"
                 required
-                className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-shadow text-base"
+                className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:border-[#047aff] focus:ring-1 focus:ring-[#047aff] transition-all text-[16px]"
                 placeholder="correo@ejemplo.com"
               />
             </div>
 
             <div>
-              <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-2">
+              <label htmlFor="phone" className="block text-[14px] font-[400] text-[#1d1d1f] mb-2">
                 Teléfono
               </label>
               <input
                 type="tel"
                 id="phone"
                 name="phone"
-                className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-shadow text-base"
+                className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:border-[#047aff] focus:ring-1 focus:ring-[#047aff] transition-all text-[16px]"
                 placeholder="(opcional)"
               />
             </div>
 
             <div>
-              <label htmlFor="relationship" className="block text-sm font-medium text-gray-700 mb-2">
+              <label htmlFor="relationship" className="block text-[14px] font-[400] text-[#1d1d1f] mb-2">
                 Relación <span className="text-red-500">*</span>
               </label>
               <select
                 id="relationship"
                 name="relationship"
                 required
-                className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-shadow text-base"
+                className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:border-[#047aff] focus:ring-1 focus:ring-[#047aff] transition-all text-[16px]"
                 defaultValue=""
               >
                 <option value="" disabled>Seleccionar relación</option>
@@ -117,16 +118,16 @@ const Add: FC<AddProps> = ({ setShowModal, showModal }) => {
                 id="isBackupExecutor"
                 name="isBackupExecutor"
                 value="true"
-                className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                className="h-4 w-4 rounded border-gray-300 text-[#047aff] focus:ring-[#047aff]"
               />
-              <label htmlFor="isBackupExecutor" className="text-sm font-medium text-gray-700">
+              <label htmlFor="isBackupExecutor" className="text-[14px] font-[400] text-[#1d1d1f]">
                 Designar como albacea suplente
               </label>
             </div>
 
             <button
               type="submit"
-              className="w-full inline-flex justify-center px-6 py-3 rounded-xl bg-blue-600 text-white text-base font-medium hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
+              className="w-full inline-flex justify-center px-6 py-2.5 rounded-xl bg-[#047aff] text-white text-[16px] font-[500] hover:bg-[#0056d6] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#047aff] transition-colors"
             >
               Agregar Albacea
             </button>

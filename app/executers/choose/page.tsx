@@ -2,7 +2,9 @@
 import { FC, useState } from 'react';
 import DashboardLayout from "@/components/common/DashboardLayout";
 import { useRouter } from "next/navigation";
-import Add from "./Add";
+import Add, { ExecutorData } from "./Add";
+import { motion } from 'framer-motion';
+import PrimaryButton from "@/components/reusables/PrimaryButton";
 
 interface ExecutorOption {
   title: string;
@@ -14,6 +16,7 @@ const ChooseExecutorsPage: FC = () => {
   const [showModal, setShowModal] = useState<boolean>(false);
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
   const [selectedOption, setSelectedOption] = useState<ExecutorOption | null>(null);
+  const [executors, setExecutors] = useState<ExecutorData[]>([]);
 
   const handleClick = (e: React.MouseEvent<HTMLDivElement>, index: number, option: ExecutorOption): void => {
     e.preventDefault();
@@ -23,6 +26,10 @@ const ChooseExecutorsPage: FC = () => {
 
   const handleAddClick = (): void => {
     setShowModal(true);
+  };
+
+  const handleAddExecutor = (executor: ExecutorData): void => {
+    setExecutors([...executors, executor]);
   };
 
   const executorOptions: ExecutorOption[] = [
@@ -41,109 +48,209 @@ const ChooseExecutorsPage: FC = () => {
   ];
 
   return (
-    <DashboardLayout>
-      <Add setShowModal={setShowModal} showModal={showModal} />
-      <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="space-y-8">
-          <div>
-            <h1 className="text-3xl font-semibold text-gray-900">
-              ¿A quién le gustaría elegir como su albacea?
-            </h1>
-            <p className="mt-4 text-lg text-gray-600">
-              Seleccione el tipo de albaceas que prefiere para administrar su patrimonio.
-            </p>
-          </div>
+    <>
+      <Add setShowModal={setShowModal} showModal={showModal} onAddExecutor={handleAddExecutor} />
+      <DashboardLayout>
+        <motion.div 
+          className="min-h-screen bg-[#f5f5f7]"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 1.2 }}
+        >
+          <div className="max-w-6xl mx-auto px-4 sm:px-5 py-12">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-24">
+              <div className="space-y-8">
+                <div>
+                  <div className="inline-flex items-center h-[32px] bg-[#047aff] bg-opacity-10 px-[12px] py-[6px] rounded-md mb-2.5 mt-5">
+                    <span className="text-[#047aff] text-[14px] font-[400]">ALBACEAS</span>
+                  </div>
 
-          <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-            {executorOptions.map((option, index) => (
-              <div
-                key={index}
-                className="cursor-pointer transition-colors"
-                onClick={(e) => handleClick(e, index, option)}
-              >
-                <div
-                  className={`px-6 py-4 ${
-                    index !== 0 ? 'border-t border-gray-100' : ''
-                  } ${
-                    activeIndex === index
-                      ? 'bg-blue-600'
-                      : 'hover:bg-blue-50'
-                  }`}
-                >
-                  <h3
-                    className={`text-lg font-medium ${
-                      activeIndex === index
-                        ? 'text-white'
-                        : 'text-gray-900'
-                    }`}
-                  >
-                    {option.title}
-                  </h3>
-                  <p
-                    className={`mt-1 text-sm ${
-                      activeIndex === index
-                        ? 'text-blue-100'
-                        : 'text-gray-500'
-                    }`}
-                  >
-                    {option.subTitle}
+                  <h1 className='text-[32px] sm:text-[38px] font-[500] tracking-[-1.5px] leading-[1.2] sm:leading-[52px] mb-[15px]'>
+                    <span className='text-[#1d1d1f]'>¿A quién le gustaría elegir como su </span>
+                    <span className='bg-gradient-to-r from-[#3d9bff] to-[#047aff] inline-block text-transparent bg-clip-text'>albacea?</span>
+                  </h1>
+                  <p className="text-[16px] text-[#1d1d1f] leading-6 mb-4">
+                    Seleccione el tipo de albaceas que prefiere para administrar su patrimonio.
                   </p>
                 </div>
-              </div>
-            ))}
-          </div>
 
-          <div>
-            <h2 className="text-xl font-semibold text-gray-900 mb-4">
-              ¿A quién quieres como tus albaceas?
-            </h2>
-            
-            <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden p-4">
-              <div className="flex justify-between items-center">
-                <div>
-                  <h3 className="font-medium text-gray-900">Nombre Completor Contacto</h3>
-                  <p className="text-sm text-gray-500">test@testador.com</p>
+                <div className="bg-white rounded-2xl shadow-md overflow-hidden">
+                  {executorOptions.map((option, index) => (
+                    <div
+                      key={index}
+                      className="cursor-pointer transition-all"
+                      onClick={(e) => handleClick(e, index, option)}
+                    >
+                      <div
+                        className={`px-6 py-4 ${
+                          index !== 0 ? 'border-t border-gray-100' : ''
+                        } ${
+                          activeIndex === index
+                            ? 'bg-[#047aff]'
+                            : 'hover:bg-gray-50'
+                        }`}
+                      >
+                        <h3
+                          className={`text-[17px] font-[500] ${
+                            activeIndex === index
+                              ? 'text-white'
+                              : 'text-[#1d1d1f]'
+                          }`}
+                        >
+                          {option.title}
+                        </h3>
+                        <p
+                          className={`mt-1 text-[14px] ${
+                            activeIndex === index
+                              ? 'text-blue-100'
+                              : 'text-gray-500'
+                          }`}
+                        >
+                          {option.subTitle}
+                        </p>
+                      </div>
+                    </div>
+                  ))}
                 </div>
+
                 <div>
-                  <input 
-                    type="checkbox" 
-                    className="h-6 w-6 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-                    aria-label="Seleccionar albacea"
-                  />
+                  <h2 className="text-[22px] font-[500] text-[#1d1d1f] mb-4">
+                    ¿A quién quieres como tus albaceas?
+                  </h2>
+                  
+                  {executors.length > 0 && (
+                    <div className="bg-white rounded-2xl shadow-md p-6 mb-4">
+                      <div className="space-y-4">
+                        {executors.map((executor) => (
+                          <div
+                            key={executor.id}
+                            className="border-b border-gray-100 last:border-b-0 pb-4 last:pb-0"
+                          >
+                            <div className="flex justify-between items-start">
+                              <div>
+                                <h3 className="text-[17px] font-[500] text-[#1d1d1f]">{executor.name}</h3>
+                                <p className="text-[14px] text-gray-500">{executor.email}</p>
+                                {executor.phone && (
+                                  <p className="text-[14px] text-gray-500">{executor.phone}</p>
+                                )}
+                                <p className="text-[14px] text-gray-500">{executor.relationship}</p>
+                                {executor.isBackupExecutor && (
+                                  <p className="text-[14px] text-[#047aff]">Albacea suplente</p>
+                                )}
+                              </div>
+                              <div>
+                                <input 
+                                  type="checkbox" 
+                                  checked
+                                  className="h-6 w-6 rounded border-gray-300 text-[#047aff] focus:ring-[#047aff]"
+                                  aria-label="Seleccionar albacea"
+                                  readOnly
+                                />
+                              </div>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  <div
+                    onClick={handleAddClick}
+                    className="bg-white rounded-2xl shadow-md hover:shadow-lg transition-all cursor-pointer overflow-hidden"
+                  >
+                    <div className="flex items-center justify-center gap-2 py-8">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 448 512"
+                        width="24"
+                        height="24"
+                        className="fill-[#047aff]"
+                      >
+                        <path d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z" />
+                      </svg>
+                      <span className="text-[#047aff] font-[500]">Agregar Albacea</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="pt-6 flex justify-end">
+                  <PrimaryButton
+                    onClick={() => router.push("/summary?completed=executers")}
+                  >
+                    Guardar y continuar
+                  </PrimaryButton>
                 </div>
               </div>
-            </div>
 
-            <div
-              onClick={handleAddClick}
-              className="bg-white rounded-xl border border-gray-200 hover:border-blue-500 transition-colors cursor-pointer mt-4"
-            >
-              <div className="flex items-center justify-center gap-2 py-4 text-blue-600 font-medium">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 448 512"
-                  width="20"
-                  height="20"
-                  className="fill-current"
-                >
-                  <path d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z" />
-                </svg>
-                Agregar Albacea
-              </div>
+              {executors.length > 0 && (
+                <div className="bg-white rounded-2xl shadow-md p-6">
+                  <h2 className="text-[22px] font-[500] text-[#1d1d1f] mb-4">Resumen de Albaceas</h2>
+                  <div className="space-y-6">
+                    <div className="space-y-4">
+                      {executors.filter(e => !e.isBackupExecutor).map((executor) => (
+                        <div key={executor.id} className="flex items-start gap-3">
+                          <div className="flex-shrink-0 w-6 h-6 rounded-full bg-[#047aff] flex items-center justify-center mt-0.5">
+                            <svg
+                              className="w-3.5 h-3.5 text-white"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              stroke="currentColor"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2.5}
+                                d="M5 13l4 4L19 7"
+                              />
+                            </svg>
+                          </div>
+                          <div>
+                            <p className="text-[16px] font-[500] text-[#1d1d1f]">{executor.name}</p>
+                            <p className="text-[14px] text-gray-500">Albacea Principal</p>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+
+                    {executors.some(e => e.isBackupExecutor) && (
+                      <div>
+                        <h3 className="text-[17px] font-[500] text-[#1d1d1f] mb-4">Albaceas Suplentes</h3>
+                        <div className="space-y-4">
+                          {executors.filter(e => e.isBackupExecutor).map((executor) => (
+                            <div key={executor.id} className="flex items-start gap-3">
+                              <div className="flex-shrink-0 w-6 h-6 rounded-full bg-[#047aff] flex items-center justify-center mt-0.5">
+                                <svg
+                                  className="w-3.5 h-3.5 text-white"
+                                  fill="none"
+                                  viewBox="0 0 24 24"
+                                  stroke="currentColor"
+                                >
+                                  <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth={2.5}
+                                    d="M5 13l4 4L19 7"
+                                  />
+                                </svg>
+                              </div>
+                              <div>
+                                <p className="text-[16px] font-[500] text-[#1d1d1f]">{executor.name}</p>
+                                <p className="text-[14px] text-gray-500">Albacea Suplente</p>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
             </div>
           </div>
-
-          <div className="pt-6 flex justify-end">
-            <button
-              onClick={() => router.push("/summary?completed=executers")}
-              className="inline-flex justify-center px-6 py-3 rounded-xl bg-blue-600 text-white text-base font-medium hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
-            >
-              Guardar y continuar
-            </button>
-          </div>
-        </div>
-      </div>
-    </DashboardLayout>
+        </motion.div>
+      </DashboardLayout>
+    </>
   );
 };
 

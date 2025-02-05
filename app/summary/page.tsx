@@ -221,7 +221,7 @@ const optionalSteps = [
     title: "",
     description: "Regalos Especiales",
     duration: "Oportunidad de dejar regalos a personas especiales",
-    route: "",
+    route: "/special-gifts",
     progress: 0,
     icon: <Gift size={32} weight="thin" />
   },

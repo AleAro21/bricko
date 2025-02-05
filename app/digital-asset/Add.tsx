@@ -1,5 +1,6 @@
-import { FC } from 'react';
+import { FC, useState, useEffect } from 'react';
 import Modal from '@/components/common/Modal';
+import PrimaryButton from "@/components/reusables/PrimaryButton";
 
 interface AddProps {
   setShowModal: (show: boolean) => void;
@@ -40,6 +41,18 @@ const platforms = {
 };
 
 const Add: FC<AddProps> = ({ setShowModal, showModal, onAddAsset }) => {
+  const [selectedType, setSelectedType] = useState<string>('');
+  const [selectedPlatform, setSelectedPlatform] = useState<string>('');
+  const [customType, setCustomType] = useState<string>('');
+  const [customPlatform, setCustomPlatform] = useState<string>('');
+  const [availablePlatforms, setAvailablePlatforms] = useState<string[]>([]);
+
+  useEffect(() => {
+    if (selectedType && selectedType !== 'other') {
+      setAvailablePlatforms(platforms[selectedType as keyof typeof platforms]);
+    }
+  }, [selectedType]);
+
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
     const form = e.target as HTMLFormElement;
@@ -47,8 +60,8 @@ const Add: FC<AddProps> = ({ setShowModal, showModal, onAddAsset }) => {
     
     const newAsset: DigitalAssetData = {
       id: crypto.randomUUID(),
-      type: formData.get('type') as string,
-      platform: formData.get('platform') as string,
+      type: selectedType === 'other' ? customType : selectedType,
+      platform: selectedPlatform === 'Otro' ? customPlatform : selectedPlatform,
       accountName: formData.get('accountName') as string,
       instructions: formData.get('instructions') as string,
       hasBackupCodes: formData.get('hasBackupCodes') === 'true',
@@ -59,22 +72,45 @@ const Add: FC<AddProps> = ({ setShowModal, showModal, onAddAsset }) => {
     setShowModal(false);
   };
 
+  const handleTypeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const value = e.target.value;
+    setSelectedType(value);
+    setSelectedPlatform('');
+    setCustomPlatform('');
+  };
+
+  const handlePlatformChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const value = e.target.value;
+    setSelectedPlatform(value);
+    if (value !== 'Otro') {
+      setCustomPlatform('');
+    }
+  };
+
   return (
     <Modal setShowModal={setShowModal} showModal={showModal}>
-      <div className="w-full min-w-[400px]">
-        <h2 className="text-xl font-semibold text-gray-900 mb-4">Agregar Activo Digital</h2>
+      <div className="w-full min-w-[400px] max-w-2xl mx-auto">
+        <div className="inline-flex items-center h-[32px] bg-[#047aff] bg-opacity-10 px-[12px] py-[6px] rounded-md mb-2.5">
+          <span className="text-[#047aff] text-[14px] font-[400]">NUEVO ACTIVO DIGITAL</span>
+        </div>
+
+        <h2 className="text-[22px] font-[500] text-[#1d1d1f] mb-6">
+          Agregar nuevo activo digital
+        </h2>
+
         <div className="w-full">
-          <form className="space-y-4" onSubmit={handleSubmit}>
+          <form className="space-y-6" onSubmit={handleSubmit}>
             <div>
-              <label htmlFor="type" className="block text-sm font-medium text-gray-700 mb-2">
-                Tipo de activo <span className="text-red-500">*</span>
+              <label htmlFor="type" className="block text-[17px] font-[400] text-[#1d1d1f] mb-2.5">
+                Tipo de activo <span className="text-[#047aff]">*</span>
               </label>
               <select
                 id="type"
                 name="type"
                 required
-                className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-shadow text-base"
-                defaultValue=""
+                className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:border-[#047aff] transition-all duration-1000 text-[16px]"
+                value={selectedType}
+                onChange={handleTypeChange}
               >
                 <option value="" disabled>Seleccionar tipo</option>
                 {assetTypes.map((type) => (
@@ -85,49 +121,88 @@ const Add: FC<AddProps> = ({ setShowModal, showModal, onAddAsset }) => {
               </select>
             </div>
 
-            <div>
-              <label htmlFor="platform" className="block text-sm font-medium text-gray-700 mb-2">
-                Plataforma <span className="text-red-500">*</span>
-              </label>
-              <select
-                id="platform"
-                name="platform"
-                required
-                className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-shadow text-base"
-                defaultValue=""
-              >
-                <option value="" disabled>Seleccionar plataforma</option>
-                {platforms.social.map((platform) => (
-                  <option key={platform} value={platform}>
-                    {platform}
-                  </option>
-                ))}
-              </select>
-            </div>
+            {selectedType === 'other' && (
+              <div>
+                <label htmlFor="customType" className="block text-[17px] font-[400] text-[#1d1d1f] mb-2.5">
+                  Especificar tipo <span className="text-[#047aff]">*</span>
+                </label>
+                <input
+                  type="text"
+                  id="customType"
+                  name="customType"
+                  required
+                  value={customType}
+                  onChange={(e) => setCustomType(e.target.value)}
+                  className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:border-[#047aff] transition-all duration-1000 text-[16px]"
+                  placeholder="Escriba el tipo de activo"
+                />
+              </div>
+            )}
+
+            {selectedType && selectedType !== 'other' && (
+              <div>
+                <label htmlFor="platform" className="block text-[17px] font-[400] text-[#1d1d1f] mb-2.5">
+                  Plataforma <span className="text-[#047aff]">*</span>
+                </label>
+                <select
+                  id="platform"
+                  name="platform"
+                  required
+                  className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:border-[#047aff] transition-all duration-1000 text-[16px]"
+                  value={selectedPlatform}
+                  onChange={handlePlatformChange}
+                >
+                  <option value="" disabled>Seleccionar plataforma</option>
+                  {availablePlatforms.map((platform) => (
+                    <option key={platform} value={platform}>
+                      {platform}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            )}
+
+            {selectedPlatform === 'Otro' && (
+              <div>
+                <label htmlFor="customPlatform" className="block text-[17px] font-[400] text-[#1d1d1f] mb-2.5">
+                  Especificar plataforma <span className="text-[#047aff]">*</span>
+                </label>
+                <input
+                  type="text"
+                  id="customPlatform"
+                  name="customPlatform"
+                  required
+                  value={customPlatform}
+                  onChange={(e) => setCustomPlatform(e.target.value)}
+                  className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:border-[#047aff] transition-all duration-1000 text-[16px]"
+                  placeholder="Escriba el nombre de la plataforma"
+                />
+              </div>
+            )}
 
             <div>
-              <label htmlFor="accountName" className="block text-sm font-medium text-gray-700 mb-2">
-                Nombre de la cuenta o identificador <span className="text-red-500">*</span>
+              <label htmlFor="accountName" className="block text-[17px] font-[400] text-[#1d1d1f] mb-2.5">
+                Nombre de la cuenta o identificador <span className="text-[#047aff]">*</span>
               </label>
               <input
                 type="text"
                 id="accountName"
                 name="accountName"
                 required
-                className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-shadow text-base"
+                className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:border-[#047aff] transition-all duration-1000 text-[16px]"
                 placeholder="@usuario o nombre de cuenta"
               />
             </div>
 
             <div>
-              <label htmlFor="instructions" className="block text-sm font-medium text-gray-700 mb-2">
+              <label htmlFor="instructions" className="block text-[17px] font-[400] text-[#1d1d1f] mb-2.5">
                 Instrucciones para el albacea
               </label>
               <textarea
                 id="instructions"
                 name="instructions"
                 rows={3}
-                className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-shadow text-base"
+                className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:border-[#047aff] transition-all duration-1000 text-[16px] resize-none"
                 placeholder="Instrucciones sobre qué hacer con esta cuenta"
               />
             </div>
@@ -139,33 +214,32 @@ const Add: FC<AddProps> = ({ setShowModal, showModal, onAddAsset }) => {
                   id="hasBackupCodes"
                   name="hasBackupCodes"
                   value="true"
-                  className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                  className="h-6 w-6 rounded border-gray-300 text-[#047aff] focus:ring-[#047aff] transition-all duration-1000"
                 />
-                <label htmlFor="hasBackupCodes" className="text-sm font-medium text-gray-700">
+                <label htmlFor="hasBackupCodes" className="text-[16px] font-[400] text-[#1d1d1f]">
                   Tengo códigos de respaldo o recuperación
                 </label>
               </div>
 
               <div>
-                <label htmlFor="backupLocation" className="block text-sm font-medium text-gray-700 mb-2">
+                <label htmlFor="backupLocation" className="block text-[17px] font-[400] text-[#1d1d1f] mb-2.5">
                   Ubicación de los códigos de respaldo
                 </label>
                 <input
                   type="text"
                   id="backupLocation"
                   name="backupLocation"
-                  className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-shadow text-base"
+                  className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:border-[#047aff] transition-all duration-1000 text-[16px]"
                   placeholder="Ej: Caja fuerte, archivo específico"
                 />
               </div>
             </div>
 
-            <button
-              type="submit"
-              className="w-full inline-flex justify-center px-6 py-3 rounded-xl bg-blue-600 text-white text-base font-medium hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
-            >
-              Agregar Activo Digital
-            </button>
+            <div className="pt-2">
+              <PrimaryButton type="submit" className="w-full">
+                Agregar
+              </PrimaryButton>
+            </div>
           </form>
         </div>
       </div>

@@ -156,15 +156,17 @@ const AccountAndPropertyPage: FC = () => {
                   className="bg-white rounded-2xl shadow-md hover:shadow-lg transition-all cursor-pointer overflow-hidden"
                 >
                   <div className="flex items-center justify-center gap-2 py-8">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 448 512"
-                      width="24"
-                      height="24"
-                      className="fill-[#047aff]"
-                    >
-                      <path d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z" />
-                    </svg>
+                    <div className="w-8 h-8 rounded-full bg-[#047aff] flex items-center justify-center">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 448 512"
+                        width="16"
+                        height="16"
+                        className="fill-white"
+                      >
+                        <path d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z" />
+                      </svg>
+                    </div>
                     <span className="text-[#047aff] font-[500]">Agregar cuenta o propiedad</span>
                   </div>
                 </div>
