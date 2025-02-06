@@ -100,13 +100,16 @@ const PeoplePage: FC = () => {
             <div className="space-y-8">
               {/* Title section */}
               <div>
-                 <div className="flex items-center gap-2 mb-2.5">
+                 <div className="flex items-center justify-between mb-2.5">
                     <div className="inline-flex items-center h-[32px] bg-[#047aff] bg-opacity-10 px-[12px] py-[6px] rounded-md">
                       <span className="text-[#047aff] text-[14px] font-[400]">PERSONAS</span>
                     </div>
-                    <Link href="#" className="inline-flex items-center h-[32px] text-[#047aff] hover:text-[#0456b0]">
-                      <span className="w-5 h-5 inline-flex items-center justify-center rounded-full border border-[#047aff] text-sm">?</span>
-                    </Link>
+                    <div className="flex items-center gap-2">
+                      <Link href="#" className="inline-flex items-center h-[32px] text-[#047aff] hover:text-[#0456b0]">
+                        <span className="w-5 h-5 inline-flex items-center justify-center rounded-full border border-[#047aff] text-sm">?</span>
+                      </Link>
+                      <p className="text-[14px] text-[#000000]">Articulo relacionado</p>
+                    </div>
                   </div>
 
                 <h1 className="text-[32px] sm:text-[38px] font-[500] tracking-[-1.5px] leading-[1.2] sm:leading-[52px] mb-[15px]">

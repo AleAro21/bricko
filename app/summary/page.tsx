@@ -14,7 +14,8 @@ import {
   Gift, 
   Globe,
   Check,
-  PencilSimple
+  PencilSimple,
+  Clock
 } from 'phosphor-react';
 import { useUser } from "@/context/UserContext";
 import { motion } from 'framer-motion';
@@ -89,7 +90,7 @@ const StepCard: FC<StepCardProps> = ({
       <div className="absolute top-0 left-0 z-10">
         <div className={`inline-flex items-center h-[32px] ${isOptional ? 'bg-gray-200' : 'bg-[#047aff] bg-opacity-10'} px-[15px] py-[5px] rounded-t-md`}>
           <span className={`${isOptional ? 'text-gray-600' : 'text-[#047aff]'} text-[14px] font-[400]`}>
-            {isOptional ? 'Opcional' : `Paso ${stepNumber} • ${duration}`}
+            {isOptional ? 'Opcional' : `Paso ${stepNumber}`}
           </span>
         </div>
       </div>
@@ -101,34 +102,38 @@ const StepCard: FC<StepCardProps> = ({
         }}
       >
         <div className="flex justify-between items-start">
-          <div className="flex-1">
-            <div className="flex items-center gap-5 mb-5">
-              <div className="text-[#047aff] w-8 h-8 flex items-center justify-center">
-                {icon}
+          <div className="flex items-start gap-5 flex-1">
+            <div className="flex-1">
+              <div className="flex items-center gap-5 mb-5">
+                <div className="text-[#047aff] w-8 h-8 flex items-center justify-center">
+                  {icon}
+                </div>
+                <h3 className="text-[24px] sm:text-[24px] text-[#000000] font-[500] mb-0 pr-5 tracking-[0.1px] leading-[1.3]">
+                  {title}
+                </h3>
               </div>
-              <h3 className="text-[24px] sm:text-[24px] text-[#000000] font-[500] mb-0 pr-5 tracking-[0.1px] leading-[1.3]">
-                {isOptional ? description : title}
-              </h3>
+              <p className="text-[14px] sm:text-[14px] font-[300] text-[#1d1d1f] mb-0 tracking-[0.1px] leading-[1.3] flex-1 max-w-[70%]">
+                {description}
+              </p>
             </div>
-            <p className="text-[14px] sm:text-[14px] font-[300] text-[#1d1d1f] mb-0 tracking-[0.1px] leading-[1.3]">
-              {isOptional ? duration : description}
-            </p>
           </div>
           <div className="flex flex-col items-end gap-5">
-            {progress > 0 && (
-              <>
-                <span className={`inline-flex items-center px-[10px] py-[5px] rounded-full text-xs font-medium ${badgeColors.bg} ${badgeColors.text}`}>
-                  {progress}% completado
-                </span>
-                {progress === 100 && (
-                  <div className="flex items-center gap-5">
-                    <div className="w-6 h-6 rounded-full bg-[#047aff] flex items-center justify-center">
-                      <Check weight="bold" className="text-white w-4 h-4" />
-                    </div>
-                    <PencilSimple className="text-[#047aff] w-5 h-5" />
-                  </div>
-                )}
-              </>
+            {progress === 100 ? (
+              <div className="flex items-center gap-5">
+                <div className="w-6 h-6 rounded-full bg-[#047aff] flex items-center justify-center">
+                  <Check weight="bold" className="text-white w-4 h-4" />
+                </div>
+                <PencilSimple className="text-[#047aff] w-5 h-5" />
+              </div>
+            ) : progress === 0 ? (
+              <div className="flex items-center gap-2 text-[#047aff]">
+                <Clock className="w-4 h-4" />
+                <span className="text-[12px] font-medium whitespace-nowrap">{duration}</span>
+              </div>
+            ) : (
+              <span className={`inline-flex items-center px-[10px] py-[5px] rounded-full text-xs font-medium ${badgeColors.bg} ${badgeColors.text}`}>
+                {progress}% completado
+              </span>
             )}
           </div>
         </div>
@@ -188,7 +193,7 @@ const mainSteps = [
     description: "Menciona dónde están tus activos",
     duration: "1-4 minutos",
     route: "/account-and-property",
-    progress: 30,
+    progress: 10,
     icon: <Buildings size={32} weight="thin" />
   },
   {
@@ -206,24 +211,24 @@ const mainSteps = [
     description: "Selecciona a la persona o personas encargadas de cumplir tus últimas voluntades",
     duration: "3-5 minutos",
     route: "/executers/introduction",
-    progress: 5,
+    progress: 0,
     icon: <Users size={32} weight="thin" />
   }
 ];
 
 const optionalSteps = [
   {
-    title: "",
-    description: "Regalos Especiales",
-    duration: "Oportunidad de dejar regalos a personas especiales",
+    title: "Regalos Especiales",
+    description: "Define objetos o bienes específicos para personas especiales",
+    duration: "3-5 minutos",
     route: "/special-gifts",
     progress: 0,
     icon: <Gift size={32} weight="thin" />
   },
   {
-    title: "",
-    description: "Activos Digitales",
-    duration: "Distribuye tus bienes o derechos digitales",
+    title: "Activos Digitales",
+    description: "Gestiona tus cuentas y activos en línea",
+    duration: "3-5 minutos",
     route: "/digital-asset",
     progress: 0,
     icon: <Globe size={32} weight="thin" />

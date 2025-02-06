@@ -49,6 +49,7 @@ const Navbar: React.FC = () => {
       { name: 'Configuración', href: '/account', current: false },
       { name: 'Mensajes', href: '/messages', current: false },
       { name: 'Compartir', href: '/invite', current: false },
+      { name: 'Versiones anteriores', href: '', current: false },
       {
         name: 'Salir', onClick: handleLogout, current: false,
         href: ''

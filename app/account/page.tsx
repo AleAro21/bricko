@@ -56,6 +56,7 @@ const AccountPage: FC = () => {
                   </a>
                 ))}
               </nav>
+              <p className="text-[12px] flex justify-end text-[#6e6e73] mt-4 px-4">V1.0.0</p>
             </div>
 
             {/* Right column - Settings forms */}
@@ -176,7 +177,9 @@ const AccountPage: FC = () => {
                     Eliminar cuenta
                   </button>
                 </section>
+         
               </div>
+             
             </div>
           </div>
         </div>
