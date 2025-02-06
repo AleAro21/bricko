@@ -19,12 +19,25 @@ export function UserProvider({ children }: { children: ReactNode }) {
   const [error, setError] = useState<Error | null>(null);
 
   const refreshUser = async () => {
-    if (!user?.id) return;
+    const savedUserId = sessionStorage.getItem('userId');
+    if (!savedUserId) {
+      setLoading(false);
+      return;
+    }
     
     try {
       setLoading(true);
-      const updatedUser = await apiService.getUser(user.id);
-      setUser(updatedUser);
+      // Check for stored user data first
+      const storedUser = sessionStorage.getItem('userObject');
+      if (storedUser) {
+        setUser(JSON.parse(storedUser));
+      } else {
+        // Only fetch if we don't have stored data
+        const updatedUser = await apiService.getUser(savedUserId);
+        setUser(updatedUser);
+        // Store the fetched user data
+        sessionStorage.setItem('userObject', JSON.stringify(updatedUser));
+      }
     } catch (err) {
       setError(err instanceof Error ? err : new Error('Failed to fetch user'));
     } finally {
@@ -33,13 +46,7 @@ export function UserProvider({ children }: { children: ReactNode }) {
   };
 
   useEffect(() => {
-    // You might want to load the user from localStorage or session storage here
-    const savedUserId = sessionStorage.getItem('userId');
-    if (savedUserId) {
-      refreshUser();
-    } else {
-      setLoading(false);
-    }
+    refreshUser();
   }, []);
 
   return (

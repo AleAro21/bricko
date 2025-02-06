@@ -243,9 +243,15 @@ const calculateTotalProgress = () => {
 
 const SummaryPage: FC = () => {
   const params = useSearchParams();
-  const totalProgress = calculateTotalProgress();
   const router = useRouter();
   const { user } = useUser();
+  const totalProgress = calculateTotalProgress();
+
+  useEffect(() => {
+    if (!user && !sessionStorage.getItem('userId')) {
+      router.push('/start/login');
+    }
+  }, [user, router]);
 
   const handlePaymentClick = () => {
     router.push("/payment");

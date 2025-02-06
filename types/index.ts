@@ -8,13 +8,19 @@ export interface User {
     acceptOffers: boolean;
     createdAt: string;
     updatedAt: string;
+    governmentId: string;
+    birthDate: string
+    nationality: string
+    gender: string
+    phoneNumber: string
+    countryCode: string
+    maritalstatus: string
   }
+  
   
   export interface CreateUserData {
     firstName: string | null;
     lastName: string | null;
     middleName: string | null;
-    email: string;
-    acceptTerms: boolean;
-    acceptOffers: boolean;
+    email: string;  
   }

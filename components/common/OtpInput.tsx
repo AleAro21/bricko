@@ -7,12 +7,12 @@ import { Envelope, Phone, ChatCircle } from 'phosphor-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import graylogo from '@/assets/greylogo.png';
 import PrimaryButton from '@/components/reusables/PrimaryButton';
-import User from "@/assets/TrustPerson.png";
 import CustomerSupport from "@/assets/CustomerSupport.png";
 import { confirmSignUp, resendSignUpCode, fetchAuthSession, signIn } from "aws-amplify/auth";
 import { apiService } from '@/app/apiService';
 import { useUser } from '@/context/UserContext';
 import FooterTwo from '@/components/common/FooterTwo';
+import Spinner from '@/components/reusables/Spinner';
 
 interface OTPInputProps {
   length?: number;
@@ -30,6 +30,7 @@ const OTPInput: React.FC<OTPInputProps> = ({ length = 6, onComplete }) => {
   const [timer, setTimer] = useState<number>(30);
   const [showPopup, setShowPopup] = useState<boolean>(false);
   const [currentMethodIndex, setCurrentMethodIndex] = useState<number>(0);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const router = useRouter();
   const { setUser } = useUser();
 
@@ -59,10 +60,12 @@ const OTPInput: React.FC<OTPInputProps> = ({ length = 6, onComplete }) => {
   };
 
   const handleSubmit = async (): Promise<void> => {
+    setIsLoading(true);
     const otpString = otp.join("");
     const email = sessionStorage.getItem("email");
     
     if (!email) {
+      setIsLoading(false);
       alert("No se encontró el correo electrónico. Por favor, regresa al paso anterior.");
       return;
     }
@@ -97,20 +100,21 @@ const OTPInput: React.FC<OTPInputProps> = ({ length = 6, onComplete }) => {
         lastName: sessionStorage.getItem("lastName"),
         middleName: sessionStorage.getItem("middleName"),
         email,
-        acceptTerms: true,
-        acceptOffers: true,
       };
 
       const createdUser = await apiService.createUser(userData);
       
-      // Store user ID and set user in context
+      // Store complete user data
       sessionStorage.setItem('userId', createdUser.id);
+      sessionStorage.setItem('userObject', JSON.stringify(createdUser));
       setUser(createdUser);
 
       router.push("/start/congratulation");
     } catch (error: any) {
       console.error("Error during confirmation process:", error);
       alert(error.message || "An error occurred during confirmation");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -185,7 +189,16 @@ const OTPInput: React.FC<OTPInputProps> = ({ length = 6, onComplete }) => {
 
               {/* Right column - OTP Form in white container */}
               <div className='w-full lg:w-3/5 flex items-center mt-[0px] lg:mt-0'>
-                <div className="bg-white rounded-2xl px-4 sm:px-8 md:px-12 py-8 shadow-lg w-full max-w-xl mx-auto">
+                <div className="bg-white rounded-2xl px-4 sm:px-8 md:px-12 py-8 shadow-lg w-full max-w-xl mx-auto relative">
+                  {isLoading && (
+                    <div className="absolute inset-0 bg-white bg-opacity-80 flex items-center justify-center z-50 rounded-2xl">
+                      <div className="text-center">
+                        <Spinner size={50} />
+                        <p className="mt-4 text-[#047aff] font-medium">Verificando...</p>
+                      </div>
+                    </div>
+                  )}
+                  
                   <motion.div
                     key={currentMethod.id}
                     initial={{ opacity: 0, y: 20 }}
@@ -238,7 +251,9 @@ const OTPInput: React.FC<OTPInputProps> = ({ length = 6, onComplete }) => {
 
                   <div className="flex w-full flex-col sm:flex-row sm:items-center sm:justify-between items-center gap-4">
                     <div className="w-full sm:w-auto flex justify-center">
-                      <PrimaryButton onClick={handleSubmit}>Continuar</PrimaryButton>
+                      <PrimaryButton onClick={handleSubmit} disabled={isLoading}>
+                        {isLoading ? 'Procesando...' : 'Continuar'}
+                      </PrimaryButton>
                     </div>
                     <div className="flex items-center gap-3">
                       <div className="w-8 h-8 rounded-full overflow-hidden">

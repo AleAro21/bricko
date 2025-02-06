@@ -54,6 +54,16 @@ export class APIService {
     const response = await this.fetchWithAuth(`/wills/users/${userId}`);
     return response.response;
   }
+
+async updateUser(userId: string, userData: Partial<User>): Promise<User> {
+  const response = await this.fetchWithAuth(`/wills/users/${userId}`, {
+    method: 'PUT',
+    body: JSON.stringify(userData),
+  });
+  return response.response;
+
+}
+
 }
 
 export const apiService = APIService.getInstance();

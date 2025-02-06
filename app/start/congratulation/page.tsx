@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { FC, useState, useEffect } from "react";
 import CardStart from "@/components/common/CardStart";
 import { Globe, Users, Newspaper, Buildings } from 'phosphor-react';
 import { useRouter } from 'next/navigation';
@@ -10,11 +10,50 @@ import Image from 'next/image';
 import { useUser } from "@/context/UserContext";
 import { motion } from 'framer-motion';
 
+type ItemData = {
+  id: number;
+  name: string;
+};
+
+type DataItem = {
+  items: {
+    itemData: ItemData[] | null;
+  };
+};
+
 export default function CongratulationsPage() {
   const router = useRouter();
-  const { user } = useUser();
+  const [childData, setChildData] = useState<ItemData[] | null>(null);
+  const { user, setUser } = useUser();
   const [selectedCards, setSelectedCards] = useState<number[]>([]);
-  const maxSelections = 1; // Set maximum selections to 2
+  const maxSelections = 1;
+
+  useEffect(() => {
+    const checkUser = () => {
+      const storedUser = sessionStorage.getItem('userObject');
+      if (storedUser && !user) {
+        setUser(JSON.parse(storedUser));
+      } else if (!user && !sessionStorage.getItem('userId')) {
+        router.push('/start/login');
+      }
+    };
+
+    checkUser();
+  }, []); // Only run on mount
+
+  const handleClick = (e: React.MouseEvent<HTMLParagraphElement>, items: DataItem): void => {
+    e.preventDefault();
+    if (items?.items?.itemData == null) {
+      router.push("/summary");
+    } else {
+      setChildData(items?.items?.itemData);
+    }
+  };
+
+  const handleChildData = (e: React.MouseEvent<HTMLParagraphElement>): void => {
+    e.preventDefault();
+    router.push("/summary");
+  };
 
   const cards = [
     {
@@ -45,7 +84,7 @@ export default function CongratulationsPage() {
         return prev.filter(i => i !== index);
       } else {
         if (maxSelections && prev.length >= maxSelections) {
-          return [...prev.slice(1), index]; // Remove the first selected item and add the new one
+          return [...prev.slice(1), index];
         }
         return [...prev, index];
       }
@@ -55,6 +94,8 @@ export default function CongratulationsPage() {
   const handleContinue = () => {
     router.push('/summary');
   };
+
+  const userName = user?.firstName || '';
 
   return (
     <motion.main 
@@ -79,7 +120,7 @@ export default function CongratulationsPage() {
           <div className="mb-8 sm:mb-[30px]">
             <h1 className='text-[32px] sm:text-[46px] font-[500] tracking-[-1.5px] leading-[1.2] sm:leading-[52px] mb-[15px]'>
               <span className='bg-gradient-to-r from-[#3d9bff] to-[#047aff] inline-block text-transparent bg-clip-text'>
-                ¡Felicidades {user?.firstName}!
+                ¡Felicidades {userName}!
               </span>
               <span className='text-[#1d1d1f]'> Estás un paso más cerca de la tranquilidad</span>
             </h1>
