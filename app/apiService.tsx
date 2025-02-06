@@ -47,11 +47,14 @@ export class APIService {
       method: 'POST',
       body: JSON.stringify(userData),
     });
+    console.log('API Response:', response); // Add this line
     return response.response;
   }
+  
 
   async getUser(userId: string): Promise<User> {
     const response = await this.fetchWithAuth(`/wills/users/${userId}`);
+    console.log('API Response:', response); // Add this line
     return response.response;
   }
 
@@ -60,6 +63,7 @@ async updateUser(userId: string, userData: Partial<User>): Promise<User> {
     method: 'PUT',
     body: JSON.stringify(userData),
   });
+  console.log('API Response:', response); // Add this line
   return response.response;
 
 }

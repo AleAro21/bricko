@@ -1,9 +1,8 @@
 'use client';
 
-import { FC, useEffect } from 'react';
+import { FC, useEffect, useState } from 'react';
 import { useRouter, useSearchParams } from "next/navigation";
 import DashboardLayout from "@/components/common/DashboardLayout";
-import PrimaryButton from "@/components/reusables/PrimaryButton";
 import { 
   LockSimple, 
   CaretRight, 
@@ -20,16 +19,26 @@ import {
 import { useUser } from "@/context/UserContext";
 import { motion } from 'framer-motion';
 
-interface StepCardProps {
+// Types
+interface StepProgress {
+  id: string;
+  progress: number;
+}
+
+interface Step {
+  id: string;
   stepNumber: number;
   title: string;
   description: string;
   duration: string;
   route: string;
+  icon?: React.ReactNode;
+}
+
+interface StepCardProps extends Step {
   onClick: () => void;
   isOptional?: boolean;
-  progress?: number;
-  icon?: React.ReactNode;
+  progress: number;
 }
 
 interface ProgressBarProps {
@@ -37,6 +46,7 @@ interface ProgressBarProps {
   showLabel?: boolean;
 }
 
+// Utility functions
 const getProgressColor = (progress: number): string => {
   if (progress === 100) return '#047aff';
   if (progress >= 11) return '#f97316';
@@ -49,6 +59,7 @@ const getProgressBadgeColor = (progress: number): { bg: string; text: string } =
   return { bg: 'bg-red-100', text: 'text-red-800' };
 };
 
+// Components
 const ProgressBar: FC<ProgressBarProps> = ({ progress, showLabel = true }) => {
   const color = getProgressColor(progress);
   
@@ -83,7 +94,6 @@ const StepCard: FC<StepCardProps> = ({
   icon
 }) => {
   const badgeColors = getProgressBadgeColor(progress);
-  const color = getProgressColor(progress);
 
   return (
     <div className="relative pt-8">
@@ -177,85 +187,128 @@ const PaymentSection: FC<{ onClick: () => void }> = ({ onClick }) => {
   );
 };
 
-const mainSteps = [
+// Step definitions
+const mainSteps: Step[] = [
   {
+    id: 'personal-info',
     stepNumber: 1,
     title: "Cuéntanos sobre ti",
     description: "Información para personalizar tu testamento",
     duration: "2-4 minutos",
     route: "/about-yourself/name",
-    progress: 75,
     icon: <Heart size={32} weight="thin" />
   },
   {
+    id: 'assets',
     stepNumber: 2,
     title: "Cuentas y Propiedades",
     description: "Menciona dónde están tus activos",
     duration: "1-4 minutos",
     route: "/account-and-property",
-    progress: 10,
     icon: <Buildings size={32} weight="thin" />
   },
   {
+    id: 'inheritance',
     stepNumber: 3,
     title: "Herencia",
     description: "Define a las personas o entidades que heredarán tus bienes",
     duration: "3-5 minutos",
     route: "/estate/introduction",
-    progress: 100,
     icon: <Coins size={32} weight="thin" />
   },
   {
+    id: 'executors',
     stepNumber: 4,
     title: "Albaceas",
     description: "Selecciona a la persona o personas encargadas de cumplir tus últimas voluntades",
     duration: "3-5 minutos",
     route: "/executers/introduction",
-    progress: 0,
     icon: <Users size={32} weight="thin" />
   }
 ];
 
-const optionalSteps = [
+const optionalSteps: Step[] = [
   {
+    id: 'special-gifts',
+    stepNumber: 0,
     title: "Regalos Especiales",
     description: "Define objetos o bienes específicos para personas especiales",
     duration: "3-5 minutos",
     route: "/special-gifts",
-    progress: 0,
     icon: <Gift size={32} weight="thin" />
   },
   {
+    id: 'digital-assets',
+    stepNumber: 0,
     title: "Activos Digitales",
     description: "Gestiona tus cuentas y activos en línea",
     duration: "3-5 minutos",
     route: "/digital-asset",
-    progress: 0,
     icon: <Globe size={32} weight="thin" />
   }
 ];
-
-const calculateTotalProgress = () => {
-  const totalSteps = mainSteps.length;
-  const totalProgress = mainSteps.reduce((acc, step) => acc + step.progress, 0);
-  return Math.round(totalProgress / totalSteps);
-};
 
 const SummaryPage: FC = () => {
   const params = useSearchParams();
   const router = useRouter();
   const { user } = useUser();
-  const totalProgress = calculateTotalProgress();
+  const [stepsProgress, setStepsProgress] = useState<StepProgress[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     if (!user && !sessionStorage.getItem('userId')) {
       router.push('/start/login');
+      return;
     }
+
+    // Here you'll fetch the progress for each step from your API
+    const fetchProgress = async () => {
+      try {
+        setIsLoading(true);
+        // TODO: Replace with actual API call
+        // const response = await apiService.getStepsProgress(user.id);
+        // setStepsProgress(response);
+        
+        // For now, initialize with 0 progress
+        const initialProgress = [...mainSteps, ...optionalSteps].map(step => ({
+          id: step.id,
+          progress: 0
+        }));
+        setStepsProgress(initialProgress);
+      } catch (error) {
+        console.error('Failed to fetch steps progress:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchProgress();
   }, [user, router]);
+
+  const getStepProgress = (stepId: string): number => {
+    return stepsProgress.find(step => step.id === stepId)?.progress || 0;
+  };
+
+  const calculateTotalProgress = (): number => {
+    if (stepsProgress.length === 0) return 0;
+    const mainStepsProgress = mainSteps.map(step => getStepProgress(step.id));
+    const totalProgress = mainStepsProgress.reduce((acc, curr) => acc + curr, 0);
+    return Math.round(totalProgress / mainSteps.length);
+  };
 
   const handlePaymentClick = () => {
     router.push("/payment");
   };
+
+  if (isLoading) {
+    return (
+      <DashboardLayout>
+        <div className="w-full h-screen flex items-center justify-center">
+          <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-[#047aff]"></div>
+        </div>
+      </DashboardLayout>
+    );
+  }
 
   return (
     <DashboardLayout>
@@ -271,7 +324,7 @@ const SummaryPage: FC = () => {
             <h1 className='text-[32px] sm:text-[46px] font-[500] tracking-[-1.5px] leading-[1.2] sm:leading-[52px] mb-5'>
               <span className='text-[#1d1d1f]'>Hola </span>
               <span className='bg-gradient-to-r from-[#3d9bff] to-[#047aff] inline-block text-transparent bg-clip-text'>
-                {user?.firstName || 'Usuario'}
+                {user?.name || 'Usuario'}
               </span>
             </h1>
             <p className="text-[15px] sm:text-[17px] font-[400] tracking-[-0.1px] leading-[1.3] text-[#1d1d1f] text-start mb-[25px]">
@@ -281,8 +334,9 @@ const SummaryPage: FC = () => {
             <div className="space-y-[25px]">
               {mainSteps.map((step) => (
                 <StepCard
-                  key={step.stepNumber}
+                  key={step.id}
                   {...step}
+                  progress={getStepProgress(step.id)}
                   onClick={() => router.push(step.route)}
                 />
               ))}
@@ -290,11 +344,11 @@ const SummaryPage: FC = () => {
               <h2 className="text-[24px] sm:text-[28px] font-[500] text-[#1d1d1f] mt-[25px] mb-[15px] tracking-[0.1px] leading-[1.3]">
                 Pasos Opcionales
               </h2>
-              {optionalSteps.map((step, index) => (
+              {optionalSteps.map((step) => (
                 <StepCard
-                  key={index}
-                  stepNumber={0}
+                  key={step.id}
                   {...step}
+                  progress={getStepProgress(step.id)}
                   onClick={() => router.push(step.route)}
                   isOptional
                 />
@@ -305,7 +359,7 @@ const SummaryPage: FC = () => {
           <div className="lg:w-2/5">
             <div className="sticky top-[25px]">
               <div className="bg-white rounded-xl p-[25px] shadow-md">
-                <ProgressBar progress={totalProgress} />
+                <ProgressBar progress={calculateTotalProgress()} />
                 
                 <h2 className="text-[24px] sm:text-[22px] font-[500] text-[#1d1d1f] mt-[25px] mb-2.5 tracking-[0.1px] leading-[1.3]">
                   Tu Voluntad

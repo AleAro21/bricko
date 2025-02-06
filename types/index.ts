@@ -1,8 +1,9 @@
 export interface User {
     id: string;
     email: string;
-    firstName: string;
-    lastName: string;
+    name: string;
+    fatherLastName: string;
+    motherLastName: string;
     middleName: string;
     acceptTerms: boolean;
     acceptOffers: boolean;
@@ -19,8 +20,8 @@ export interface User {
   
   
   export interface CreateUserData {
-    firstName: string | null;
-    lastName: string | null;
-    middleName: string | null;
+    name: string | null;
+    fatherLastName: string | null;
+    motherLastName: string | null;
     email: string;  
   }

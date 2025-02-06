@@ -95,7 +95,7 @@ export default function CongratulationsPage() {
     router.push('/summary');
   };
 
-  const userName = user?.firstName || '';
+  const userName = user?.name || '';
 
   return (
     <motion.main 

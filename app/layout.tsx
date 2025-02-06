@@ -2,6 +2,7 @@ import { Suspense } from 'react';
 import { Inter } from 'next/font/google';
 import AmplifyProvider from '@/components/providers/AmplifyProvider';
 import { UserProvider } from '@/context/UserContext';
+import { TestamentProvider } from '@/context/TestamentContext';
 import './globals.css';
 
 const inter = Inter({ subsets: ['latin'] });
@@ -29,9 +30,11 @@ export default function RootLayout({ children }: RootLayoutProps) {
       <body className={inter.className}>
         <AmplifyProvider>
           <UserProvider>
-            <Suspense fallback="loading...">
-              <div className="bg-background">{children}</div>
-            </Suspense>
+            <TestamentProvider>
+              <Suspense fallback="loading...">
+                <div className="bg-background">{children}</div>
+              </Suspense>
+            </TestamentProvider>
           </UserProvider>
         </AmplifyProvider>
       </body>

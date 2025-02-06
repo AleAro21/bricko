@@ -44,14 +44,14 @@ const BasicsPage: FC = () => {
     }
 
     // Store user data in sessionStorage
-    const firstName = (document.getElementById("name") as HTMLInputElement).value;
-    const lastName = (document.getElementById("fatherLastName") as HTMLInputElement).value;
-    const middleName = (document.getElementById("motherLastName") as HTMLInputElement).value;
+    const name = (document.getElementById("name") as HTMLInputElement).value;
+    const fatherLastName = (document.getElementById("fatherLastName") as HTMLInputElement).value;
+    const motherLastName = (document.getElementById("motherLastName") as HTMLInputElement).value;
 
     sessionStorage.setItem("email", emailInput.value);
-    sessionStorage.setItem("firstName", firstName);
-    sessionStorage.setItem("lastName", lastName);
-    sessionStorage.setItem("middleName", middleName);
+    sessionStorage.setItem("name", name);
+    sessionStorage.setItem("fatherLastName", fatherLastName);
+    sessionStorage.setItem("motherLastName", motherLastName);
 
     router.push("/start/password");
   };

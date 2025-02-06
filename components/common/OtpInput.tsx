@@ -63,7 +63,7 @@ const OTPInput: React.FC<OTPInputProps> = ({ length = 6, onComplete }) => {
     setIsLoading(true);
     const otpString = otp.join("");
     const email = sessionStorage.getItem("email");
-    
+
     if (!email) {
       setIsLoading(false);
       alert("No se encontró el correo electrónico. Por favor, regresa al paso anterior.");
@@ -73,7 +73,7 @@ const OTPInput: React.FC<OTPInputProps> = ({ length = 6, onComplete }) => {
     try {
       // Confirm signup
       await confirmSignUp({ username: email, confirmationCode: otpString });
-      
+
       // Sign in
       const password = sessionStorage.getItem("password");
       if (!password) {
@@ -96,14 +96,15 @@ const OTPInput: React.FC<OTPInputProps> = ({ length = 6, onComplete }) => {
 
       // Create user
       const userData = {
-        firstName: sessionStorage.getItem("firstName"),
-        lastName: sessionStorage.getItem("lastName"),
-        middleName: sessionStorage.getItem("middleName"),
+        name: sessionStorage.getItem("name") || '',
+        fatherLastName: sessionStorage.getItem("fatherLastName") || '',
+        motherLastName: sessionStorage.getItem("motherLastName") || '',
         email,
       };
 
       const createdUser = await apiService.createUser(userData);
-      
+
+
       // Store complete user data
       sessionStorage.setItem('userId', createdUser.id);
       sessionStorage.setItem('userObject', JSON.stringify(createdUser));
@@ -198,7 +199,7 @@ const OTPInput: React.FC<OTPInputProps> = ({ length = 6, onComplete }) => {
                       </div>
                     </div>
                   )}
-                  
+
                   <motion.div
                     key={currentMethod.id}
                     initial={{ opacity: 0, y: 20 }}
