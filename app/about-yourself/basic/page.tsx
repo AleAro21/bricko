@@ -4,10 +4,7 @@ import { FC, FormEvent, useState } from 'react';
 import { motion } from 'framer-motion';
 import DashboardLayout from "@/components/common/DashboardLayout";
 import { useRouter } from "next/navigation";
-import PhoneInput from 'react-phone-number-input';
-import 'react-phone-number-input/style.css';
 import AddressAutocomplete, { AddressData } from "@/components/common/address/AddressAutocomplete";
-import type { E164Number } from 'libphonenumber-js/core';
 import PrimaryButton from "@/components/reusables/PrimaryButton";
 import ProgressIndicator from "@/components/reusables/ProgressIndicator";
 import Link from "next/link";
@@ -16,8 +13,8 @@ interface FormValues {
   address1: string;
   address2: string;
   city: string;
+  state: string;
   postalCode: string;
-  phone: E164Number | undefined;
 }
 
 const BasicPage: FC = () => {
@@ -26,15 +23,10 @@ const BasicPage: FC = () => {
     address1: "",
     address2: "",
     city: "",
+    state: "",
     postalCode: "",
-    phone: undefined,
   });
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
-
-  const handlePhoneChange = (value: E164Number | undefined): void => {
-    setFormValues(prev => ({ ...prev, phone: value }));
-    setErrorMessage(null);
-  };
 
   const handleAddressSelect = (addressData: AddressData): void => {
     setFormValues(prev => ({
@@ -48,9 +40,9 @@ const BasicPage: FC = () => {
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
-    const { address1, city, postalCode } = formValues;
+    const { address1, city, state, postalCode } = formValues;
 
-    if (!address1 || !city || !postalCode) {
+    if (!address1 || !city || !state || !postalCode) {
       setErrorMessage("Por favor, complete todos los campos obligatorios");
       return;
     }
@@ -155,6 +147,20 @@ const BasicPage: FC = () => {
                         </div>
 
                         <div>
+                          <label htmlFor="state" className="block text-[17px] font-[400] text-[#1d1d1f] mb-2.5">
+                            Estado <span className="text-[#047aff]">*</span>
+                          </label>
+                          <input
+                            type="text"
+                            id="state"
+                            value={formValues.state}
+                            onChange={handleManualChange}
+                            className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:border-[#047aff] transition-all"
+                            required
+                          />
+                        </div>
+
+                        <div>
                           <label htmlFor="postalCode" className="block text-[17px] font-[400] text-[#1d1d1f] mb-2.5">
                             Código Postal <span className="text-[#047aff]">*</span>
                           </label>
@@ -167,25 +173,6 @@ const BasicPage: FC = () => {
                             required
                           />
                         </div>
-                      </div>
-                    </div>
-
-                    <div className="pt-5 mt-5 border-t border-gray-100">
-                      <h2 className="text-[20px] font-[500] text-[#1d1d1f] mb-2">
-                        Número de Teléfono
-                      </h2>
-                      <p className="text-[14px] text-[#6e6e73] mb-5">
-                        Sólo te llamaremos si necesitamos ayudarte con tu testamento.
-                      </p>
-                      <div className="mt-4">
-                        <PhoneInput
-                          international
-                          defaultCountry="MX"
-                          value={formValues.phone}
-                          onChange={handlePhoneChange}
-                          placeholder="Opcional"
-                          className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:border-[#047aff] transition-all"
-                        />
                       </div>
                     </div>
                   </div>

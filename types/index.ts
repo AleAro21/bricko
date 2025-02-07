@@ -14,7 +14,7 @@ export interface User {
     nationality: string
     gender: string
     phoneNumber: string
-    countryCode: string
+    countryPhoneCode: string
     maritalstatus: string
   }
   
@@ -24,4 +24,13 @@ export interface User {
     fatherLastName: string | null;
     motherLastName: string | null;
     email: string;  
+  }
+
+
+  export interface Address {
+    street: string;
+    city: string;
+    state: string;
+    zipCode: string;
+    country: string;
   }

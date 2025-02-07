@@ -14,6 +14,11 @@ import { useUser } from "@/context/UserContext";
 import Spinner from "@/components/reusables/Spinner";
 import { Autocomplete, TextField, Radio, RadioGroup, FormControlLabel, FormControl } from '@mui/material';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
+import { apiService } from '@/app/apiService';
+import { fetchAuthSession } from "aws-amplify/auth";
+import PhoneInput from 'react-phone-number-input';
+import 'react-phone-number-input/style.css';
+import type { E164Number } from 'libphonenumber-js/core';
 
 // List of countries
 const COUNTRIES = [
@@ -46,8 +51,10 @@ interface FormValues {
   motherLastName: string;
   taxId: string;
   birthDate: Date | null;
-  countryCode: string;
+  nationality: string;
   gender: 'male' | 'female' | '';
+  phoneNumber: string;
+  countryPhoneCode: string;
 }
 
 // Create custom theme to match your design
@@ -128,7 +135,7 @@ const theme = createTheme({
 
 const NamePage: FC = () => {
   const router = useRouter();
-  const { user } = useUser();
+  const { user, refreshUser } = useUser();
   const { personalInfo, savePersonalInfo, loading } = useTestament();
   const [formValues, setFormValues] = useState<FormValues>({
     name: "",
@@ -137,8 +144,10 @@ const NamePage: FC = () => {
     motherLastName: "",
     taxId: "",
     birthDate: null,
-    countryCode: "",
+    nationality: "",
     gender: "",
+    phoneNumber: "",
+    countryPhoneCode: "",
   });
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
@@ -150,8 +159,11 @@ const NamePage: FC = () => {
       setFormValues(prev => ({
         ...prev,
         ...personalInfo,
-        countryCode: personalInfo.countryCode || "",
+        nationality: personalInfo.nationality || "",
         gender: personalInfo.gender as 'male' | 'female' || "",
+        phoneNumber: personalInfo.phoneNumber || "",
+        countryPhoneCode: personalInfo.countryPhoneCode || "",
+        birthDate: personalInfo.birthDate ? new Date(personalInfo.birthDate) : null,
       }));
     } else if (user) {
       // Get data from both sessionStorage and user object
@@ -167,25 +179,26 @@ const NamePage: FC = () => {
         // Keep existing values for other fields
         taxId: formValues.taxId,
         birthDate: formValues.birthDate,
-        countryCode: formValues.countryCode,
+        nationality: formValues.nationality,
         gender: formValues.gender,
+        phoneNumber: formValues.phoneNumber,
+        countryPhoneCode: formValues.countryPhoneCode,
       };
       
       console.log('Setting new values:', newValues);
       setFormValues(newValues);
     }
-  }, [personalInfo, user]); // Add user to dependencies
-  
+  }, [personalInfo, user]);
   
   useEffect(() => {
     console.log('Current form values:', formValues);
-  }, [formValues]); // This will log whenever formValues changes  
+  }, [formValues]);
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
-    const { name, fatherLastName, motherLastName, middleName, taxId, birthDate, countryCode, gender } = formValues;
+    const { name, fatherLastName, motherLastName, middleName, taxId, birthDate, nationality, gender, phoneNumber, countryPhoneCode } = formValues;
 
-    if (!name || !fatherLastName || !motherLastName || !taxId || !countryCode || !gender) {
+    if (!name || !fatherLastName || !motherLastName || !taxId || !nationality || !gender) {
       setErrorMessage("Por favor, complete todos los campos obligatorios");
       return;
     }
@@ -197,9 +210,57 @@ const NamePage: FC = () => {
     }
 
     try {
-      await savePersonalInfo(formValues);
+      // Get the current session token
+      const { tokens } = await fetchAuthSession();
+      if (!tokens?.accessToken) {
+        throw new Error("No authentication token available");
+      }
+
+      // Set the token in APIService
+      apiService.setToken(tokens.accessToken.toString());
+
+      // Format birthDate to ISO string
+      const formattedBirthDate = birthDate ? birthDate.toISOString() : null;
+
+      // First update the user
+      if (user?.id) {
+        const userData = {
+          name,
+          middleName: middleName || undefined,
+          fatherLastName,
+          motherLastName,
+          birthDate: formattedBirthDate || undefined,
+          gender,
+          nationality,
+          phoneNumber: phoneNumber || undefined,
+          countryPhoneCode: countryPhoneCode || undefined,
+          taxId: taxId || undefined,
+        };
+
+        await apiService.updateUser(user.id, userData);
+
+        // Refresh user data
+        await refreshUser();
+      }
+
+      // Then save personal info with all form values
+      await savePersonalInfo({
+        name,
+        middleName,
+        fatherLastName,
+        motherLastName,
+        taxId,
+        birthDate: formattedBirthDate,
+        nationality,
+        gender,
+        phoneNumber: phoneNumber || "",
+        countryPhoneCode: countryPhoneCode || "",
+      });
+      
+      // Navigate to next page
       router.push("/about-yourself/basic");
     } catch (error) {
+      console.error('Error updating user:', error);
       setErrorMessage("Error al guardar la información. Por favor, intente nuevamente.");
     }
   };
@@ -223,13 +284,41 @@ const NamePage: FC = () => {
   const handleCountryChange = (_: any, newValue: typeof COUNTRIES[number] | null) => {
     setFormValues(prev => ({
       ...prev,
-      countryCode: newValue?.code || ''
+      nationality: newValue?.code || '',
+      countryPhoneCode: newValue ? newValue.phone : '',
     }));
     setErrorMessage(null);
   };
 
   const handleDateChange = (date: Date | null): void => {
     setFormValues((prev) => ({ ...prev, birthDate: date }));
+    setErrorMessage(null);
+  };
+
+  const handlePhoneChange = (value: E164Number | undefined): void => {
+    if (!value) {
+      setFormValues(prev => ({
+        ...prev,
+        phoneNumber: "",
+        countryPhoneCode: "",
+      }));
+      return;
+    }
+
+    // Convert to string and handle the parsing
+    const phoneString = value.toString();
+    
+    // Extract the country code and number
+    const match = phoneString.match(/^\+(\d+)(\d+)$/);
+    if (match) {
+      const [_, countryCode, number] = match;
+      setFormValues(prev => ({
+        ...prev,
+        phoneNumber: number,
+        countryPhoneCode: countryCode,
+      }));
+    }
+    
     setErrorMessage(null);
   };
 
@@ -384,7 +473,7 @@ const NamePage: FC = () => {
                             </label>
                             <Autocomplete
                               options={COUNTRIES}
-                              value={COUNTRIES.find(country => country.code === formValues.countryCode) || null}
+                              value={COUNTRIES.find(country => country.code === formValues.nationality) || null}
                               onChange={handleCountryChange}
                               getOptionLabel={(option) => option.label}
                               renderInput={(params) => (
@@ -408,6 +497,23 @@ const NamePage: FC = () => {
                               onChange={handleChange}
                               className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:border-[#047aff] transition-all"
                               required
+                            />
+                          </div>
+
+                          <div>
+                            <label htmlFor="phone" className="block text-[17px] font-[400] text-[#1d1d1f] mb-2.5">
+                              Número de Teléfono
+                            </label>
+                            <p className="text-[14px] text-[#6e6e73] mb-5">
+                              Sólo te llamaremos si necesitamos ayudarte con tu testamento.
+                            </p>
+                            <PhoneInput
+                              international
+                              defaultCountry="MX"
+                              value={formValues.phoneNumber ? `+${formValues.countryPhoneCode}${formValues.phoneNumber}` : undefined}
+                              onChange={handlePhoneChange}
+                              placeholder="Opcional"
+                              className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:border-[#047aff] transition-all"
                             />
                           </div>
                         </div>
