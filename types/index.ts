@@ -34,3 +34,18 @@ export interface User {
     zipCode: string;
     country: string;
   }
+
+  export interface Contact {
+    id: string;
+    name: string;
+    fatherLastName: string;
+    motherLastName: string;
+    email: string;
+    message: string;
+    relationToUser: string;
+    countryPhoneCode: string;
+    phoneNumber: string;
+    country: string;
+    trustedContact: boolean;
+
+  }

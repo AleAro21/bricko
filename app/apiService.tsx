@@ -1,4 +1,4 @@
-import { User, CreateUserData, Address } from '@/types';
+import { User, CreateUserData, Address, Contact } from '@/types';
 
 const API_BASE_URL = "https://51lyy4n8z0.execute-api.us-east-2.amazonaws.com/dev";
 
@@ -75,6 +75,23 @@ async createUserAddress(userId: string, addressData: Address): Promise<Address> 
   });
   console.log('API Response:', response); 
   return response.response;
+}
+
+async getUserAddress(userId: string): Promise<Address> {
+  const response = await this.fetchWithAuth(`/wills/user/${userId}/address`);
+  console.log('API Response:', response);
+  return response.response;
+}
+
+
+async createContact(userId: string, contactData: Contact): Promise<Contact> {
+  const response = await this.fetchWithAuth(`/wills/users/${userId}/contacts`, {
+    method: 'POST',
+    body: JSON.stringify(contactData),
+  });
+  console.log('API Response:', response); 
+  return response.response;
+
 }
 
 }

@@ -10,7 +10,7 @@ export interface PersonalInfo {
   middleName: string;
   fatherLastName: string;
   motherLastName: string;
-  taxId: string;
+  governmentId: string;
   birthDate: string | null;
   nationality?: string;
   gender?: string;
@@ -19,7 +19,7 @@ export interface PersonalInfo {
 }
 
 export interface ContactInfo {
-  address1: string;
+  street: string;
   address2?: string;
   city: string;
   postalCode: string;
@@ -118,7 +118,7 @@ export function TestamentProvider({ children }: { children: ReactNode }) {
             middleName: user.middleName || '',
             fatherLastName: user.fatherLastName || '',
             motherLastName: user.motherLastName || '',
-            taxId: '',
+            governmentId: '',
             birthDate: null,
             nationality: user.nationality,
             gender: user.gender

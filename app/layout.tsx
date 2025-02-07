@@ -3,6 +3,7 @@ import { Inter } from 'next/font/google';
 import AmplifyProvider from '@/components/providers/AmplifyProvider';
 import { UserProvider } from '@/context/UserContext';
 import { TestamentProvider } from '@/context/TestamentContext';
+import { ContactProvider } from '@/context/ContactContext';
 import './globals.css';
 
 const inter = Inter({ subsets: ['latin'] });
@@ -31,9 +32,11 @@ export default function RootLayout({ children }: RootLayoutProps) {
         <AmplifyProvider>
           <UserProvider>
             <TestamentProvider>
-              <Suspense fallback="loading...">
-                <div className="bg-background">{children}</div>
-              </Suspense>
+              <ContactProvider>
+                <Suspense fallback="loading...">
+                  <div className="bg-background">{children}</div>
+                </Suspense>
+              </ContactProvider>
             </TestamentProvider>
           </UserProvider>
         </AmplifyProvider>
