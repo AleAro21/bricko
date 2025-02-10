@@ -15,6 +15,7 @@ import awsConfig from "@/aws-exports";
 import { useUser } from "@/context/UserContext";
 import { apiService } from "@/app/apiService";
 import GradientCanvas from "@/components/reusables/GradientCanvas";
+import Spinner from "@/components/reusables/Spinner";
 
 Amplify.configure(awsConfig);
 
@@ -36,6 +37,7 @@ const LoginPage: FC = () => {
   const router = useRouter();
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [showPassword, setShowPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const { setUser } = useUser();
 
   const cleanupCognitoData = async () => {
@@ -49,6 +51,7 @@ const LoginPage: FC = () => {
   const handleSubmit = async (e: FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
     setErrorMessage(null);
+    setIsLoading(true);
 
     const emailInput = (document.getElementById("email") as HTMLInputElement).value;
     const passwordInput = (document.getElementById("password") as HTMLInputElement).value;
@@ -71,16 +74,17 @@ const LoginPage: FC = () => {
           sessionStorage.setItem('userId', userData.id);
           router.push("/summary");
         } catch (error) {
-          // Clean up Cognito data if API call fails
           await cleanupCognitoData();
           console.error("Failed to fetch user data:", error);
-          setErrorMessage("No se pudo obtener los datos del usuario. Es posible que el servicio no esté disponible temporalmente. Por favor, inténtelo de nuevo más tarde.");
+          setErrorMessage("Failed to fetch user data. The service might be temporarily unavailable. Please try again later.");
         }
       }
     } catch (error: any) {
       console.error("Login failed", error);
       await cleanupCognitoData();
       setErrorMessage(error.message || "Authentication failed. Please try again.");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -159,6 +163,7 @@ const LoginPage: FC = () => {
                             id="email"
                             className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:border-blue-500 transition-all"
                             required
+                            disabled={isLoading}
                           />
                         </div>
                         <div>
@@ -171,11 +176,13 @@ const LoginPage: FC = () => {
                               id="password"
                               className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:border-blue-500 transition-all"
                               required
+                              disabled={isLoading}
                             />
                             <button
                               type="button"
                               onClick={() => setShowPassword(!showPassword)}
                               className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700 focus:outline-none"
+                              disabled={isLoading}
                             >
                               {showPassword ? (
                                 <EyeSlash size={20} />
@@ -192,7 +199,9 @@ const LoginPage: FC = () => {
                       )}
 
                       <div className="flex justify-center pt-2.5">
-                        <PrimaryButton type="submit">Continuar</PrimaryButton>
+                        <PrimaryButton type="submit" disabled={isLoading}>
+                          {isLoading ? <Spinner size={24} /> : 'Continuar'}
+                        </PrimaryButton>
                       </div>
 
                       <div className="text-center mt-5">
@@ -200,6 +209,7 @@ const LoginPage: FC = () => {
                           type="button"
                           onClick={() => router.push("/start/basics")}
                           className="text-[14px] text-[#1d1d1f] hover:underline"
+                          disabled={isLoading}
                         >
                           No tengo cuenta <span className="text-blue-500">Registrar</span>
                         </button>
