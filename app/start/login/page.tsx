@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { FC, FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Amplify } from 'aws-amplify';
-import { signIn, fetchAuthSession } from 'aws-amplify/auth';
+import { signIn, fetchAuthSession, signOut } from 'aws-amplify/auth';
 import { Eye, EyeSlash } from "phosphor-react";
 import Image from "next/image";
 import graylogo from "../../../assets/greylogo.png";
@@ -38,8 +38,17 @@ const LoginPage: FC = () => {
   const [showPassword, setShowPassword] = useState(false);
   const { setUser } = useUser();
 
+  const cleanupCognitoData = async () => {
+    try {
+      await signOut();
+    } catch (error) {
+      console.error("Error during cleanup:", error);
+    }
+  };
+
   const handleSubmit = async (e: FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
+    setErrorMessage(null);
 
     const emailInput = (document.getElementById("email") as HTMLInputElement).value;
     const passwordInput = (document.getElementById("password") as HTMLInputElement).value;
@@ -50,6 +59,7 @@ const LoginPage: FC = () => {
       if (isSignedIn) {
         const { tokens } = await fetchAuthSession();
         if (!tokens?.accessToken) {
+          await cleanupCognitoData();
           throw new Error("Failed to retrieve tokens");
         }
 
@@ -61,12 +71,15 @@ const LoginPage: FC = () => {
           sessionStorage.setItem('userId', userData.id);
           router.push("/summary");
         } catch (error) {
+          // Clean up Cognito data if API call fails
+          await cleanupCognitoData();
           console.error("Failed to fetch user data:", error);
-          setErrorMessage("Failed to fetch user data. Please try again.");
+          setErrorMessage("No se pudo obtener los datos del usuario. Es posible que el servicio no esté disponible temporalmente. Por favor, inténtelo de nuevo más tarde.");
         }
       }
     } catch (error: any) {
       console.error("Login failed", error);
+      await cleanupCognitoData();
       setErrorMessage(error.message || "Authentication failed. Please try again.");
     }
   };
@@ -227,7 +240,6 @@ const LoginPage: FC = () => {
             </div>
           </div>
         </main>
-        {/* Security note visible only on mobile */}
 
         <FooterTwo />
       </motion.div>

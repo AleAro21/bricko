@@ -1,6 +1,6 @@
 'use client';
 
-import { FC, useState } from 'react';
+import { FC, useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import DashboardLayout from "@/components/common/DashboardLayout";
 import { useRouter } from "next/navigation";
@@ -8,70 +8,196 @@ import Add from "./Add";
 import PrimaryButton from "@/components/reusables/PrimaryButton";
 import ProgressIndicator from "@/components/reusables/ProgressIndicator";
 import Link from "next/link";
+import { useUser } from "@/context/UserContext";
+import { apiService } from '@/app/apiService';
+import { fetchAuthSession } from "aws-amplify/auth";
+import Spinner from "@/components/reusables/Spinner";
+import { Pet } from '@/types';
 
 interface PetOption {
   title: string;
   subTitle: string;
+  value: string;
 }
 
 const PetsPage: FC = () => {
   const router = useRouter();
+  const { user } = useUser();
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
   const [showModal, setShowModal] = useState<boolean>(false);
-  const [showAddPet, setShowAddPet] = useState<boolean>(false);
-
-  const handleClick = (e: React.MouseEvent<HTMLDivElement>, index: number): void => {
-    e.preventDefault();
-    setActiveIndex(index === activeIndex ? null : index);
-    setShowAddPet(index === 0);
-  };
-
-  const handlePetClick = (): void => {
-    setShowModal(true);
-  };
+  const [loading, setLoading] = useState(false);
+  const [isInitialLoading, setIsInitialLoading] = useState(true);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [pets, setPets] = useState<Pet[]>([]);
+  const [selectedOption, setSelectedOption] = useState<PetOption | null>(null);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editingPet, setEditingPet] = useState<Pet | null>(null);
 
   const data: PetOption[] = [
     {
       title: "Sí",
+      value: "yes",
       subTitle: "Tengo mascotas que quiero incluir en mi testamento.",
     },
     {
       title: "No",
+      value: "no",
       subTitle: "No tengo mascotas que incluir en mi testamento.",
     },
   ];
 
-  const renderAddPetButton = (): JSX.Element | null => {
-    if (showAddPet) {
-      return (
-        <div
-          onClick={handlePetClick}
-          className="bg-white rounded-xl border border-gray-200 hover:border-[#047aff] transition-colors cursor-pointer mt-4"
-        >
-          <div className="flex items-center justify-center gap-2 py-4 text-[#047aff] font-medium">
-            <div className="bg-[#047aff] rounded-full p-1">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 448 512"
-                width="16"
-                height="16"
-                className="fill-white"
-              >
-                <path d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z" />
-              </svg>
-            </div>
-            Agregar Mascota
-          </div>
-        </div>
-      );
+  useEffect(() => {
+    const loadData = async () => {
+      if (!user?.id) {
+        setIsInitialLoading(false);
+        return;
+      }
+
+      try {
+        // Check session storage for pets data
+        const storedPets = sessionStorage.getItem('userPets');
+        const storedHasPets = sessionStorage.getItem('userHasPets');
+
+        if (storedPets && storedHasPets) {
+          setPets(JSON.parse(storedPets));
+          const hasPets = JSON.parse(storedHasPets);
+          setSelectedOption(data.find(item => item.value === (hasPets ? 'yes' : 'no')) || null);
+          setIsInitialLoading(false);
+          return;
+        }
+
+        // Fetch pets from API only if no data in session storage
+        const { tokens } = await fetchAuthSession();
+        if (!tokens?.accessToken) {
+          throw new Error("No authentication token available");
+        }
+
+        apiService.setToken(tokens.accessToken.toString());
+        const petsResponse = await apiService.getPets(user.id);
+        
+        // Store in session storage
+        sessionStorage.setItem('userPets', JSON.stringify(petsResponse));
+        sessionStorage.setItem('userHasPets', JSON.stringify(petsResponse.length > 0));
+
+        setPets(petsResponse);
+        setSelectedOption(data.find(item => item.value === (petsResponse.length > 0 ? 'yes' : 'no')) || null);
+      } catch (error) {
+        console.error('Error loading data:', error);
+      } finally {
+        setIsInitialLoading(false);
+      }
+    };
+
+    loadData();
+  }, [user?.id]);
+
+  const handleClick = (e: React.MouseEvent<HTMLDivElement>, index: number, option: PetOption): void => {
+    e.preventDefault();
+    setActiveIndex(index === activeIndex ? null : index);
+    setSelectedOption(option);
+    setErrorMessage(null);
+
+    // Clear pets if "No" is selected
+    if (option.value === 'no') {
+      setPets([]);
+      sessionStorage.setItem('userPets', JSON.stringify([]));
     }
-    return null;
+  };
+
+  const handleAddPet = (): void => {
+    setIsEditing(false);
+    setEditingPet(null);
+    setShowModal(true);
+  };
+
+  const handleEditPet = (pet: Pet): void => {
+    setIsEditing(true);
+    setEditingPet(pet);
+    setShowModal(true);
+  };
+
+  const handleDeletePet = (petId: string): void => {
+    if (confirm('¿Estás seguro de que deseas eliminar esta mascota?')) {
+      const updatedPets = pets.filter(pet => pet.id !== petId);
+      setPets(updatedPets);
+      sessionStorage.setItem('userPets', JSON.stringify(updatedPets));
+    }
+  };
+
+  const handleSave = async (): Promise<void> => {
+    if (!selectedOption) {
+      setErrorMessage("Por favor, selecciona una opción");
+      return;
+    }
+
+    if (!user?.id) {
+      setErrorMessage("No se encontró información del usuario");
+      return;
+    }
+
+    try {
+      setLoading(true);
+      const { tokens } = await fetchAuthSession();
+      if (!tokens?.accessToken) {
+        throw new Error("No authentication token available");
+      }
+
+      apiService.setToken(tokens.accessToken.toString());
+
+      // If user selected "no", delete all existing pets from the API
+      if (selectedOption.value === 'no') {
+        const existingPets = await apiService.getPets(user.id);
+        await Promise.all(existingPets.map(pet => apiService.deletePet(user.id, pet.id)));
+      } else {
+        // Get existing pets from API to compare with session storage
+        const existingPets = await apiService.getPets(user.id);
+        const sessionPets = pets;
+
+        // Delete pets that are in API but not in session storage
+        const petsToDelete = existingPets.filter(
+          existingPet => !sessionPets.some(sessionPet => sessionPet.id === existingPet.id)
+        );
+        await Promise.all(petsToDelete.map(pet => apiService.deletePet(user.id, pet.id)));
+
+        // Create or update pets from session storage
+        for (const pet of sessionPets) {
+          const petData = {
+            name: pet.name,
+            species: pet.species,
+            dateOfBirth: pet.dateOfBirth,
+            notes: pet.notes || '',
+          };
+
+          if (pet.id.startsWith('temp-')) {
+            // Create new pet
+            await apiService.createPet(user.id, petData);
+          } else {
+            // Update existing pet
+            await apiService.updatePet(user.id, pet.id, petData);
+          }
+        }
+      }
+
+      router.push("/summary?completed=about-your-self");
+    } catch (error) {
+      console.error('Error saving pets data:', error);
+      setErrorMessage("Error al guardar los cambios. Por favor, intente nuevamente.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
     <DashboardLayout>
       <div className="relative min-h-screen">
-        <Add showModal={showModal} setShowModal={setShowModal} />
+        <Add
+          showModal={showModal}
+          setShowModal={setShowModal}
+          setPets={setPets}
+          isEditing={isEditing}
+          existingPet={editingPet}
+          pets={pets}
+        />
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -115,17 +241,68 @@ const PetsPage: FC = () => {
                   totalSections={5}
                   title="Progreso de la sección"
                 />
+
+                {/* Pets List */}
+                {pets.length > 0 && (
+                  <div className="mt-8 space-y-4">
+                    {pets.map((pet) => (
+                      <div key={pet.id} className="bg-white rounded-2xl p-6 shadow-lg">
+                        <div className="flex justify-between items-start mb-4">
+                          <h3 className="text-lg font-semibold">{pet.name}</h3>
+                          <div className="flex gap-2">
+                            <button
+                              onClick={() => handleEditPet(pet)}
+                              className="text-blue-600 hover:text-blue-800"
+                            >
+                              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
+                              </svg>
+                            </button>
+                            <button
+                              onClick={() => handleDeletePet(pet.id)}
+                              className="text-red-600 hover:text-red-800"
+                            >
+                              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                <path fillRule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clipRule="evenodd" />
+                              </svg>
+                            </button>
+                          </div>
+                        </div>
+                        <p className="text-sm text-gray-600">
+                          <strong>Especie:</strong> {pet.species}<br />
+                          <strong>Fecha de Nacimiento:</strong> {new Date(pet.dateOfBirth).toLocaleDateString()}<br />
+                          {pet.notes && (
+                            <>
+                              <strong>Notas:</strong> {pet.notes}
+                            </>
+                          )}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
 
               {/* Right column - Form in white container */}
               <div className='w-full lg:w-3/5'>
-                <div className="bg-white rounded-2xl px-4 sm:px-8 md:px-12 py-8 shadow-lg">
+                <div className="bg-white rounded-2xl px-4 sm:px-8 md:px-12 py-8 shadow-lg relative">
+                  {(loading || isInitialLoading) && (
+                    <div className="absolute inset-0 bg-white bg-opacity-80 flex items-center justify-center z-50 rounded-2xl">
+                      <div className="text-center">
+                        <Spinner size={50} />
+                        <p className="mt-4 text-[#047aff] font-medium">
+                          {loading ? 'Guardando...' : 'Cargando...'}
+                        </p>
+                      </div>
+                    </div>
+                  )}
+
                   <div className="space-y-4">
-                    {data.map((item, index) => (
+                    {data.map((option, index) => (
                       <div
                         key={index}
                         className="cursor-pointer transition-colors"
-                        onClick={(e) => handleClick(e, index)}
+                        onClick={(e) => handleClick(e, index, option)}
                       >
                         <div
                           className={`px-6 py-4 rounded-xl border ${
@@ -141,7 +318,7 @@ const PetsPage: FC = () => {
                                 : 'text-[#1d1d1f]'
                             }`}
                           >
-                            {item.title}
+                            {option.title}
                           </h3>
                           <p
                             className={`mt-1 text-[14px] ${
@@ -150,17 +327,41 @@ const PetsPage: FC = () => {
                                 : 'text-[#6e6e73]'
                             }`}
                           >
-                            {item.subTitle}
+                            {option.subTitle}
                           </p>
                         </div>
                       </div>
                     ))}
                   </div>
 
-                  {renderAddPetButton()}
+                  {selectedOption?.value === 'yes' && (
+                    <div
+                      onClick={handleAddPet}
+                      className="bg-white rounded-xl border border-gray-200 hover:border-[#047aff] transition-colors cursor-pointer mt-4"
+                    >
+                      <div className="flex items-center justify-center gap-2 py-4 text-[#047aff] font-medium">
+                        <div className="bg-[#047aff] rounded-full p-1">
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 448 512"
+                            width="16"
+                            height="16"
+                            className="fill-white"
+                          >
+                            <path d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z" />
+                          </svg>
+                        </div>
+                        Agregar Mascota
+                      </div>
+                    </div>
+                  )}
+
+                  {errorMessage && (
+                    <p className="text-red-500 text-[14px] text-center mt-4">{errorMessage}</p>
+                  )}
 
                   <div className="flex justify-end pt-4 mt-4">
-                    <PrimaryButton onClick={() => router.push("/summary?completed=about-your-self")}>
+                    <PrimaryButton onClick={handleSave}>
                       Guardar y continuar
                     </PrimaryButton>
                   </div>

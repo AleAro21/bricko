@@ -9,17 +9,16 @@ import PrimaryButton from "@/components/reusables/PrimaryButton";
 import ProgressIndicator from "@/components/reusables/ProgressIndicator";
 import Link from "next/link";
 import { useUser } from "@/context/UserContext";
+import Spinner from "@/components/reusables/Spinner";
 import { apiService } from '@/app/apiService';
 import { fetchAuthSession } from "aws-amplify/auth";
-import Spinner from "@/components/reusables/Spinner";
-import { Address } from "@/types";
 
-interface FormValues {
+interface Address {
   street: string;
-  address2: string;
   city: string;
   state: string;
-  zipCode: string; // Changed from postalCode to match API
+  zipCode: string;
+  country: string;
 }
 
 const BasicPage: FC = () => {
@@ -27,12 +26,11 @@ const BasicPage: FC = () => {
   const { user } = useUser();
   const [loading, setLoading] = useState(false);
   const [isInitialLoading, setIsInitialLoading] = useState(true);
-  const [formValues, setFormValues] = useState<FormValues>({
+  const [formValues, setFormValues] = useState({
     street: "",
-    address2: "",
     city: "",
     state: "",
-    zipCode: "", // Changed from postalCode to match API
+    zipCode: "",
   });
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
@@ -48,9 +46,9 @@ const BasicPage: FC = () => {
         const storedAddress = sessionStorage.getItem('userAddress');
         if (storedAddress) {
           const address: Address = JSON.parse(storedAddress);
+          console.log('Stored address:', address);
           setFormValues({
             street: address.street || "",
-            address2: "", // This field isn't in the API
             city: address.city || "",
             state: address.state || "",
             zipCode: address.zipCode || "",
@@ -67,23 +65,24 @@ const BasicPage: FC = () => {
 
         apiService.setToken(tokens.accessToken.toString());
         const response = await apiService.getUserAddress(user.id);
-        
+
         if (response) {
-          const address: Address = response;
           // Store in session storage
-          sessionStorage.setItem('userAddress', JSON.stringify(address));
-          
+          sessionStorage.setItem('userAddress', JSON.stringify(response));
+
           setFormValues({
-            street: address.street || "",
-            address2: "", // This field isn't in the API
-            city: address.city || "",
-            state: address.state || "",
-            zipCode: address.zipCode || "",
+            street: response.street || "",
+            city: response.city || "",
+            state: response.state || "",
+            zipCode: response.zipCode || "",
           });
         }
       } catch (error) {
         console.error('Error loading user address:', error);
-        setErrorMessage("Error al cargar la dirección. Por favor, intente nuevamente.");
+        // Don't show error message for 404 (no address yet)
+        if ((error as any).response?.status !== 404) {
+          setErrorMessage("Error al cargar la dirección. Por favor, intente nuevamente.");
+        }
       } finally {
         setIsInitialLoading(false);
       }
@@ -95,8 +94,9 @@ const BasicPage: FC = () => {
   const handleAddressSelect = (addressData: AddressData): void => {
     setFormValues(prev => ({
       ...prev,
-      street: addressData.streetAddress,
+      street: addressData.street,
       city: addressData.city,
+      state: addressData.state,
       zipCode: addressData.postalCode,
     }));
     setErrorMessage(null);
@@ -117,31 +117,52 @@ const BasicPage: FC = () => {
     }
 
     try {
-      setLoading(true);
-      
-      const { tokens } = await fetchAuthSession();
-      if (!tokens?.accessToken) {
-        throw new Error("No authentication token available");
+      // Get the stored address from session storage
+      const storedAddress = sessionStorage.getItem('userAddress');
+      const currentAddress: Address | null = storedAddress ? JSON.parse(storedAddress) : null;
+
+      // Check if address data has changed
+      const hasDataChanged = !currentAddress ||
+        currentAddress.street !== street ||
+        currentAddress.city !== city ||
+        currentAddress.state !== state ||
+        currentAddress.zipCode !== zipCode;
+
+      if (hasDataChanged) {
+        setLoading(true);
+
+        const { tokens } = await fetchAuthSession();
+        if (!tokens?.accessToken) {
+          throw new Error("No authentication token available");
+        }
+
+        apiService.setToken(tokens.accessToken.toString());
+
+        // If we have a current address, update it; otherwise create new
+        const addressData = {
+          street,
+          city,
+          state,
+          zipCode,
+          country: "MX", // Default to Mexico since the form is in Spanish
+        };
+
+        let response;
+        if (currentAddress) {
+          response = await apiService.updateUserAddress(user.id, addressData);
+        } else {
+          response = await apiService.createUserAddress(user.id, addressData);
+        }
+
+        if (response) {
+          sessionStorage.setItem('userAddress', JSON.stringify(response));
+        }
       }
 
-      apiService.setToken(tokens.accessToken.toString());
-
-      const response = await apiService.createUserAddress(user.id, {
-        street,
-        city,
-        state,
-        zipCode,
-        country: "MX", // Default to Mexico since the form is in Spanish
-      });
-
-      if (response) {
-    
-        sessionStorage.setItem('userAddress', JSON.stringify(response));
-      }
-
+      // Navigate to next page regardless of whether data was updated
       router.push("/about-yourself/partner");
     } catch (error) {
-      console.error('Error creating address:', error);
+      console.error('Error handling address:', error);
       setErrorMessage("Error al guardar la dirección. Por favor, intente nuevamente.");
     } finally {
       setLoading(false);
@@ -150,9 +171,7 @@ const BasicPage: FC = () => {
 
   const handleManualChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
     const { id, value } = e.target;
-    // Map postalCode to zipCode if necessary
-    const key = id === 'postalCode' ? 'zipCode' : id;
-    setFormValues(prev => ({ ...prev, [key]: value }));
+    setFormValues(prev => ({ ...prev, [id]: value }));
     setErrorMessage(null);
   };
 
@@ -169,23 +188,27 @@ const BasicPage: FC = () => {
           <div className="flex flex-col lg:flex-row gap-8 lg:gap-24 h-full py-12">
             {/* Left column - Title section */}
             <div className="lg:w-1/3">
-              <div className="flex items-center gap-2 mb-2.5">
+              <div className="flex items-center justify-between mb-2.5">
                 <div className="inline-flex items-center h-[32px] bg-[#047aff] bg-opacity-10 px-[12px] py-[6px] rounded-md">
-                  <span className="text-[#047aff] text-[14px] font-[400]">INFORMACIÓN DE CONTACTO</span>
+                  <span className="text-[#047aff] text-[14px] font-[400]">DATOS PERSONALES</span>
                 </div>
+              </div>
+
+              <h1 className='text-[32px] sm:text-[38px] font-[500] tracking-[-1.5px] leading-[1.2] sm:leading-[52px] mb-[15px]'>
+                <span className='text-[#1d1d1f]'>¿Dónde </span>
+                <span className='bg-gradient-to-r from-[#3d9bff] to-[#047aff] inline-block text-transparent bg-clip-text'>vives?</span>
+              </h1>
+
+              <p className="text-[16px] text-[#1d1d1f] leading-6 mb-5">
+                Necesitamos tu dirección para completar el testamento.
+              </p>
+
+              <div className="flex justify-end items-center gap-2 mb-5">
                 <Link href="#" className="inline-flex items-center h-[32px] text-[#047aff] hover:text-[#0456b0]">
                   <span className="w-5 h-5 inline-flex items-center justify-center rounded-full border border-[#047aff] text-sm">?</span>
                 </Link>
+                <p className="text-[14px] text-[#000000]">Articulo relacionado</p>
               </div>
-              <h1 className='text-[32px] sm:text-[38px] font-[500] tracking-[-1.5px] leading-[1.2] sm:leading-[52px] mb-[15px]'>
-                <span className='text-[#1d1d1f]'>Detalles de </span>
-                <span className='bg-gradient-to-r from-[#3d9bff] to-[#047aff] inline-block text-transparent bg-clip-text'>contacto</span>
-              </h1>
-
-              <p className="text-[16px] text-[#1d1d1f] leading-6 mb-8">
-                Necesitamos tu información de contacto para completar el testamento.
-              </p>
-
               <ProgressIndicator
                 currentSection={2}
                 totalSections={5}
@@ -223,23 +246,10 @@ const BasicPage: FC = () => {
                             Dirección Línea 1 <span className="text-[#047aff]">*</span>
                           </label>
                           <AddressAutocomplete
+                            key={formValues.street} // Force re-render when street changes
                             onAddressSelect={handleAddressSelect}
                             defaultValue={formValues.street}
                             required
-                          />
-                        </div>
-
-                        <div>
-                          <label htmlFor="address2" className="block text-[17px] font-[400] text-[#1d1d1f] mb-2.5">
-                            Dirección Línea 2
-                          </label>
-                          <input
-                            type="text"
-                            id="address2"
-                            value={formValues.address2}
-                            onChange={handleManualChange}
-                            className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:border-[#047aff] transition-all"
-                            placeholder="Apartamento, suite, unidad, etc."
                           />
                         </div>
 
@@ -272,13 +282,13 @@ const BasicPage: FC = () => {
                         </div>
 
                         <div>
-                          <label htmlFor="postalCode" className="block text-[17px] font-[400] text-[#1d1d1f] mb-2.5">
+                          <label htmlFor="zipCode" className="block text-[17px] font-[400] text-[#1d1d1f] mb-2.5">
                             Código Postal <span className="text-[#047aff]">*</span>
                           </label>
                           <input
                             type="text"
-                            id="postalCode"
-                            value={formValues.zipCode} // Note: Using zipCode here
+                            id="zipCode"
+                            value={formValues.zipCode}
                             onChange={handleManualChange}
                             className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:border-[#047aff] transition-all"
                             required

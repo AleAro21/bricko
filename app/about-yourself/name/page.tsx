@@ -156,44 +156,52 @@ const NamePage: FC = () => {
     const loadInitialData = async () => {
       setIsInitialLoading(true);
       try {
-        // First check session storage for user data
         const storedUser = sessionStorage.getItem('userObject');
         const userData = storedUser ? JSON.parse(storedUser) : null;
 
-        // If we don't have data in session storage but have a user ID, refresh the user data
-        if (!userData && sessionStorage.getItem('userId')) {
+        if (userData) {
+          // Fix: Properly format the phone number by removing the '+' if it exists
+          const phoneCode = userData.countryPhoneCode?.replace(/^\+/, '') || "";
+          const formattedPhoneNumber = userData.phoneNumber || "";
+
+          setFormValues(prev => ({
+            ...prev,
+            name: userData.name || "",
+            fatherLastName: userData.fatherLastName || "",
+            motherLastName: userData.motherLastName || "",
+            middleName: userData.middleName || "",
+            governmentId: userData.governmentId || "",
+            birthDate: userData.birthDate ? new Date(userData.birthDate) : null,
+            nationality: userData.nationality || "",
+            gender: userData.gender || "",
+            phoneNumber: formattedPhoneNumber,
+            countryPhoneCode: phoneCode,
+          }));
+        } else if (sessionStorage.getItem('userId')) {
           await refreshUser();
-        }
+          
+          const latestStoredUser = sessionStorage.getItem('userObject');
+          const latestUserData = latestStoredUser ? JSON.parse(latestStoredUser) : null;
+          
+          if (latestUserData) {
+            // Fix: Properly format the phone number by removing the '+' if it exists
+            const phoneCode = latestUserData.countryPhoneCode?.replace(/^\+/, '') || "";
+            const formattedPhoneNumber = latestUserData.phoneNumber || "";
 
-        // Get the latest user data after potential refresh
-        const latestStoredUser = sessionStorage.getItem('userObject');
-        const latestUserData = latestStoredUser ? JSON.parse(latestStoredUser) : null;
-
-        // Set form values from either personal info or user data
-        if (personalInfo) {
-          setFormValues(prev => ({
-            ...prev,
-            ...personalInfo,
-            nationality: personalInfo.nationality || "",
-            gender: personalInfo.gender as 'male' | 'female' || "",
-            phoneNumber: personalInfo.phoneNumber || "",
-            countryPhoneCode: personalInfo.countryPhoneCode || "",
-            birthDate: personalInfo.birthDate ? new Date(personalInfo.birthDate) : null,
-          }));
-        } else if (latestUserData) {
-          setFormValues(prev => ({
-            ...prev,
-            name: latestUserData.name || "",
-            fatherLastName: latestUserData.fatherLastName || "",
-            motherLastName: latestUserData.motherLastName || "",
-            middleName: latestUserData.middleName || "",
-            governmentId: latestUserData.governmentId || "",
-            birthDate: latestUserData.birthDate ? new Date(latestUserData.birthDate) : null,
-            nationality: latestUserData.nationality || "",
-            gender: latestUserData.gender || "",
-            phoneNumber: latestUserData.phoneNumber || "",
-            countryPhoneCode: latestUserData.countryPhoneCode || "",
-          }));
+            setFormValues(prev => ({
+              ...prev,
+              name: latestUserData.name || "",
+              fatherLastName: latestUserData.fatherLastName || "",
+              motherLastName: latestUserData.motherLastName || "",
+              middleName: latestUserData.middleName || "",
+              governmentId: latestUserData.governmentId || "",
+              birthDate: latestUserData.birthDate ? new Date(latestUserData.birthDate) : null,
+              nationality: latestUserData.nationality || "",
+              gender: latestUserData.gender || "",
+              phoneNumber: formattedPhoneNumber,
+              countryPhoneCode: phoneCode,
+            }));
+          }
         }
       } catch (error) {
         console.error('Error loading initial data:', error);
@@ -203,7 +211,7 @@ const NamePage: FC = () => {
     };
 
     loadInitialData();
-  }, [personalInfo, refreshUser]);
+  }, []); // Only run on mount
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
@@ -220,58 +228,74 @@ const NamePage: FC = () => {
       return;
     }
 
+    // Check if data has changed by comparing with current user data
+    const hasDataChanged = 
+      user?.name !== name ||
+      user?.middleName !== middleName ||
+      user?.fatherLastName !== fatherLastName ||
+      user?.motherLastName !== motherLastName ||
+      user?.governmentId !== governmentId ||
+      user?.birthDate !== (birthDate ? birthDate.toISOString() : null) ||
+      user?.nationality !== nationality ||
+      user?.gender !== gender ||
+      user?.phoneNumber !== phoneNumber ||
+      user?.countryPhoneCode !== (countryPhoneCode ? `+${countryPhoneCode}` : undefined);
+
     try {
-      // Get the current session token
-      const { tokens } = await fetchAuthSession();
-      if (!tokens?.accessToken) {
-        throw new Error("No authentication token available");
-      }
+      if (hasDataChanged) {
+        console.log('Data has changed, updating user...');
+        // Get the current session token
+        const { tokens } = await fetchAuthSession();
+        if (!tokens?.accessToken) {
+          throw new Error("No authentication token available");
+        }
 
-      // Set the token in APIService
-      apiService.setToken(tokens.accessToken.toString());
+        // Set the token in APIService
+        apiService.setToken(tokens.accessToken.toString());
 
-      // Format birthDate to ISO string
-      const formattedBirthDate = birthDate ? birthDate.toISOString() : null;
+        // Format birthDate to ISO string
+        const formattedBirthDate = birthDate ? birthDate.toISOString() : null;
 
-      // First update the user
-      if (user?.id) {
-        const userData = {
+        // First update the user
+        if (user?.id) {
+          const userData = {
+            name,
+            middleName: middleName || undefined,
+            fatherLastName,
+            motherLastName,
+            birthDate: formattedBirthDate || undefined,
+            gender,
+            nationality,
+            phoneNumber: phoneNumber || undefined,
+            countryPhoneCode: countryPhoneCode ? `+${countryPhoneCode}` : undefined,
+            governmentId: governmentId || undefined,
+          };
+
+          const updatedUser = await apiService.updateUser(user.id, userData);
+          
+          // Update session storage with the new user data
+          sessionStorage.setItem('userObject', JSON.stringify(updatedUser));
+
+          // Refresh user context
+          await refreshUser();
+        }
+
+        // Then save personal info with all form values
+        await savePersonalInfo({
           name,
-          middleName: middleName || undefined,
+          middleName,
           fatherLastName,
           motherLastName,
-          birthDate: formattedBirthDate || undefined,
-          gender,
+          governmentId,
+          birthDate: formattedBirthDate,
           nationality,
-          phoneNumber: phoneNumber || undefined,
-          countryPhoneCode: countryPhoneCode.startsWith('+') ? countryPhoneCode : `+${countryPhoneCode}`, 
-          governmentId: governmentId || undefined,
-        };
-
-        const updatedUser = await apiService.updateUser(user.id, userData);
-        
-        // Update session storage with the new user data
-        sessionStorage.setItem('userObject', JSON.stringify(updatedUser));
-
-        // Refresh user context
-        await refreshUser();
+          gender,
+          phoneNumber: phoneNumber || "",
+          countryPhoneCode: countryPhoneCode || "",
+        });
       }
-
-      // Then save personal info with all form values
-      await savePersonalInfo({
-        name,
-        middleName,
-        fatherLastName,
-        motherLastName,
-        governmentId,
-        birthDate: formattedBirthDate,
-        nationality,
-        gender,
-        phoneNumber: phoneNumber || "",
-        countryPhoneCode: countryPhoneCode || "",
-      });
       
-      // Navigate to next page
+      // Navigate to next page regardless of whether data was updated
       router.push("/about-yourself/basic");
     } catch (error) {
       console.error('Error updating user:', error);
@@ -281,14 +305,9 @@ const NamePage: FC = () => {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
     const { id, value } = e.target;
-    console.log('Field changed:', id, value);
-    setFormValues((prev) => {
-      const newValues = { ...prev, [id]: value };
-      console.log('New form values:', newValues);
-      return newValues;
-    });
+    setFormValues((prev) => ({ ...prev, [id]: value }));
     setErrorMessage(null);
-  };  
+  };
 
   const handleGenderChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
     setFormValues((prev) => ({ ...prev, gender: e.target.value as 'male' | 'female' }));
@@ -532,7 +551,7 @@ const NamePage: FC = () => {
                               <PhoneInput
                                 international
                                 defaultCountry="MX"
-                                value={formValues.phoneNumber ? `+${formValues.countryPhoneCode}${formValues.phoneNumber}` : undefined}
+                                value={formValues.phoneNumber && formValues.countryPhoneCode ? `+${formValues.countryPhoneCode}${formValues.phoneNumber}` : undefined}
                                 onChange={handlePhoneChange}
                                 placeholder="Opcional"
                                 className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:border-[#047aff] transition-all"

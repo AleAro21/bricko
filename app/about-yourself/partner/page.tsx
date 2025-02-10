@@ -33,6 +33,7 @@ const PartnerPage: FC = () => {
   const [selectedItem, setSelectedItem] = useState<MaritalStatusItem | null>(null);
   const [showModal, setShowModal] = useState<boolean>(false);
   const [loading, setLoading] = useState(false);
+  const [isInitialLoading, setIsInitialLoading] = useState(true);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [partner, setPartner] = useState<Contact | null>(null);
   const [isEditing, setIsEditing] = useState(false);
@@ -85,11 +86,62 @@ const PartnerPage: FC = () => {
     },
   ];
 
+  // Load marital status and contact data on page load
   useEffect(() => {
-    if (contact) {
-      setPartner(contact);
-    }
-  }, [contact]);
+    const loadData = async () => {
+      if (!user?.id) {
+        setIsInitialLoading(false);
+        return;
+      }
+
+      try {
+        // Check session storage for marital status and contact
+        const storedMaritalStatus = sessionStorage.getItem('userMaritalStatus');
+        const storedContact = sessionStorage.getItem('userContact');
+
+        if (storedMaritalStatus && storedContact) {
+          const maritalStatus = JSON.parse(storedMaritalStatus);
+          const contactData: Contact = JSON.parse(storedContact);
+
+          setSelectedItem(data.find(item => item.value === maritalStatus) || null);
+          setPartner(contactData);
+          setIsInitialLoading(false);
+          return;
+        }
+
+        // Fetch marital status and contact from API
+        const { tokens } = await fetchAuthSession();
+        if (!tokens?.accessToken) {
+          throw new Error("No authentication token available");
+        }
+
+        apiService.setToken(tokens.accessToken.toString());
+
+        // Fetch marital status from user data
+        const userResponse = await apiService.getUser(user.id);
+        const maritalStatus = userResponse.maritalstatus;
+
+        // Fetch contact data
+        const contactsResponse = await apiService.getContacts(user.id);
+        const contactData = contactsResponse.length > 0 ? contactsResponse[0] : null;
+
+        // Store in session storage
+        sessionStorage.setItem('userMaritalStatus', JSON.stringify(maritalStatus));
+        sessionStorage.setItem('userContact', JSON.stringify(contactData));
+
+        // Update state
+        setSelectedItem(data.find(item => item.value === maritalStatus) || null);
+        setPartner(contactData);
+      } catch (error) {
+        console.error('Error loading data:', error);
+        // setErrorMessage("Error al cargar los datos. Por favor, intente nuevamente.");
+      } finally {
+        setIsInitialLoading(false);
+      }
+    };
+
+    loadData();
+  }, [user?.id]);
 
   const handleClick = (e: React.MouseEvent<HTMLDivElement>, index: number, items: MaritalStatusItem): void => {
     e.preventDefault();
@@ -114,6 +166,7 @@ const PartnerPage: FC = () => {
         setLoading(true);
         await deleteContact();
         setPartner(null);
+        sessionStorage.removeItem('userContact');
       } catch (error) {
         console.error('Error deleting partner:', error);
         setErrorMessage("Error al eliminar la pareja. Por favor, intente nuevamente.");
@@ -128,28 +181,41 @@ const PartnerPage: FC = () => {
       setErrorMessage("Por favor, selecciona un estado civil");
       return;
     }
-  
+
     if (!user?.id) {
       setErrorMessage("No se encontró información del usuario");
       return;
     }
-  
+
     try {
       setLoading(true);
       const { tokens } = await fetchAuthSession();
       if (!tokens?.accessToken) {
         throw new Error("No authentication token available");
       }
-  
+
       apiService.setToken(tokens.accessToken.toString());
-  
-      // Update user's marital status
-      await apiService.updateUser(user.id, {
-        ...user,
+
+      // Create a cleaned version of the user object without the restricted fields
+      const cleanedUserData = {
+        email: user.email,
+        name: user.name,
+        middleName: user.middleName,
+        fatherLastName: user.fatherLastName,
+        motherLastName: user.motherLastName,
+        birthDate: user.birthDate,
+        gender: user.gender,
+        nationality: user.nationality,
+        governmentId: user.governmentId,
+        phoneNumber: user.phoneNumber,
+        countryPhoneCode: user.countryPhoneCode,
         maritalstatus: selectedItem.value
-      });
-  
-      // Save contact if exists
+      };
+
+      // Update user's marital status with cleaned data
+      await apiService.updateUser(user.id, cleanedUserData);
+
+      // Save or update contact if exists
       if (partner) {
         const contactData: Contact = {
           id: partner.id || '',
@@ -158,16 +224,24 @@ const PartnerPage: FC = () => {
           motherLastName: partner.motherLastName,
           relationToUser: partner.relationToUser,
           email: partner.email,
-          trustedContact: false, // Setting default value
+          trustedContact: false,
           message: partner.message || '',
           countryPhoneCode: partner.countryPhoneCode || '',
           phoneNumber: partner.phoneNumber || '',
-          country: partner.country || ''
+          country: partner.country || '',
         };
-  
-        await saveContact(contactData);
+
+        if (partner.id) {
+          await apiService.updateContact(user.id, partner.id, contactData);
+        } else {
+          await apiService.createContact(user.id, contactData);
+        }
+
+        // Store updated contact in session storage
+        sessionStorage.setItem('userContact', JSON.stringify(contactData));
       }
-  
+
+      // Refresh user data and navigate to the next page
       await refreshUser();
       router.push("/about-yourself/children");
     } catch (error) {
@@ -177,7 +251,6 @@ const PartnerPage: FC = () => {
       setLoading(false);
     }
   };
-  
 
   const renderAddPartnerButton = (title: string): JSX.Element | null => {
     if (["Casado", "Viudo", "Divorciado", "Concubinato"].includes(title)) {
@@ -210,10 +283,10 @@ const PartnerPage: FC = () => {
 
   return (
     <DashboardLayout>
-      <Add 
-        setShowModal={setShowModal} 
-        showModal={showModal} 
-        setPartner={setPartner} 
+      <Add
+        setShowModal={setShowModal}
+        showModal={showModal}
+        setPartner={setPartner}
         isEditing={isEditing}
         existingPartner={isEditing ? partner : null}
       />
@@ -292,11 +365,13 @@ const PartnerPage: FC = () => {
             {/* Right column - Form in white container */}
             <div className='w-full lg:w-3/5'>
               <div className="bg-white rounded-2xl px-4 sm:px-8 md:px-12 py-8 shadow-lg relative">
-                {loading && (
+                {(loading || isInitialLoading) && (
                   <div className="absolute inset-0 bg-white bg-opacity-80 flex items-center justify-center z-50 rounded-2xl">
                     <div className="text-center">
                       <Spinner size={50} />
-                      <p className="mt-4 text-[#047aff] font-medium">Guardando...</p>
+                      <p className="mt-4 text-[#047aff] font-medium">
+                        {loading ? 'Guardando...' : 'Cargando...'}
+                      </p>
                     </div>
                   </div>
                 )}

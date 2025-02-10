@@ -47,5 +47,13 @@ export interface User {
     phoneNumber: string;
     country: string;
     trustedContact: boolean;
+  }
 
+
+  export interface Pet {
+    id: string;
+    name: string;
+    species: string;
+    dateOfBirth: string;
+    notes: string;
   }

@@ -12,11 +12,12 @@ interface AddressAutocompleteProps {
 }
 
 export interface AddressData {
-  streetAddress: string;
-  streetAddress2: string;
+  street: string;
+  street2: string;
   city: string;
   postalCode: string;
   country: string;
+  state: string
 }
 
 const StyledWrapper = styled.div`
@@ -117,11 +118,12 @@ const AddressAutocomplete: React.FC<AddressAutocompleteProps> = ({
 
       const addressComponents = place.address_components || [];
       const addressData: AddressData = {
-        streetAddress: '',
-        streetAddress2: '',
+        street: '',
+        street2: '',
         city: '',
         postalCode: '',
         country: '',
+        state: ''
       };
 
       // Extract address components
@@ -129,10 +131,10 @@ const AddressAutocomplete: React.FC<AddressAutocompleteProps> = ({
         const types = component.types;
 
         if (types.includes('street_number')) {
-          addressData.streetAddress = `${addressData.streetAddress} ${component.long_name}`.trim();
+          addressData.street = `${addressData.street} ${component.long_name}`.trim();
         }
         if (types.includes('route')) {
-          addressData.streetAddress = `${component.long_name} ${addressData.streetAddress}`.trim();
+          addressData.street = `${component.long_name} ${addressData.street}`.trim();
         }
         if (types.includes('locality')) {
           addressData.city = component.long_name;
