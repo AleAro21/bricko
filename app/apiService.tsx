@@ -1,4 +1,5 @@
 import { User, CreateUserData, Address, Contact, Pet } from '@/types';
+import options from './api/auth/[...nextauth]/options';
 
 const API_BASE_URL = "https://51lyy4n8z0.execute-api.us-east-2.amazonaws.com/dev";
 
@@ -53,7 +54,8 @@ export class APIService {
 
   async getUser(userId: string): Promise<User> {
     const response = await this.fetchWithAuth(`/wills/users/${userId}`);
-    console.log('API Response:', response);
+    console.log('API Response:', response); 
+    console.log("headers", response.headers);
     return response.response;
   }
 

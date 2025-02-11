@@ -69,14 +69,14 @@ const LoginPage: FC = () => {
         apiService.setToken(tokens.accessToken.toString());
 
         try {
-          const userData = await apiService.getUser(emailInput);
+          const userData = await apiService.getUser("123");
           setUser(userData);
           sessionStorage.setItem('userId', userData.id);
           router.push("/summary");
         } catch (error) {
           await cleanupCognitoData();
           console.error("Failed to fetch user data:", error);
-          setErrorMessage("Failed to fetch user data. The service might be temporarily unavailable. Please try again later.");
+          setErrorMessage("No se pudo obtener los datos del usuario. Es posible que el servicio no esté disponible temporalmente. Por favor, inténtelo de nuevo más tarde");
         }
       }
     } catch (error: any) {
