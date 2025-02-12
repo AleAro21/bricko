@@ -11,7 +11,7 @@ interface ContactContextType {
   loading: boolean;
   error: Error | null;
   saveContact: (contactData: Contact) => Promise<void>;
-  deleteContact: () => Promise<void>;
+  // deleteContact: () => Promise<void>;
   refreshContact: () => Promise<void>;
 }
 
@@ -28,9 +28,8 @@ export function ContactProvider({ children }: { children: ReactNode }) {
 
     try {
       setLoading(true);
-      // Add endpoint to get contact when available
-      // const contactData = await apiService.getContact(user.id);
-      // setContact(contactData);
+      const contactData = await apiService.getContact(contact?.id || '');
+      setContact(contactData);
     } catch (err) {
       setError(err instanceof Error ? err : new Error('Failed to fetch contact'));
     } finally {
@@ -57,21 +56,6 @@ export function ContactProvider({ children }: { children: ReactNode }) {
     }
   };
 
-  const deleteContact = async () => {
-    if (!user?.id || !contact?.id) throw new Error('Contact not found');
-
-    try {
-      setLoading(true);
-      // Add endpoint to delete contact when available
-      // await apiService.deleteContact(user.id, contact.id);
-      setContact(null);
-    } catch (err) {
-      setError(err instanceof Error ? err : new Error('Failed to delete contact'));
-      throw err;
-    } finally {
-      setLoading(false);
-    }
-  };
 
   return (
     <ContactContext.Provider
@@ -81,7 +65,7 @@ export function ContactProvider({ children }: { children: ReactNode }) {
         loading,
         error,
         saveContact,
-        deleteContact,
+
         refreshContact,
       }}
     >

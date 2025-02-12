@@ -307,6 +307,7 @@ const NamePage: FC = () => {
     const { id, value } = e.target;
     setFormValues((prev) => ({ ...prev, [id]: value }));
     setErrorMessage(null);
+    console.log('Form values:', formValues);
   };
 
   const handleGenderChange = (e: React.ChangeEvent<HTMLInputElement>): void => {

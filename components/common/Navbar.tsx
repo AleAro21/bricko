@@ -19,6 +19,8 @@ const Navbar: React.FC = () => {
   const handleLogout = async () => {
     try {
       await signOut();
+      sessionStorage.clear();
+      localStorage.clear();
       router.push("/start/login");
     } catch (error) {
       console.error("Error logging out:", error);
@@ -67,8 +69,8 @@ const Navbar: React.FC = () => {
                 <div className="hidden sm:block">
                   <div className="flex items-center space-x-8">
                     <Link href="/" className="flex items-center">
-                      <Image 
-                        src={blacklogo} 
+                      <Image
+                        src={blacklogo}
                         width={150}
                         height={150}
                         alt="Logo"
@@ -76,8 +78,8 @@ const Navbar: React.FC = () => {
                       />
                     </Link>
                     {navigation.map((item) => (
-                      <Link 
-                        href={item.href} 
+                      <Link
+                        href={item.href}
                         key={item.name}
                         className="text-[14px] font-[400] text-[#1d1d1f] hover:text-[#047aff] transition-colors duration-200"
                       >
@@ -118,8 +120,8 @@ const Navbar: React.FC = () => {
                                 onClick={subItem.onClick}
                                 className={`
                                   block px-4 py-2 text-[14px] font-[400] cursor-pointer
-                                  ${active 
-                                    ? 'bg-gradient-to-r from-blue-50 to-blue-100 text-[#047aff]' 
+                                  ${active
+                                    ? 'bg-gradient-to-r from-blue-50 to-blue-100 text-[#047aff]'
                                     : 'text-[#1d1d1f]'
                                   }
                                 `}
@@ -131,8 +133,8 @@ const Navbar: React.FC = () => {
                                 href={subItem.href}
                                 className={`
                                   block px-4 py-2 text-[14px] font-[400] cursor-pointer
-                                  ${active 
-                                    ? 'bg-gradient-to-r from-blue-50 to-blue-100 text-[#047aff]' 
+                                  ${active
+                                    ? 'bg-gradient-to-r from-blue-50 to-blue-100 text-[#047aff]'
                                     : 'text-[#1d1d1f]'
                                   }
                                 `}

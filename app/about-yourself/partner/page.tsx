@@ -28,7 +28,7 @@ interface MaritalStatusItem {
 const PartnerPage: FC = () => {
   const router = useRouter();
   const { user, refreshUser } = useUser();
-  const { contact, saveContact, deleteContact } = useContact();
+  const { contact, saveContact } = useContact();
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
   const [selectedItem, setSelectedItem] = useState<MaritalStatusItem | null>(null);
   const [showModal, setShowModal] = useState<boolean>(false);
@@ -102,8 +102,13 @@ const PartnerPage: FC = () => {
         if (storedMaritalStatus && storedContact) {
           const maritalStatus = JSON.parse(storedMaritalStatus);
           const contactData: Contact = JSON.parse(storedContact);
-
-          setSelectedItem(data.find(item => item.value === maritalStatus) || null);
+          const selected = data.find(item => item.value === maritalStatus) || null;
+          setSelectedItem(selected);
+          // Set the active index based on the found marital status
+          const index = data.findIndex(item => item.value === maritalStatus);
+          if (index !== -1) {
+            setActiveIndex(index);
+          }
           setPartner(contactData);
           setIsInitialLoading(false);
           return;
@@ -124,13 +129,19 @@ const PartnerPage: FC = () => {
         // Fetch contact data
         const contactsResponse = await apiService.getContacts(user.id);
         const contactData = contactsResponse.length > 0 ? contactsResponse[0] : null;
+        console.log('Contact data:', contactData);
 
         // Store in session storage
         sessionStorage.setItem('userMaritalStatus', JSON.stringify(maritalStatus));
         sessionStorage.setItem('userContact', JSON.stringify(contactData));
 
         // Update state
-        setSelectedItem(data.find(item => item.value === maritalStatus) || null);
+        const selected = data.find(item => item.value === maritalStatus) || null;
+        setSelectedItem(selected);
+        const index = data.findIndex(item => item.value === maritalStatus);
+        if (index !== -1) {
+          setActiveIndex(index);
+        }
         setPartner(contactData);
       } catch (error) {
         console.error('Error loading data:', error);
@@ -143,10 +154,10 @@ const PartnerPage: FC = () => {
     loadData();
   }, [user?.id]);
 
-  const handleClick = (e: React.MouseEvent<HTMLDivElement>, index: number, items: MaritalStatusItem): void => {
+  const handleClick = (e: React.MouseEvent<HTMLDivElement>, index: number, item: MaritalStatusItem): void => {
     e.preventDefault();
     setActiveIndex(index === activeIndex ? null : index);
-    setSelectedItem(items);
+    setSelectedItem(item);
     setErrorMessage(null);
   };
 
@@ -164,7 +175,7 @@ const PartnerPage: FC = () => {
     if (confirm('¿Estás seguro de que deseas eliminar esta pareja?')) {
       try {
         setLoading(true);
-        await deleteContact();
+        // Delete partner logic if needed; here we simply remove partner from state
         setPartner(null);
         sessionStorage.removeItem('userContact');
       } catch (error) {
@@ -196,46 +207,32 @@ const PartnerPage: FC = () => {
 
       apiService.setToken(tokens.accessToken.toString());
 
-      // Create a cleaned version of the user object without the restricted fields
-      const cleanedUserData = {
-        email: user.email,
-        name: user.name,
-        middleName: user.middleName,
-        fatherLastName: user.fatherLastName,
-        motherLastName: user.motherLastName,
-        birthDate: user.birthDate,
-        gender: user.gender,
-        nationality: user.nationality,
-        governmentId: user.governmentId,
-        phoneNumber: user.phoneNumber,
-        countryPhoneCode: user.countryPhoneCode,
+      // Update user's marital status
+      await apiService.updateUser(user.id, {
         maritalstatus: selectedItem.value
-      };
+      });
 
-      // Update user's marital status with cleaned data
-      await apiService.updateUser(user.id, cleanedUserData);
-
-      // Save or update contact if exists
+      // Save or update contact if it exists
       if (partner) {
         const contactData: Contact = {
-          id: partner.id || '',
+          id: partner.id,
           name: partner.name,
           fatherLastName: partner.fatherLastName,
           motherLastName: partner.motherLastName,
           relationToUser: partner.relationToUser,
           email: partner.email,
           trustedContact: false,
-          message: partner.message || '',
           countryPhoneCode: partner.countryPhoneCode || '',
           phoneNumber: partner.phoneNumber || '',
-          country: partner.country || '',
+          country: "MX",
         };
 
-        if (partner.id) {
-          await apiService.updateContact(user.id, partner.id, contactData);
-        } else {
+        // Uncomment and update the logic below if you want to handle contact updates
+        // if (partner.id) {
+        //   await apiService.updateContact(user.id, partner.id, contactData);
+        // } else {
           await apiService.createContact(user.id, contactData);
-        }
+        // }
 
         // Store updated contact in session storage
         sessionStorage.setItem('userContact', JSON.stringify(contactData));
@@ -377,11 +374,11 @@ const PartnerPage: FC = () => {
                 )}
 
                 <div className="space-y-4">
-                  {data.map((items, index) => (
+                  {data.map((item, index) => (
                     <div
                       key={index}
                       className="cursor-pointer transition-colors"
-                      onClick={(e) => handleClick(e, index, items)}
+                      onClick={(e) => handleClick(e, index, item)}
                     >
                       <div
                         className={`px-6 py-4 rounded-xl border ${
@@ -397,7 +394,7 @@ const PartnerPage: FC = () => {
                               : 'text-[#1d1d1f]'
                           }`}
                         >
-                          {items.title}
+                          {item.title}
                         </h3>
                         <p
                           className={`mt-1 text-[14px] ${
@@ -406,7 +403,7 @@ const PartnerPage: FC = () => {
                               : 'text-[#6e6e73]'
                           }`}
                         >
-                          {items.subTitle}
+                          {item.subTitle}
                         </p>
                       </div>
                     </div>

@@ -59,9 +59,14 @@ const PetsPage: FC = () => {
         const storedHasPets = sessionStorage.getItem('userHasPets');
 
         if (storedPets && storedHasPets) {
-          setPets(JSON.parse(storedPets));
+          const petsData = JSON.parse(storedPets);
+          setPets(petsData);
           const hasPets = JSON.parse(storedHasPets);
-          setSelectedOption(data.find(item => item.value === (hasPets ? 'yes' : 'no')) || null);
+          const selectedValue = hasPets ? 'yes' : 'no';
+          const selected = data.find(item => item.value === selectedValue) || null;
+          setSelectedOption(selected);
+          const index = data.findIndex(item => item.value === selectedValue);
+          if (index !== -1) setActiveIndex(index);
           setIsInitialLoading(false);
           return;
         }
@@ -80,7 +85,11 @@ const PetsPage: FC = () => {
         sessionStorage.setItem('userHasPets', JSON.stringify(petsResponse.length > 0));
 
         setPets(petsResponse);
-        setSelectedOption(data.find(item => item.value === (petsResponse.length > 0 ? 'yes' : 'no')) || null);
+        const selectedValue = petsResponse.length > 0 ? 'yes' : 'no';
+        const selected = data.find(item => item.value === selectedValue) || null;
+        setSelectedOption(selected);
+        const index = data.findIndex(item => item.value === selectedValue);
+        if (index !== -1) setActiveIndex(index);
       } catch (error) {
         console.error('Error loading data:', error);
       } finally {
@@ -97,10 +106,15 @@ const PetsPage: FC = () => {
     setSelectedOption(option);
     setErrorMessage(null);
 
-    // Clear pets if "No" is selected
+    // If "No" is selected, clear pets and update session storage.
     if (option.value === 'no') {
       setPets([]);
       sessionStorage.setItem('userPets', JSON.stringify([]));
+      sessionStorage.setItem('userHasPets', JSON.stringify(false));
+    }
+    // If "Sí" is selected, update session storage to indicate pets should be created.
+    if (option.value === 'yes') {
+      sessionStorage.setItem('userHasPets', JSON.stringify(true));
     }
   };
 
@@ -121,6 +135,7 @@ const PetsPage: FC = () => {
       const updatedPets = pets.filter(pet => pet.id !== petId);
       setPets(updatedPets);
       sessionStorage.setItem('userPets', JSON.stringify(updatedPets));
+      sessionStorage.setItem('userHasPets', JSON.stringify(updatedPets.length > 0));
     }
   };
 
@@ -129,55 +144,96 @@ const PetsPage: FC = () => {
       setErrorMessage("Por favor, selecciona una opción");
       return;
     }
-
+  
     if (!user?.id) {
       setErrorMessage("No se encontró información del usuario");
       return;
     }
-
+  
+    // Helper function: any error in fetching pets is treated as "no pets"
+    const getExistingPets = async (): Promise<Pet[]> => {
+      try {
+        return await apiService.getPets(user.id);
+      } catch (error: any) {
+        console.error("Error in getExistingPets:", error);
+        // Treat any error as if there are no pets in the API.
+        return [];
+      }
+    };
+  
     try {
       setLoading(true);
       const { tokens } = await fetchAuthSession();
       if (!tokens?.accessToken) {
         throw new Error("No authentication token available");
       }
-
+  
       apiService.setToken(tokens.accessToken.toString());
-
-      // If user selected "no", delete all existing pets from the API
+      console.log('Selected option:', selectedOption);
       if (selectedOption.value === 'no') {
-        const existingPets = await apiService.getPets(user.id);
-        await Promise.all(existingPets.map(pet => apiService.deletePet(user.id, pet.id)));
+        // For "No": Delete all existing pets (if any).
+        const existingPets = await getExistingPets();
+        if (existingPets.length > 0) {
+          await Promise.all(
+            existingPets.map(async (pet) => {
+              try {
+                await apiService.deletePet(user.id, pet.id);
+              } catch (error: any) {
+                // If the pet was already deleted, ignore the error.
+                if (error.message.includes('404')) {
+                  console.warn(`Pet ${pet.id} already deleted, ignoring.`);
+                } else {
+                  throw error;
+                }
+              }
+            })
+          );
+        }
       } else {
-        // Get existing pets from API to compare with session storage
-        const existingPets = await apiService.getPets(user.id);
+        // For "Sí": Fetch the existing pets from the API.
+        const existingPets = await getExistingPets();
         const sessionPets = pets;
-
-        // Delete pets that are in API but not in session storage
-        const petsToDelete = existingPets.filter(
-          existingPet => !sessionPets.some(sessionPet => sessionPet.id === existingPet.id)
-        );
-        await Promise.all(petsToDelete.map(pet => apiService.deletePet(user.id, pet.id)));
-
-        // Create or update pets from session storage
+  
+        // Delete pets that exist in the API but are not in session storage.
+        // const petsToDelete = existingPets.filter(
+        //   existingPet => !sessionPets.some(sessionPet => sessionPet.id === existingPet.id)
+        // );
+        // console.log('Pets to delete:', petsToDelete);
+        // if (petsToDelete.length > 0) {
+        //   await Promise.all(
+        //     petsToDelete.map(async (pet) => {
+        //       try {
+        //         await apiService.deletePet(user.id, pet.id);
+        //       } catch (error: any) {
+        //         if (error.message.includes('404')) {
+        //           console.warn(`Pet ${pet.id} already deleted, ignoring.`);
+        //         } else {
+        //           throw error;
+        //         }
+        //       }
+        //     })
+        //   );
+        // }
+  
+        // For each pet in session storage, either update it (if it exists)
+        // or create it (if it does not exist in the API).
         for (const pet of sessionPets) {
           const petData = {
             name: pet.name,
             species: pet.species,
-            dateOfBirth: pet.dateOfBirth,
+            dateOfBirth: new Date(pet.dateOfBirth).toISOString(),
             notes: pet.notes || '',
           };
-
-          if (pet.id.startsWith('temp-')) {
-            // Create new pet
-            await apiService.createPet(user.id, petData);
-          } else {
-            // Update existing pet
+  
+          const petExists = existingPets.some(existingPet => existingPet.id === pet.id);
+          if (petExists) {
             await apiService.updatePet(user.id, pet.id, petData);
+          } else {
+            await apiService.createPet(user.id, petData);
           }
         }
       }
-
+  
       router.push("/summary?completed=about-your-self");
     } catch (error) {
       console.error('Error saving pets data:', error);
@@ -186,6 +242,7 @@ const PetsPage: FC = () => {
       setLoading(false);
     }
   };
+  
 
   return (
     <DashboardLayout>

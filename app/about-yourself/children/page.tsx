@@ -1,12 +1,18 @@
 'use client';
 
-import { FC, useState } from 'react';
+import { FC, useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import DashboardLayout from "@/components/common/DashboardLayout";
 import { useRouter } from "next/navigation";
 import PrimaryButton from "@/components/reusables/PrimaryButton";
 import ProgressIndicator from "@/components/reusables/ProgressIndicator";
 import Link from "next/link";
+import AddChild from "@/app/about-yourself/children/AddChild";
+import { useUser } from "@/context/UserContext";
+import { apiService } from '@/app/apiService';
+import { fetchAuthSession } from "aws-amplify/auth";
+import Spinner from "@/components/reusables/Spinner";
+import { Contact } from '@/types';
 
 interface ChildOption {
   title: string;
@@ -15,14 +21,15 @@ interface ChildOption {
 
 const ChildrenPage: FC = () => {
   const router = useRouter();
+  const { user } = useUser();
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
-  const [showAddChild, setShowAddChild] = useState<boolean>(false);
-
-  const handleClick = (e: React.MouseEvent<HTMLDivElement>, index: number): void => {
-    e.preventDefault();
-    setActiveIndex(index === activeIndex ? null : index);
-    setShowAddChild(index === 0); // Show add child button only when "Sí" is selected
-  };
+  const [showModal, setShowModal] = useState<boolean>(false);
+  const [children, setChildren] = useState<Contact[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [isInitialLoading, setIsInitialLoading] = useState(true);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [isEditing, setIsEditing] = useState(false);
+  const [selectedChild, setSelectedChild] = useState<Contact | null>(null);
 
   const data: ChildOption[] = [
     {
@@ -35,34 +42,148 @@ const ChildrenPage: FC = () => {
     },
   ];
 
-  const renderAddChildButton = (): JSX.Element | null => {
-    if (showAddChild) {
-      return (
-        <div
-          className="bg-white rounded-xl border border-gray-200 hover:border-[#047aff] transition-colors cursor-pointer mt-4"
-        >
-          <div className="flex items-center justify-center gap-2 py-4 text-[#047aff] font-medium">
-            <div className="bg-[#047aff] rounded-full p-1">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 448 512"
-                width="16"
-                height="16"
-                className="fill-white"
-              >
-                <path d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z" />
-              </svg>
-            </div>
-            Agregar Hijo
-          </div>
-        </div>
-      );
+  // Load children data on page load
+  useEffect(() => {
+    const loadData = async () => {
+      if (!user?.id) {
+        setIsInitialLoading(false);
+        return;
+      }
+
+      try {
+        const storedChildren = sessionStorage.getItem('userChildren');
+
+        if (storedChildren) {
+          setChildren(JSON.parse(storedChildren));
+          setActiveIndex(0); // Set "Sí" as active if children exist
+          setIsInitialLoading(false);
+          return;
+        }
+
+        const { tokens } = await fetchAuthSession();
+        if (!tokens?.accessToken) {
+          throw new Error("No authentication token available");
+        }
+
+        apiService.setToken(tokens.accessToken.toString());
+        const contactsResponse = await apiService.getContacts(user.id);
+        const childrenContacts = contactsResponse.filter(
+          (contact: Contact) => contact.relationToUser === 'child'
+        );
+
+        sessionStorage.setItem('userChildren', JSON.stringify(childrenContacts));
+        setChildren(childrenContacts);
+        if (childrenContacts.length > 0) {
+          setActiveIndex(0); // Set "Sí" as active if children exist
+        }
+      } catch (error) {
+        console.error('Error loading children:', error);
+      } finally {
+        setIsInitialLoading(false);
+      }
+    };
+
+    loadData();
+  }, [user?.id]);
+
+  const handleClick = (e: React.MouseEvent<HTMLDivElement>, index: number): void => {
+    e.preventDefault();
+    setActiveIndex(index === activeIndex ? null : index);
+    if (index === 1) { // If "No" is selected
+      setChildren([]); // Clear children list
+      sessionStorage.removeItem('userChildren');
     }
-    return null;
+  };
+
+  const handleAddChild = (): void => {
+    setIsEditing(false);
+    setSelectedChild(null);
+    setShowModal(true);
+  };
+
+  const handleEditChild = (child: Contact): void => {
+    setIsEditing(true);
+    setSelectedChild(child);
+    setShowModal(true);
+  };
+
+  const handleDeleteChild = (childToDelete: Contact): void => {
+    if (confirm('¿Estás seguro de que deseas eliminar este hijo?')) {
+      // Remove child from state
+      const updatedChildren = children.filter(child => child !== childToDelete);
+      setChildren(updatedChildren);
+      
+      // Update session storage
+      sessionStorage.setItem('userChildren', JSON.stringify(updatedChildren));
+    }
+  };
+
+  const handleSave = async (): Promise<void> => {
+    if (activeIndex === null) {
+      setErrorMessage("Por favor, seleccione una opción");
+      return;
+    }
+
+    if (activeIndex === 0 && children.length === 0) {
+      setErrorMessage("Por favor, agregue al menos un hijo");
+      return;
+    }
+
+    try {
+      setLoading(true);
+      const { tokens } = await fetchAuthSession();
+      if (!tokens?.accessToken) {
+        throw new Error("No authentication token available");
+      }
+
+      apiService.setToken(tokens.accessToken.toString());
+
+      // Save all children:
+      // For each child without an id (new child), remove the id property before sending to the API.
+      if (user?.id && activeIndex === 0) {
+        for (const child of children) {
+          if (!child.id) {
+            // Destructure to remove the id property
+            const { id, ...childDataWithoutId } = child;
+            await apiService.createContact(user.id, childDataWithoutId);
+          }
+        }
+      }
+
+      router.push("/about-yourself/pets");
+    } catch (error) {
+      console.error('Error saving children:', error);
+      setErrorMessage("Error al guardar los cambios. Por favor, intente nuevamente.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const setChild = (childData: Contact) => {
+    if (isEditing && selectedChild) {
+      // Update existing child
+      const updatedChildren = children.map(child =>
+        child.id === selectedChild.id ? { ...childData, id: child.id } : child
+      );
+      setChildren(updatedChildren);
+      sessionStorage.setItem('userChildren', JSON.stringify(updatedChildren));
+    } else {
+      // Add new child
+      const updatedChildren = [...children, childData];
+      setChildren(updatedChildren);
+      sessionStorage.setItem('userChildren', JSON.stringify(updatedChildren));
+    }
   };
 
   return (
     <DashboardLayout>
+      <AddChild
+        showModal={showModal}
+        setShowModal={setShowModal}
+        setChild={setChild}
+        isEditing={isEditing}
+        existingChild={selectedChild}
+      />
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
@@ -109,11 +230,61 @@ const ChildrenPage: FC = () => {
                 totalSections={5}
                 title="Progreso de la sección"
               />
+
+              {/* Children List */}
+              {children.length > 0 && (
+                <div className="mt-8">
+                  <h3 className="text-lg font-semibold mb-4">Hijos Registrados</h3>
+                  <div className="space-y-4">
+                    {children.map((child, index) => (
+                      <div key={index} className="bg-white rounded-2xl p-6 shadow-lg">
+                        <div className="flex justify-between items-start mb-4">
+                          <h4 className="font-medium">{child.name}</h4>
+                          <div className="flex gap-2">
+                            <button
+                              onClick={() => handleEditChild(child)}
+                              className="text-blue-600 hover:text-blue-800"
+                            >
+                              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
+                              </svg>
+                            </button>
+                            <button
+                              onClick={() => handleDeleteChild(child)}
+                              className="text-red-600 hover:text-red-800"
+                            >
+                              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                <path fillRule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clipRule="evenodd" />
+                              </svg>
+                            </button>
+                          </div>
+                        </div>
+                        <p className="text-sm text-gray-600">
+                          <strong>Apellido Paterno:</strong> {child.fatherLastName}<br />
+                          <strong>Apellido Materno:</strong> {child.motherLastName}<br />
+                          {child.email && <><strong>Correo:</strong> {child.email}<br /></>}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
 
             {/* Right column - Form in white container */}
             <div className='w-full lg:w-3/5'>
-              <div className="bg-white rounded-2xl px-4 sm:px-8 md:px-12 py-8 shadow-lg">
+              <div className="bg-white rounded-2xl px-4 sm:px-8 md:px-12 py-8 shadow-lg relative">
+                {(loading || isInitialLoading) && (
+                  <div className="absolute inset-0 bg-white bg-opacity-80 flex items-center justify-center z-50 rounded-2xl">
+                    <div className="text-center">
+                      <Spinner size={50} />
+                      <p className="mt-4 text-[#047aff] font-medium">
+                        {loading ? 'Guardando...' : 'Cargando...'}
+                      </p>
+                    </div>
+                  </div>
+                )}
+
                 <div className="space-y-4">
                   {data.map((item, index) => (
                     <div
@@ -151,10 +322,34 @@ const ChildrenPage: FC = () => {
                   ))}
                 </div>
 
-                {renderAddChildButton()}
+                {activeIndex === 0 && (
+                  <div
+                    onClick={handleAddChild}
+                    className="bg-white rounded-xl border border-gray-200 hover:border-[#047aff] transition-colors cursor-pointer mt-4"
+                  >
+                    <div className="flex items-center justify-center gap-2 py-4 text-[#047aff] font-medium">
+                      <div className="bg-[#047aff] rounded-full p-1">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 448 512"
+                          width="16"
+                          height="16"
+                          className="fill-white"
+                        >
+                          <path d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z" />
+                        </svg>
+                      </div>
+                      Agregar Hijo
+                    </div>
+                  </div>
+                )}
+
+                {errorMessage && (
+                  <p className="text-red-500 text-[14px] text-center mt-4">{errorMessage}</p>
+                )}
 
                 <div className="flex justify-end pt-4 mt-4">
-                  <PrimaryButton onClick={() => router.push("/about-yourself/pets")}>
+                  <PrimaryButton onClick={handleSave}>
                     Guardar y continuar
                   </PrimaryButton>
                 </div>

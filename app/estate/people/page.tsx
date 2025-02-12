@@ -1,39 +1,79 @@
 "use client";
-import { FC, useState } from 'react';
+import { FC, useState, useEffect } from 'react';
 import DashboardLayout from "@/components/common/DashboardLayout";
 import { useRouter } from "next/navigation";
-import Add, { HeirData } from "./Add";
+import Add, { HeirData } from "./Add"; // Assume Add is your modal for adding a new heir
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from 'recharts';
 import { motion } from 'framer-motion';
 import PrimaryButton from "@/components/reusables/PrimaryButton";
 import Link from "next/link";
+import { useUser } from "@/context/UserContext";
+import { apiService } from '@/app/apiService';
+import { fetchAuthSession } from "aws-amplify/auth";
 
 const COLORS = ['#047aff', '#3d9bff', '#66b2ff', '#8fc7ff', '#b8dcff', '#e0f0ff'];
 
 const PeoplePage: FC = () => {
   const router = useRouter();
+  const { user } = useUser();
   const [showModal, setShowModal] = useState<boolean>(false);
   const [useEqualDistribution, setUseEqualDistribution] = useState<boolean>(false);
   const [heirs, setHeirs] = useState<HeirData[]>([]);
+  const [loadingContacts, setLoadingContacts] = useState<boolean>(false);
+
+  // When the component mounts (or when the user changes),
+  // load all contacts that the user has added so far.
+  useEffect(() => {
+    const loadContacts = async () => {
+      if (!user?.id) return;
+      setLoadingContacts(true);
+      try {
+        const { tokens } = await fetchAuthSession();
+        if (!tokens?.accessToken) {
+          throw new Error("No authentication token available");
+        }
+        apiService.setToken(tokens.accessToken.toString());
+        const contacts = await apiService.getContacts(user.id);
+        // Map each Contact into a HeirData object.
+        const mappedHeirs: HeirData[] = contacts.map((contact: any) => ({
+          id: contact.id,
+          name: contact.name,
+          relationship: contact.relationToUser || "Contacto",
+          percentage: 0, // default percentage (the user can adjust later)
+          backupHeir: contact.backupHeir || ""
+        }));
+        setHeirs(mappedHeirs);
+      } catch (error) {
+        console.error("Error loading contacts:", error);
+      } finally {
+        setLoadingContacts(false);
+      }
+    };
+    loadContacts();
+  }, [user]);
 
   const handleAddClick = (): void => {
     setShowModal(true);
   };
 
+  // When a new heir is added via the modal, add it to the heirs state.
   const handleAddHeir = (heir: HeirData): void => {
-    setHeirs([...heirs, heir]);
+    setHeirs(prevHeirs => [...prevHeirs, heir]);
   };
 
+  // When a percentage input is changed, update that heir’s percentage.
   const handlePercentageChange = (id: string, newPercentage: number): void => {
-    setHeirs(prevHeirs => 
-      prevHeirs.map(heir => 
-        heir.id === id 
+    setHeirs(prevHeirs =>
+      prevHeirs.map(heir =>
+        heir.id === id
           ? { ...heir, percentage: Math.min(100, Math.max(0, newPercentage)) }
           : heir
       )
     );
   };
 
+  // Prepare chart data: if equal distribution is selected, all heirs get the same share;
+  // otherwise, use each heir’s individual percentage.
   const getChartData = () => {
     if (useEqualDistribution && heirs.length > 0) {
       const equalShare = 100 / heirs.length;
@@ -64,7 +104,9 @@ const PeoplePage: FC = () => {
 
   return (
     <>
+      {/* Modal for adding a new heir/contact */}
       <Add setShowModal={setShowModal} showModal={showModal} onAddHeir={handleAddHeir} />
+
       <DashboardLayout>
         <motion.div 
           className="min-h-screen bg-[#f5f5f7]"
@@ -75,6 +117,7 @@ const PeoplePage: FC = () => {
         >
           <div className="max-w-6xl mx-auto px-4 sm:px-5 py-12">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-24">
+              {/* Left Column: Explanation, checkbox for equal distribution, add button, and list of heirs */}
               <div className="space-y-8">
                 <div>
                   <div className="flex items-center gap-2 mb-2.5">
@@ -85,7 +128,6 @@ const PeoplePage: FC = () => {
                       <span className="w-5 h-5 inline-flex items-center justify-center rounded-full border border-[#047aff] text-sm">?</span>
                     </Link>
                   </div>
-
                   <h1 className="text-[32px] sm:text-[38px] font-[500] tracking-[-1.5px] leading-[1.2] sm:leading-[52px] mb-[15px]">
                     <span className="text-[#1d1d1f]">¿Quién le gustaría que </span>
                     <span className="bg-gradient-to-r from-[#3d9bff] to-[#047aff] inline-block text-transparent bg-clip-text">
@@ -93,9 +135,7 @@ const PeoplePage: FC = () => {
                     </span>
                   </h1>
                   <p className="text-[16px] text-[#1d1d1f] leading-6">
-                    Puedes decidir cuánto recibe cada persona en el siguiente
-                    paso. También podrás elegir copias de seguridad en caso de
-                    que alguno de ellos muera antes que tú.
+                    Puedes decidir cuánto recibe cada persona en el siguiente paso. También podrás elegir copias de seguridad en caso de que alguno de ellos muera antes que tú.
                   </p>
                 </div>
 
@@ -141,10 +181,7 @@ const PeoplePage: FC = () => {
                       <h2 className="text-[22px] font-[500] text-[#1d1d1f] mb-4">Lista de Herederos</h2>
                       <div className="space-y-4">
                         {heirs.map((heir) => (
-                          <div
-                            key={heir.id}
-                            className="border-b border-gray-100 last:border-b-0 pb-4 last:pb-0"
-                          >
+                          <div key={heir.id} className="border-b border-gray-100 pb-4 last:border-b-0 last:pb-0">
                             <div className="flex justify-between items-start">
                               <div>
                                 <h3 className="text-[17px] font-[500] text-[#1d1d1f]">{heir.name}</h3>
@@ -193,6 +230,7 @@ const PeoplePage: FC = () => {
                 </div>
               </div>
 
+              {/* Right Column: Chart showing the distribution */}
               {heirs.length > 0 && (
                 <div className="bg-white rounded-2xl shadow-md p-6">
                   <h2 className="text-[22px] font-[500] text-[#1d1d1f] mb-4">Distribución de Herencia</h2>
@@ -230,7 +268,6 @@ const PeoplePage: FC = () => {
                         <p className="text-[16px] font-[500] text-[#1d1d1f]">{item.value.toFixed(1)}%</p>
                       </div>
                     ))}
-                    
                     {!useEqualDistribution && (
                       <div className="pt-4 border-t border-gray-100">
                         <div className="flex justify-between items-center">

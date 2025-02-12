@@ -18,7 +18,7 @@ interface Address {
   city: string;
   state: string;
   zipCode: string;
-  country: string;
+  country?: string;
 }
 
 const BasicPage: FC = () => {
@@ -40,41 +40,46 @@ const BasicPage: FC = () => {
         setIsInitialLoading(false);
         return;
       }
-
+  
       try {
         // First check session storage
         const storedAddress = sessionStorage.getItem('userAddress');
         if (storedAddress) {
-          const address: Address = JSON.parse(storedAddress);
-          console.log('Stored address:', address);
-          setFormValues({
-            street: address.street || "",
-            city: address.city || "",
-            state: address.state || "",
-            zipCode: address.zipCode || "",
-          });
-          setIsInitialLoading(false);
-          return;
+          const parsedAddress = JSON.parse(storedAddress);
+          // Normalize to a single object (if stored as an array, get the first element)
+          const address = Array.isArray(parsedAddress) ? parsedAddress[0] : parsedAddress;
+          
+          if (address) {
+            setFormValues({
+              street: address.street || "",
+              city: address.city || "",
+              state: address.state || "",
+              zipCode: address.zipCode || "",
+            });
+            setIsInitialLoading(false);
+            return;
+          }
         }
-
+  
         // If no stored address, fetch from API
         const { tokens } = await fetchAuthSession();
         if (!tokens?.accessToken) {
           throw new Error("No authentication token available");
         }
-
+  
         apiService.setToken(tokens.accessToken.toString());
         const response = await apiService.getUserAddress(user.id);
-
+  
         if (response) {
-          // Store in session storage
-          sessionStorage.setItem('userAddress', JSON.stringify(response));
-
+          // Normalize the response and store only a single address object
+          const addressToStore = Array.isArray(response) ? response[0] : response;
+          sessionStorage.setItem('userAddress', JSON.stringify(addressToStore));
+          
           setFormValues({
-            street: response.street || "",
-            city: response.city || "",
-            state: response.state || "",
-            zipCode: response.zipCode || "",
+            street: addressToStore.street || "",
+            city: addressToStore.city || "",
+            state: addressToStore.state || "",
+            zipCode: addressToStore.zipCode || "",
           });
         }
       } catch (error) {
@@ -87,9 +92,10 @@ const BasicPage: FC = () => {
         setIsInitialLoading(false);
       }
     };
-
+  
     loadUserAddress();
   }, [user?.id]);
+  
 
   const handleAddressSelect = (addressData: AddressData): void => {
     setFormValues(prev => ({
@@ -117,9 +123,13 @@ const BasicPage: FC = () => {
     }
 
     try {
-      // Get the stored address from session storage
+      // Retrieve and normalize the stored address from session storage
       const storedAddress = sessionStorage.getItem('userAddress');
-      const currentAddress: Address | null = storedAddress ? JSON.parse(storedAddress) : null;
+      let currentAddress: Address | null = null;
+      if (storedAddress) {
+        const parsedAddress = JSON.parse(storedAddress);
+        currentAddress = Array.isArray(parsedAddress) ? parsedAddress[0] : parsedAddress;
+      }
 
       // Check if address data has changed
       const hasDataChanged = !currentAddress ||
@@ -138,28 +148,32 @@ const BasicPage: FC = () => {
 
         apiService.setToken(tokens.accessToken.toString());
 
-        // If we have a current address, update it; otherwise create new
+        // Prepare address data
         const addressData = {
           street,
           city,
-          state,
+          state,  
           zipCode,
           country: "MX", // Default to Mexico since the form is in Spanish
         };
 
         let response;
         if (currentAddress) {
-          response = await apiService.updateUserAddress(user.id, addressData);
+          // Update the existing address.
+          // NOTE: Ensure you pass the correct identifier here; currently using `currentAddress.city` as a placeholder.
+          response = await apiService.updateUserAddress(currentAddress.city, addressData);
         } else {
+          // Create a new address entry.
           response = await apiService.createUserAddress(user.id, addressData);
         }
 
         if (response) {
-          sessionStorage.setItem('userAddress', JSON.stringify(response));
+          const addressToStore = Array.isArray(response) ? response[0] : response;
+          sessionStorage.setItem('userAddress', JSON.stringify(addressToStore));
         }
       }
 
-      // Navigate to next page regardless of whether data was updated
+      // Navigate to the next page regardless of whether data was updated
       router.push("/about-yourself/partner");
     } catch (error) {
       console.error('Error handling address:', error);
@@ -173,6 +187,7 @@ const BasicPage: FC = () => {
     const { id, value } = e.target;
     setFormValues(prev => ({ ...prev, [id]: value }));
     setErrorMessage(null);
+    console.log('Form values:', formValues);
   };
 
   return (

@@ -37,7 +37,6 @@ const Add: FC<AddProps> = ({ showModal, setShowModal, setPets, pets, isEditing, 
   }, [isEditing, existingPet, showModal]);
 
   const handleSubmit = () => {
-    // Validate required fields
     if (!name || !species || !dateOfBirth) {
       setError("Por favor, complete todos los campos obligatorios.");
       return;
@@ -50,27 +49,22 @@ const Add: FC<AddProps> = ({ showModal, setShowModal, setPets, pets, isEditing, 
       const petData: Pet = {
         id: isEditing && existingPet ? existingPet.id : `temp-${Date.now()}`,
         name,
-        species,
+        species, // species now holds an allowed value (e.g. "Dog")
         dateOfBirth,
         notes: notes || '',
       };
 
-      // Get current pets from session storage
       const storedPets = sessionStorage.getItem('userPets');
       let currentPets: Pet[] = storedPets ? JSON.parse(storedPets) : [];
-
       if (isEditing && existingPet) {
-        // Update existing pet in session storage
-        currentPets = currentPets.map(pet => 
+        currentPets = currentPets.map(pet =>
           pet.id === existingPet.id ? petData : pet
         );
       } else {
-        // Add new pet to session storage
         currentPets.push(petData);
       }
-
-      // Update session storage and state
       sessionStorage.setItem('userPets', JSON.stringify(currentPets));
+      console.log('Pets saved:', currentPets);
       setPets(currentPets);
       setShowModal(false);
     } catch (error) {
@@ -82,6 +76,14 @@ const Add: FC<AddProps> = ({ showModal, setShowModal, setPets, pets, isEditing, 
   };
 
   if (!showModal) return null;
+
+  // Define allowed species options with proper values.
+  const speciesOptions = [
+    { value: "Dog", label: "Perro" },
+    { value: "Cat", label: "Gato" },
+    { value: "Bird", label: "Ave" },
+    { value: "Other", label: "Otro" },
+  ];
 
   return (
     <motion.div
@@ -104,7 +106,7 @@ const Add: FC<AddProps> = ({ showModal, setShowModal, setPets, pets, isEditing, 
         </h2>
 
         <div className="space-y-4">
-          {/* Name */}
+          {/* Name Field */}
           <div>
             <label className="block text-sm font-medium text-[#6e6e73] mb-1">
               Nombre <span className="text-[#047aff]">*</span>
@@ -118,7 +120,7 @@ const Add: FC<AddProps> = ({ showModal, setShowModal, setPets, pets, isEditing, 
             />
           </div>
 
-          {/* Species */}
+          {/* Species Field */}
           <div>
             <label className="block text-sm font-medium text-[#6e6e73] mb-1">
               Especie <span className="text-[#047aff]">*</span>
@@ -129,14 +131,15 @@ const Add: FC<AddProps> = ({ showModal, setShowModal, setPets, pets, isEditing, 
               className="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:border-[#047aff]"
             >
               <option value="">Seleccionar especie</option>
-              <option value="dog">Perro</option>
-              <option value="cat">Gato</option>
-              <option value="bird">Ave</option>
-              <option value="other">Otro</option>
+              {speciesOptions.map((option) => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
+              ))}
             </select>
           </div>
 
-          {/* Date of Birth */}
+          {/* Date of Birth Field */}
           <div>
             <label className="block text-sm font-medium text-[#6e6e73] mb-1">
               Fecha de Nacimiento <span className="text-[#047aff]">*</span>
@@ -149,7 +152,7 @@ const Add: FC<AddProps> = ({ showModal, setShowModal, setPets, pets, isEditing, 
             />
           </div>
 
-          {/* Notes */}
+          {/* Notes Field */}
           <div>
             <label className="block text-sm font-medium text-[#6e6e73] mb-1">
               Notas
