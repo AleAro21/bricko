@@ -13,20 +13,35 @@ interface PasswordStrength {
   color: string;
 }
 
+// Update the strength check function to use the password string directly
+const getStrengthDetails = (password: string): PasswordStrength => {
+  const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password);
+  if (password.length >= 8 && hasSpecialChar) {
+    return { label: "Fuerte", color: "text-green-600" };
+  } else if (password.length >= 8) {
+    return { label: "Mediana", color: "text-yellow-600" };
+  } else {
+    return { label: "Débil", color: "text-red-600" };
+  }
+};
+
 const PasswordPage: FC = () => {
   const router = useRouter();
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [password, setPassword] = useState<string>("");
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const pass: number = Math.min(password.length * 10, 100);
 
-  const getStrengthDetails = (pass: number): PasswordStrength => {
-    if (pass < 40) return { label: "Débil", color: "text-red-600" };
-    if (pass < 70) return { label: "Mediana", color: "text-yellow-600" };
-    return { label: "Fuerte", color: "text-green-600" };
-  };
+  // Calculate the strength details based on the password string
+  const strengthDetails = getStrengthDetails(password);
 
-  const strengthDetails = getStrengthDetails(pass);
+  // Adjust the progress bar width: if length >=8 then 70% for medium and 100% for strong,
+  // otherwise use a factor based on length (maxing out at 80% for weak passwords).
+  const progressWidth =
+    password.length >= 8
+      ? /[!@#$%^&*(),.?":{}|<>]/.test(password)
+        ? 100
+        : 70
+      : Math.min(password.length * 10, 80);
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
@@ -69,10 +84,14 @@ const PasswordPage: FC = () => {
     setPassword(e.target.value);
   };
 
+  // Optional: You can remove this function if you are handling color via the progress bar inline style.
   const getColor = (): string => {
-    const red = Math.max(255 - (pass * 2), 0);
-    const green = Math.min(pass * 2, 128);
-    return `rgb(${red}, ${green}, 0)`;
+    // This function is now secondary since we base the label color on strengthDetails.
+    return strengthDetails.label === "Fuerte"
+      ? "rgb(0, 128, 0)"
+      : strengthDetails.label === "Mediana"
+      ? "rgb(204, 204, 0)"
+      : "rgb(255, 0, 0)";
   };
 
   return (
@@ -155,7 +174,7 @@ const PasswordPage: FC = () => {
                           <div
                             className="h-full transition-all duration-500 rounded-full"
                             style={{
-                              width: `${pass}%`,
+                              width: `${progressWidth}%`,
                               backgroundColor: getColor(),
                             }}
                           />

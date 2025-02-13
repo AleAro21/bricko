@@ -48,14 +48,32 @@ const OTPInput: React.FC<OTPInputProps> = ({ length = 6, onComplete }) => {
   };
 
   const handleChange = (element: HTMLInputElement, index: number): void => {
-    if (isNaN(Number(element.value))) return;
+    if (isNaN(Number(element.value)) && element.value !== '') return; // allow deletion
 
     const newOtp = [...otp];
     newOtp[index] = element.value;
     setOtp(newOtp);
 
-    if (element.nextSibling && element.value !== '') {
+    if (element.value !== '' && element.nextSibling) {
       (element.nextSibling as HTMLInputElement).focus();
+    }
+  };
+
+  const handleKeyDown = (
+    e: React.KeyboardEvent<HTMLInputElement>,
+    index: number
+  ) => {
+    if (e.key === "Backspace") {
+      // If the current input is already empty, move focus to the previous input
+      if (otp[index] === "" && index > 0) {
+        const prevInput = document.getElementById(`otp-${index - 1}`);
+        prevInput?.focus();
+      } else {
+        // Clear the current input immediately
+        const newOtp = [...otp];
+        newOtp[index] = "";
+        setOtp(newOtp);
+      }
     }
   };
 
@@ -103,7 +121,6 @@ const OTPInput: React.FC<OTPInputProps> = ({ length = 6, onComplete }) => {
       };
 
       const createdUser = await apiService.createUser(userData);
-
 
       // Store complete user data
       sessionStorage.setItem('userId', createdUser.id);
@@ -183,7 +200,7 @@ const OTPInput: React.FC<OTPInputProps> = ({ length = 6, onComplete }) => {
                   <span className='bg-gradient-to-r from-[#3d9bff] to-[#047aff] inline-block text-transparent bg-clip-text'>verificación</span>
                 </h1>
                 <p className="text-[16px] text-[#1d1d1f] leading-6 mb-4">
-                  Es un código de 6 dígitos enviado a {" "}
+                  Es un código de 6 dígitos enviado a{" "}
                   <span className="font-bold">{sessionStorage.getItem("email")}</span>
                 </p>
               </div>
@@ -218,12 +235,14 @@ const OTPInput: React.FC<OTPInputProps> = ({ length = 6, onComplete }) => {
                   <div className="flex justify-start space-x-4 mb-8">
                     {otp.map((data, index) => (
                       <input
+                        id={`otp-${index}`}
+                        key={index}
                         className="w-12 h-12 border rounded-lg text-center text-xl focus:outline-none focus:border-[#047aff] border-gray-300 transition-all"
                         type="text"
                         maxLength={1}
-                        key={index}
                         value={data}
                         onChange={(e: ChangeEvent<HTMLInputElement>) => handleChange(e.target, index)}
+                        onKeyDown={(e) => handleKeyDown(e, index)}
                         onFocus={(e) => e.target.select()}
                       />
                     ))}

@@ -2,7 +2,7 @@
 import { FC, useState, useEffect } from 'react';
 import DashboardLayout from "@/components/common/DashboardLayout";
 import { useRouter } from "next/navigation";
-import Add, { HeirData } from "./Add"; // Assume Add is your modal for adding a new heir
+import Add, { HeirData } from "./Add"; // Modal for adding a new heir/contact
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from 'recharts';
 import { motion } from 'framer-motion';
 import PrimaryButton from "@/components/reusables/PrimaryButton";
@@ -10,36 +10,47 @@ import Link from "next/link";
 import { useUser } from "@/context/UserContext";
 import { apiService } from '@/app/apiService';
 import { fetchAuthSession } from "aws-amplify/auth";
+// Import the enum for assignment types
+import { AssignmentType } from "@/types";
 
 const COLORS = ['#047aff', '#3d9bff', '#66b2ff', '#8fc7ff', '#b8dcff', '#e0f0ff'];
+
+type AssetDistribution = { [heirId: string]: number };
 
 const PeoplePage: FC = () => {
   const router = useRouter();
   const { user } = useUser();
+
+  // State for managing heirs (contacts)
   const [showModal, setShowModal] = useState<boolean>(false);
-  const [useEqualDistribution, setUseEqualDistribution] = useState<boolean>(false);
   const [heirs, setHeirs] = useState<HeirData[]>([]);
   const [loadingContacts, setLoadingContacts] = useState<boolean>(false);
 
-  // When the component mounts (or when the user changes),
-  // load all contacts that the user has added so far.
+  // New states: assets, testament (will) and per‑asset distributions.
+  const [assets, setAssets] = useState<any[]>([]);
+  const [testament, setTestament] = useState<any>(null);
+  // distribution: key is asset.id and value is an object mapping heir.id -> percentage.
+  const [distribution, setDistribution] = useState<{ [assetId: string]: AssetDistribution }>({});
+  // For chart visualization, allow the user to pick which asset’s distribution to view.
+  const [selectedAssetId, setSelectedAssetId] = useState<string>("");
+  const [savingAssignments, setSavingAssignments] = useState<boolean>(false);
+
+  // Load heirs (contacts)
   useEffect(() => {
     const loadContacts = async () => {
       if (!user?.id) return;
       setLoadingContacts(true);
       try {
         const { tokens } = await fetchAuthSession();
-        if (!tokens?.accessToken) {
-          throw new Error("No authentication token available");
-        }
+        if (!tokens?.accessToken) throw new Error("No authentication token available");
         apiService.setToken(tokens.accessToken.toString());
         const contacts = await apiService.getContacts(user.id);
-        // Map each Contact into a HeirData object.
+        // Map contacts into HeirData objects.
         const mappedHeirs: HeirData[] = contacts.map((contact: any) => ({
           id: contact.id,
           name: contact.name,
           relationship: contact.relationToUser || "Contacto",
-          percentage: 0, // default percentage (the user can adjust later)
+          percentage: 0, // Not used in per‑asset distribution
           backupHeir: contact.backupHeir || ""
         }));
         setHeirs(mappedHeirs);
@@ -52,54 +63,165 @@ const PeoplePage: FC = () => {
     loadContacts();
   }, [user]);
 
-  const handleAddClick = (): void => {
-    setShowModal(true);
-  };
+  // Load assets
+  useEffect(() => {
+    const loadAssets = async () => {
+      if (!user?.id) return;
+      try {
+        const { tokens } = await fetchAuthSession();
+        if (!tokens?.accessToken) throw new Error("No authentication token available");
+        apiService.setToken(tokens.accessToken.toString());
+        const fetchedAssets = await apiService.getUserAssets(user.id);
+        setAssets(fetchedAssets);
+      } catch (error) {
+        console.error("Error fetching assets:", error);
+      }
+    };
+    loadAssets();
+  }, [user]);
 
-  // When a new heir is added via the modal, add it to the heirs state.
-  const handleAddHeir = (heir: HeirData): void => {
-    setHeirs(prevHeirs => [...prevHeirs, heir]);
-  };
+  // Load (or create) the testament (will)
+  useEffect(() => {
+    const loadTestament = async () => {
+      if (!user?.id) return;
+      try {
+        const { tokens } = await fetchAuthSession();
+        if (!tokens?.accessToken) throw new Error("No authentication token available");
+        apiService.setToken(tokens.accessToken.toString());
+        const willsResponse = await apiService.getAllWills(user.id);
+        const willsArray = Array.isArray(willsResponse) ? willsResponse : [];
+        if (willsArray.length > 0) {
+          setTestament(willsArray[0]);
+          console.log("Testament already exists:", willsArray[0]);
+        } else {
+          // Create a new will if none exists.
+          const newWillData = { legalAdvisor: "", notes: "", terms: "" };
+          const newWill = await apiService.createWill(user.id, newWillData);
+          setTestament(newWill);
+          console.log("Created new testament:", newWill);
+        }
+      } catch (error: any) {
+        console.error("Error loading or creating testament:", error);
+      }
+    };
+    loadTestament();
+  }, [user]);
 
-  // When a percentage input is changed, update that heir’s percentage.
-  const handlePercentageChange = (id: string, newPercentage: number): void => {
-    setHeirs(prevHeirs =>
-      prevHeirs.map(heir =>
-        heir.id === id
-          ? { ...heir, percentage: Math.min(100, Math.max(0, newPercentage)) }
-          : heir
-      )
-    );
-  };
-
-  // Prepare chart data: if equal distribution is selected, all heirs get the same share;
-  // otherwise, use each heir’s individual percentage.
-  const getChartData = () => {
-    if (useEqualDistribution && heirs.length > 0) {
-      const equalShare = 100 / heirs.length;
-      return heirs.map(heir => ({
-        name: heir.name,
-        value: equalShare
-      }));
+  // When both assets and heirs are loaded, initialize per‑asset distributions.
+  useEffect(() => {
+    if (assets.length > 0 && heirs.length > 0) {
+      setDistribution(prev => {
+        const newDist = { ...prev };
+        assets.forEach((asset) => {
+          if (!newDist[asset.id]) {
+            // Default equal distribution for this asset.
+            const defaultValue = 100 / heirs.length;
+            const assetDist: AssetDistribution = {};
+            heirs.forEach((heir) => {
+              assetDist[heir.id] = Number(defaultValue.toFixed(1));
+            });
+            newDist[asset.id] = assetDist;
+          }
+        });
+        return newDist;
+      });
+      // Set the selected asset for the chart if not already set.
+      if (!selectedAssetId && assets.length > 0) {
+        setSelectedAssetId(assets[0].id);
+      }
     }
-    return heirs.map(heir => ({
-      name: heir.name,
-      value: heir.percentage
+  }, [assets, heirs, selectedAssetId]);
+
+  // Handler for when a new heir is added via the modal.
+  const handleAddHeir = (heir: HeirData): void => {
+    setHeirs(prev => [...prev, heir]);
+    // When adding a new heir, update distributions for all assets with a default value.
+    setDistribution(prev => {
+      const newDist = { ...prev };
+      assets.forEach((asset) => {
+        // Recalculate equal distribution with the new number of heirs.
+        const defaultValue = 100 / (heirs.length + 1);
+        // Adjust existing heirs
+        Object.keys(newDist[asset.id] || {}).forEach((heirId) => {
+          newDist[asset.id][heirId] = Number(defaultValue.toFixed(1));
+        });
+        // Add the new heir
+        newDist[asset.id][heir.id] = Number(defaultValue.toFixed(1));
+      });
+      return newDist;
+    });
+  };
+
+  // Handler for updating the distribution percentage for a given asset and heir.
+  const handleAssetDistributionChange = (assetId: string, heirId: string, newValue: number) => {
+    setDistribution(prev => ({
+      ...prev,
+      [assetId]: {
+        ...prev[assetId],
+        [heirId]: newValue
+      }
     }));
   };
 
-  const totalPercentage = heirs.reduce((sum, heir) => sum + heir.percentage, 0);
+  // For the chart, compute the distribution data for the selected asset.
+  const getAssetChartData = () => {
+    if (!selectedAssetId || !distribution[selectedAssetId]) return [];
+    return heirs.map((heir) => ({
+      name: heir.name,
+      value: distribution[selectedAssetId][heir.id] || 0
+    }));
+  };
 
-  const CustomTooltip = ({ active, payload }: any) => {
-    if (active && payload && payload.length) {
-      return (
-        <div className="bg-white p-4 rounded-lg shadow-md border border-gray-100">
-          <p className="text-[#1d1d1f] font-[500]">{payload[0].name}</p>
-          <p className="text-[#047aff] font-[400]">{payload[0].value.toFixed(1)}%</p>
-        </div>
-      );
+  // Validate that for each asset the distribution sums to 100.
+  const validateDistributions = (): boolean => {
+    for (const assetId in distribution) {
+      const total = Object.values(distribution[assetId]).reduce((sum, val) => sum + val, 0);
+      if (Math.abs(total - 100) > 0.1) {
+        return false;
+      }
     }
-    return null;
+    return true;
+  };
+
+  // Handler to create assignments for each asset–heir pair.
+  const handleSaveAssignments = async () => {
+    if (!user?.id || !testament || assets.length === 0) return;
+    if (!validateDistributions()) {
+      alert("Cada activo debe tener un total de 100% asignado.");
+      return;
+    }
+    setSavingAssignments(true);
+    try {
+      const { tokens } = await fetchAuthSession();
+      if (!tokens?.accessToken) throw new Error("No authentication token available");
+      apiService.setToken(tokens.accessToken.toString());
+
+      const assignmentPromises: Promise<any>[] = [];
+      // Loop over each asset and each heir for that asset.
+      assets.forEach((asset) => {
+        const assetDist = distribution[asset.id];
+        Object.entries(assetDist).forEach(([heirId, perc]) => {
+          if (perc > 0) {
+            const assignmentData = {
+              assetId: asset.id,
+              assignmentId: heirId, // Using the heir's id as the assignment target
+              assignmentType: AssignmentType.C, // Use the enum value instead of a string literal
+              notes: "",
+              percentage: perc
+            };
+            assignmentPromises.push(apiService.createAssignment(testament.id, assignmentData));
+          }
+        });
+      });
+
+      const responses = await Promise.all(assignmentPromises);
+      console.log("Assignments created:", responses);
+      router.push("/estate/charities");
+    } catch (error) {
+      console.error("Error creating assignments:", error);
+    } finally {
+      setSavingAssignments(false);
+    }
   };
 
   return (
@@ -117,175 +239,120 @@ const PeoplePage: FC = () => {
         >
           <div className="max-w-6xl mx-auto px-4 sm:px-5 py-12">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-24">
-              {/* Left Column: Explanation, checkbox for equal distribution, add button, and list of heirs */}
+              {/* Left Column: List each asset with per‑asset distribution inputs */}
               <div className="space-y-8">
                 <div>
                   <div className="flex items-center gap-2 mb-2.5">
                     <div className="inline-flex items-center h-[32px] bg-[#047aff] bg-opacity-10 px-[12px] py-[6px] rounded-md">
-                      <span className="text-[#047aff] text-[14px] font-[400]">HEREDEROS</span>
+                      <span className="text-[#047aff] text-[14px] font-medium">DISTRIBUCIÓN POR ACTIVO</span>
                     </div>
                     <Link href="#" className="inline-flex items-center h-[32px] text-[#047aff] hover:text-[#0456b0]">
                       <span className="w-5 h-5 inline-flex items-center justify-center rounded-full border border-[#047aff] text-sm">?</span>
                     </Link>
                   </div>
-                  <h1 className="text-[32px] sm:text-[38px] font-[500] tracking-[-1.5px] leading-[1.2] sm:leading-[52px] mb-[15px]">
-                    <span className="text-[#1d1d1f]">¿Quién le gustaría que </span>
-                    <span className="bg-gradient-to-r from-[#3d9bff] to-[#047aff] inline-block text-transparent bg-clip-text">
-                      heredara su patrimonio?
-                    </span>
+                  <h1 className="text-[32px] sm:text-[38px] font-medium tracking-[-1.5px] leading-[1.2] sm:leading-[52px] mb-[15px]">
+                    Asigna el % de cada activo a cada heredero
                   </h1>
                   <p className="text-[16px] text-[#1d1d1f] leading-6">
-                    Puedes decidir cuánto recibe cada persona en el siguiente paso. También podrás elegir copias de seguridad en caso de que alguno de ellos muera antes que tú.
+                    Para cada activo, ajusta los porcentajes asignados a cada heredero. La suma de cada activo debe ser 100%.
                   </p>
                 </div>
 
-                <div className="bg-white rounded-2xl shadow-md p-6">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <h2 className="text-[22px] font-[500] text-[#1d1d1f]">
-                        Herederos legales por partes iguales
-                      </h2>
-                    </div>
-                    <div>
-                      <input
-                        type="checkbox"
-                        checked={useEqualDistribution}
-                        onChange={(e) => setUseEqualDistribution(e.target.checked)}
-                        className="h-6 w-6 rounded border-gray-300 text-[#047aff] focus:ring-[#047aff]"
-                      />
-                    </div>
-                  </div>
-                </div>
-
-                <div
-                  onClick={handleAddClick}
-                  className="bg-white rounded-2xl shadow-md hover:shadow-lg transition-all cursor-pointer overflow-hidden"
-                >
-                  <div className="flex items-center justify-center gap-2 py-8">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 448 512"
-                      width="24"
-                      height="24"
-                      className="fill-[#047aff]"
-                    >
-                      <path d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z" />
-                    </svg>
-                    <span className="text-[#047aff] font-[500]">Agregar Heredero</span>
-                  </div>
-                </div>
-
-                {heirs.length > 0 && (
-                  <div className="bg-white rounded-2xl shadow-md overflow-hidden">
-                    <div className="p-6">
-                      <h2 className="text-[22px] font-[500] text-[#1d1d1f] mb-4">Lista de Herederos</h2>
-                      <div className="space-y-4">
-                        {heirs.map((heir) => (
-                          <div key={heir.id} className="border-b border-gray-100 pb-4 last:border-b-0 last:pb-0">
-                            <div className="flex justify-between items-start">
-                              <div>
-                                <h3 className="text-[17px] font-[500] text-[#1d1d1f]">{heir.name}</h3>
-                                <p className="text-[14px] text-gray-500">{heir.relationship}</p>
-                                {heir.backupHeir && (
-                                  <p className="text-[14px] text-gray-500 mt-1">
-                                    Heredero de respaldo: {heir.backupHeir}
-                                  </p>
-                                )}
-                              </div>
-                              <div className="flex items-center gap-2">
-                                {useEqualDistribution ? (
-                                  <p className="text-[17px] font-[500] text-[#1d1d1f]">
-                                    {(100 / heirs.length).toFixed(1)}%
-                                  </p>
-                                ) : (
-                                  <div className="flex items-center gap-2">
-                                    <input
-                                      type="number"
-                                      value={heir.percentage}
-                                      onChange={(e) => handlePercentageChange(heir.id, Number(e.target.value))}
-                                      className="w-20 px-4 py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:border-[#047aff] transition-all text-[16px]"
-                                      min="0"
-                                      max="100"
-                                      step="1"
-                                    />
-                                    <span className="text-[#1d1d1f]">%</span>
-                                  </div>
-                                )}
-                              </div>
-                            </div>
+                {assets.map((asset) => {
+                  const assetDist = distribution[asset.id] || {};
+                  const total = Object.values(assetDist).reduce((sum, val) => sum + val, 0);
+                  return (
+                    <div key={asset.id} className="bg-white rounded-2xl shadow-md p-6">
+                      <h2 className="text-xl font-bold mb-4">{asset.name}</h2>
+                      {heirs.map((heir) => (
+                        <div key={heir.id} className="flex justify-between items-center mb-3">
+                          <div className="w-1/2 text-[16px] text-[#1d1d1f]">{heir.name}</div>
+                          <div className="flex items-center">
+                            <input
+                              type="number"
+                              value={assetDist[heir.id] ?? 0}
+                              onChange={(e) => handleAssetDistributionChange(asset.id, heir.id, Number(e.target.value))}
+                              className="w-20 px-3 py-2 rounded-lg border border-gray-300 focus:outline-none focus:border-[#047aff] transition-all text-[16px]"
+                              min="0"
+                              max="100"
+                              step="1"
+                            />
+                            <span className="ml-1">%</span>
                           </div>
-                        ))}
+                        </div>
+                      ))}
+                      <div className="mt-2 text-right font-medium">
+                        Total: {total.toFixed(1)}%
                       </div>
+                      {Math.abs(total - 100) > 0.1 && (
+                        <p className="text-[14px] text-[#D00E01] text-right mt-1">
+                          El total debe sumar 100%
+                        </p>
+                      )}
                     </div>
-                  </div>
-                )}
+                  );
+                })}
 
                 <div className="pt-6 flex justify-end">
                   <PrimaryButton
-                    onClick={() => router.push("/estate/charities")}
-                    disabled={!useEqualDistribution && totalPercentage !== 100}
+                    onClick={handleSaveAssignments}
+                    disabled={savingAssignments || !validateDistributions()}
                   >
-                    Guardar y continuar
+                    {savingAssignments ? "Guardando..." : "Guardar y continuar"}
                   </PrimaryButton>
                 </div>
               </div>
 
-              {/* Right Column: Chart showing the distribution */}
-              {heirs.length > 0 && (
+              {/* Right Column: Chart for a selected asset's distribution */}
+              <div className="space-y-6">
                 <div className="bg-white rounded-2xl shadow-md p-6">
-                  <h2 className="text-[22px] font-[500] text-[#1d1d1f] mb-4">Distribución de Herencia</h2>
+                  <h2 className="text-[22px] font-medium text-[#1d1d1f] mb-4">Visualización del Activo</h2>
+                  {assets.length > 0 && (
+                    <select
+                      value={selectedAssetId}
+                      onChange={(e) => setSelectedAssetId(e.target.value)}
+                      className="mb-4 px-3 py-2 border rounded-md focus:outline-none focus:border-[#047aff]"
+                    >
+                      {assets.map((asset) => (
+                        <option key={asset.id} value={asset.id}>
+                          {asset.name}
+                        </option>
+                      ))}
+                    </select>
+                  )}
                   <div className="h-[300px]">
                     <ResponsiveContainer width="100%" height="100%">
                       <PieChart>
                         <Pie
-                          data={getChartData()}
+                          data={getAssetChartData()}
                           cx="50%"
                           cy="50%"
                           labelLine={false}
                           outerRadius={120}
-                          fill="#8884d8"
                           dataKey="value"
                         >
-                          {getChartData().map((entry, index) => (
+                          {getAssetChartData().map((entry, index) => (
                             <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                           ))}
                         </Pie>
-                        <Tooltip content={<CustomTooltip />} />
+                        <Tooltip
+                          content={({ active, payload }: any) => {
+                            if (active && payload && payload.length) {
+                              return (
+                                <div className="bg-white p-4 rounded-lg shadow-md border border-gray-100">
+                                  <p className="text-[#1d1d1f] font-medium">{payload[0].name}</p>
+                                  <p className="text-[#047aff] font-normal">{payload[0].value.toFixed(1)}%</p>
+                                </div>
+                              );
+                            }
+                            return null;
+                          }}
+                        />
                       </PieChart>
                     </ResponsiveContainer>
                   </div>
-
-                  <div className="mt-8 space-y-4">
-                    {getChartData().map((item, index) => (
-                      <div key={index} className="flex items-center justify-between">
-                        <div className="flex items-center gap-3">
-                          <div 
-                            className="w-4 h-4 rounded-full" 
-                            style={{ backgroundColor: COLORS[index % COLORS.length] }}
-                          />
-                          <span className="text-[16px] text-[#1d1d1f]">{item.name}</span>
-                        </div>
-                        <p className="text-[16px] font-[500] text-[#1d1d1f]">{item.value.toFixed(1)}%</p>
-                      </div>
-                    ))}
-                    {!useEqualDistribution && (
-                      <div className="pt-4 border-t border-gray-100">
-                        <div className="flex justify-between items-center">
-                          <span className="text-[18px] font-[500] text-[#1d1d1f]">Total</span>
-                          <span className="text-[18px] font-[500] text-[#1d1d1f]">
-                            {totalPercentage.toFixed(1)}%
-                          </span>
-                        </div>
-                        {totalPercentage !== 100 && (
-                          <p className="text-[14px] text-[#D00E01] text-right mt-1">
-                            El total debe sumar 100%
-                          </p>
-                        )}
-                      </div>
-                    )}
-                  </div>
                 </div>
-              )}
+              </div>
             </div>
           </div>
         </motion.div>
