@@ -11,27 +11,9 @@ import { useUser } from "@/context/UserContext";
 import { apiService } from '@/app/apiService';
 import { fetchAuthSession } from "aws-amplify/auth";
 import { UserAsset, Will, CreateWillRequest } from '@/types';
+import { AssetOption, AssetCategory, GetAssetsCategoriesResponse } from '@/types';
 
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF', '#FF9F40'];
-
-// A mapping from your asset type key to the UUID and default description.
-const assetCategoryMapping: { [key: string]: { id: string, defaultDescription: string } } = {
-  digital_account: { id: "a19dfcc7-e4c3-11ef-8562-0a4c8cf7c281", defaultDescription: "Digital accounts (e.g., PayPal, Stripe, neobanks)" },
-  crypto: { id: "a19e0657-e4c3-11ef-8562-0a4c8cf7c281", defaultDescription: "Cryptocurrencies (Bitcoin, Ethereum, etc.)" },
-  nft: { id: "a19e0978-e4c3-11ef-8562-0a4c8cf7c281", defaultDescription: "Non-fungible tokens (NFTs)" },
-  // ... (other categories)
-  other: { id: "a19e237c-e4c3-11ef-8562-0a4c8cf7c281", defaultDescription: "Other assets not categorized above" },
-};
-
-// Create a list of options for the dropdown.
-const assetOptionsList = Object.keys(assetCategoryMapping).map((key) => ({
-  id: assetCategoryMapping[key].id,
-  key: key,
-  value: key,
-  label: key.replace(/_/g, ' '),
-  categoryId: assetCategoryMapping[key].id,
-  description: assetCategoryMapping[key].defaultDescription,
-}));
 
 const AccountAndPropertyPage: FC = () => {
   const router = useRouter();
@@ -39,8 +21,8 @@ const AccountAndPropertyPage: FC = () => {
   const [showModal, setShowModal] = useState<boolean>(false);
   const [assets, setAssets] = useState<UserAsset[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
-  // New state to hold the user's testament (will)
   const [testament, setTestament] = useState<Will | null>(null);
+  const [assetOptions, setAssetOptions] = useState<AssetOption[]>([]);
 
   // Load user assets
   useEffect(() => {
@@ -49,9 +31,7 @@ const AccountAndPropertyPage: FC = () => {
       setLoading(true);
       try {
         const { tokens } = await fetchAuthSession();
-        if (!tokens?.accessToken) {
-          throw new Error("No authentication token available");
-        }
+        if (!tokens?.accessToken) throw new Error("No authentication token available");
         apiService.setToken(tokens.accessToken.toString());
         const fetchedAssets = await apiService.getUserAssets(user.id);
         setAssets(fetchedAssets);
@@ -64,29 +44,21 @@ const AccountAndPropertyPage: FC = () => {
     loadAssets();
   }, [user]);
 
+  // Load or create the user's will (testament)
   useEffect(() => {
     const loadTestament = async () => {
       if (!user?.id) return;
       try {
         const { tokens } = await fetchAuthSession();
-        if (!tokens?.accessToken) {
-          throw new Error("No authentication token available");
-        }
+        if (!tokens?.accessToken) throw new Error("No authentication token available");
         apiService.setToken(tokens.accessToken.toString());
-  
         const willsResponse = await apiService.getAllWills(user.id);
         const willsArray = Array.isArray(willsResponse) ? willsResponse : [];
-  
         if (willsArray.length > 0) {
           setTestament(willsArray[0]);
           console.log("Testament already exists:", willsArray[0]);
         } else {
-          // No wills found, so create a new one directly.
-          const newWillData: CreateWillRequest = {
-            legalAdvisor: "",
-            notes: "",
-            terms: ""
-          };
+          const newWillData: CreateWillRequest = { legalAdvisor: "", notes: "", terms: "" };
           const newWill = await apiService.createWill(user.id, newWillData);
           setTestament(newWill);
           console.log("Created new testament:", newWill);
@@ -95,18 +67,92 @@ const AccountAndPropertyPage: FC = () => {
         console.error("Error loading or creating testament:", error);
       }
     };
-  
     loadTestament();
   }, [user]);
-  
-  
+
+  // Load asset categories from the API and map them into AssetOption[]
+ // Inside your loadAssetCategories useEffect:
+
+useEffect(() => {
+  const loadAssetCategories = async () => {
+    if (!user?.id) return;
+    try {
+      const { tokens } = await fetchAuthSession();
+      if (!tokens?.accessToken) throw new Error("No authentication token available");
+      apiService.setToken(tokens.accessToken.toString());
+      const categoriesResponse: GetAssetsCategoriesResponse = await apiService.getAssetsCategories();
+
+      // Mapping from raw API category names to pretty Spanish labels.
+      const prettyNames: Record<string, string> = {
+        "cloud_storage": "Almacenamiento en la nube",
+        "cryptocurrencies": "Criptomonedas",
+        "domain_names": "Nombres de dominio",
+        "email_accounts": "Cuentas de correo",
+        "gaming_accounts": "Cuentas de juegos",
+        "insurance_policy": "Pólizas de seguros",
+        "investment_account": "Cuenta de inversión",
+        "other_assets": "Otros activos",
+        "other_digital_assets": "Otros activos digitales",
+        "real_estate": "Bienes raíces"
+      };
+
+      // Mapping for subcategories
+      const prettySubcategories: Record<string, string> = {
+        "dropbox": "Dropbox",
+        "google_drive": "Google Drive",
+        "onedrive": "OneDrive",
+        "icloud": "iCloud",
+        "bitcoin": "Bitcoin",
+        "ethereum": "Ethereum",
+        "litecoin": "Litecoin",
+        "godaddy": "GoDaddy",
+        "namecheap": "Namecheap",
+        "google_domains": "Google Domains",
+        "gmail": "Gmail",
+        "outlook": "Outlook",
+        "yahoo": "Yahoo",
+        "protonmail": "ProtonMail",
+        "steam": "Steam",
+        "xbox": "Xbox",
+        "playstation": "PlayStation",
+        "nintendo": "Nintendo",
+        "life_insurance": "Seguro de vida",
+        "health_insurance": "Seguro de salud",
+        "auto_insurance": "Seguro de auto",
+        "home_insurance": "Seguro de hogar",
+        "brokerage": "Correduría",
+        "mutual_funds": "Fondos mutuos",
+        "etf": "ETF",
+        "miscellaneous": "Misceláneos",
+        "ebooks": "Ebooks",
+        "online_courses": "Cursos en línea",
+        "digital_art": "Arte digital",
+        "house": "Casa",
+        "apartment": "Apartamento",
+        "commercial_property": "Propiedad comercial",
+        "land": "Terreno"
+      };
+
+      const options: AssetOption[] = categoriesResponse.categories.map((cat: AssetCategory) => ({
+        id: cat.id,
+        key: cat.name.toLowerCase().replace(/\s+/g, '_'),
+        label: prettyNames[cat.name] || cat.name, // Use the pretty Spanish label if available
+        description: cat.description,
+        subcategories: cat.metadata.subcategories.map(sub => prettySubcategories[sub] || sub)
+      }));
+      setAssetOptions(options);
+    } catch (error) {
+      console.error("Error fetching asset categories:", error);
+    }
+  };
+  loadAssetCategories();
+}, [user]);
 
 
   const getChartData = () => {
     const data = assets.reduce((acc, asset) => {
-      // Use the asset’s categoryId to get the label from our mapping.
-      const mappingEntry = Object.values(assetCategoryMapping).find(entry => entry.id === asset.categoryId);
-      const label = mappingEntry ? mappingEntry.defaultDescription.split('(')[0].trim() : "Other";
+      const option = assetOptions.find(opt => opt.id === asset.categoryId);
+      const label = option ? option.label : "Other";
       const existing = acc.find(item => item.name === label);
       if (existing) {
         existing.value += asset.value;
@@ -116,20 +162,11 @@ const AccountAndPropertyPage: FC = () => {
       return acc;
     }, [] as { name: string; value: number }[]);
     const total = data.reduce((sum, item) => sum + item.value, 0);
-    return data.map(item => ({
-      ...item,
-      percentage: total ? (item.value / total) * 100 : 0
-    }));
+    return data.map(item => ({ ...item, percentage: total ? (item.value / total) * 100 : 0 }));
   };
 
-  const formatCurrency = (value: number): string => {
-    return new Intl.NumberFormat('es-MX', {
-      style: 'currency',
-      currency: 'MXN',
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2
-    }).format(value);
-  };
+  const formatCurrency = (value: number): string =>
+    new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN', minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(value);
 
   const CustomTooltip = ({ active, payload }: any) => {
     if (active && payload && payload.length) {
@@ -167,9 +204,7 @@ const AccountAndPropertyPage: FC = () => {
     if (!user?.id) return;
     try {
       const { tokens } = await fetchAuthSession();
-      if (!tokens?.accessToken) {
-        throw new Error("No authentication token available");
-      }
+      if (!tokens?.accessToken) throw new Error("No authentication token available");
       apiService.setToken(tokens.accessToken.toString());
       const createdAsset = await apiService.createUserAsset(user.id, newAsset);
       setAssets(prev => [...prev, createdAsset]);
@@ -184,7 +219,7 @@ const AccountAndPropertyPage: FC = () => {
         showModal={showModal}
         setShowModal={setShowModal}
         onAddAsset={handleAddAsset}
-        assetOptions={assetOptionsList}
+        assetOptions={assetOptions}
       />
       <DashboardLayout>
         <motion.div
@@ -197,6 +232,7 @@ const AccountAndPropertyPage: FC = () => {
           <div className="max-w-6xl mx-auto px-4 sm:px-5 py-12">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-24">
               <div className="space-y-8">
+                {/* Page Header */}
                 <div>
                   <div className="flex items-center gap-2 mb-2.5">
                     <div className="inline-flex items-center h-[32px] bg-[#047aff] bg-opacity-10 px-[12px] py-[6px] rounded-md">
@@ -206,7 +242,6 @@ const AccountAndPropertyPage: FC = () => {
                       <span className="w-5 h-5 inline-flex items-center justify-center rounded-full border border-[#047aff] text-sm">?</span>
                     </Link>
                   </div>
-
                   <h1 className="text-[32px] sm:text-[38px] font-medium tracking-[-1.5px] leading-[1.2] sm:leading-[52px] mb-[15px]">
                     <span className="text-[#1d1d1f]">Enumere sus </span>
                     <span className="bg-gradient-to-r from-[#3d9bff] to-[#047aff] inline-block text-transparent bg-clip-text">
@@ -220,27 +255,18 @@ const AccountAndPropertyPage: FC = () => {
                     No solicitaremos detalles específicos como números de cuenta.
                   </p>
                 </div>
-
-                <div
-                  onClick={() => setShowModal(true)}
-                  className="bg-white rounded-2xl shadow-md hover:shadow-lg transition-all cursor-pointer overflow-hidden"
-                >
+                {/* Add Asset Button */}
+                <div onClick={() => setShowModal(true)} className="bg-white rounded-2xl shadow-md hover:shadow-lg transition-all cursor-pointer overflow-hidden">
                   <div className="flex items-center justify-center gap-2 py-8">
                     <div className="w-8 h-8 rounded-full bg-[#047aff] flex items-center justify-center">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 448 512"
-                        width="16"
-                        height="16"
-                        className="fill-white"
-                      >
+                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" width="16" height="16" className="fill-white">
                         <path d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z" />
                       </svg>
                     </div>
                     <span className="text-[#047aff] font-medium">Agregar cuenta o propiedad</span>
                   </div>
                 </div>
-
+                {/* Assets List */}
                 {assets.length > 0 && (
                   <div className="bg-white rounded-2xl shadow-md overflow-hidden">
                     <div className="p-6">
@@ -252,22 +278,16 @@ const AccountAndPropertyPage: FC = () => {
                               <div>
                                 <h3 className="text-[17px] font-medium text-[#1d1d1f]">{asset.name}</h3>
                                 <p className="text-[14px] text-gray-500">
-                                  {Object.keys(assetCategoryMapping).find(key => assetCategoryMapping[key].id === asset.categoryId)?.replace(/_/g, ' ') || "Other"}
+                                  {assetOptions.find(opt => opt.id === asset.categoryId)?.label || "Other"}
                                 </p>
                                 {asset.metadata && (asset.metadata as any).location && (
-                                  <p className="text-[14px] text-gray-500">
-                                    {(asset.metadata as any).location}
-                                  </p>
+                                  <p className="text-[14px] text-gray-500">{(asset.metadata as any).location}</p>
                                 )}
                                 {asset.metadata && (asset.metadata as any).description && (
-                                  <p className="text-[14px] text-gray-500 mt-1">
-                                    {(asset.metadata as any).description}
-                                  </p>
+                                  <p className="text-[14px] text-gray-500 mt-1">{(asset.metadata as any).description}</p>
                                 )}
                               </div>
-                              <p className="text-[17px] font-medium text-[#1d1d1f]">
-                                {formatCurrency(asset.value)}
-                              </p>
+                              <p className="text-[17px] font-medium text-[#1d1d1f]">{formatCurrency(asset.value)}</p>
                             </div>
                           </div>
                         ))}
@@ -275,14 +295,13 @@ const AccountAndPropertyPage: FC = () => {
                     </div>
                   </div>
                 )}
-
                 <div className="pt-6 flex justify-end">
                   <PrimaryButton onClick={() => router.push("/summary?completed=account-and-property")}>
                     Guardar y continuar
                   </PrimaryButton>
                 </div>
               </div>
-
+              {/* Assets Distribution Chart */}
               {assets.length > 0 && (
                 <div className="bg-white rounded-2xl shadow-md p-6">
                   <h2 className="text-[22px] font-medium text-[#1d1d1f] mb-4">Distribución de Activos</h2>
@@ -307,7 +326,6 @@ const AccountAndPropertyPage: FC = () => {
                       </PieChart>
                     </ResponsiveContainer>
                   </div>
-
                   <div className="mt-8 space-y-4">
                     {getChartData().map((item, index) => (
                       <div key={index} className="flex items-center justify-between">

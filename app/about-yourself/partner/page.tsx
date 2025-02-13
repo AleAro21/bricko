@@ -102,6 +102,15 @@ const PartnerPage: FC = () => {
         if (storedMaritalStatus && storedContact) {
           const maritalStatus = JSON.parse(storedMaritalStatus);
           const contactData: Contact = JSON.parse(storedContact);
+          // Only set partner if its relation is "spouse" or "albacea"
+          if (
+            contactData &&
+            (contactData.relationToUser === "spouse" || contactData.relationToUser === "albacea")
+          ) {
+            setPartner(contactData);
+          } else {
+            setPartner(null);
+          }
           const selected = data.find(item => item.value === maritalStatus) || null;
           setSelectedItem(selected);
           // Set the active index based on the found marital status
@@ -109,7 +118,6 @@ const PartnerPage: FC = () => {
           if (index !== -1) {
             setActiveIndex(index);
           }
-          setPartner(contactData);
           setIsInitialLoading(false);
           return;
         }
@@ -126,10 +134,13 @@ const PartnerPage: FC = () => {
         const userResponse = await apiService.getUser(user.id);
         const maritalStatus = userResponse.maritalstatus;
 
-        // Fetch contact data
+        // Fetch contact data and filter allowed relations
         const contactsResponse = await apiService.getContacts(user.id);
-        const contactData = contactsResponse.length > 0 ? contactsResponse[0] : null;
-        console.log('Contact data:', contactData);
+        const filteredContacts = contactsResponse.filter((contact: Contact) =>
+          contact.relationToUser === "spouse" || contact.relationToUser === "albacea"
+        );
+        const contactData = filteredContacts.length > 0 ? filteredContacts[0] : null;
+        console.log('Filtered contact data:', contactData);
 
         // Store in session storage
         sessionStorage.setItem('userMaritalStatus', JSON.stringify(maritalStatus));
@@ -145,7 +156,7 @@ const PartnerPage: FC = () => {
         setPartner(contactData);
       } catch (error) {
         console.error('Error loading data:', error);
-        // setErrorMessage("Error al cargar los datos. Por favor, intente nuevamente.");
+        // Optionally, set an error message here
       } finally {
         setIsInitialLoading(false);
       }
@@ -212,8 +223,11 @@ const PartnerPage: FC = () => {
         maritalstatus: selectedItem.value
       });
 
-      // Save or update contact if it exists
-      if (partner) {
+      // Save or update contact ONLY if it exists and has an allowed relation
+      if (
+        partner &&
+        (partner.relationToUser === "spouse" || partner.relationToUser === "albacea")
+      ) {
         const contactData: Contact = {
           id: partner.id,
           name: partner.name,
@@ -325,7 +339,7 @@ const PartnerPage: FC = () => {
               />
 
               {/* Partner Card with Edit/Delete */}
-              {partner && (
+              {partner && (partner.relationToUser === "spouse" || partner.relationToUser === "albacea") && (
                 <div className="mt-8 bg-white rounded-2xl p-6 shadow-lg">
                   <div className="flex justify-between items-start mb-4">
                     <h3 className="text-lg font-semibold">Pareja</h3>

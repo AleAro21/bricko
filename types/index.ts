@@ -26,7 +26,7 @@ export interface CreateUserData {
   name: string | null;
   fatherLastName: string | null;
   motherLastName: string | null;
-  email: string;  
+  email: string;
 }
 
 export interface Address {
@@ -207,3 +207,45 @@ export interface Assignation {
   updatedAt: Date;
   [property: string]: any;
 }
+
+// ============================
+// New Asset Category Types
+// ============================
+
+export interface AssetCategory {
+  id: string;
+  name: string;
+  metadata: {
+    subcategories: string[];
+  };
+  description: string;
+  // If you don't always receive a 'type', you can mark it optional:
+  type?: string;
+}
+
+export interface GetAssetsCategoriesResponse {
+  total: number;
+  page: number;
+  limit: number;
+  totalPages: number;
+  categories: AssetCategory[];
+}
+
+// Optionally, you can define an AssetOption interface for your UI needs:
+export interface AssetOption {
+  id: string; // same as categoryId
+  key: string;
+  label: string;
+  description: string;
+  subcategories: string[];
+}
+
+export interface Executor {
+  id: string;
+  testamentHeaderId: string;
+  type: string; // e.g. "Contact"
+  contactId: string;
+  createdAt: string;
+  updatedAt: string;
+}
+

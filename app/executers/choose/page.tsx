@@ -1,56 +1,188 @@
 "use client";
-import { FC, useState } from 'react';
+import { FC, useState, useEffect } from 'react';
 import DashboardLayout from "@/components/common/DashboardLayout";
 import { useRouter } from "next/navigation";
 import Add, { ExecutorData } from "./Add";
 import { motion } from 'framer-motion';
 import PrimaryButton from "@/components/reusables/PrimaryButton";
 import Link from "next/link";
+import Spinner from "@/components/reusables/Spinner";
+import { apiService } from '@/app/apiService';
+import { fetchAuthSession } from "aws-amplify/auth";
+import { Contact, Will, Executor } from '@/types';
+import { useUser } from "@/context/UserContext";
 
-interface ExecutorOption {
-  title: string;
-  subTitle: string;
-}
+// Helper: Map contact's relation to a valid executor type.
+const mapRelationToExecutorType = (relation: string): string => {
+  const r = relation.toLowerCase();
+  const familyRelations = ["sibling", "child", "spouse", "parent", "albacea"];
+  if (familyRelations.includes(r)) return "family";
+  if (r === "friend") return "friend";
+  if (r === "none") return "other";
+  const validExecutorTypes = ["professional", "lawyer", "accountant", "other"];
+  if (validExecutorTypes.includes(r)) return r;
+  return "other";
+};
 
 const ChooseExecutorsPage: FC = () => {
   const router = useRouter();
+  const { user } = useUser(); // Get current user from context
   const [showModal, setShowModal] = useState<boolean>(false);
-  const [activeIndex, setActiveIndex] = useState<number | null>(null);
-  const [selectedOption, setSelectedOption] = useState<ExecutorOption | null>(null);
-  const [executors, setExecutors] = useState<ExecutorData[]>([]);
+  const [executors, setExecutors] = useState<Executor[]>([]);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [testament, setTestament] = useState<Will | null>(null);
+  const [contacts, setContacts] = useState<Contact[]>([]);
+  const [selectedContactIds, setSelectedContactIds] = useState<string[]>([]);
 
-  const handleClick = (e: React.MouseEvent<HTMLDivElement>, index: number, option: ExecutorOption): void => {
-    e.preventDefault();
-    setActiveIndex(index === activeIndex ? null : index);
-    setSelectedOption(option);
+  // Load the user's will (testament)
+  useEffect(() => {
+    const loadTestament = async () => {
+      if (!user?.id) return;
+      try {
+        const { tokens } = await fetchAuthSession();
+        if (!tokens?.accessToken) throw new Error("No authentication token available");
+        apiService.setToken(tokens.accessToken.toString());
+        const wills = await apiService.getAllWills(user.id);
+        if (wills.length > 0) {
+          setTestament(wills[0]);
+          console.log("Testament found:", wills[0]);
+        } else {
+          const newWill = await apiService.createWill(user.id, {
+            legalAdvisor: "",
+            notes: "",
+            terms: ""
+          });
+          setTestament(newWill);
+          console.log("Created new testament:", newWill);
+        }
+      } catch (error) {
+        console.error("Error loading testament:", error);
+      }
+    };
+    loadTestament();
+  }, [user]);
+
+  // Load all executors using the original endpoint (based on user id)
+  useEffect(() => {
+    const loadExecutors = async () => {
+      if (!user?.id) return;
+      try {
+        const { tokens } = await fetchAuthSession();
+        if (!tokens?.accessToken) throw new Error("No authentication token available");
+        apiService.setToken(tokens.accessToken.toString());
+        const fetchedExecutors = await apiService.getAllExecutors(user.id);
+        const executorArray = Array.isArray(fetchedExecutors) ? fetchedExecutors : [fetchedExecutors];
+        setExecutors(executorArray);
+        console.log("Executors loaded:", executorArray);
+      } catch (error) {
+        console.error("Error loading executors:", error);
+      }
+    };
+    loadExecutors();
+  }, [user]);
+
+  // Load existing contacts
+  useEffect(() => {
+    const loadContacts = async () => {
+      if (!user?.id) return;
+      try {
+        const { tokens } = await fetchAuthSession();
+        if (!tokens?.accessToken) throw new Error("No authentication token available");
+        apiService.setToken(tokens.accessToken.toString());
+        const fetchedContacts = await apiService.getContacts(user.id);
+        setContacts(fetchedContacts);
+      } catch (error) {
+        console.error("Error fetching contacts:", error);
+      }
+    };
+    loadContacts();
+  }, [user]);
+
+  // Toggle selection for existing contacts
+  const toggleContactSelection = (contactId: string) => {
+    setSelectedContactIds((prev) =>
+      prev.includes(contactId)
+        ? prev.filter((id) => id !== contactId)
+        : [...prev, contactId]
+    );
   };
 
-  const handleAddClick = (): void => {
-    setShowModal(true);
+  // Compute available contacts: those not already linked as executors.
+  const availableContacts = contacts.filter(
+    (c) => !executors.some((e) => e.contactId === c.id)
+  );
+
+  // Handler for adding a new executor via the Add modal.
+  const handleAddExecutor = async (executorData: ExecutorData): Promise<void> => {
+    if (!user?.id || !testament) {
+      alert("No se encontró el usuario o testamento.");
+      return;
+    }
+    try {
+      // Create a new contact.
+      const newContact = await apiService.createContact(user.id, {
+        name: executorData.name,
+        fatherLastName: "",
+        motherLastName: "",
+        email: executorData.email,
+        relationToUser: executorData.relationship,
+        countryPhoneCode: "",
+        phoneNumber: executorData.phone || "",
+        country: "MX",
+        trustedContact: false,
+      });
+      console.log("New contact created:", newContact);
+      const executorType = mapRelationToExecutorType(newContact.relationToUser);
+      const newExecutor = await apiService.createExecutor(
+        testament.id!,
+        newContact.id!,
+        executorType
+      );
+      console.log("New executor created:", newExecutor);
+      setExecutors((prev) => [...prev, newExecutor]);
+    } catch (error) {
+      console.error("Error adding executor:", error);
+      alert("Error al agregar albacea");
+    }
   };
 
-  const handleAddExecutor = (executor: ExecutorData): void => {
-    setExecutors([...executors, executor]);
+  // Handler for saving executors based on selected existing contacts.
+  const handleSaveExecutors = async (): Promise<void> => {
+    if (!user?.id || !testament) {
+      alert("No se encontró usuario o testamento.");
+      return;
+    }
+    setLoading(true);
+    try {
+      for (const contactId of selectedContactIds) {
+        if (executors.some((e) => e.contactId === contactId)) continue;
+        const contact = contacts.find((c) => c.id === contactId);
+        if (!contact) continue;
+        const executorType = mapRelationToExecutorType(contact.relationToUser);
+        const newExec = await apiService.createExecutor(
+          testament.id!,
+          contact.id!,
+          executorType
+        );
+        console.log("Created executor for contact:", newExec);
+        setExecutors((prev) => [...prev, newExec]);
+      }
+      router.push("/summary?completed=executors");
+    } catch (error) {
+      console.error("Error saving executors:", error);
+      alert("Error al guardar albaceas");
+    } finally {
+      setLoading(false);
+    }
   };
-
-  const executorOptions: ExecutorOption[] = [
-    {
-      title: "Amigos de la familia",
-      subTitle: "Seleccione amigos cercanos que conozcan bien a su familia y sus deseos.",
-    },
-    {
-      title: "Fideicomisarios de despedida",
-      subTitle: "Profesionales especializados en la administración de patrimonios.",
-    },
-    {
-      title: "Amigos y familiares y fideicomisarios de Testador",
-      subTitle: "Una combinación de personas de confianza y profesionales.",
-    },
-  ];
 
   return (
     <>
-      <Add setShowModal={setShowModal} showModal={showModal} onAddExecutor={handleAddExecutor} />
+      <Add 
+        setShowModal={setShowModal} 
+        showModal={showModal} 
+        onAddExecutor={handleAddExecutor} 
+      />
       <DashboardLayout>
         <motion.div 
           className="min-h-screen bg-[#f5f5f7]"
@@ -62,6 +194,7 @@ const ChooseExecutorsPage: FC = () => {
           <div className="max-w-6xl mx-auto px-4 sm:px-5 py-12">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-24">
               <div className="space-y-8">
+                {/* Header */}
                 <div>
                   <div className="flex items-center gap-2 mb-2.5">
                     <div className="inline-flex items-center h-[32px] bg-[#047aff] bg-opacity-10 px-[12px] py-[6px] rounded-md">
@@ -71,187 +204,147 @@ const ChooseExecutorsPage: FC = () => {
                       <span className="w-5 h-5 inline-flex items-center justify-center rounded-full border border-[#047aff] text-sm">?</span>
                     </Link>
                   </div>
-
-                  <h1 className='text-[32px] sm:text-[38px] font-[500] tracking-[-1.5px] leading-[1.2] sm:leading-[52px] mb-[15px]'>
-                    <span className='text-[#1d1d1f]'>¿A quién le gustaría elegir como su </span>
-                    <span className='bg-gradient-to-r from-[#3d9bff] to-[#047aff] inline-block text-transparent bg-clip-text'>albacea?</span>
+                  <h1 className="text-[32px] sm:text-[38px] font-[500] tracking-[-1.5px] leading-[1d1d1f] sm:leading-[52px] mb-[15px]">
+                    <span className="text-[#1d1d1f]">¿A quién le gustaría elegir como su </span>
+                    <span className="bg-gradient-to-r from-[#3d9bff] to-[#047aff] inline-block text-transparent bg-clip-text">
+                      albacea?
+                    </span>
                   </h1>
                   <p className="text-[16px] text-[#1d1d1f] leading-6 mb-4">
-                    Seleccione el tipo de albaceas que prefiere para administrar su patrimonio.
+                    Seleccione contactos de confianza para administrar su patrimonio.
                   </p>
                 </div>
 
-                <div className="bg-white rounded-2xl shadow-md overflow-hidden">
-                  {executorOptions.map((option, index) => (
-                    <div
-                      key={index}
-                      className="cursor-pointer transition-all"
-                      onClick={(e) => handleClick(e, index, option)}
-                    >
-                      <div
-                        className={`px-6 py-4 ${
-                          index !== 0 ? 'border-t border-gray-100' : ''
-                        } ${
-                          activeIndex === index
-                            ? 'bg-[#047aff]'
-                            : 'hover:bg-gray-50'
-                        }`}
-                      >
-                        <h3
-                          className={`text-[17px] font-[500] ${
-                            activeIndex === index
-                              ? 'text-white'
-                              : 'text-[#1d1d1f]'
-                          }`}
-                        >
-                          {option.title}
-                        </h3>
-                        <p
-                          className={`mt-1 text-[14px] ${
-                            activeIndex === index
-                              ? 'text-blue-100'
-                              : 'text-gray-500'
-                          }`}
-                        >
-                          {option.subTitle}
-                        </p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-
+                {/* Display executors already created */}
                 <div>
                   <h2 className="text-[22px] font-[500] text-[#1d1d1f] mb-4">
-                    ¿A quién quieres como tus albaceas?
+                    Albaceas agregados
                   </h2>
-                  
-                  {executors.length > 0 && (
+                  {executors.length > 0 ? (
                     <div className="bg-white rounded-2xl shadow-md p-6 mb-4">
                       <div className="space-y-4">
-                        {executors.map((executor) => (
-                          <div
-                            key={executor.id}
-                            className="border-b border-gray-100 last:border-b-0 pb-4 last:pb-0"
-                          >
-                            <div className="flex justify-between items-start">
-                              <div>
-                                <h3 className="text-[17px] font-[500] text-[#1d1d1f]">{executor.name}</h3>
-                                <p className="text-[14px] text-gray-500">{executor.email}</p>
-                                {executor.phone && (
-                                  <p className="text-[14px] text-gray-500">{executor.phone}</p>
-                                )}
-                                <p className="text-[14px] text-gray-500">{executor.relationship}</p>
-                                {executor.isBackupExecutor && (
-                                  <p className="text-[14px] text-[#047aff]">Albacea suplente</p>
-                                )}
-                              </div>
-                              <div>
-                                <input 
-                                  type="checkbox" 
-                                  checked
-                                  className="h-6 w-6 rounded border-gray-300 text-[#047aff] focus:ring-[#047aff]"
-                                  aria-label="Seleccionar albacea"
-                                  readOnly
-                                />
+                        {executors.map((executor) => {
+                          const contact = contacts.find(c => c.id === executor.contactId);
+                          return (
+                            <div key={executor.id} className="border-b border-gray-100 pb-4 last:border-b-0 last:pb-0">
+                              <div className="flex justify-between items-center">
+                                <div>
+                                  <h3 className="text-[17px] font-[500] text-[#1d1d1f]">
+                                    {contact ? contact.name : executor.contactId}
+                                  </h3>
+                                  <p className="text-[14px] text-gray-500">{executor.type}</p>
+                                </div>
+                                <div>
+                                  <input 
+                                    type="checkbox" 
+                                    checked
+                                    className="h-6 w-6 rounded border-gray-300 text-[#047aff] focus:ring-[#047aff]"
+                                    aria-label="Seleccionar albacea"
+                                    readOnly
+                                  />
+                                </div>
                               </div>
                             </div>
-                          </div>
-                        ))}
+                          );
+                        })}
                       </div>
                     </div>
+                  ) : (
+                    <p className="text-gray-500">No se han agregado albaceas aún.</p>
                   )}
+                </div>
 
-                  <div
-                    onClick={handleAddClick}
-                    className="bg-white rounded-2xl shadow-md hover:shadow-lg transition-all cursor-pointer overflow-hidden"
-                  >
-                    <div className="flex items-center justify-center gap-2 py-8">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 448 512"
-                        width="24"
-                        height="24"
-                        className="fill-[#047aff]"
-                      >
-                        <path d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z" />
-                      </svg>
-                      <span className="text-[#047aff] font-[500]">Agregar Albacea</span>
+                {/* Section to select existing contacts as executors */}
+                <div className="bg-white rounded-2xl shadow-md p-6 mb-4">
+                  <h2 className="text-[22px] font-[500] text-[#1d1d1f] mb-4">
+                    Seleccione contactos para ser albaceas
+                  </h2>
+                  {availableContacts.length > 0 ? (
+                    <div className="space-y-4">
+                      {availableContacts.map(contact => (
+                        <div key={contact.id} className="flex items-center gap-4">
+                          <input
+                            type="checkbox"
+                            className="h-5 w-5 text-[#047aff] border-gray-300"
+                            checked={contact.id ? selectedContactIds.includes(contact.id) : false}
+                            onChange={() => contact.id && toggleContactSelection(contact.id)}
+                          />
+                          <div>
+                            <p className="text-[16px] font-medium text-[#1d1d1f]">{contact.name}</p>
+                            <p className="text-[14px] text-gray-500">{contact.email}</p>
+                          </div>
+                        </div>
+                      ))}
                     </div>
+                  ) : (
+                    <p className="text-gray-500">No hay contactos disponibles para agregar.</p>
+                  )}
+                </div>
+
+                {/* Button to open the Add modal */}
+                <div
+                  onClick={() => setShowModal(true)}
+                  className="bg-white rounded-2xl shadow-md hover:shadow-lg transition-all cursor-pointer overflow-hidden"
+                >
+                  <div className="flex items-center justify-center gap-2 py-8">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 448 512"
+                      width="24"
+                      height="24"
+                      className="fill-[#047aff]"
+                    >
+                      <path d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z" />
+                    </svg>
+                    <span className="text-[#047aff] font-[500]">Agregar Albacea</span>
                   </div>
                 </div>
 
+                {/* Save executors button */}
                 <div className="pt-6 flex justify-end">
-                  <PrimaryButton
-                    onClick={() => router.push("/summary?completed=executers")}
-                  >
-                    Guardar y continuar
-                  </PrimaryButton>
+                  {loading ? (
+                    <Spinner size={40} />
+                  ) : (
+                    <PrimaryButton onClick={handleSaveExecutors}>
+                      Guardar y continuar
+                    </PrimaryButton>
+                  )}
                 </div>
               </div>
 
-              {executors.length > 0 && (
-                <div className="bg-white rounded-2xl shadow-md p-6">
-                  <h2 className="text-[22px] font-[500] text-[#1d1d1f] mb-4">Resumen de Albaceas</h2>
+              {/* Optional summary panel */}
+              <div className="bg-white rounded-2xl shadow-md p-6">
+                <h2 className="text-[22px] font-[500] text-[#1d1d1f] mb-4">Resumen de Albaceas</h2>
+                {executors.length > 0 ? (
                   <div className="space-y-6">
-                    <div className="space-y-4">
-                      {executors.filter(e => !e.isBackupExecutor).map((executor) => (
-                        <div key={executor.id} className="flex items-start gap-3">
-                          <div className="flex-shrink-0 w-6 h-6 rounded-full bg-[#047aff] flex items-center justify-center mt-0.5">
+                    {executors.map((executor) => {
+                      const contact = contacts.find(c => c.id === executor.contactId);
+                      return (
+                        <div key={executor.id} className="flex items-center gap-3">
+                          <div className="flex-shrink-0 w-6 h-6 rounded-full bg-[#047aff] flex items-center justify-center">
                             <svg
                               className="w-3.5 h-3.5 text-white"
                               fill="none"
                               viewBox="0 0 24 24"
                               stroke="currentColor"
                             >
-                              <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth={2.5}
-                                d="M5 13l4 4L19 7"
-                              />
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
                             </svg>
                           </div>
                           <div>
-                            <p className="text-[16px] font-[500] text-[#1d1d1f]">{executor.name}</p>
-                            <p className="text-[14px] text-gray-500">Albacea Principal</p>
+                            <p className="text-[16px] font-[500] text-[#1d1d1f]">
+                              {contact ? contact.name : executor.contactId}
+                            </p>
+                            <p className="text-[14px] text-gray-500">{executor.type}</p>
                           </div>
                         </div>
-                      ))}
-                    </div>
-
-                    {executors.some(e => e.isBackupExecutor) && (
-                      <div>
-                        <h3 className="text-[17px] font-[500] text-[#1d1d1f] mb-4">Albaceas Suplentes</h3>
-                        <div className="space-y-4">
-                          {executors.filter(e => e.isBackupExecutor).map((executor) => (
-                            <div key={executor.id} className="flex items-start gap-3">
-                              <div className="flex-shrink-0 w-6 h-6 rounded-full bg-[#047aff] flex items-center justify-center mt-0.5">
-                                <svg
-                                  className="w-3.5 h-3.5 text-white"
-                                  fill="none"
-                                  viewBox="0 0 24 24"
-                                  stroke="currentColor"
-                                >
-                                  <path
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    strokeWidth={2.5}
-                                    d="M5 13l4 4L19 7"
-                                  />
-                                </svg>
-                              </div>
-                              <div>
-                                <p className="text-[16px] font-[500] text-[#1d1d1f]">{executor.name}</p>
-                                <p className="text-[14px] text-gray-500">Albacea Suplente</p>
-                              </div>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                    )}
+                      );
+                    })}
                   </div>
-                </div>
-              )}
+                ) : (
+                  <p className="text-gray-500">No hay albaceas registrados.</p>
+                )}
+              </div>
             </div>
           </div>
         </motion.div>
