@@ -73,7 +73,7 @@ const AccountAndPropertyPage: FC = () => {
   // Load asset categories from the API and map them into AssetOption[]
  // Inside your loadAssetCategories useEffect:
 
-useEffect(() => {
+ useEffect(() => {
   const loadAssetCategories = async () => {
     if (!user?.id) return;
     try {
@@ -133,13 +133,18 @@ useEffect(() => {
         "land": "Terreno"
       };
 
-      const options: AssetOption[] = categoriesResponse.categories.map((cat: AssetCategory) => ({
-        id: cat.id,
-        key: cat.name.toLowerCase().replace(/\s+/g, '_'),
-        label: prettyNames[cat.name] || cat.name, // Use the pretty Spanish label if available
-        description: cat.description,
-        subcategories: cat.metadata.subcategories.map(sub => prettySubcategories[sub] || sub)
-      }));
+      // Filter for only physical categories, then map into AssetOption[]
+      const options: AssetOption[] = categoriesResponse.categories
+        .filter((cat: AssetCategory) => cat.type === 'physical')
+        .map((cat: AssetCategory) => ({
+          id: cat.id,
+          key: cat.name.toLowerCase().replace(/\s+/g, '_'),
+          label: prettyNames[cat.name] || cat.name, // Use the pretty Spanish label if available
+          description: cat.description,
+          subcategories: cat.metadata.subcategories.map(sub => prettySubcategories[sub] || sub),
+          type: cat.type || '' // Ensure type is always a string
+        }));
+
       setAssetOptions(options);
     } catch (error) {
       console.error("Error fetching asset categories:", error);
@@ -147,6 +152,7 @@ useEffect(() => {
   };
   loadAssetCategories();
 }, [user]);
+
 
 
   const getChartData = () => {

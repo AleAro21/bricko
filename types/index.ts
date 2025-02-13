@@ -238,6 +238,7 @@ export interface AssetOption {
   label: string;
   description: string;
   subcategories: string[];
+  type: string; 
 }
 
 export interface Executor {
