@@ -23,6 +23,6 @@
         "@root/*": ["./*"]
       }
     },
-    "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "app/estate/introduction/page.jsx", "app/about-yourself/basic/page.jsx", "aws-exports.js"],
+    "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "app/estate/introduction/page.jsx", "app/about-yourself/basic/page.jsx", "aws-exports.js", "components/reusables/Gradient.js"],
     "exclude": ["node_modules"]
   }

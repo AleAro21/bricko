@@ -4,7 +4,7 @@ import { FC, FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Amplify } from 'aws-amplify';
 import { signIn, fetchAuthSession, signOut } from 'aws-amplify/auth';
-import { Eye, EyeSlash } from "phosphor-react";
+import { Lock, Eye, EyeSlash } from "phosphor-react"; // Import Lock icon
 import Image from "next/image";
 import graylogo from "../../../assets/greylogo.png";
 import Apple from "@/assets/Apple.png";
@@ -113,10 +113,21 @@ const LoginPage: FC = () => {
                     <span className="text-[#047aff] text-[14px] font-[400]">INICIAR SESIÓN</span>
                   </div>
 
-                  <h1 className='text-[32px] sm:text-[38px] font-[500] tracking-[-1.5px] leading-[1.2] sm:leading-[52px] mb-[15px]'>
-                    <span className='text-[#1d1d1f]'>Administra tu </span>
-                    <span className='bg-gradient-to-r from-[#3d9bff] to-[#047aff] inline-block text-transparent bg-clip-text'>testamento</span>
+                  <h1 className="text-[32px] sm:text-[38px] font-[500] tracking-[-1.5px] leading-[1.2] sm:leading-[52px] mb-[15px]">
+                    <span className="text-[#1d1d1f]">Administra tu </span>
+                    <span
+                      style={{
+                        backgroundImage:
+                          "linear-gradient(to right, #7abaff 1%, #047aff 60%, #0d4ba3 100%)",
+                      }}
+                      className="inline-block text-transparent bg-clip-text"
+                    >
+                      testamento
+                    </span>
                   </h1>
+
+
+
 
                   <ul className="space-y-4 mb-8">
                     {[
@@ -144,9 +155,15 @@ const LoginPage: FC = () => {
                       </li>
                     ))}
                   </ul>
-                  <p className="text-gray-500 text-[14px]">
-                    En Testamento.mx, usamos cifrado <span className="font-bold">AES-256</span> <span className="font-bold">blockchain</span> para garantizar la seguridad, integridad y privacidad de tu información.
-                  </p>
+                  {/* Security note with bullet-style lock icon */}
+                  <div className="flex items-start gap-1">
+                    <div className="flex-shrink-0 w-6 h-6  flex items-center justify-center mt-0">
+                      <Lock weight="thin" size={17} className="text-gray-500" />
+                    </div>
+                    <p className="text-gray-500 text-[14px] ml-2">
+                      En Testamento.mx, usamos cifrado <span className="font-bold">AES-256</span> <span className="font-bold">blockchain</span> para garantizar la seguridad, integridad y privacidad de tu información.
+                    </p>
+                  </div>
                 </div>
                 {/* Right column - Form in white container */}
                 <div className='w-full lg:w-3/5 flex items-center mt-[30px] lg:mt-0'>
@@ -243,10 +260,16 @@ const LoginPage: FC = () => {
                 </div>
               </div>
             </div>
-            <div className="px-4 py-6 text-center lg:hidden">
-              <p className="text-gray-500 text-[12px]">
-                En Testamento.mx, usamos cifrado <span className="font-bold">AES-256</span> <span className="font-bold">blockchain</span> para garantizar la seguridad, integridad y privacidad de tu información.
-              </p>
+            {/* Mobile security note */}
+            <div className="px-4 py-6 text-start lg:hidden">
+              <div className="flex items-start gap-0">
+                <div className="flex-shrink-0 w-6 h-6  flex items-center justify-start mt-0">
+                  <Lock weight="thin" size={17} className="text-gray-500" />
+                </div>
+                <p className="text-gray-500 text-[14px] ml-2">
+                  En Testamento.mx, usamos cifrado <span className="font-bold">AES-256</span> <span className="font-bold">blockchain</span> para garantizar la seguridad, integridad y privacidad de tu información.
+                </p>
+              </div>
             </div>
           </div>
         </main>

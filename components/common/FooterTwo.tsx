@@ -1,6 +1,7 @@
 import React from 'react';
 import Image from 'next/image';
 import logo from '../../assets/greylogo.png';
+import GradientCanvas from '../reusables/GradientCanvas';
 
 interface FooterTwoLink {
   href: string;
@@ -26,7 +27,9 @@ const FooterTwo: React.FC = () => {
   const currentYear = new Date().getFullYear();
 
   return (
+    
     <div className="bg-background">
+    
       <div className='container w-3/4 mx-auto flex border-t py-4 items-center justify-between'>
         <div className="flex gap-4 items-center">
 

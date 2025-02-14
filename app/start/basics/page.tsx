@@ -61,6 +61,7 @@ const BasicsPage: FC = () => {
   };
 
   return (
+    
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
@@ -123,8 +124,8 @@ const BasicsPage: FC = () => {
                     <span className="lg:hidden">Registrate</span>
                     <span className="hidden lg:inline">Registrate en Testamento.mx</span>
                   </h2>
-                  <form onSubmit={handleSubmit} className="space-y-5">
-                    <div className="space-y-5">
+                  <form onSubmit={handleSubmit} className="space-y-2.5">
+                    <div className="space-y-2.5">
                       <div>
                         <label htmlFor="name" className="block text-[17px] font-[400] text-[#1d1d1f] mb-2.5">
                           Nombre

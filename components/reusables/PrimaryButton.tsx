@@ -12,13 +12,16 @@ const PrimaryButton: FC<PrimaryButtonProps> = ({
   children, 
   onClick,
   className = '',
+  disabled,
   ...props 
 }) => {
+  const disabledStyles = disabled ? 'opacity-50 cursor-not-allowed' : '';
   return (
     <button
       type={type}
       onClick={onClick}
-      className={`w-[200px] h-[45px] text-center text-[14px] text-[#FFFFFF] font-[400] bg-[#0171e3] rounded-lg cursor-pointer hover:bg-[#0156aa] transition-colors duration-200 ${className}`}
+      disabled={disabled}
+      className={`w-[200px] h-[45px] text-center text-[14px] text-[#FFFFFF] font-[400] bg-[#0171e3] rounded-lg transition-colors duration-200 hover:bg-[#0156aa] ${disabledStyles} ${className}`}
       {...props}
     >
       {children}
