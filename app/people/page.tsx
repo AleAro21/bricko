@@ -78,6 +78,10 @@ const ContactCard: FC<ContactCardProps> = ({ contact, onEdit, onDelete }) => (
         <span className="text-sm text-[#047aff] bg-[#047aff]/10 px-2 py-1 rounded-full">
           {relationshipLabels[contact.relationToUser] || "Otro"}
         </span>
+         
+        <span className="text-sm text-[#047aff] bg-[#047aff]/10 px-2 py-1 rounded-full">
+          { "Menor de edad"}
+        </span>
       </div>
       <div className="flex gap-2">
         <button
@@ -240,7 +244,7 @@ const PeoplePage: FC = () => {
   const categories = [
     {
       id: 'children' as const,
-      title: "Niños",
+      title: "Hijos",
       description: "Agrega información sobre tus hijos o menores a cargo para asegurar su futuro y bienestar",
       icon: <Baby size={28} weight="thin" />,
       count: filteredContacts.children.length

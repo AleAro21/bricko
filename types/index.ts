@@ -22,6 +22,14 @@ export interface User {
   maritalstatus: string;
 }
 
+export interface UserProgress {
+  response: any;
+  profile: string
+  assets: string
+  assignments: string
+  executors: string
+}
+
 export interface CreateUserData {
   name: string | null;
   fatherLastName: string | null;

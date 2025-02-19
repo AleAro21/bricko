@@ -14,7 +14,8 @@ import {
   ResponseAssignation,
   Assignation,
   AssetCategory,
-  GetAssetsCategoriesResponse
+  GetAssetsCategoriesResponse,
+  UserProgress
 } from '@/types';
 import options from './api/auth/[...nextauth]/options';
 
@@ -89,6 +90,12 @@ export class APIService {
     const response = await this.fetchWithAuth(`/wills/users/${userId}`);
     console.log('API Response:', response);
     console.log("headers", response.headers);
+    return response.response;
+  }
+
+  async getUserProgress(userId: string): Promise<UserProgress> {
+    const response = await this.fetchWithAuth(`/wills/users/${userId}/completness`);
+    console.log('API Response:', response);
     return response.response;
   }
 
@@ -380,11 +387,11 @@ export class APIService {
   }
 
   async getAllExecutors(userId: string): Promise<Executor[]> {
-  const response = await this.fetchWithAuth(`/wills/${userId}/executors`);
-  console.log('Get All Executors Response:', response);
-  const executors = response.response.executors || response.response; // adjust based on your API response structure
-  return Array.isArray(executors) ? executors : [executors];
-}
+    const response = await this.fetchWithAuth(`/wills/${userId}/executors`);
+    console.log('Get All Executors Response:', response);
+    const executors = response.response.executors || response.response; // adjust based on your API response structure
+    return Array.isArray(executors) ? executors : [executors];
+  }
 
 
   /**

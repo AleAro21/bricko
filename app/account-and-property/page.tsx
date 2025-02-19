@@ -10,7 +10,7 @@ import Link from "next/link";
 import { useUser } from "@/context/UserContext";
 import { apiService } from '@/app/apiService';
 import { fetchAuthSession } from "aws-amplify/auth";
-import { UserAsset, Will, CreateWillRequest } from '@/types';
+import { UserAsset, Will, CreateWillRequest, UpdateWillRequest, WillStatus } from '@/types';
 import { AssetOption, AssetCategory, GetAssetsCategoriesResponse } from '@/types';
 
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF', '#FF9F40'];
@@ -52,23 +52,40 @@ const AccountAndPropertyPage: FC = () => {
         const { tokens } = await fetchAuthSession();
         if (!tokens?.accessToken) throw new Error("No authentication token available");
         apiService.setToken(tokens.accessToken.toString());
+        
+        // Get all existing wills for the user
         const willsResponse = await apiService.getAllWills(user.id);
         const willsArray = Array.isArray(willsResponse) ? willsResponse : [];
+        
         if (willsArray.length > 0) {
+          // If a will already exists, set it in state.
           setTestament(willsArray[0]);
           console.log("Testament already exists:", willsArray[0]);
         } else {
-          const newWillData: CreateWillRequest = { legalAdvisor: "", notes: "", terms: "" };
+          // Create a new will
+          const newWillData: CreateWillRequest = { 
+            legalAdvisor: "", 
+            notes: "", 
+            terms: "" 
+          };
           const newWill = await apiService.createWill(user.id, newWillData);
-          setTestament(newWill);
-          console.log("Created new testament:", newWill);
+          console.log("Created new will:", newWill);
+          
+          // Update the newly created will to activate it.
+          // Make sure to use "ACTIVE" as your API requires (case-sensitive).
+          const updateData: UpdateWillRequest = { status: WillStatus.Active };
+          const updatedWill = await apiService.updateWill(newWill.id as string, updateData);
+          setTestament(updatedWill);
+          console.log("Updated will to active:", updatedWill);
         }
       } catch (error: any) {
         console.error("Error loading or creating testament:", error);
       }
     };
+  
     loadTestament();
   }, [user]);
+  
 
   // Load asset categories from the API and map them into AssetOption[]
  // Inside your loadAssetCategories useEffect:
@@ -269,14 +286,14 @@ const AccountAndPropertyPage: FC = () => {
                         <path d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z" />
                       </svg>
                     </div>
-                    <span className="text-[#047aff] font-medium">Agregar cuenta o propiedad</span>
+                    <span className="text-[#047aff] font-medium">Agregar activos</span>
                   </div>
                 </div>
                 {/* Assets List */}
                 {assets.length > 0 && (
                   <div className="bg-white rounded-2xl shadow-md overflow-hidden">
                     <div className="p-6">
-                      <h2 className="text-[22px] font-medium text-[#1d1d1f] mb-4">Cuentas y Propiedades</h2>
+                      <h2 className="text-[22px] font-medium text-[#1d1d1f] mb-4">Activos</h2>
                       <div className="space-y-4">
                         {assets.map(asset => (
                           <div key={asset.id} className="border-b border-gray-100 pb-4 last:border-b-0 last:pb-0">

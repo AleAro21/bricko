@@ -217,14 +217,22 @@ const NamePage: FC = () => {
     e.preventDefault();
     const { name, fatherLastName, motherLastName, middleName, governmentId, birthDate, nationality, gender, phoneNumber, countryPhoneCode } = formValues;
 
+    // Basic field validation
     if (!name || !fatherLastName || !motherLastName || !governmentId || !nationality || !gender) {
       setErrorMessage("Por favor, complete todos los campos obligatorios");
       return;
     }
 
+    // Validate age
     const ageError = validateAge(birthDate);
     if (ageError) {
       setErrorMessage(ageError);
+      return;
+    }
+
+    // Validate RFC length (13 characters)
+    if (governmentId.length !== 13) {
+      setErrorMessage("El RFC debe tener 13 dígitos");
       return;
     }
 
@@ -529,6 +537,20 @@ const NamePage: FC = () => {
                             </div>
 
                             <div>
+                              <label htmlFor="birthDate" className="block text-[17px] font-[400] text-[#1d1d1f] mb-2.5">
+                                Fecha de nacimiento <span className="text-[#047aff]">*</span>
+                              </label>
+                              <Calendar
+                                selectedDate={formValues.birthDate}
+                                onChange={handleDateChange}
+                                minDate={new Date(1923, 0, 1)}
+                                maxDate={new Date()}
+                                placeholderText="Seleccionar fecha de nacimiento"
+                                className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:border-[#047aff] transition-all"
+                              />
+                            </div>
+
+                            <div>
                               <label htmlFor="governmentId" className="block text-[17px] font-[400] text-[#1d1d1f] mb-2.5">
                                 RFC <span className="text-[#047aff]">*</span>
                               </label>
@@ -540,6 +562,9 @@ const NamePage: FC = () => {
                                 className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:border-[#047aff] transition-all"
                                 required
                               />
+                              <p className="text-[12px] text-gray-500 mt-1">
+                                El RFC debe tener 13 dígitos.
+                              </p>
                             </div>
 
                             <div>
@@ -560,19 +585,6 @@ const NamePage: FC = () => {
                             </div>
                           </div>
                         </div>
-                        <div>
-                          <label htmlFor="birthDate" className="block text-[17px] font-[400] text-[#1d1d1f] mb-2.5">
-                            Fecha de nacimiento <span className="text-[#047aff]">*</span>
-                          </label>
-                          <Calendar
-                            selectedDate={formValues.birthDate}
-                            onChange={handleDateChange}
-                            minDate={new Date(1923, 0, 1)}
-                            maxDate={new Date()}
-                            placeholderText="Seleccionar fecha de nacimiento"
-                            className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:border-[#047aff] transition-all"
-                          />
-                        </div>
                       </div>
 
                       {errorMessage && (
@@ -580,8 +592,8 @@ const NamePage: FC = () => {
                       )}
 
                       <div className="flex justify-end pt-6">
-                        <PrimaryButton type="submit">
-                          Guardar y continuar
+                        <PrimaryButton type="submit" disabled={loading}>
+                          {loading ? <Spinner size={24} /> : "Guardar y continuar"}
                         </PrimaryButton>
                       </div>
                     </form>

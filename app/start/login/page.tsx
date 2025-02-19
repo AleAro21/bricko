@@ -126,9 +126,6 @@ const LoginPage: FC = () => {
                     </span>
                   </h1>
 
-
-
-
                   <ul className="space-y-4 mb-8">
                     {[
                       "Edita y actualiza en cualquier momento",
@@ -157,7 +154,7 @@ const LoginPage: FC = () => {
                   </ul>
                   {/* Security note with bullet-style lock icon */}
                   <div className="flex items-start gap-1">
-                    <div className="flex-shrink-0 w-6 h-6  flex items-center justify-center mt-0">
+                    <div className="flex-shrink-0 w-6 h-6 flex items-center justify-center mt-0">
                       <Lock weight="thin" size={17} className="text-gray-500" />
                     </div>
                     <p className="text-gray-500 text-[14px] ml-2">
@@ -214,13 +211,22 @@ const LoginPage: FC = () => {
                       {errorMessage && (
                         <p className="text-red-500 text-[14px] text-center mt-2.5">{errorMessage}</p>
                       )}
-
+ <div className="text-right mt-0 mb-0">
+                        <button
+                          type="button"
+                          onClick={() => router.push("/forgot-password")}
+                          className="text-[14px] text-blue-500 hover:underline"
+                          disabled={isLoading}
+                        >
+                          Olvidé mi contraseña
+                        </button>
+                      </div>
                       <div className="flex justify-center pt-2.5">
                         <PrimaryButton type="submit" disabled={isLoading}>
                           {isLoading ? <Spinner size={24} /> : 'Continuar'}
                         </PrimaryButton>
                       </div>
-
+                     
                       <div className="text-center mt-5">
                         <button
                           type="button"
@@ -231,6 +237,9 @@ const LoginPage: FC = () => {
                           No tengo cuenta <span className="text-blue-500">Registrar</span>
                         </button>
                       </div>
+
+                      {/* Forgot Password Link */}
+                     
 
                       <div className="flex items-center my-5">
                         <div className="w-full h-[1px] bg-gray-300"></div>
@@ -253,7 +262,7 @@ const LoginPage: FC = () => {
                       </div>
 
                       <div className="text-center text-sm text-gray-500 mt-5">
-                        ¿Problemas para iniciar sesión? <a href="mailto: ayuda@testamento.mx" className="text-blue-500 underline">Contáctanos</a>
+                        ¿Problemas para iniciar sesión? <a href="mailto:ayuda@testamento.mx" className="text-blue-500 underline">Contáctanos</a>
                       </div>
                     </form>
                   </div>
@@ -263,7 +272,7 @@ const LoginPage: FC = () => {
             {/* Mobile security note */}
             <div className="px-4 py-6 text-start lg:hidden">
               <div className="flex items-start gap-0">
-                <div className="flex-shrink-0 w-6 h-6  flex items-center justify-start mt-0">
+                <div className="flex-shrink-0 w-6 h-6 flex items-center justify-start mt-0">
                   <Lock weight="thin" size={17} className="text-gray-500" />
                 </div>
                 <p className="text-gray-500 text-[14px] ml-2">

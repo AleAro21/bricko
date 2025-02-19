@@ -7,6 +7,7 @@ import graylogo from "../../../assets/greylogo.png";
 import Image from "next/image";
 import PrimaryButton from "@/components/reusables/PrimaryButton";
 import FooterTwo from '@/components/common/FooterTwo';
+import Spinner from "@/components/reusables/Spinner";
 
 interface PasswordStrength {
   label: string;
@@ -35,6 +36,7 @@ const PasswordPage: FC = () => {
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [password, setPassword] = useState<string>("");
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   // Define the bullet point requirements for the password.
   const passwordRequirements = [
@@ -73,18 +75,19 @@ const PasswordPage: FC = () => {
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
-
+    
     if (!isAllValid) {
       setErrorMessage("Aún no cumples con todos los requisitos de la contraseña.");
       return;
     }
-
+    
     const email = sessionStorage.getItem("email");
     if (!email) {
       setErrorMessage("No se encontró el correo electrónico. Por favor, regresa al paso anterior.");
       return;
     }
 
+    setIsLoading(true);
     try {
       sessionStorage.setItem("password", password);
 
@@ -102,6 +105,8 @@ const PasswordPage: FC = () => {
     } catch (error: any) {
       console.error("Sign up failed", error);
       setErrorMessage(error.message || "No se pudo completar el registro. Intenta de nuevo.");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -270,8 +275,8 @@ const PasswordPage: FC = () => {
                     )}
 
                     <div className="flex justify-center pt-2.5">
-                      <PrimaryButton type="submit" disabled={!isAllValid}>
-                        Continuar
+                      <PrimaryButton type="submit" disabled={!isAllValid || isLoading}>
+                        {isLoading ? <Spinner size={24} /> : "Continuar"}
                       </PrimaryButton>
                     </div>
                   </form>

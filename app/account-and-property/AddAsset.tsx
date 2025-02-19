@@ -72,11 +72,11 @@ const AddAsset: FC<AddAssetProps> = ({ setShowModal, showModal, onAddAsset, asse
     <Modal setShowModal={setShowModal} showModal={showModal}>
       <div className="w-full min-w-[400px] max-w-2xl mx-auto">
         <div className="inline-flex items-center h-[32px] bg-[#047aff] bg-opacity-10 px-[12px] py-[6px] rounded-md mb-2.5">
-          <span className="text-[#047aff] text-[14px] font-normal">NUEVO ACTIVO</span>
+          <span className="text-[#047aff] text-[14px] font-normal">NUEVO REGISTRO</span>
         </div>
 
         <h2 className="text-[22px] font-medium text-[#1d1d1f] mb-6">
-          Agregar nueva cuenta o propiedad
+          Agregar activo
         </h2>
 
         <div className="w-full">

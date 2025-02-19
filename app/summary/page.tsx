@@ -18,8 +18,10 @@ import {
 } from 'phosphor-react';
 import { useUser } from "@/context/UserContext";
 import { motion } from 'framer-motion';
+import { apiService } from '@/app/apiService';
+import { fetchAuthSession } from "aws-amplify/auth";
 
-// Types
+// ----- Types -----
 interface StepProgress {
   id: string;
   progress: number;
@@ -46,7 +48,7 @@ interface ProgressBarProps {
   showLabel?: boolean;
 }
 
-// Utility functions
+// ----- Utility Functions -----
 const getProgressColor = (progress: number): string => {
   if (progress === 100) return '#047aff';
   if (progress >= 11) return '#f97316';
@@ -59,7 +61,7 @@ const getProgressBadgeColor = (progress: number): { bg: string; text: string } =
   return { bg: 'bg-red-100', text: 'text-red-800' };
 };
 
-// Components
+// ----- Components -----
 const ProgressBar: FC<ProgressBarProps> = ({ progress, showLabel = true }) => {
   const color = getProgressColor(progress);
   
@@ -111,23 +113,23 @@ const StepCard: FC<StepCardProps> = ({
           borderTopLeftRadius: '0'
         }}
       >
-        <div className="flex justify-between items-start">
-          <div className="flex items-start gap-5 flex-1">
-            <div className="flex-1">
-              <div className="flex items-center gap-5 mb-5">
-                <div className="text-[#047aff] w-8 h-8 flex items-center justify-center">
+        <div className="flex justify-between items-start flex-wrap">
+          <div className="flex items-start gap-5 flex-1 min-w-0">
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center gap-5 mb-5 flex-wrap">
+                <div className="text-[#047aff] w-8 h-8 flex items-center justify-center flex-shrink-0">
                   {icon}
                 </div>
-                <h3 className="text-[24px] sm:text-[24px] text-[#000000] font-[500] mb-0 pr-5 tracking-[0.1px] leading-[1.3]">
+                <h3 className="text-[20px] sm:text-[24px] text-[#000000] font-[500] mb-0 tracking-[0.1px] leading-[1.3] break-words">
                   {title}
                 </h3>
               </div>
-              <p className="text-[14px] sm:text-[14px] font-[300] text-[#1d1d1f] mb-0 tracking-[0.1px] leading-[1.3] flex-1 max-w-[70%]">
+              <p className="text-[14px] font-[300] text-[#1d1d1f] mb-0 tracking-[0.1px] leading-[1.3] break-words">
                 {description}
               </p>
             </div>
           </div>
-          <div className="flex flex-col items-end gap-5">
+          <div className="flex flex-col items-end gap-5 mt-4 sm:mt-0">
             {progress === 100 ? (
               <div className="flex items-center gap-5">
                 <div className="w-6 h-6 rounded-full bg-[#047aff] flex items-center justify-center">
@@ -160,16 +162,16 @@ const PaymentSection: FC<{ onClick: () => void }> = ({ onClick }) => {
     >
       <div className="p-[1px] bg-gradient-to-br from-[#047aff] via-[#3d9bff] to-[#047aff] rounded-xl">
         <div className="bg-white rounded-[11px] p-[25px] hover:bg-gradient-to-br hover:from-[#f8faff] hover:to-white transition-all duration-500">
-          <div className="flex items-start gap-5">
+          <div className="flex items-start gap-5 flex-wrap">
             <div className="bg-gradient-to-br from-[#047aff] to-[#3d9bff] p-[15px] rounded-xl shadow-md group-hover:scale-105 transition-transform duration-300">
               <LockSimple weight="thin" className="text-white w-6 h-6" />
             </div>
-            <div className="flex-1">
+            <div className="flex-1 min-w-0">
               <div className="mb-5">
-                <h3 className="text-[22px] text-[#1d1d1f] font-[500] tracking-[-0.5px] leading-[1.3] mb-5">
+                <h3 className="text-[20px] sm:text-[22px] text-[#1d1d1f] font-[500] tracking-[-0.5px] leading-[1.3] mb-5 break-words">
                   Legaliza tu Testamento
                 </h3>
-                <p className="text-[15px] font-[300] text-[#1d1d1f]/80 tracking-[0.1px] leading-[1.3]">
+                <p className="text-[15px] font-[300] text-[#1d1d1f]/80 tracking-[0.1px] leading-[1.3] break-words">
                   Completa tu proceso realizando el pago para generar tu testamento oficial
                 </p>
               </div>
@@ -187,7 +189,7 @@ const PaymentSection: FC<{ onClick: () => void }> = ({ onClick }) => {
   );
 };
 
-// Step definitions
+// ----- Step Definitions -----
 const mainSteps: Step[] = [
   {
     id: 'personal-info',
@@ -248,6 +250,7 @@ const optionalSteps: Step[] = [
   }
 ];
 
+// ----- SummaryPage Component -----
 const SummaryPage: FC = () => {
   const params = useSearchParams();
   const router = useRouter();
@@ -255,25 +258,43 @@ const SummaryPage: FC = () => {
   const [stepsProgress, setStepsProgress] = useState<StepProgress[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
+  const parsePercentage = (percentage: string): number => {
+    return parseFloat(percentage.replace('%', ''));
+  };
+
   useEffect(() => {
     if (!user && !sessionStorage.getItem('userId')) {
       router.push('/start/login');
       return;
     }
 
-    // Here you'll fetch the progress for each step from your API
     const fetchProgress = async () => {
       try {
         setIsLoading(true);
-        // TODO: Replace with actual API call
-        // const response = await apiService.getStepsProgress(user.id);
-        // setStepsProgress(response);
-        
-        // For now, initialize with 0 progress
+        if (!user) return;
+
+        const { tokens } = await fetchAuthSession();
+        if (!tokens?.accessToken)
+          throw new Error("No authentication token available");
+        apiService.setToken(tokens.accessToken.toString());
+
+        const progressData = await apiService.getUserProgress(user.id);
+        console.log("API progress data:", progressData);
+
+        const progressMapping: Record<string, number> = {
+          'personal-info': parsePercentage(progressData.profile),
+          'assets': parsePercentage(progressData.assets),
+          'inheritance': parsePercentage(progressData.assignments),
+          'executors': parsePercentage(progressData.executors),
+        };
+        console.log("Progress mapping:", progressMapping);
+
         const initialProgress = [...mainSteps, ...optionalSteps].map(step => ({
           id: step.id,
-          progress: 0
+          progress: progressMapping[step.id] ?? 0
         }));
+        console.log("Initial progress array:", initialProgress);
+
         setStepsProgress(initialProgress);
       } catch (error) {
         console.error('Failed to fetch steps progress:', error);
@@ -313,21 +334,21 @@ const SummaryPage: FC = () => {
   return (
     <DashboardLayout>
       <motion.div 
-        className="w-full max-w-6xl mx-auto px-[25px] sm:px-[25px] py-[25px] sm:py-[25px] overflow-x-hidden"
+        className="w-full max-w-6xl mx-auto px-5 sm:px-[25px] py-5 sm:py-[25px] overflow-hidden"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
         transition={{ duration: 1.2 }}
       >
         <div className="flex flex-col lg:flex-row gap-[25px]">
-          <div className="lg:w-3/5">
-            <h1 className='text-[32px] sm:text-[46px] font-[500] tracking-[-1.5px] leading-[1.2] sm:leading-[52px] mb-5'>
-              <span className='text-[#1d1d1f]'>Hola </span>
-              <span className='bg-gradient-to-r from-[#3d9bff] to-[#047aff] inline-block text-transparent bg-clip-text'>
+          <div className="lg:w-3/5 w-full">
+            <h1 className="text-[28px] sm:text-[46px] font-[500] tracking-[-1.5px] leading-[1.2] sm:leading-[52px] mb-5 break-words">
+              <span className="text-[#1d1d1f]">Hola </span>
+              <span className="bg-gradient-to-r from-[#3d9bff] to-[#047aff] inline-block text-transparent bg-clip-text">
                 {user?.name || 'Usuario'}
               </span>
             </h1>
-            <p className="text-[15px] sm:text-[17px] font-[400] tracking-[-0.1px] leading-[1.3] text-[#1d1d1f] text-start mb-[25px]">
+            <p className="text-[15px] sm:text-[17px] font-[400] tracking-[-0.1px] leading-[1.3] text-[#1d1d1f] text-start mb-[25px] break-words">
               Te guiamos en cada etapa para asegurar que tu voluntad se refleje con claridad.
             </p>
             
@@ -341,7 +362,7 @@ const SummaryPage: FC = () => {
                 />
               ))}
               
-              <h2 className="text-[24px] sm:text-[28px] font-[500] text-[#1d1d1f] mt-[25px] mb-[15px] tracking-[0.1px] leading-[1.3]">
+              <h2 className="text-[22px] sm:text-[28px] font-[500] text-[#1d1d1f] mt-[25px] mb-[15px] tracking-[0.1px] leading-[1.3] break-words">
                 Pasos Opcionales
               </h2>
               {optionalSteps.map((step) => (
@@ -356,15 +377,15 @@ const SummaryPage: FC = () => {
             </div>
           </div>
 
-          <div className="lg:w-2/5">
+          <div className="lg:w-2/5 w-full">
             <div className="sticky top-[25px]">
-              <div className="bg-white rounded-xl p-[25px] shadow-md">
+              <div className="bg-white rounded-xl p-5 sm:p-[25px] shadow-md">
                 <ProgressBar progress={calculateTotalProgress()} />
                 
-                <h2 className="text-[24px] sm:text-[22px] font-[500] text-[#1d1d1f] mt-[25px] mb-2.5 tracking-[0.1px] leading-[1.3]">
+                <h2 className="text-[20px] sm:text-[22px] font-[500] text-[#1d1d1f] mt-[25px] mb-2.5 tracking-[0.1px] leading-[1.3] break-words">
                   Tu Voluntad
                 </h2>
-                <p className="text-[14px] sm:text-[14px] font-[300] text-[#1d1d1f] mb-2.5 tracking-[0.1px] leading-[1.3]">
+                <p className="text-[14px] font-[300] text-[#1d1d1f] mb-2.5 tracking-[0.1px] leading-[1.3] break-words">
                   La primera parte de tu testamento tiene que ver contigo y tu familia. 
                   Completa la información en el Paso 1 para avanzar.
                 </p>

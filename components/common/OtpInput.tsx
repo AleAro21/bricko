@@ -272,7 +272,7 @@ const OTPInput: React.FC<OTPInputProps> = ({ length = 6, onComplete }) => {
                   <div className="flex w-full flex-col sm:flex-row sm:items-center sm:justify-between items-center gap-4">
                     <div className="w-full sm:w-auto flex justify-center">
                       <PrimaryButton onClick={handleSubmit} disabled={isLoading}>
-                        {isLoading ? 'Procesando...' : 'Continuar'}
+                        {isLoading ? <Spinner size={24} /> : 'Continuar'}
                       </PrimaryButton>
                     </div>
                     <div className="flex items-center gap-3">

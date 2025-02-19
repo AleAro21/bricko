@@ -9,7 +9,7 @@ const GradientCanvas: React.FC = () => {
 
     // Get WebGL context
     const gl = canvas.getContext('webgl');
-    if (!gl) { 
+    if (!gl) {
       console.error('WebGL not supported.');
       return;
     }
@@ -23,7 +23,7 @@ const GradientCanvas: React.FC = () => {
     resizeCanvas();
     window.addEventListener('resize', resizeCanvas);
 
- 
+    // Vertex Shader Source
     const vertexShaderSource = `
       attribute vec3 a_position;
       attribute vec2 a_uv;
@@ -120,7 +120,7 @@ const GradientCanvas: React.FC = () => {
       }
     `;
 
-   
+    // Fragment Shader Source
     const fragmentShaderSource = `
       precision mediump float;
       varying vec2 v_uv;
@@ -239,7 +239,6 @@ const GradientCanvas: React.FC = () => {
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer);
     gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(indices), gl.STATIC_DRAW);
 
-    
     const uTimeLocation = gl.getUniformLocation(program, 'u_time');
     const uNoiseAmpLocation = gl.getUniformLocation(program, 'u_noiseAmp');
     const uNoiseSpeedLocation = gl.getUniformLocation(program, 'u_noiseSpeed');
@@ -258,7 +257,6 @@ const GradientCanvas: React.FC = () => {
     // Stripe color: #3d9bff normalized with slight white blend
     gl.uniform3fv(uStripeColorLocation, [61/255, 155/255, 255/255]);
    
-    
     // Stripe scale: adjust to control frequency
     gl.uniform1f(uStripeScaleLocation, 2.0);
 

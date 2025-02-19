@@ -42,11 +42,9 @@ const BasicPage: FC = () => {
       }
   
       try {
-        // First check session storage
         const storedAddress = sessionStorage.getItem('userAddress');
         if (storedAddress) {
           const parsedAddress = JSON.parse(storedAddress);
-          // Normalize to a single object (if stored as an array, get the first element)
           const address = Array.isArray(parsedAddress) ? parsedAddress[0] : parsedAddress;
           
           if (address) {
@@ -61,7 +59,6 @@ const BasicPage: FC = () => {
           }
         }
   
-        // If no stored address, fetch from API
         const { tokens } = await fetchAuthSession();
         if (!tokens?.accessToken) {
           throw new Error("No authentication token available");
@@ -71,7 +68,6 @@ const BasicPage: FC = () => {
         const response = await apiService.getUserAddress(user.id);
   
         if (response) {
-          // Normalize the response and store only a single address object
           const addressToStore = Array.isArray(response) ? response[0] : response;
           sessionStorage.setItem('userAddress', JSON.stringify(addressToStore));
           
@@ -84,7 +80,6 @@ const BasicPage: FC = () => {
         }
       } catch (error) {
         console.error('Error loading user address:', error);
-        // Don't show error message for 404 (no address yet)
         if ((error as any).response?.status !== 404) {
           setErrorMessage("Error al cargar la dirección. Por favor, intente nuevamente.");
         }
@@ -96,7 +91,6 @@ const BasicPage: FC = () => {
     loadUserAddress();
   }, [user?.id]);
   
-
   const handleAddressSelect = (addressData: AddressData): void => {
     setFormValues(prev => ({
       ...prev,
@@ -123,7 +117,6 @@ const BasicPage: FC = () => {
     }
 
     try {
-      // Retrieve and normalize the stored address from session storage
       const storedAddress = sessionStorage.getItem('userAddress');
       let currentAddress: Address | null = null;
       if (storedAddress) {
@@ -131,7 +124,6 @@ const BasicPage: FC = () => {
         currentAddress = Array.isArray(parsedAddress) ? parsedAddress[0] : parsedAddress;
       }
 
-      // Check if address data has changed
       const hasDataChanged = !currentAddress ||
         currentAddress.street !== street ||
         currentAddress.city !== city ||
@@ -148,22 +140,18 @@ const BasicPage: FC = () => {
 
         apiService.setToken(tokens.accessToken.toString());
 
-        // Prepare address data
         const addressData = {
           street,
           city,
           state,  
           zipCode,
-          country: "MX", // Default to Mexico since the form is in Spanish
+          country: "MX",
         };
 
         let response;
         if (currentAddress) {
-          // Update the existing address.
-          // NOTE: Ensure you pass the correct identifier here; currently using `currentAddress.city` as a placeholder.
           response = await apiService.updateUserAddress(currentAddress.city, addressData);
         } else {
-          // Create a new address entry.
           response = await apiService.createUserAddress(user.id, addressData);
         }
 
@@ -173,7 +161,6 @@ const BasicPage: FC = () => {
         }
       }
 
-      // Navigate to the next page regardless of whether data was updated
       router.push("/about-yourself/partner");
     } catch (error) {
       console.error('Error handling address:', error);
@@ -261,7 +248,7 @@ const BasicPage: FC = () => {
                             Dirección Línea 1 <span className="text-[#047aff]">*</span>
                           </label>
                           <AddressAutocomplete
-                            key={formValues.street} // Force re-render when street changes
+                            key={formValues.street}
                             onAddressSelect={handleAddressSelect}
                             defaultValue={formValues.street}
                             required
@@ -307,6 +294,20 @@ const BasicPage: FC = () => {
                             onChange={handleManualChange}
                             className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:border-[#047aff] transition-all"
                             required
+                          />
+                        </div>
+
+                        <div>
+                          <label htmlFor="country" className="block text-[17px] font-[400] text-[#1d1d1f] mb-2.5">
+                            País
+                          </label>
+                          <input
+                            type="text"
+                            id="country"
+                            value="México"
+                            className="w-full px-4 py-2.5 rounded-lg border border-gray-200 bg-gray-50 text-gray-500 cursor-not-allowed"
+                            disabled
+                            readOnly
                           />
                         </div>
                       </div>

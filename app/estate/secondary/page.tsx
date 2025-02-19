@@ -27,7 +27,7 @@ const SharePage: FC = () => {
 
   const data: ShareOption[] = [
     {
-      title: "Sus niños",
+      title: "Sus hijos",
       subTitle: "Todos los hijos biológicos y legalmente adoptados heredarán por igual.",
       items: {
         itemTitle: "",
