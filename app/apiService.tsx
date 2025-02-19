@@ -17,7 +17,7 @@ import {
   GetAssetsCategoriesResponse,
   UserProgress
 } from '@/types';
-import options from './api/auth/[...nextauth]/options';
+
 
 const API_BASE_URL = "https://51lyy4n8z0.execute-api.us-east-2.amazonaws.com/dev";
 

@@ -31,6 +31,7 @@ const OTPInput: React.FC<OTPInputProps> = ({ length = 6, onComplete }) => {
   const [showPopup, setShowPopup] = useState<boolean>(false);
   const [currentMethodIndex, setCurrentMethodIndex] = useState<number>(0);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [email, setEmail] = useState<string>(''); // New state to hold email
   const router = useRouter();
   const { setUser } = useUser();
 
@@ -39,6 +40,16 @@ const OTPInput: React.FC<OTPInputProps> = ({ length = 6, onComplete }) => {
     { id: 'sms', icon: <ChatCircle size={24} weight="regular" />, label: 'SMS' },
     { id: 'call', icon: <Phone size={24} weight="regular" />, label: 'Llamada' },
   ];
+
+  // Load email from sessionStorage on client-side only
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const storedEmail = sessionStorage.getItem("email");
+      if (storedEmail) {
+        setEmail(storedEmail);
+      }
+    }
+  }, []);
 
   const rotateVerificationMethod = () => {
     setCurrentMethodIndex((prevIndex) =>
@@ -80,8 +91,7 @@ const OTPInput: React.FC<OTPInputProps> = ({ length = 6, onComplete }) => {
   const handleSubmit = async (): Promise<void> => {
     setIsLoading(true);
     const otpString = otp.join("");
-    const email = sessionStorage.getItem("email");
-
+    // Use the email state instead of directly calling sessionStorage
     if (!email) {
       setIsLoading(false);
       alert("No se encontró el correo electrónico. Por favor, regresa al paso anterior.");
@@ -137,7 +147,6 @@ const OTPInput: React.FC<OTPInputProps> = ({ length = 6, onComplete }) => {
   };
 
   const handleResendCode = async (): Promise<void> => {
-    const email = sessionStorage.getItem("email");
     if (!email) {
       alert("No se encontró el correo electrónico.");
       return;
@@ -201,7 +210,7 @@ const OTPInput: React.FC<OTPInputProps> = ({ length = 6, onComplete }) => {
                 </h1>
                 <p className="text-[16px] text-[#1d1d1f] leading-6 mb-4">
                   Es un código de 6 dígitos enviado a{" "}
-                  <span className="font-bold">{sessionStorage.getItem("email")}</span>
+                  <span className="font-bold">{email}</span>
                 </p>
               </div>
 
