@@ -129,7 +129,7 @@ const AddressAutocomplete: React.FC<AddressAutocompleteProps> = ({
       // Extract address components
       addressComponents.forEach(component => {
         const types = component.types;
-
+      
         if (types.includes('street_number')) {
           addressData.street = `${addressData.street} ${component.long_name}`.trim();
         }
@@ -145,7 +145,11 @@ const AddressAutocomplete: React.FC<AddressAutocompleteProps> = ({
         if (types.includes('country')) {
           addressData.country = component.long_name;
         }
+        if (types.includes('administrative_area_level_1')) { // <-- Add this block
+          addressData.state = component.long_name;
+        }
       });
+      
 
       onAddressSelect(addressData);
       setInputValue(place.formatted_address || '');
