@@ -130,6 +130,9 @@ const ChooseExecutorsPage: FC = () => {
         phoneNumber: executorData.phone || "",
         country: "MX",
         trustedContact: false,
+        notes: "",
+        governmentId: "",
+        gender: "",
       });
       console.log("New contact created:", newContact);
       const executorType = mapRelationToExecutorType(newContact.relationToUser);
