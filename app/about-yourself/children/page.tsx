@@ -25,6 +25,7 @@ const ChildrenPage: FC = () => {
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
   const [showModal, setShowModal] = useState<boolean>(false);
   const [children, setChildren] = useState<Contact[]>([]);
+  const [contacts, setContacts] = useState<Contact[]>([]);
   const [loading, setLoading] = useState(false);
   const [isInitialLoading, setIsInitialLoading] = useState(true);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -34,7 +35,7 @@ const ChildrenPage: FC = () => {
   const data: ChildOption[] = [
     {
       title: "Sí",
-      subTitle: "Tengo hijos biológicos o legalmente adoptados.",
+      subTitle: "Tengo hijos biológicos y/o legalmente adoptados.",
     },
     {
       title: "No",
@@ -42,7 +43,6 @@ const ChildrenPage: FC = () => {
     },
   ];
 
-  // Load children data on page load
   useEffect(() => {
     const loadData = async () => {
       if (!user?.id) {
@@ -52,10 +52,12 @@ const ChildrenPage: FC = () => {
 
       try {
         const storedChildren = sessionStorage.getItem('userChildren');
+        const storedContacts = sessionStorage.getItem('userContacts');
 
-        if (storedChildren) {
+        if (storedChildren && storedContacts) {
           setChildren(JSON.parse(storedChildren));
-          setActiveIndex(0); // Set "Sí" as active if children exist
+          setContacts(JSON.parse(storedContacts));
+          setActiveIndex(0);
           setIsInitialLoading(false);
           return;
         }
@@ -67,14 +69,22 @@ const ChildrenPage: FC = () => {
 
         apiService.setToken(tokens.accessToken.toString());
         const contactsResponse = await apiService.getContacts(user.id);
+        
         const childrenContacts = contactsResponse.filter(
           (contact: Contact) => contact.relationToUser === 'child'
         );
+        const otherContacts = contactsResponse.filter(
+          (contact: Contact) => contact.relationToUser !== 'child'
+        );
 
         sessionStorage.setItem('userChildren', JSON.stringify(childrenContacts));
+        sessionStorage.setItem('userContacts', JSON.stringify(otherContacts));
+        
         setChildren(childrenContacts);
+        setContacts(otherContacts);
+        
         if (childrenContacts.length > 0) {
-          setActiveIndex(0); // Set "Sí" as active if children exist
+          setActiveIndex(0);
         }
       } catch (error) {
         console.error('Error loading children:', error);
@@ -89,8 +99,8 @@ const ChildrenPage: FC = () => {
   const handleClick = (e: React.MouseEvent<HTMLDivElement>, index: number): void => {
     e.preventDefault();
     setActiveIndex(index === activeIndex ? null : index);
-    if (index === 1) { // If "No" is selected
-      setChildren([]); // Clear children list
+    if (index === 1) {
+      setChildren([]);
       sessionStorage.removeItem('userChildren');
     }
   };
@@ -109,11 +119,8 @@ const ChildrenPage: FC = () => {
 
   const handleDeleteChild = (childToDelete: Contact): void => {
     if (confirm('¿Estás seguro de que deseas eliminar este hijo?')) {
-      // Remove child from state
       const updatedChildren = children.filter(child => child !== childToDelete);
       setChildren(updatedChildren);
-      
-      // Update session storage
       sessionStorage.setItem('userChildren', JSON.stringify(updatedChildren));
     }
   };
@@ -138,19 +145,16 @@ const ChildrenPage: FC = () => {
 
       apiService.setToken(tokens.accessToken.toString());
 
-      // Save all children:
-      // For each child without an id (new child), remove the id property before sending to the API.
       if (user?.id && activeIndex === 0) {
         for (const child of children) {
           if (!child.id) {
-            // Destructure to remove the id property
             const { id, ...childDataWithoutId } = child;
             await apiService.createContact(user.id, childDataWithoutId);
           }
         }
       }
 
-      router.push("/about-yourself/pets");
+      router.push("/summary");
     } catch (error) {
       console.error('Error saving children:', error);
       setErrorMessage("Error al guardar los cambios. Por favor, intente nuevamente.");
@@ -161,14 +165,12 @@ const ChildrenPage: FC = () => {
 
   const setChild = (childData: Contact) => {
     if (isEditing && selectedChild) {
-      // Update existing child
       const updatedChildren = children.map(child =>
         child.id === selectedChild.id ? { ...childData, id: child.id } : child
       );
       setChildren(updatedChildren);
       sessionStorage.setItem('userChildren', JSON.stringify(updatedChildren));
     } else {
-      // Add new child
       const updatedChildren = [...children, childData];
       setChildren(updatedChildren);
       sessionStorage.setItem('userChildren', JSON.stringify(updatedChildren));
@@ -183,6 +185,7 @@ const ChildrenPage: FC = () => {
         setChild={setChild}
         isEditing={isEditing}
         existingChild={selectedChild}
+        contacts={contacts}
       />
       <motion.div
         initial={{ opacity: 0 }}
@@ -216,12 +219,12 @@ const ChildrenPage: FC = () => {
                   Siempre podrás actualizar esto en el futuro.
                 </p>
                 <p className="text-[16px] text-[#1d1d1f] leading-6">
-                  Agregua todos tus hijos biológicos y legalmente adoptados,
-                  quieras o no dejarles cosas en tu testamento.
+                  Agrega todos tus hijos biológicos y legalmente adoptados,
+                  quieras o no dejarlos en tu testamento.
                 </p>
                 <p className="text-[16px] text-[#1d1d1f] leading-6 mb-8">
-                  No agregues ningún hijastro aquí. Puede agregarlos más tarde si
-                  desea dejarlos como parte de su patrimonio.
+                  No agregues ningún hijastro aquí. Podrás agregarlos más tarde si
+                  deseas incluirlos en tu patrimonio.
                 </p>
               </div>
 
@@ -263,6 +266,15 @@ const ChildrenPage: FC = () => {
                           <strong>Apellido Paterno:</strong> {child.fatherLastName}<br />
                           <strong>Apellido Materno:</strong> {child.motherLastName}<br />
                           {child.email && <><strong>Correo:</strong> {child.email}<br /></>}
+                          {child.gender && (
+                            <><strong>Género:</strong> {child.gender === 'male' ? 'Masculino' : 'Femenino'}<br /></>
+                          )}
+                          {child.birthDate && (
+                            <><strong>Fecha de Nacimiento:</strong> {new Date(child.birthDate).toLocaleDateString()}<br /></>
+                          )}
+                          {child.country === 'MX' && child.governmentId && (
+                            <><strong>ID de Gobierno:</strong> {child.governmentId}<br /></>
+                          )}
                         </p>
                       </div>
                     ))}

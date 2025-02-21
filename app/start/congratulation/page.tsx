@@ -41,20 +41,6 @@ export default function CongratulationsPage() {
     checkUser();
   }, []); // Only run on mount
 
-  const handleClick = (e: React.MouseEvent<HTMLParagraphElement>, items: DataItem): void => {
-    e.preventDefault();
-    if (items?.items?.itemData == null) {
-      router.push("/summary");
-    } else {
-      setChildData(items?.items?.itemData);
-    }
-  };
-
-  const handleChildData = (e: React.MouseEvent<HTMLParagraphElement>): void => {
-    e.preventDefault();
-    router.push("/summary");
-  };
-
   const cards = [
     {
       icon: <Globe size={70} weight="thin" />,
@@ -92,7 +78,7 @@ export default function CongratulationsPage() {
   };
 
   const handleContinue = () => {
-    router.push('/summary');
+    router.push('/about-yourself/name');
   };
 
   const userName = user?.name || '';

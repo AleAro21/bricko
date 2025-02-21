@@ -45,6 +45,14 @@ const relationshipLabels: Record<string, string> = {
   none: "Otro"
 };
 
+// Helper function to calculate age from a date string
+const calculateAge = (dob: string): number => {
+  const birthDate = new Date(dob);
+  const diffMs = Date.now() - birthDate.getTime();
+  const ageDate = new Date(diffMs);
+  return Math.abs(ageDate.getUTCFullYear() - 1970);
+};
+
 // Components
 const CategoryCard: FC<CategoryCardProps> = ({ title, description, icon, onClick, count }) => (
   <div    
@@ -68,58 +76,78 @@ const CategoryCard: FC<CategoryCardProps> = ({ title, description, icon, onClick
   </div>
 );
 
-const ContactCard: FC<ContactCardProps> = ({ contact, onEdit, onDelete }) => (
-  <div className="bg-white/90 backdrop-blur-sm shadow-md rounded-xl p-6 hover:shadow-lg transition-all duration-300">
-    <div className="flex justify-between items-start mb-4">
-      <div>
-        <h3 className="text-xl font-medium text-[#1d1d1f]">
-          {contact.name} {contact.fatherLastName}
-        </h3>
-        <span className="text-sm text-[#047aff] bg-[#047aff]/10 px-2 py-1 rounded-full">
-          {relationshipLabels[contact.relationToUser] || "Otro"}
-        </span>
-         
-        <span className="text-sm text-[#047aff] bg-[#047aff]/10 px-2 py-1 rounded-full">
-          { "Menor de edad"}
-        </span>
-      </div>
-      <div className="flex gap-2">
-        <button
-          onClick={() => onEdit(contact)}
-          className="p-2 text-gray-600 hover:text-[#047aff] transition-colors"
-        >
-          <Pencil size={20} />
-        </button>
-        <button
-          onClick={() => onDelete(contact.id!)}
-          className="p-2 text-gray-600 hover:text-red-500 transition-colors"
-        >
-          <Trash size={20} />
-        </button>
-      </div>
-    </div>
-    <div className="space-y-2">
-      <p className="text-sm text-gray-600">
-        <span className="font-medium">Email:</span> {contact.email}
-      </p>
-      <p className="text-sm text-gray-600">
-        <span className="font-medium">Teléfono:</span> {contact.phoneNumber}
-      </p>
-      {contact.trustedContact && (
-        <div className="mt-2">
-          <span className="text-sm bg-green-100 text-green-800 px-2 py-1 rounded-full">
-            Contacto de confianza
+const ContactCard: FC<ContactCardProps> = ({ contact, onEdit, onDelete }) => {
+  // Determine age label based on birthDate
+  const ageLabel = contact.birthDate
+    ? (calculateAge(contact.birthDate) < 18 ? "Menor de edad" : "Mayor de edad")
+    : "Mayor de edad";
+  
+  // Format the birth date to a pretty format (e.g., "12 de octubre de 2023")
+  const formattedBirthDate = contact.birthDate
+    ? new Date(contact.birthDate).toLocaleDateString("es-ES", {
+        day: "numeric",
+        month: "long",
+        year: "numeric",
+      })
+    : "N/A";
+
+  return (
+    <div className="bg-white/90 backdrop-blur-sm shadow-md rounded-xl p-6 hover:shadow-lg transition-all duration-300">
+      <div className="flex justify-between items-start mb-4">
+        <div>
+          <h3 className="text-xl font-medium text-[#1d1d1f]">
+            {contact.name} {contact.fatherLastName}
+          </h3>
+          <span className="text-sm text-[#047aff] bg-[#047aff]/10 px-2 py-1 rounded-full mr-2">
+            {relationshipLabels[contact.relationToUser] || "Otro"}
+          </span>
+          <span className="text-sm text-[#047aff] bg-[#047aff]/10 px-2 py-1 rounded-full">
+            {ageLabel}
           </span>
         </div>
-      )}
-      {/* {contact.notes && (
-        <p className="text-sm text-gray-600 mt-2">
-          <span className="font-medium">Notas:</span> {contact.notes}
+        <div className="flex gap-2">
+          <button
+            onClick={() => onEdit(contact)}
+            className="p-2 text-gray-600 hover:text-[#047aff] transition-colors"
+          >
+            <Pencil size={20} />
+          </button>
+          <button
+            onClick={() => onDelete(contact.id!)}
+            className="p-2 text-gray-600 hover:text-red-500 transition-colors"
+          >
+            <Trash size={20} />
+          </button>
+        </div>
+      </div>
+      <div className="space-y-2">
+        <p className="text-sm text-gray-600">
+          <span className="font-medium">Email:</span> {contact.email}
         </p>
-      )} */}
+        <p className="text-sm text-gray-600">
+          <span className="font-medium">País:</span> {contact.country}
+        </p>
+        <p className="text-sm text-gray-600">
+          <span className="font-medium">Fecha de nacimiento:</span> {formattedBirthDate}
+        </p>
+        {contact.governmentId && (
+          <p className="text-sm text-gray-600">
+            <span className="font-medium">ID de Gobierno:</span> {contact.governmentId}
+          </p>
+        )}
+        {contact.trustedContact && (
+          <div className="mt-2">
+            <span className="text-sm bg-green-100 text-green-800 px-2 py-1 rounded-full">
+              Contacto de confianza
+            </span>
+          </div>
+        )}
+      </div>
     </div>
-  </div>
-);
+  );
+};
+
+
 
 const PetCard: FC<PetCardProps> = ({ pet, onEdit, onDelete }) => (
   <div className="bg-white/90 backdrop-blur-sm shadow-md rounded-xl p-6 hover:shadow-lg transition-all duration-300">
@@ -176,28 +204,50 @@ const PeoplePage: FC = () => {
       
       try {
         setLoading(true);
+        console.log("Fetching auth session...");
         const { tokens } = await fetchAuthSession();
+        console.log("Fetched tokens:", tokens);
         if (!tokens?.accessToken) throw new Error("No authentication token available");
         apiService.setToken(tokens.accessToken.toString());
-        
-        const [fetchedContacts, fetchedPets] = await Promise.all([
-          apiService.getContacts(user.id),
-          apiService.getPets(user.id)
-        ]);
+  
+        console.log("Fetching contacts for user:", user.id);
+        const fetchedContacts = await apiService.getContacts(user.id);
+        console.log("Fetched contacts:", fetchedContacts);
+  
+        // Try to fetch pets, but handle the 404 error gracefully.
+        let fetchedPets: Pet[] = [];
+        try {
+          console.log("Fetching pets for user:", user.id);
+          fetchedPets = await apiService.getPets(user.id);
+          console.log("Fetched pets:", fetchedPets);
+        } catch (err: any) {
+          console.error("Error fetching pets:", err);
+          console.log("Type of error:", typeof err);
+          console.log("Full error object:", err);
+          if (
+            (typeof err === "string" && err.includes("API call failed: 404")) ||
+            (err.message && err.message.includes("API call failed: 404"))
+          ) {
+            console.log("Encountered 404 error for pets, setting fetchedPets to an empty array");
+            fetchedPets = [];
+          } else {
+            throw err;
+          }
+        }
         
         setContacts(fetchedContacts);
         setPets(fetchedPets);
       } catch (err) {
+        console.error("Error in loadData:", err);
         setError('Error al cargar los datos');
-        console.error('Error fetching data:', err);
       } finally {
         setLoading(false);
       }
     };
-
+  
     loadData();
   }, [user?.id]);
-
+  
   const handleEdit = {
     contact: (contact: Contact) => {
       console.log('Edit contact:', contact);
@@ -340,8 +390,11 @@ const PeoplePage: FC = () => {
         </div>
       );
     } else {
-      const categoryContacts = selectedCategory === 'children' ? filteredContacts.children : 
-                             selectedCategory === 'trusted' ? filteredContacts.trusted : [];
+      const categoryContacts = selectedCategory === 'children'
+        ? filteredContacts.children
+        : selectedCategory === 'trusted'
+          ? filteredContacts.trusted
+          : [];
       
       content = categoryContacts.length === 0 ? getEmptyState() : (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

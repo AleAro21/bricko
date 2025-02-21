@@ -58,27 +58,9 @@ const PartnerPage: FC = () => {
       },
     },
     {
-      title: "Viudo",
-      value: "widowed",
-      subTitle: "Estado de quien ha perdido a su cónyuge por fallecimiento.",
-      items: {
-        itemTiltle: "",
-        itemData: "/about-yourself/live-with-partner",
-      },
-    },
-    {
       title: "Concubinato",
       value: "concubinage",
       subTitle: "Relación de hecho reconocida si la pareja vive junta y cumple ciertos requisitos.",
-      items: {
-        itemTiltle: "",
-        itemData: "/about-yourself/live-with-partner",
-      },
-    },
-    {
-      title: "Divorciado",
-      value: "divorced",
-      subTitle: "Matrimonio disuelto legalmente; cada uno retoma su estado de soltería.",
       items: {
         itemTiltle: "",
         itemData: "/about-yourself/live-with-partner",
@@ -156,7 +138,6 @@ const PartnerPage: FC = () => {
         setPartner(contactData);
       } catch (error) {
         console.error('Error loading data:', error);
-        // Optionally, set an error message here
       } finally {
         setIsInitialLoading(false);
       }
@@ -186,7 +167,7 @@ const PartnerPage: FC = () => {
     if (confirm('¿Estás seguro de que deseas eliminar esta pareja?')) {
       try {
         setLoading(true);
-        // Delete partner logic if needed; here we simply remove partner from state
+        // Delete partner logic if needed; here we simply remove partner from state and session storage
         setPartner(null);
         sessionStorage.removeItem('userContact');
       } catch (error) {
@@ -228,24 +209,45 @@ const PartnerPage: FC = () => {
         partner &&
         (partner.relationToUser === "spouse" || partner.relationToUser === "albacea")
       ) {
+        // Map the field 'relationship' from the form to 'relationToUser' for the API.
         const contactData: Contact = {
           id: partner.id,
           name: partner.name,
           fatherLastName: partner.fatherLastName,
           motherLastName: partner.motherLastName,
-          relationToUser: partner.relationToUser,
+          relationToUser: partner.relationToUser, // make sure this comes from the Add form correctly
           email: partner.email,
           trustedContact: false,
           countryPhoneCode: partner.countryPhoneCode || '',
           phoneNumber: partner.phoneNumber || '',
           country: "MX",
+          notes: partner.notes || '',
+          governmentId: partner.governmentId || '',
+          gender: partner.gender || '',
         };
 
+        const contactDataTo : Contact = {
+          name: partner.name,
+          fatherLastName: partner.fatherLastName,
+          motherLastName: partner.motherLastName,
+          relationToUser: partner.relationToUser, // make sure this comes from the Add form correctly
+          email: partner.email,
+          trustedContact: false,
+          countryPhoneCode: partner.countryPhoneCode || '',
+          phoneNumber: partner.phoneNumber || '',
+          country: "MX",
+          notes: partner.notes || '',
+          governmentId: partner.governmentId || '',
+          gender: partner.gender || '',
+        };
+        
+
+       
         // Uncomment and update the logic below if you want to handle contact updates
         // if (partner.id) {
         //   await apiService.updateContact(user.id, partner.id, contactData);
         // } else {
-          await apiService.createContact(user.id, contactData);
+        await apiService.createContact(user.id, contactData);
         // }
 
         // Store updated contact in session storage
@@ -263,35 +265,6 @@ const PartnerPage: FC = () => {
     }
   };
 
-  const renderAddPartnerButton = (title: string): JSX.Element | null => {
-    if (["Casado", "Viudo", "Divorciado", "Concubinato"].includes(title)) {
-      if (!partner) {
-        return (
-          <div
-            onClick={handlePartnerClick}
-            className="bg-white rounded-xl border border-gray-200 hover:border-[#047aff] transition-colors cursor-pointer mt-4"
-          >
-            <div className="flex items-center justify-center gap-2 py-4 text-[#047aff] font-medium">
-              <div className="bg-[#047aff] rounded-full p-1">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 448 512"
-                  width="16"
-                  height="16"
-                  className="fill-white"
-                >
-                  <path d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z" />
-                </svg>
-              </div>
-              Agregar Pareja
-            </div>
-          </div>
-        );
-      }
-    }
-    return null;
-  };
-
   return (
     <DashboardLayout>
       <Add
@@ -300,6 +273,7 @@ const PartnerPage: FC = () => {
         setPartner={setPartner}
         isEditing={isEditing}
         existingPartner={isEditing ? partner : null}
+        partnerType={selectedItem?.title}
       />
       <motion.div
         initial={{ opacity: 0 }}
@@ -314,7 +288,7 @@ const PartnerPage: FC = () => {
             <div className="lg:w-1/3">
               <div className="flex items-center gap-2 mb-2.5">
                 <div className="inline-flex items-center h-[32px] bg-[#047aff] bg-opacity-10 px-[12px] py-[6px] rounded-md">
-                  <span className="text-[#047aff] text-[14px] font-[400]">ESTADO CIVIL</span>
+                  <span className="text-[#047aff] text-[14px] font-[400]">SITUACIÓN CIVIL</span>
                 </div>
                 <Link href="#" className="inline-flex items-center h-[32px] text-[#047aff] hover:text-[#0456b0]">
                   <span className="w-5 h-5 inline-flex items-center justify-center rounded-full border border-[#047aff] text-sm">?</span>
@@ -323,13 +297,12 @@ const PartnerPage: FC = () => {
 
               <h1 className='text-[32px] sm:text-[38px] font-[500] tracking-[-1.5px] leading-[1.2] sm:leading-[52px] mb-[15px]'>
                 <span className='text-[#1d1d1f]'>¿Cuál es tu </span>
-                <span className='bg-gradient-to-r from-[#3d9bff] to-[#047aff] inline-block text-transparent bg-clip-text'>estado civil</span>
+                <span className='bg-gradient-to-r from-[#3d9bff] to-[#047aff] inline-block text-transparent bg-clip-text'>situación civil</span>
                 <span className='text-[#1d1d1f]'>?</span>
               </h1>
 
               <p className="text-[16px] text-[#1d1d1f] leading-6 mb-8">
-                Seleccione su estado legal actual, incluso si sabes que va a
-                cambiar pronto. Siempre podrás actualizar esto en el futuro.
+                Seleccione su estado legal actual, incluso si sabes que va a cambiar pronto. Siempre podrás actualizar esto en el futuro.
               </p>
 
               <ProgressIndicator
@@ -338,24 +311,18 @@ const PartnerPage: FC = () => {
                 title="Progreso de la sección"
               />
 
-              {/* Partner Card with Edit/Delete */}
+              {/* Contact Card with Edit/Delete */}
               {partner && (partner.relationToUser === "spouse" || partner.relationToUser === "albacea") && (
                 <div className="mt-8 bg-white rounded-2xl p-6 shadow-lg">
                   <div className="flex justify-between items-start mb-4">
-                    <h3 className="text-lg font-semibold">Pareja</h3>
+                    <h3 className="text-lg font-semibold">{partner.name}</h3>
                     <div className="flex gap-2">
-                      <button
-                        onClick={handleEditPartner}
-                        className="text-blue-600 hover:text-blue-800"
-                      >
+                      <button onClick={handleEditPartner} className="text-blue-600 hover:text-blue-800">
                         <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                           <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
                         </svg>
                       </button>
-                      <button
-                        onClick={handleDeletePartner}
-                        className="text-red-600 hover:text-red-800"
-                      >
+                      <button onClick={handleDeletePartner} className="text-red-600 hover:text-red-800">
                         <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                           <path fillRule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clipRule="evenodd" />
                         </svg>
@@ -363,7 +330,6 @@ const PartnerPage: FC = () => {
                     </div>
                   </div>
                   <p className="text-sm text-gray-600">
-                    <strong>Nombre:</strong> {partner.name}<br />
                     <strong>Apellido Paterno:</strong> {partner.fatherLastName}<br />
                     <strong>Apellido Materno:</strong> {partner.motherLastName}<br />
                     <strong>Correo Electrónico:</strong> {partner.email}<br />
@@ -395,27 +361,24 @@ const PartnerPage: FC = () => {
                       onClick={(e) => handleClick(e, index, item)}
                     >
                       <div
-                        className={`px-6 py-4 rounded-xl border ${
-                          activeIndex === index
+                        className={`px-6 py-4 rounded-xl border ${activeIndex === index
                             ? 'bg-[#047aff] border-[#047aff]'
                             : 'border-gray-200 hover:border-[#047aff]'
-                        }`}
+                          }`}
                       >
                         <h3
-                          className={`text-[17px] font-[400] ${
-                            activeIndex === index
+                          className={`text-[17px] font-[400] ${activeIndex === index
                               ? 'text-white'
                               : 'text-[#1d1d1f]'
-                          }`}
+                            }`}
                         >
                           {item.title}
                         </h3>
                         <p
-                          className={`mt-1 text-[14px] ${
-                            activeIndex === index
+                          className={`mt-1 text-[14px] ${activeIndex === index
                               ? 'text-blue-100'
                               : 'text-[#6e6e73]'
-                          }`}
+                            }`}
                         >
                           {item.subTitle}
                         </p>
@@ -424,7 +387,28 @@ const PartnerPage: FC = () => {
                   ))}
                 </div>
 
-                {selectedItem && renderAddPartnerButton(selectedItem.title)}
+                {/* Show the Add Contact button only for "Casado" or "Concubinato" */}
+                {selectedItem && ["Casado", "Concubinato"].includes(selectedItem.title) && !partner && (
+                  <div
+                    onClick={handlePartnerClick}
+                    className="bg-white rounded-xl border border-gray-200 hover:border-[#047aff] transition-colors cursor-pointer mt-4"
+                  >
+                    <div className="flex items-center justify-center gap-2 py-4 text-[#047aff] font-medium">
+                      <div className="bg-[#047aff] rounded-full p-1">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 448 512"
+                          width="16"
+                          height="16"
+                          className="fill-white"
+                        >
+                          <path d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z" />
+                        </svg>
+                      </div>
+                      {selectedItem.title === "Casado" ? "Agregar Cónyuge" : "Agregar Pareja"}
+                    </div>
+                  </div>
+                )}
 
                 {errorMessage && (
                   <p className="text-red-500 text-[14px] text-center mt-4">{errorMessage}</p>

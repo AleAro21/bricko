@@ -50,12 +50,16 @@ export interface Contact {
   name: string;
   fatherLastName: string;
   motherLastName: string;
+  birthDate?: string;
   email: string;
   relationToUser: string;
   countryPhoneCode: string;
   phoneNumber: string;
   country: string;
   trustedContact: boolean;
+  notes: string;
+  governmentId: string;
+  gender: string;
 }
 
 export interface Pet {

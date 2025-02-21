@@ -4,7 +4,7 @@ import { FC } from "react";
 import { useRouter } from "next/navigation";
 import DashboardLayout from "@/components/common/DashboardLayout";
 import { motion } from "framer-motion";
-import { Diamond, Stack, Car, Money, Question } from "phosphor-react";
+import { Diamond, Stack, Car, Money, Question, Dog } from "phosphor-react";
 import Link from "next/link";
 
 interface LegacyCardProps {
@@ -54,6 +54,12 @@ const AccountAndPropertyPage: FC = () => {
             description: "Un automóvil, motocicleta u otro tipo de vehículo",
             icon: <Car size={24} weight="thin" />,
             onClick: () => router.push('/legacy?type=vehicle')
+        },
+        {
+            title: "Mascota",
+            description: "Un perro, gato u otra mascota que necesite cuidados futuros",
+            icon: <Dog size={24} weight="thin" />,
+            onClick: () => router.push('/legacy?type=pet')
         },
         {
             title: "Dinero",
