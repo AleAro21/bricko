@@ -1,4 +1,6 @@
+// app/start/basics/page.tsx
 'use client';
+
 import { motion } from 'framer-motion';
 import { FC, FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -9,7 +11,7 @@ import Google from "@/assets/Google.png";
 import PrimaryButton from "@/components/reusables/PrimaryButton";
 import FooterTwo from '@/components/common/FooterTwo';
 import Spinner from "@/components/reusables/Spinner";
-import { Lock } from "phosphor-react"; // Import Lock icon
+import { Lock } from "phosphor-react";
 
 interface SocialButtonProps {
   src: string;
@@ -31,21 +33,25 @@ const BasicsPage: FC = () => {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
 
+  // Use controlled state for form fields
+  const [name, setName] = useState("");
+  const [fatherLastName, setFatherLastName] = useState("");
+  const [motherLastName, setMotherLastName] = useState("");
+  const [email, setEmail] = useState("");
+  const [terms, setTerms] = useState(false);
+
   const handleSubmit = (e: FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
     setIsLoading(true);
 
-    const emailInput = document.getElementById("email") as HTMLInputElement;
-    const termsCheckbox = document.getElementById("terms") as HTMLInputElement;
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-    if (!emailRegex.test(emailInput.value)) {
+    if (!emailRegex.test(email)) {
       alert("Por favor, ingresa un correo electrónico válido.");
       setIsLoading(false);
       return;
     }
 
-    if (!termsCheckbox.checked) {
+    if (!terms) {
       alert("Por favor, acepta los términos y condiciones para continuar.");
       setIsLoading(false);
       return;
@@ -54,11 +60,7 @@ const BasicsPage: FC = () => {
     // Simulate an asynchronous action (e.g., an API call)
     setTimeout(() => {
       // Store user data in sessionStorage
-      const name = (document.getElementById("name") as HTMLInputElement).value;
-      const fatherLastName = (document.getElementById("fatherLastName") as HTMLInputElement).value;
-      const motherLastName = (document.getElementById("motherLastName") as HTMLInputElement).value;
-
-      sessionStorage.setItem("email", emailInput.value);
+      sessionStorage.setItem("email", email);
       sessionStorage.setItem("name", name);
       sessionStorage.setItem("fatherLastName", fatherLastName);
       sessionStorage.setItem("motherLastName", motherLastName);
@@ -167,6 +169,8 @@ const BasicsPage: FC = () => {
                         <input
                           type="text"
                           id="name"
+                          value={name}
+                          onChange={(e) => setName(e.target.value)}
                           className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:border-blue-500 transition-all"
                           required
                         />
@@ -178,6 +182,8 @@ const BasicsPage: FC = () => {
                         <input
                           type="text"
                           id="fatherLastName"
+                          value={fatherLastName}
+                          onChange={(e) => setFatherLastName(e.target.value)}
                           className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:border-blue-500 transition-all"
                           required
                         />
@@ -189,6 +195,8 @@ const BasicsPage: FC = () => {
                         <input
                           type="text"
                           id="motherLastName"
+                          value={motherLastName}
+                          onChange={(e) => setMotherLastName(e.target.value)}
                           className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:border-blue-500 transition-all"
                           required
                         />
@@ -200,6 +208,8 @@ const BasicsPage: FC = () => {
                         <input
                           type="email"
                           id="email"
+                          value={email}
+                          onChange={(e) => setEmail(e.target.value)}
                           className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:border-blue-500 transition-all"
                           required
                         />
@@ -211,7 +221,8 @@ const BasicsPage: FC = () => {
                         <input
                           type="checkbox"
                           id="terms"
-                          // Increase checkbox size on mobile (default: larger; smaller on sm+ screens)
+                          checked={terms}
+                          onChange={(e) => setTerms(e.target.checked)}
                           className="self-center h-5 w-5 sm:h-3 sm:w-3 rounded border-gray-300 text-blue-500 focus:ring-blue-500 mt-2.5 transition-all"
                         />
                         <span className="text-[12px] pt-2.5 text-[#1d1d1f]">

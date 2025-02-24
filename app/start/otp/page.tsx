@@ -1,10 +1,11 @@
-import { FC } from 'react';
-import OTP from '@/components/common/OtpInput';
+// app/start/otp/page.tsx (Server Component)
+import MotionWrapper from '@/components/reusables/MotionWapper';
+import OTPInput from '@/components/common/OtpInput';
 
-const OtpPage: FC = () => {
+export default function OtpPage() {
   return (
-    <OTP />
+    <MotionWrapper>
+      <OTPInput />
+    </MotionWrapper>
   );
-};
-
-export default OtpPage;
+}

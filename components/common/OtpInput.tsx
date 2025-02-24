@@ -1,5 +1,5 @@
+// components/common/OtpInput.tsx
 'use client';
-
 import React, { useState, useEffect, ChangeEvent } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
@@ -7,12 +7,14 @@ import { Envelope, Phone, ChatCircle } from 'phosphor-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import graylogo from '@/assets/greylogo.png';
 import PrimaryButton from '@/components/reusables/PrimaryButton';
-import CustomerSupport from "@/assets/CustomerSupport.png";
-import { confirmSignUp, resendSignUpCode, fetchAuthSession, signIn } from "aws-amplify/auth";
-import { apiService } from '@/app/apiService';
+import CustomerSupport from '@/assets/CustomerSupport.png';
+import { resendSignUpCode } from 'aws-amplify/auth';
 import { useUser } from '@/context/UserContext';
 import FooterTwo from '@/components/common/FooterTwo';
 import Spinner from '@/components/reusables/Spinner';
+
+// IMPORTANT: Import the server action from its server file
+import { confirmOtpAction } from '@/app/actions/otpActions';
 
 interface OTPInputProps {
   length?: number;
@@ -31,9 +33,21 @@ const OTPInput: React.FC<OTPInputProps> = ({ length = 6, onComplete }) => {
   const [showPopup, setShowPopup] = useState<boolean>(false);
   const [currentMethodIndex, setCurrentMethodIndex] = useState<number>(0);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [email, setEmail] = useState<string>(''); // New state to hold email
   const router = useRouter();
-  const { setUser } = useUser();
+  const { user, setUser } = useUser();
+
+  // Get user details securely from context (fetched via your secure API route)
+  const email = user?.email;
+  const name = user?.name || "";
+  const fatherLastName = user?.fatherLastName || "";
+  const motherLastName = user?.motherLastName || "";
+
+  // If no email is available, force a redirect to login
+  useEffect(() => {
+    if (!email) {
+      router.push('/start/login');
+    }
+  }, [email, router]);
 
   const verificationMethods: VerificationMethod[] = [
     { id: 'email', icon: <Envelope size={24} weight="regular" />, label: 'Email' },
@@ -41,46 +55,27 @@ const OTPInput: React.FC<OTPInputProps> = ({ length = 6, onComplete }) => {
     { id: 'call', icon: <Phone size={24} weight="regular" />, label: 'Llamada' },
   ];
 
-  // Load email from sessionStorage on client-side only
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      const storedEmail = sessionStorage.getItem("email");
-      if (storedEmail) {
-        setEmail(storedEmail);
-      }
-    }
-  }, []);
-
   const rotateVerificationMethod = () => {
-    setCurrentMethodIndex((prevIndex) =>
-      (prevIndex + 1) % verificationMethods.length
-    );
+    setCurrentMethodIndex((prevIndex) => (prevIndex + 1) % verificationMethods.length);
     resetTimer();
   };
 
   const handleChange = (element: HTMLInputElement, index: number): void => {
-    if (isNaN(Number(element.value)) && element.value !== '') return; // allow deletion
-
+    if (isNaN(Number(element.value)) && element.value !== '') return;
     const newOtp = [...otp];
     newOtp[index] = element.value;
     setOtp(newOtp);
-
     if (element.value !== '' && element.nextSibling) {
       (element.nextSibling as HTMLInputElement).focus();
     }
   };
 
-  const handleKeyDown = (
-    e: React.KeyboardEvent<HTMLInputElement>,
-    index: number
-  ) => {
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>, index: number) => {
     if (e.key === "Backspace") {
-      // If the current input is already empty, move focus to the previous input
       if (otp[index] === "" && index > 0) {
         const prevInput = document.getElementById(`otp-${index - 1}`);
         prevInput?.focus();
       } else {
-        // Clear the current input immediately
         const newOtp = [...otp];
         newOtp[index] = "";
         setOtp(newOtp);
@@ -91,56 +86,40 @@ const OTPInput: React.FC<OTPInputProps> = ({ length = 6, onComplete }) => {
   const handleSubmit = async (): Promise<void> => {
     setIsLoading(true);
     const otpString = otp.join("");
-    // Use the email state instead of directly calling sessionStorage
     if (!email) {
       setIsLoading(false);
       alert("No se encontró el correo electrónico. Por favor, regresa al paso anterior.");
       return;
     }
+    // Ensure registration details are available (they should have been securely fetched earlier)
+    if (!name || !fatherLastName || !motherLastName) {
+      setIsLoading(false);
+      alert("Faltan datos de registro. Por favor, regresa al paso anterior.");
+      return;
+    }
 
     try {
-      // Confirm signup
-      await confirmSignUp({ username: email, confirmationCode: otpString });
-
-      // Sign in
-      const password = sessionStorage.getItem("password");
-      if (!password) {
-        throw new Error("Password not found in session storage");
-      }
-
-      const { isSignedIn } = await signIn({ username: email, password });
-      if (!isSignedIn) {
-        throw new Error("Sign in failed");
-      }
-
-      // Get tokens
-      const { tokens } = await fetchAuthSession();
-      if (!tokens?.accessToken) {
-        throw new Error("Failed to retrieve tokens");
-      }
-
-      // Set token in API service
-      apiService.setToken(tokens.accessToken.toString());
-
-      // Create user
-      const userData = {
-        name: sessionStorage.getItem("name") || '',
-        fatherLastName: sessionStorage.getItem("fatherLastName") || '',
-        motherLastName: sessionStorage.getItem("motherLastName") || '',
+      // Call the server action to confirm OTP, sign in, and create the user.
+      // Note: In a production flow, the password might be handled exclusively on the server.
+      const result = await confirmOtpAction({
         email,
-      };
+        otp: otpString,
+        password: "", // Adjust this as needed—ideally, the password is not exposed on the client.
+        name,
+        fatherLastName,
+        motherLastName,
+      });
 
-      const createdUser = await apiService.createUser(userData);
-
-      // Store complete user data
-      sessionStorage.setItem('userId', createdUser.id);
-      sessionStorage.setItem('userObject', JSON.stringify(createdUser));
-      setUser(createdUser);
-
-      router.push("/start/congratulation");
+      if (result.success) {
+        // Do not store sensitive data on the client; user data is now available via secure cookies
+        setUser(result.user);
+        router.push("/start/congratulation");
+      } else {
+        alert(result.error);
+      }
     } catch (error: any) {
       console.error("Error during confirmation process:", error);
-      alert(error.message || "An error occurred during confirmation");
+      alert(error.message || "An unexpected error occurred during confirmation");
     } finally {
       setIsLoading(false);
     }
@@ -151,7 +130,6 @@ const OTPInput: React.FC<OTPInputProps> = ({ length = 6, onComplete }) => {
       alert("No se encontró el correo electrónico.");
       return;
     }
-
     try {
       await resendSignUpCode({ username: email });
       alert("Código de verificación reenviado.");
@@ -164,21 +142,13 @@ const OTPInput: React.FC<OTPInputProps> = ({ length = 6, onComplete }) => {
 
   useEffect(() => {
     if (timer > 0) {
-      const countdown = setInterval(() => {
-        setTimer((prevTime) => prevTime - 1);
-      }, 1000);
+      const countdown = setInterval(() => setTimer(prev => prev - 1), 1000);
       return () => clearInterval(countdown);
     }
   }, [timer]);
 
-  const resetTimer = (): void => {
-    setTimer(30);
-  };
-
-  const togglePopup = (): void => {
-    setShowPopup(!showPopup);
-  };
-
+  const resetTimer = (): void => setTimer(30);
+  const togglePopup = (): void => setShowPopup(!showPopup);
   const currentMethod = verificationMethods[currentMethodIndex];
 
   return (
@@ -189,33 +159,29 @@ const OTPInput: React.FC<OTPInputProps> = ({ length = 6, onComplete }) => {
       transition={{ duration: 1 }}
       className="flex flex-col min-h-screen"
     >
-      <main className='container mx-auto flex flex-col flex-grow bg-[#f5f5f7] overflow-hidden'>
-        <div className='w-full max-w-6xl mx-auto flex flex-col min-h-[75vh] mb-4'>
-          <div className='py-4 px-4 sm:px-5'>
-            <a href='https://testador.mx'>
+      <main className="container mx-auto flex flex-col flex-grow bg-[#f5f5f7] overflow-hidden">
+        <div className="w-full max-w-6xl mx-auto flex flex-col min-h-[75vh] mb-4">
+          <div className="py-4 px-4 sm:px-5">
+            <a href="https://testador.mx">
               <Image src={graylogo} width={150} height={150} alt="Testador Logo" />
             </a>
           </div>
-          <div className='px-4 sm:px-5 flex-grow'>
-            <div className='flex flex-col lg:flex-row gap-8 lg:gap-24 h-full'>
-              {/* Left column - Title section */}
+          <div className="px-4 sm:px-5 flex-grow">
+            <div className="flex flex-col lg:flex-row gap-8 lg:gap-24 h-full">
               <div className="lg:w-1/3">
                 <div className="inline-flex items-center h-[32px] bg-[#047aff] bg-opacity-10 px-[12px] py-[6px] rounded-md mb-2.5 mt-5">
                   <span className="text-[#047aff] text-[14px] font-[400]">VERIFICACIÓN EN 2 PASOS</span>
                 </div>
-
-                <h1 className='text-[32px] sm:text-[38px] font-[500] tracking-[-1.5px] leading-[1.2] sm:leading-[52px] mb-[15px]'>
-                  <span className='text-[#1d1d1f]'>Ingresa tu código de </span>
-                  <span className='bg-gradient-to-r from-[#3d9bff] to-[#047aff] inline-block text-transparent bg-clip-text'>verificación</span>
+                <h1 className="text-[32px] sm:text-[38px] font-[500] tracking-[-1.5px] leading-[1.2] sm:leading-[52px] mb-[15px]">
+                  <span className="text-[#1d1d1f]">Ingresa tu código de </span>
+                  <span className="bg-gradient-to-r from-[#3d9bff] to-[#047aff] inline-block text-transparent bg-clip-text">verificación</span>
                 </h1>
                 <p className="text-[16px] text-[#1d1d1f] leading-6 mb-4">
-                  Es un código de 6 dígitos enviado a{" "}
-                  <span className="font-bold">{email}</span>
+                  Es un código de 6 dígitos enviado a <span className="font-bold">{email}</span>
                 </p>
               </div>
 
-              {/* Right column - OTP Form in white container */}
-              <div className='w-full lg:w-3/5 flex items-center mt-[0px] lg:mt-0'>
+              <div className="w-full lg:w-3/5 flex items-center mt-[0px] lg:mt-0">
                 <div className="bg-white rounded-2xl px-4 sm:px-8 md:px-12 py-8 shadow-lg w-full max-w-xl mx-auto relative">
                   {isLoading && (
                     <div className="absolute inset-0 bg-white bg-opacity-80 flex items-center justify-center z-50 rounded-2xl">
