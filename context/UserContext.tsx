@@ -12,8 +12,6 @@ interface UserContextType {
 }
 
 const UserContext = createContext<UserContextType | undefined>(undefined);
-
-// How often to refresh user data (in milliseconds)
 const REFRESH_INTERVAL = 5 * 60 * 1000; // 5 minutes
 
 export function UserProvider({ children }: { children: ReactNode }) {
@@ -21,7 +19,7 @@ export function UserProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
 
-  const refreshUser = async (force: boolean = false) => {
+  const refreshUser = async () => {
     try {
       setLoading(true);
       const response = await fetch('/api/user', {
@@ -41,12 +39,10 @@ export function UserProvider({ children }: { children: ReactNode }) {
     }
   };
 
-  // Initial load
   useEffect(() => {
-    refreshUser(true);
+    refreshUser();
   }, []);
 
-  // Periodic refresh
   useEffect(() => {
     const interval = setInterval(() => {
       refreshUser();
@@ -54,7 +50,6 @@ export function UserProvider({ children }: { children: ReactNode }) {
     return () => clearInterval(interval);
   }, []);
 
-  // Refresh when the tab becomes visible
   useEffect(() => {
     const handleVisibilityChange = () => {
       if (document.visibilityState === 'visible') {

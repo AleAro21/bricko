@@ -1,5 +1,6 @@
 // components/common/OtpInput.tsx
 'use client';
+
 import React, { useState, useEffect, ChangeEvent } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
@@ -34,20 +35,34 @@ const OTPInput: React.FC<OTPInputProps> = ({ length = 6, onComplete }) => {
   const [currentMethodIndex, setCurrentMethodIndex] = useState<number>(0);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const router = useRouter();
-  const { user, setUser } = useUser();
+  const { setUser } = useUser();
 
-  // Get user details securely from context (fetched via your secure API route)
-  const email = user?.email;
-  const name = user?.name || "";
-  const fatherLastName = user?.fatherLastName || "";
-  const motherLastName = user?.motherLastName || "";
+  // Since the user is not yet created, we rely on sessionStorage for these fields.
+  const [email, setEmail] = useState<string>('');
+  const [name, setName] = useState<string>('');
+  const [fatherLastName, setFatherLastName] = useState<string>('');
+  const [motherLastName, setMotherLastName] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
 
-  // If no email is available, force a redirect to login
+  // Retrieve registration fields from sessionStorage on mount.
   useEffect(() => {
-    if (!email) {
-      router.push('/start/login');
+    if (typeof window !== 'undefined') {
+      const storedEmail = sessionStorage.getItem("email");
+      const storedName = sessionStorage.getItem("name");
+      const storedFather = sessionStorage.getItem("fatherLastName");
+      const storedMother = sessionStorage.getItem("motherLastName");
+      const storedPassword = sessionStorage.getItem("password");
+      if (storedEmail && storedName && storedFather && storedMother) {
+        setEmail(storedEmail);
+        setName(storedName);
+        setFatherLastName(storedFather);
+        setMotherLastName(storedMother);
+        setPassword(storedPassword || '');
+      } else {
+        router.push('/start/login');
+      }
     }
-  }, [email, router]);
+  }, [router]);
 
   const verificationMethods: VerificationMethod[] = [
     { id: 'email', icon: <Envelope size={24} weight="regular" />, label: 'Email' },
@@ -91,7 +106,7 @@ const OTPInput: React.FC<OTPInputProps> = ({ length = 6, onComplete }) => {
       alert("No se encontró el correo electrónico. Por favor, regresa al paso anterior.");
       return;
     }
-    // Ensure registration details are available (they should have been securely fetched earlier)
+    // Ensure registration details are available.
     if (!name || !fatherLastName || !motherLastName) {
       setIsLoading(false);
       alert("Faltan datos de registro. Por favor, regresa al paso anterior.");
@@ -100,18 +115,19 @@ const OTPInput: React.FC<OTPInputProps> = ({ length = 6, onComplete }) => {
 
     try {
       // Call the server action to confirm OTP, sign in, and create the user.
-      // Note: In a production flow, the password might be handled exclusively on the server.
+      // In production, sensitive details (like password) should be handled on the server.
       const result = await confirmOtpAction({
         email,
         otp: otpString,
-        password: "", // Adjust this as needed—ideally, the password is not exposed on the client.
+        password, // Omit or handle the password securely on the server.
         name,
         fatherLastName,
         motherLastName,
       });
 
       if (result.success) {
-        // Do not store sensitive data on the client; user data is now available via secure cookies
+        // The server action sets secure HTTP‑only cookies.
+        // Now update the user context with the returned user data.
         setUser(result.user);
         router.push("/start/congratulation");
       } else {

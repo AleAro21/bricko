@@ -18,6 +18,7 @@ import {
   UserProgress
 } from '@/types';
 
+import { cookies } from 'next/headers';
 
 const API_BASE_URL = "https://51lyy4n8z0.execute-api.us-east-2.amazonaws.com/dev";
 
@@ -47,14 +48,14 @@ export class APIService {
     this.token = token;
   }
 
-  private async fetchWithAuth(endpoint: string, options: RequestInit = {}) {
-    if (!this.token) {
+  private async fetchWithAuth(endpoint: string, options: RequestInit = {}, tokenOverride?: string) {
+    const token = tokenOverride || this.token;
+    if (!token) {
       throw new Error('No authentication token available');
     }
-
     const headers = {
       'Content-Type': 'application/json',
-      'Authorization': `Bearer ${this.token}`,
+      'Authorization': `Bearer ${token}`,
       ...options.headers,
     };
 
@@ -65,11 +66,9 @@ export class APIService {
 
     if (!response.ok) {
       const error = new Error(`API call failed: ${response.status} ${response.statusText}`);
-      // Attach the status code to the error object
       (error as any).status = response.status;
       throw error;
     }
-
     return response.json();
   }
 

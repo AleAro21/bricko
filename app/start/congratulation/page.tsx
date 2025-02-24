@@ -7,6 +7,7 @@ import CongratulationsLayout from "@/components/congratulations/CongratulationsL
 import CongratulationsInteractive from "@/components/congratulations/CongratulationsInteractive";
 import { motion } from "framer-motion";
 
+
 export default function CongratulationsPage() {
   const router = useRouter();
   const { user, setUser } = useUser();
@@ -19,6 +20,10 @@ export default function CongratulationsPage() {
         setUser(JSON.parse(storedUser));
       } else if (!user && !sessionStorage.getItem("userId")) {
         router.push("/start/login");
+        sessionStorage.clear();
+        localStorage.clear();
+        
+
       }
     };
     checkUser();

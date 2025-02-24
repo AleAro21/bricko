@@ -1,25 +1,18 @@
 // app/api/user/route.ts
 import { NextResponse } from 'next/server';
 import { apiService } from '@/app/apiService';
+import { cookies } from 'next/headers';
 
-// Example: Verify the token from cookies and fetch user data securely.
-export async function GET(request: Request) {
-  // Get token from cookies
-  const cookies = require('next/headers').cookies();
-  const token = cookies.get('token')?.value;
-  if (!token) {
-    return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
-  }
-
+export async function GET() {
   try {
-    // Set the token in your API service
-    apiService.setToken(token);
-    // Assume the token payload has a userId or your API can determine it.
-    // For example, if you have the userId stored in a cookie or from the token itself.
-    const userId = cookies.get('userId')?.value;
-    if (!userId) {
-      throw new Error("User ID not found");
+    const tokenCookie = cookies().get("token");
+    const userIdCookie = cookies().get("userId");
+    if (!tokenCookie || !userIdCookie) {
+      return NextResponse.json({ error: "User not authenticated" }, { status: 401 });
     }
+    const userId = userIdCookie.value;
+    // Ensure the API service has the token (in case it’s not already set)
+    apiService.setToken(tokenCookie.value);
     const user = await apiService.getUser(userId);
     return NextResponse.json({ user });
   } catch (error: any) {
