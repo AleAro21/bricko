@@ -4,7 +4,6 @@ import { apiService } from "@/app/apiService";
 import { User } from "@/types";
 import { cookies } from "next/headers";
 
-
 export interface UpdateUserInput {
   id: string;
   name?: string;
@@ -24,20 +23,24 @@ export async function updateUserAction(
   userData: UpdateUserInput
 ): Promise<{ success: boolean; user?: User; error?: string }> {
   try {
-    // Create a payload that matches Partial<User>
+    // Destructure id and birthDate, and then build payload where birthDate is undefined if null.
+    const { id, birthDate, ...rest } = userData;
     const payload: Partial<User> = {
-      ...userData,
-      // Convert a null birthDate to undefined so that it matches the expected type
-      birthDate: userData.birthDate === null ? undefined : userData.birthDate,
+      ...rest,
+      birthDate: birthDate === null ? undefined : birthDate,
     };
 
-    const updatedUser = await apiService.updateUser(userData.id, payload);
+    console.log("Payload in updateUserAction:", payload);
+
+    const updatedUser = await apiService.updateUser(id, payload);
     return { success: true, user: updatedUser };
   } catch (error: any) {
     console.error("Error in updateUserAction:", error);
+    console.log("Error message:", error.message);
     return { success: false, error: error.message || "Error updating user" };
   }
 }
+
 
 export async function getUserAction() {
   try {
