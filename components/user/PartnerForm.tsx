@@ -1,0 +1,327 @@
+// components/PartnerForm.client.tsx
+'use client';
+
+import { FC, useState } from 'react';
+import { motion } from 'framer-motion';
+import DashboardLayout from '@/components/common/DashboardLayout';
+import { useRouter } from 'next/navigation';
+import PrimaryButton from '@/components/reusables/PrimaryButton';
+import ProgressIndicator from '@/components/reusables/ProgressIndicator';
+import Link from 'next/link';
+import Spinner from '@/components/reusables/Spinner';
+import { updateUserAction } from '@/app/actions/userActions';
+import { createContactAction } from '@/app/actions/contactActions';
+import type { Contact } from '@/types';
+import Add from "@/app/about-yourself/partner/Add";
+
+interface MaritalStatusItem {
+  title: string;
+  subTitle: string;
+  value: string;
+  items: {
+    itemTiltle: string;
+    itemData: string | null;
+  };
+}
+
+interface PartnerFormProps {
+  userId: string;
+  initialMaritalStatus: string | null;
+  initialPartner: Contact | null;
+}
+
+const maritalStatusOptions: MaritalStatusItem[] = [
+  {
+    title: "Soltero",
+    value: "single",
+    subTitle:
+      "Libre de vínculos matrimoniales; puede contraer matrimonio si lo desea.",
+    items: { itemTiltle: "", itemData: null },
+  },
+  {
+    title: "Casado",
+    value: "married",
+    subTitle:
+      "Unión legal entre dos personas; ambos asumen derechos y obligaciones.",
+    items: { itemTiltle: "", itemData: "/about-yourself/live-with-partner" },
+  },
+  {
+    title: "Concubinato",
+    value: "concubinage",
+    subTitle:
+      "Relación de hecho reconocida si la pareja vive junta y cumple ciertos requisitos.",
+    items: { itemTiltle: "", itemData: "/about-yourself/live-with-partner" },
+  },
+];
+
+const PartnerForm: FC<PartnerFormProps> = ({
+  userId,
+  initialMaritalStatus,
+  initialPartner,
+}) => {
+  const router = useRouter();
+  const initialIndex = maritalStatusOptions.findIndex(
+    (item) => item.value === initialMaritalStatus
+  );
+  const [activeIndex, setActiveIndex] = useState<number | null>(
+    initialIndex >= 0 ? initialIndex : null
+  );
+  const [selectedItem, setSelectedItem] = useState<MaritalStatusItem | null>(
+    initialIndex >= 0 ? maritalStatusOptions[initialIndex] : null
+  );
+  const [partner, setPartner] = useState<Contact | null>(initialPartner);
+  const [showModal, setShowModal] = useState<boolean>(false);
+  const [isEditing, setIsEditing] = useState<boolean>(false);
+  const [loading, setLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
+  // When a marital status option is clicked, update selection
+  const handleClick = (index: number, item: MaritalStatusItem): void => {
+    setActiveIndex(index);
+    setSelectedItem(item);
+    setErrorMessage(null);
+  };
+
+  const handlePartnerClick = (): void => {
+    setIsEditing(false);
+    setShowModal(true);
+  };
+
+  const handleEditPartner = (): void => {
+    setIsEditing(true);
+    setShowModal(true);
+  };
+
+  const handleDeletePartner = async (): Promise<void> => {
+    if (confirm('¿Estás seguro de que deseas eliminar esta pareja?')) {
+      try {
+        setLoading(true);
+        setPartner(null);
+        sessionStorage.removeItem('userContact');
+      } catch (error) {
+        console.error('Error deleting partner:', error);
+        setErrorMessage("Error al eliminar la pareja. Por favor, intente nuevamente.");
+      } finally {
+        setLoading(false);
+      }
+    }
+  };
+
+  const handleSave = async (): Promise<void> => {
+    if (!selectedItem) {
+      setErrorMessage("Por favor, selecciona un estado civil");
+      return;
+    }
+    if (!userId) {
+      setErrorMessage("No se encontró información del usuario");
+      return;
+    }
+    try {
+      setLoading(true);
+      // Update user's marital status using updateUserAction (which omits the id in its payload)
+      const updateResult = await updateUserAction({
+        id: userId,
+        maritalstatus: selectedItem.value,
+      });
+      if (!updateResult.success) {
+        throw new Error(updateResult.error || "Error updating user");
+      }
+      // If the selected marital status requires a partner (Casado or Concubinato)
+      // and no partner has been added, do nothing (or optionally alert the user).
+      // Otherwise, if partner data exists and has an allowed relation, create the contact.
+      if (
+        (selectedItem.title === "Casado" ||
+          selectedItem.title === "Concubinato") &&
+        !partner
+      ) {
+        // If no partner has been added, prompt the user to add one.
+        setErrorMessage("Por favor, agregue su pareja haciendo clic en 'Agregar Cónyuge' o 'Agregar Pareja'.");
+        return;
+      }
+      if (partner && (partner.relationToUser === "spouse" || partner.relationToUser === "albacea")) {
+        const contactData = {
+          name: partner.name,
+          fatherLastName: partner.fatherLastName,
+          motherLastName: partner.motherLastName,
+          relationToUser: partner.relationToUser,
+          email: partner.email,
+          trustedContact: false,
+          countryPhoneCode: partner.countryPhoneCode || '',
+          phoneNumber: partner.phoneNumber || '',
+          country: "MX",
+          notes: partner.notes || '',
+          governmentId: partner.governmentId || '',
+          gender: partner.gender || '',
+        };
+        await createContactAction(userId, contactData);
+        sessionStorage.setItem('userContact', JSON.stringify(contactData));
+      }
+      router.push("/about-yourself/children");
+    } catch (error: any) {
+      console.error('Error updating marital status and contact:', error);
+      setErrorMessage("Error al guardar los cambios. Por favor, intente nuevamente.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <DashboardLayout>
+      {/* Render the Add modal for adding/editing partner contact */}
+      <Add
+        showModal={showModal}
+        setShowModal={setShowModal}
+        setPartner={setPartner}
+        isEditing={isEditing}
+        existingPartner={isEditing ? partner : null}
+        partnerType={selectedItem?.title}
+      />
+
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        transition={{ duration: 1 }}
+        className="container mx-auto flex flex-col flex-grow bg-[#f5f5f7] overflow-hidden"
+      >
+        <div className="w-full max-w-6xl mx-auto flex flex-col min-h-[100vh] mb-4 px-4 sm:px-5">
+          {/* Left Column: Title, instructions, and progress indicator */}
+          <div className="flex flex-col lg:flex-row gap-8 lg:gap-24 h-full py-12">
+            <div className="lg:w-1/3">
+              <div className="flex items-center gap-2 mb-2.5">
+                <div className="inline-flex items-center h-[32px] bg-[#047aff] bg-opacity-10 px-[12px] py-[6px] rounded-md">
+                  <span className="text-[#047aff] text-[14px] font-[400]">SITUACIÓN CIVIL</span>
+                </div>
+                <Link href="#" className="inline-flex items-center h-[32px] text-[#047aff] hover:text-[#0456b0]">
+                  <span className="w-5 h-5 inline-flex items-center justify-center rounded-full border border-[#047aff] text-sm">?</span>
+                </Link>
+              </div>
+              <h1 className="text-[32px] sm:text-[38px] font-[500] tracking-[-1.5px] leading-[1.2] sm:leading-[52px] mb-[15px]">
+                <span className="text-[#1d1d1f]">¿Cuál es tu </span>
+                <span className="bg-gradient-to-r from-[#3d9bff] to-[#047aff] inline-block text-transparent bg-clip-text">
+                  situación civil
+                </span>
+                <span className="text-[#1d1d1f]">?</span>
+              </h1>
+              <p className="text-[16px] text-[#1d1d1f] leading-6 mb-8">
+                Seleccione su estado legal actual, incluso si sabe que va a cambiar pronto. Siempre podrá actualizar esto en el futuro.
+              </p>
+              <ProgressIndicator currentSection={3} totalSections={5} title="Progreso de la sección" />
+            </div>
+
+            {/* Right Column: White container with marital options, Add button or partner card, and save button */}
+            <div className="lg:w-3/5 w-full">
+              <div className="bg-white rounded-2xl px-4 sm:px-8 md:px-12 py-10 shadow-lg relative">
+                {loading && (
+                  <div className="absolute inset-0 bg-white bg-opacity-80 flex items-center justify-center z-50 rounded-2xl">
+                    <div className="text-center">
+                      <Spinner size={50} />
+                      <p className="mt-4 text-[#047aff] font-medium">
+                        {loading ? 'Guardando...' : 'Cargando...'}
+                      </p>
+                    </div>
+                  </div>
+                )}
+                {/* Marital status option cards */}
+                <div className="space-y-4 mb-8">
+                  {maritalStatusOptions.map((item, index) => (
+                    <div
+                      key={index}
+                      className="cursor-pointer transition-colors"
+                      onClick={() => handleClick(index, item)}
+                    >
+                      <div
+                        className={`px-6 py-4 rounded-xl border ${
+                          activeIndex === index
+                            ? 'bg-[#047aff] border-[#047aff]'
+                            : 'border-gray-200 hover:border-[#047aff]'
+                        }`}
+                      >
+                        <h3
+                          className={`text-[17px] font-[400] ${
+                            activeIndex === index ? 'text-white' : 'text-[#1d1d1f]'
+                          }`}
+                        >
+                          {item.title}
+                        </h3>
+                        <p
+                          className={`mt-1 text-[14px] ${
+                            activeIndex === index ? 'text-blue-100' : 'text-[#6e6e73]'
+                          }`}
+                        >
+                          {item.subTitle}
+                        </p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                {/* If the selected option is "Casado" or "Concubinato" and no partner exists, show an "Add" button */}
+                {selectedItem &&
+                  (selectedItem.title === "Casado" ||
+                    selectedItem.title === "Concubinato") &&
+                  !partner && (
+                    <div
+                      onClick={handlePartnerClick}
+                      className="bg-white rounded-xl border border-gray-200 hover:border-[#047aff] transition-colors cursor-pointer mb-8"
+                    >
+                      <div className="flex items-center justify-center gap-2 py-4 text-[#047aff] font-medium">
+                        <div className="bg-[#047aff] rounded-full p-1">
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 448 512"
+                            width="16"
+                            height="16"
+                            className="fill-white"
+                          >
+                            <path d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z" />
+                          </svg>
+                        </div>
+                        {selectedItem.title === "Casado" ? "Agregar Cónyuge" : "Agregar Pareja"}
+                      </div>
+                    </div>
+                  )}
+
+                {/* If a partner exists, show the partner card */}
+                {partner && (partner.relationToUser === "spouse" || partner.relationToUser === "albacea") && (
+                  <div className="mt-8 bg-white rounded-2xl p-6 shadow-lg mb-8">
+                    <div className="flex justify-between items-start mb-4">
+                      <h3 className="text-lg font-semibold">{partner.name}</h3>
+                      <div className="flex gap-2">
+                        <button onClick={handleEditPartner} className="text-blue-600 hover:text-blue-800">
+                          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                            <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
+                          </svg>
+                        </button>
+                        <button onClick={handleDeletePartner} className="text-red-600 hover:text-red-800">
+                          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                            <path fillRule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clipRule="evenodd" />
+                          </svg>
+                        </button>
+                      </div>
+                    </div>
+                    <p className="text-sm text-gray-600">
+                      <strong>Apellido Paterno:</strong> {partner.fatherLastName}<br />
+                      <strong>Apellido Materno:</strong> {partner.motherLastName}<br />
+                      <strong>Correo Electrónico:</strong> {partner.email}<br />
+                      <strong>Relación:</strong> {partner.relationToUser}
+                    </p>
+                  </div>
+                )}
+
+                {/* Save Button */}
+                <div className="flex justify-end pt-4 mt-4">
+                  <PrimaryButton onClick={handleSave}>
+                    Guardar y continuar
+                  </PrimaryButton>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </motion.div>
+    </DashboardLayout>
+  );
+};
+
+export default PartnerForm;

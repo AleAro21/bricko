@@ -1,10 +1,13 @@
+// components/AddChild.tsx
 'use client';
 
 import { FC, useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
+import { X } from 'phosphor-react';
 import { Contact } from '@/types';
 import Add from '../partner/Add';
 
+// List of countries with their codes
 const COUNTRIES = [
   { code: 'MX', label: 'México' },
   { code: 'US', label: 'Estados Unidos' },
@@ -37,7 +40,15 @@ interface AddChildProps {
   contacts?: Contact[];
 }
 
-const AddChild: FC<AddChildProps> = ({ showModal, setShowModal, setChild, isEditing, existingChild, contacts = [] }) => {
+const AddChild: FC<AddChildProps> = ({
+  showModal,
+  setShowModal,
+  setChild,
+  isEditing,
+  existingChild,
+  contacts = [],
+}) => {
+  // Child's fields
   const [name, setName] = useState<string>('');
   const [fatherLastName, setFatherLastName] = useState<string>('');
   const [motherLastName, setMotherLastName] = useState<string>('');
@@ -46,7 +57,8 @@ const AddChild: FC<AddChildProps> = ({ showModal, setShowModal, setChild, isEdit
   const [birthDate, setBirthDate] = useState<string>('');
   const [country, setCountry] = useState<string>('MX');
   const [governmentId, setGovernmentId] = useState<string>('');
-  
+
+  // Parent selection state
   const [showAddParentModal, setShowAddParentModal] = useState<boolean>(false);
   const [selectedParentId, setSelectedParentId] = useState<string>('');
   const [parentType, setParentType] = useState<'existing' | 'new'>('existing');
@@ -59,7 +71,11 @@ const AddChild: FC<AddChildProps> = ({ showModal, setShowModal, setChild, isEdit
       setMotherLastName(existingChild.motherLastName || '');
       setEmail(existingChild.email || '');
       setGender(existingChild.gender || 'none');
-      setBirthDate(existingChild.birthDate ? new Date(existingChild.birthDate).toISOString().split('T')[0] : '');
+      setBirthDate(
+        existingChild.birthDate
+          ? new Date(existingChild.birthDate).toISOString().split('T')[0]
+          : ''
+      );
       setCountry(existingChild.country || 'MX');
       setGovernmentId(existingChild.governmentId || '');
       if (existingChild.parentInfo) {
@@ -94,12 +110,10 @@ const AddChild: FC<AddChildProps> = ({ showModal, setShowModal, setChild, isEdit
       alert("Por favor, complete todos los campos obligatorios (Nombre, apellidos, género, fecha de nacimiento y país).");
       return;
     }
-
     if (country === 'MX' && !governmentId) {
       alert("Por favor, ingrese el ID de Gobierno.");
       return;
     }
-
     if (!selectedParent) {
       alert("Por favor, seleccione o agregue un padre/madre.");
       return;
@@ -121,10 +135,6 @@ const AddChild: FC<AddChildProps> = ({ showModal, setShowModal, setChild, isEdit
       governmentId,
       gender,
       birthDate: isoBirthDate,
-      parentInfo: {
-        id: selectedParent.id || '',
-        name: `${selectedParent.name} ${selectedParent.fatherLastName}`
-      }
     };
 
     setChild(childData);
@@ -160,141 +170,144 @@ const AddChild: FC<AddChildProps> = ({ showModal, setShowModal, setChild, isEdit
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
         transition={{ duration: 0.3 }}
-        className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50 p-4"
+        className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50"
       >
-        <div className="bg-white rounded-2xl w-full max-w-md max-h-[90vh] flex flex-col">
-          <div className="p-6 border-b border-gray-200">
-            <h2 className="text-xl font-semibold text-[#1d1d1f]">
-              {isEditing ? 'Editar Hijo' : 'Agregar Hijo'}
-            </h2>
-          </div>
+        <div className="bg-white rounded-2xl p-8 w-full max-w-md relative">
+          <button
+            onClick={() => setShowModal(false)}
+            className="absolute right-4 top-4 text-gray-400 hover:text-gray-600 transition-colors"
+          >
+            <X size={24} weight="bold" />
+          </button>
 
-          <div className="overflow-y-auto flex-1 p-6">
-            <div className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-[#6e6e73] mb-1">
-                  Padre/Madre <span className="text-[#047aff]">*</span>
-                </label>
-                <select
-                  value={parentType === 'new' ? 'new' : selectedParentId}
-                  onChange={handleParentSelect}
-                  className="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:border-[#047aff]"
-                >
-                  <option value="">Seleccione un padre/madre</option>
-                  {contacts.map((contact) => (
-                    <option key={contact.id} value={contact.id}>
-                      {contact.name} {contact.fatherLastName} {contact.motherLastName}
-                    </option>
-                  ))}
-                  <option value="new">+ Agregar nuevo padre/madre</option>
-                </select>
-              </div>
+          <h2 className="text-xl font-semibold mb-6 text-[#1d1d1f]">
+            {isEditing ? 'Editar Hijo' : 'Agregar Hijo'}
+          </h2>
 
-              <div>
-                <label className="block text-sm font-medium text-[#6e6e73] mb-1">Nombre</label>
-                <input
-                  type="text"
-                  placeholder="Nombre"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  className="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:border-[#047aff]"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-[#6e6e73] mb-1">Apellido Paterno</label>
-                <input
-                  type="text"
-                  placeholder="Apellido Paterno"
-                  value={fatherLastName}
-                  onChange={(e) => setFatherLastName(e.target.value)}
-                  className="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:border-[#047aff]"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-[#6e6e73] mb-1">Apellido Materno</label>
-                <input
-                  type="text"
-                  placeholder="Apellido Materno"
-                  value={motherLastName}
-                  onChange={(e) => setMotherLastName(e.target.value)}
-                  className="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:border-[#047aff]"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-[#6e6e73] mb-1">
-                  Correo Electrónico (Opcional)
-                </label>
-                <input
-                  type="email"
-                  placeholder="Correo Electrónico"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:border-[#047aff]"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-[#6e6e73] mb-1">
-                  Género <span className="text-[#047aff]">*</span>
-                </label>
-                <select
-                  value={gender}
-                  onChange={(e) => setGender(e.target.value)}
-                  className="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:border-[#047aff]"
-                >
-                  <option value="none">Seleccione un género</option>
-                  <option value="male">Masculino</option>
-                  <option value="female">Femenino</option>
-                </select>
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-[#6e6e73] mb-1">
-                  Fecha de Nacimiento <span className="text-[#047aff]">*</span>
-                </label>
-                <input
-                  type="date"
-                  value={birthDate}
-                  onChange={(e) => setBirthDate(e.target.value)}
-                  className="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:border-[#047aff]"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-[#6e6e73] mb-1">
-                  País de Nacimiento <span className="text-[#047aff]">*</span>
-                </label>
-                <select
-                  value={country}
-                  onChange={(e) => setCountry(e.target.value)}
-                  className="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:border-[#047aff]"
-                >
-                  {COUNTRIES.map((c) => (
-                    <option key={c.code} value={c.code}>
-                      {c.label}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              {country === 'MX' && (
-                <div>
-                  <label className="block text-sm font-medium text-[#6e6e73] mb-1">
-                    ID de Gobierno <span className="text-[#047aff]">*</span>
-                  </label>
-                  <input
-                    type="text"
-                    placeholder="ID de Gobierno"
-                    value={governmentId}
-                    onChange={(e) => setGovernmentId(e.target.value)}
-                    className="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:border-[#047aff]"
-                  />
-                </div>
-              )}
+          <div className="space-y-4">
+            <div>
+              <label className="block text-sm font-medium text-[#6e6e73] mb-1">
+                Padre/Madre <span className="text-[#047aff]">*</span>
+              </label>
+              <select
+                value={parentType === 'new' ? 'new' : selectedParentId}
+                onChange={handleParentSelect}
+                className="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:border-[#047aff]"
+              >
+                <option value="">Seleccione un padre/madre</option>
+                {contacts.map((contact) => (
+                  <option key={contact.id} value={contact.id}>
+                    {contact.name} {contact.fatherLastName} {contact.motherLastName}
+                  </option>
+                ))}
+                <option value="new">+ Agregar nuevo padre/madre</option>
+              </select>
             </div>
+
+            <div>
+              <label className="block text-sm font-medium text-[#6e6e73] mb-1">Nombre</label>
+              <input
+                type="text"
+                placeholder="Nombre"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                className="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:border-[#047aff]"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-[#6e6e73] mb-1">Apellido Paterno</label>
+              <input
+                type="text"
+                placeholder="Apellido Paterno"
+                value={fatherLastName}
+                onChange={(e) => setFatherLastName(e.target.value)}
+                className="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:border-[#047aff]"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-[#6e6e73] mb-1">Apellido Materno</label>
+              <input
+                type="text"
+                placeholder="Apellido Materno"
+                value={motherLastName}
+                onChange={(e) => setMotherLastName(e.target.value)}
+                className="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:border-[#047aff]"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-[#6e6e73] mb-1">
+                Correo Electrónico (Opcional)
+              </label>
+              <input
+                type="email"
+                placeholder="Correo Electrónico"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:border-[#047aff]"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-[#6e6e73] mb-1">
+                Género <span className="text-[#047aff]">*</span>
+              </label>
+              <select
+                value={gender}
+                onChange={(e) => setGender(e.target.value)}
+                className="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:border-[#047aff]"
+              >
+                <option value="none">Seleccione un género</option>
+                <option value="male">Masculino</option>
+                <option value="female">Femenino</option>
+              </select>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-[#6e6e73] mb-1">
+                Fecha de Nacimiento <span className="text-[#047aff]">*</span>
+              </label>
+              <input
+                type="date"
+                value={birthDate}
+                onChange={(e) => setBirthDate(e.target.value)}
+                className="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:border-[#047aff]"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-[#6e6e73] mb-1">
+                País de Nacimiento <span className="text-[#047aff]">*</span>
+              </label>
+              <select
+                value={country}
+                onChange={(e) => setCountry(e.target.value)}
+                className="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:border-[#047aff]"
+              >
+                {COUNTRIES.map((c) => (
+                  <option key={c.code} value={c.code}>
+                    {c.label}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            {country === 'MX' && (
+              <div>
+                <label className="block text-sm font-medium text-[#6e6e73] mb-1">
+                  ID de Gobierno <span className="text-[#047aff]">*</span>
+                </label>
+                <input
+                  type="text"
+                  placeholder="ID de Gobierno"
+                  value={governmentId}
+                  onChange={(e) => setGovernmentId(e.target.value)}
+                  className="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:border-[#047aff]"
+                />
+              </div>
+            )}
           </div>
 
           <div className="p-6 border-t border-gray-200">
@@ -302,6 +315,7 @@ const AddChild: FC<AddChildProps> = ({ showModal, setShowModal, setChild, isEdit
               <button
                 onClick={() => setShowModal(false)}
                 className="px-6 py-2 text-[#6e6e73] hover:text-[#1d1d1f] transition-colors"
+                disabled={false}
               >
                 Cancelar
               </button>

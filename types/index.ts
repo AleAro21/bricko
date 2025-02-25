@@ -20,6 +20,7 @@ export interface User {
   phoneNumber: string;
   countryPhoneCode: string;
   maritalstatus: string;
+  hasChildren: boolean;
 }
 
 export interface UserProgress {

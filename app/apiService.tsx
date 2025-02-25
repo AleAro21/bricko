@@ -58,19 +58,26 @@ export class APIService {
       'Authorization': `Bearer ${token}`,
       ...options.headers,
     };
-
+  
     const response = await fetch(`${API_BASE_URL}${endpoint}`, {
       ...options,
       headers,
     });
-
+  
     if (!response.ok) {
-      const error = new Error(`API call failed: ${response.status} ${response.statusText}`);
+      let errorDetails = '';
+      try {
+        errorDetails = await response.text();
+      } catch (err) {
+        errorDetails = 'No additional details';
+      }
+      const error = new Error(`API call failed: ${response.status} ${response.statusText} - ${errorDetails}`);
       (error as any).status = response.status;
       throw error;
     }
     return response.json();
   }
+  
 
   // ============================
   // Existing User/Address/Contact/Pet/Asset methods
