@@ -14,13 +14,13 @@ import { useUser } from "@/context/UserContext";
 import Spinner from "@/components/reusables/Spinner";
 import { Autocomplete, TextField, Radio, RadioGroup, FormControlLabel, FormControl } from '@mui/material';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
-import { apiService } from '@/app/apiService';
 import { fetchAuthSession } from "aws-amplify/auth";
 import PhoneInput from 'react-phone-number-input';
 import 'react-phone-number-input/style.css';
 import type { E164Number } from 'libphonenumber-js/core';
+// Import our server action for updating the user
+import { updateUserAction } from '@/app/actions/userActions';
 
-// List of countries
 const COUNTRIES = [
   { code: 'MX', label: 'México', phone: '52' },
   { code: 'US', label: 'Estados Unidos', phone: '1' },
@@ -30,7 +30,7 @@ const COUNTRIES = [
   { code: 'CL', label: 'Chile', phone: '56' },
   { code: 'CO', label: 'Colombia', phone: '57' },
   { code: 'CR', label: 'Costa Rica', phone: '506' },
-  { code: 'CU', label: 'Cuba', phone: '53' },
+  { code: 'CU', label: 'Cuba', phone: '53' }, 
   { code: 'EC', label: 'Ecuador', phone: '593' },
   { code: 'SV', label: 'El Salvador', phone: '503' },
   { code: 'GT', label: 'Guatemala', phone: '502' },
@@ -52,12 +52,11 @@ interface FormValues {
   governmentId: string;
   birthDate: Date | null;
   nationality: string;
-  gender: 'male' | 'female' | '';
+  gender: 'male' | 'female'; // Only allow "male" or "female"
   phoneNumber: string;
   countryPhoneCode: string;
 }
 
-// Create custom theme to match your design
 const theme = createTheme({
   components: {
     MuiAutocomplete: {
@@ -146,98 +145,66 @@ const NamePage: FC = () => {
     governmentId: "",
     birthDate: null,
     nationality: "",
-    gender: "",
+    gender: "male", // default to "male"
     phoneNumber: "",
     countryPhoneCode: "",
   });
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  // Flag to prevent re-initializing the form after first population
+  const [isFormInitialized, setIsFormInitialized] = useState(false);
 
+  // Refresh the user data from the secure API on mount.
   useEffect(() => {
-    const loadInitialData = async () => {
-      setIsInitialLoading(true);
+    const loadUserData = async () => {
       try {
-        const storedUser = sessionStorage.getItem('userObject');
-        const userData = storedUser ? JSON.parse(storedUser) : null;
-
-        if (userData) {
-          // Fix: Properly format the phone number by removing the '+' if it exists
-          const phoneCode = userData.countryPhoneCode?.replace(/^\+/, '') || "";
-          const formattedPhoneNumber = userData.phoneNumber || "";
-
-          setFormValues(prev => ({
-            ...prev,
-            name: userData.name || "",
-            fatherLastName: userData.fatherLastName || "",
-            motherLastName: userData.motherLastName || "",
-            middleName: userData.middleName || "",
-            governmentId: userData.governmentId || "",
-            birthDate: userData.birthDate ? new Date(userData.birthDate) : null,
-            nationality: userData.nationality || "",
-            gender: userData.gender || "",
-            phoneNumber: formattedPhoneNumber,
-            countryPhoneCode: phoneCode,
-          }));
-        } else if (sessionStorage.getItem('userId')) {
-          await refreshUser();
-          
-          const latestStoredUser = sessionStorage.getItem('userObject');
-          const latestUserData = latestStoredUser ? JSON.parse(latestStoredUser) : null;
-          
-          if (latestUserData) {
-            // Fix: Properly format the phone number by removing the '+' if it exists
-            const phoneCode = latestUserData.countryPhoneCode?.replace(/^\+/, '') || "";
-            const formattedPhoneNumber = latestUserData.phoneNumber || "";
-
-            setFormValues(prev => ({
-              ...prev,
-              name: latestUserData.name || "",
-              fatherLastName: latestUserData.fatherLastName || "",
-              motherLastName: latestUserData.motherLastName || "",
-              middleName: latestUserData.middleName || "",
-              governmentId: latestUserData.governmentId || "",
-              birthDate: latestUserData.birthDate ? new Date(latestUserData.birthDate) : null,
-              nationality: latestUserData.nationality || "",
-              gender: latestUserData.gender || "",
-              phoneNumber: formattedPhoneNumber,
-              countryPhoneCode: phoneCode,
-            }));
-          }
-        }
-      } catch (error) {
-        console.error('Error loading initial data:', error);
+        await refreshUser();
+      } catch (err) {
+        console.error("Error refreshing user:", err);
       } finally {
         setIsInitialLoading(false);
       }
     };
+    loadUserData();
+  }, [refreshUser]);
 
-    loadInitialData();
-  }, []); // Only run on mount
+  // Populate form values only once when user data is available.
+  useEffect(() => {
+    if (user && !isFormInitialized) {
+      setFormValues({
+        name: user.name || "",
+        middleName: user.middleName || "",
+        fatherLastName: user.fatherLastName || "",
+        motherLastName: user.motherLastName || "",
+        governmentId: user.governmentId || "",
+        birthDate: user.birthDate ? new Date(user.birthDate) : null,
+        nationality: user.nationality || "",
+        gender: (user.gender === "male" || user.gender === "female") ? user.gender : "male",
+        phoneNumber: user.phoneNumber || "",
+        countryPhoneCode: user.countryPhoneCode?.replace(/^\+/, '') || "",
+      });
+      setIsFormInitialized(true);
+    }
+  }, [user, isFormInitialized]);
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
     const { name, fatherLastName, motherLastName, middleName, governmentId, birthDate, nationality, gender, phoneNumber, countryPhoneCode } = formValues;
 
-    // Basic field validation
+    // Basic field validation.
     if (!name || !fatherLastName || !motherLastName || !governmentId || !nationality || !gender) {
       setErrorMessage("Por favor, complete todos los campos obligatorios");
       return;
     }
-
-    // Validate age
     const ageError = validateAge(birthDate);
     if (ageError) {
       setErrorMessage(ageError);
       return;
     }
-
-    // Validate RFC length (13 characters)
     if (governmentId.length !== 13) {
       setErrorMessage("El RFC debe tener 13 dígitos");
       return;
     }
-
-    // Check if data has changed by comparing with current user data
-    const hasDataChanged = 
+    const hasDataChanged =
       user?.name !== name ||
       user?.middleName !== middleName ||
       user?.fatherLastName !== fatherLastName ||
@@ -250,60 +217,47 @@ const NamePage: FC = () => {
       user?.countryPhoneCode !== (countryPhoneCode ? `+${countryPhoneCode}` : undefined);
 
     try {
-      if (hasDataChanged) {
+      if (hasDataChanged && user?.id) {
         console.log('Data has changed, updating user...');
-        // Get the current session token
         const { tokens } = await fetchAuthSession();
         if (!tokens?.accessToken) {
           throw new Error("No authentication token available");
         }
-
-        // Set the token in APIService
-        apiService.setToken(tokens.accessToken.toString());
-
-        // Format birthDate to ISO string
         const formattedBirthDate = birthDate ? birthDate.toISOString() : null;
-
-        // First update the user
-        if (user?.id) {
-          const userData = {
-            name,
-            middleName: middleName || undefined,
-            fatherLastName,
-            motherLastName,
-            birthDate: formattedBirthDate || undefined,
-            gender,
-            nationality,
-            phoneNumber: phoneNumber || undefined,
-            countryPhoneCode: countryPhoneCode ? `+${countryPhoneCode}` : undefined,
-            governmentId: governmentId || undefined,
-          };
-
-          const updatedUser = await apiService.updateUser(user.id, userData);
-          
-          // Update session storage with the new user data
-          sessionStorage.setItem('userObject', JSON.stringify(updatedUser));
-
-          // Refresh user context
-          await refreshUser();
-        }
-
-        // Then save personal info with all form values
-        await savePersonalInfo({
+        // Use our server action to update the user.
+        const updateResult = await updateUserAction({
+          id: user.id,
           name,
-          middleName,
+          middleName: middleName || undefined,
           fatherLastName,
           motherLastName,
-          governmentId,
-          birthDate: formattedBirthDate,
+          governmentId: governmentId || undefined,
+          birthDate: formattedBirthDate || undefined,
           nationality,
           gender,
-          phoneNumber: phoneNumber || "",
-          countryPhoneCode: countryPhoneCode || "",
+          phoneNumber: phoneNumber || undefined,
+          countryPhoneCode: countryPhoneCode ? `+${countryPhoneCode}` : undefined,
         });
+        if (!updateResult.success) {
+          throw new Error(updateResult.error || "Error updating user");
+        }
+        await refreshUser(); // Re-fetch updated user data
       }
       
-      // Navigate to next page regardless of whether data was updated
+      const formattedBirthDate = birthDate ? birthDate.toISOString() : null;
+      await savePersonalInfo({
+        name,
+        middleName,
+        fatherLastName,
+        motherLastName,
+        governmentId,
+        birthDate: formattedBirthDate,
+        nationality,
+        gender,
+        phoneNumber: phoneNumber || "",
+        countryPhoneCode: countryPhoneCode || "",
+      });
+      
       router.push("/about-yourself/basic");
     } catch (error) {
       console.error('Error updating user:', error);
@@ -313,13 +267,12 @@ const NamePage: FC = () => {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
     const { id, value } = e.target;
-    setFormValues((prev) => ({ ...prev, [id]: value }));
+    setFormValues(prev => ({ ...prev, [id]: value }));
     setErrorMessage(null);
-    console.log('Form values:', formValues);
   };
 
   const handleGenderChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
-    setFormValues((prev) => ({ ...prev, gender: e.target.value as 'male' | 'female' }));
+    setFormValues(prev => ({ ...prev, gender: e.target.value as 'male' | 'female' }));
     setErrorMessage(null);
   };
 
@@ -333,37 +286,26 @@ const NamePage: FC = () => {
   };
 
   const handleDateChange = (date: Date | null): void => {
-    setFormValues((prev) => ({ ...prev, birthDate: date }));
+    setFormValues(prev => ({ ...prev, birthDate: date }));
     setErrorMessage(null);
   };
 
   const handlePhoneChange = (value: E164Number | undefined): void => {
     if (!value) {
-      setFormValues(prev => ({
-        ...prev,
-        phoneNumber: "",
-        countryPhoneCode: "",
-      }));
+      setFormValues(prev => ({ ...prev, phoneNumber: "", countryPhoneCode: "" }));
       return;
     }
-
-    // Convert to string and handle the parsing
     const phoneString = value.toString();
-    
-    // Find the matching country code
     const country = COUNTRIES.find(c => phoneString.startsWith(`+${c.phone}`));
-    
     if (country) {
       const countryCode = country.phone;
-      const number = phoneString.slice(countryCode.length + 1); // +1 for the '+' symbol
-      
+      const number = phoneString.slice(countryCode.length + 1);
       setFormValues(prev => ({
         ...prev,
         phoneNumber: number,
         countryPhoneCode: countryCode,
       }));
     }
-    
     setErrorMessage(null);
   };
 
@@ -384,38 +326,28 @@ const NamePage: FC = () => {
           ) : (
             <div className="w-full max-w-6xl mx-auto flex flex-col min-h-[75vh] mb-4 px-4 sm:px-5">
               <div className="flex flex-col lg:flex-row gap-8 lg:gap-24 h-full py-12">
-                {/* Left column - Title section */}
                 <div className="lg:w-1/3">
                   <div className="flex items-center justify-between mb-2.5">
                     <div className="inline-flex items-center h-[32px] bg-[#047aff] bg-opacity-10 px-[12px] py-[6px] rounded-md">
                       <span className="text-[#047aff] text-[14px] font-[400]">DATOS PERSONALES</span>
                     </div>
                   </div>
-
-                  <h1 className='text-[32px] sm:text-[38px] font-[500] tracking-[-1.5px] leading-[1.2] sm:leading-[52px] mb-[15px]'>
-                    <span className='text-[#1d1d1f]'>Primero, vamos a </span>
-                    <span className='bg-gradient-to-r from-[#3d9bff] to-[#047aff] inline-block text-transparent bg-clip-text'>conocerte</span>
+                  <h1 className="text-[32px] sm:text-[38px] font-[500] tracking-[-1.5px] leading-[1d1d1f] sm:leading-[52px] mb-[15px]">
+                    <span className="text-[#1d1d1f]">Primero, vamos a </span>
+                    <span className="bg-gradient-to-r from-[#3d9bff] to-[#047aff] inline-block text-transparent bg-clip-text">conocerte</span>
                   </h1>
-
                   <p className="text-[16px] text-[#1d1d1f] leading-6 mb-5">
                     Necesitamos algunos datos personales para comenzar con tu testamento.
                   </p>
-
                   <div className="flex justify-end items-center gap-2 mb-5">
                     <Link href="#" className="inline-flex items-center h-[32px] text-[#047aff] hover:text-[#0456b0]">
                       <span className="w-5 h-5 inline-flex items-center justify-center rounded-full border border-[#047aff] text-sm">?</span>
                     </Link>
                     <p className="text-[14px] text-[#000000]">Articulo relacionado</p>
                   </div>
-                  <ProgressIndicator
-                    currentSection={1}
-                    totalSections={5}
-                    title="Progreso de la sección"
-                  />
+                  <ProgressIndicator currentSection={1} totalSections={5} title="Progreso de la sección" />
                 </div>
-
-                {/* Right column - Form in white container */}
-                <div className='w-full lg:w-3/5'>
+                <div className="w-full lg:w-3/5">
                   <div className="bg-white rounded-2xl px-4 sm:px-8 md:px-12 py-10 shadow-lg relative">
                     {loading && (
                       <div className="absolute inset-0 bg-white bg-opacity-80 flex items-center justify-center z-50 rounded-2xl">
@@ -425,7 +357,6 @@ const NamePage: FC = () => {
                         </div>
                       </div>
                     )}
-
                     <form onSubmit={handleSubmit} className="space-y-4">
                       <div className="space-y-7">
                         <div>
@@ -435,7 +366,6 @@ const NamePage: FC = () => {
                           <p className="text-[14px] text-[#6e6e73] mb-5">
                             Este es el nombre que figura en tu pasaporte o permiso de conducir.
                           </p>
-
                           <div className="space-y-7">
                             <div>
                               <label htmlFor="name" className="block text-[17px] font-[400] text-[#1d1d1f] mb-2.5">
@@ -450,9 +380,8 @@ const NamePage: FC = () => {
                                 required
                               />
                             </div>
-
                             <div>
-                              <label htmlFor="middlename" className="block text-[17px] font-[400] text-[#1d1d1f] mb-2.5">
+                              <label htmlFor="middleName" className="block text-[17px] font-[400] text-[#1d1d1f] mb-2.5">
                                 Segundo Nombre
                               </label>
                               <input
@@ -463,7 +392,6 @@ const NamePage: FC = () => {
                                 className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:border-[#047aff] transition-all"
                               />
                             </div>
-
                             <div>
                               <label htmlFor="fatherLastName" className="block text-[17px] font-[400] text-[#1d1d1f] mb-2.5">
                                 Apellido Paterno <span className="text-[#047aff]">*</span>
@@ -477,7 +405,6 @@ const NamePage: FC = () => {
                                 required
                               />
                             </div>
-
                             <div>
                               <label htmlFor="motherLastName" className="block text-[17px] font-[400] text-[#1d1d1f] mb-2.5">
                                 Apellido Materno <span className="text-[#047aff]">*</span>
@@ -491,32 +418,17 @@ const NamePage: FC = () => {
                                 required
                               />
                             </div>
-
                             <div>
                               <label className="block text-[17px] font-[400] text-[#1d1d1f] mb-2.5">
                                 Género <span className="text-[#047aff]">*</span>
                               </label>
                               <FormControl component="fieldset">
-                                <RadioGroup
-                                  row
-                                  value={formValues.gender}
-                                  onChange={handleGenderChange}
-                                >
-                                  <FormControlLabel
-                                    value="male"
-                                    control={<Radio />}
-                                    label="Hombre"
-                                    className="mr-8"
-                                  />
-                                  <FormControlLabel
-                                    value="female"
-                                    control={<Radio />}
-                                    label="Mujer"
-                                  />
+                                <RadioGroup row value={formValues.gender} onChange={handleGenderChange}>
+                                  <FormControlLabel value="male" control={<Radio />} label="Hombre" className="mr-8" />
+                                  <FormControlLabel value="female" control={<Radio />} label="Mujer" />
                                 </RadioGroup>
                               </FormControl>
                             </div>
-
                             <div>
                               <label htmlFor="country" className="block text-[17px] font-[400] text-[#1d1d1f] mb-2.5">
                                 País de Nacimiento <span className="text-[#047aff]">*</span>
@@ -527,15 +439,10 @@ const NamePage: FC = () => {
                                 onChange={handleCountryChange}
                                 getOptionLabel={(option) => option.label}
                                 renderInput={(params) => (
-                                  <TextField
-                                    {...params}
-                                    placeholder="Selecciona tu país"
-                                    fullWidth
-                                  />
+                                  <TextField {...params} placeholder="Selecciona tu país" fullWidth />
                                 )}
                               />
                             </div>
-
                             <div>
                               <label htmlFor="birthDate" className="block text-[17px] font-[400] text-[#1d1d1f] mb-2.5">
                                 Fecha de nacimiento <span className="text-[#047aff]">*</span>
@@ -549,7 +456,6 @@ const NamePage: FC = () => {
                                 className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:border-[#047aff] transition-all"
                               />
                             </div>
-
                             <div>
                               <label htmlFor="governmentId" className="block text-[17px] font-[400] text-[#1d1d1f] mb-2.5">
                                 RFC <span className="text-[#047aff]">*</span>
@@ -562,11 +468,8 @@ const NamePage: FC = () => {
                                 className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:border-[#047aff] transition-all"
                                 required
                               />
-                              <p className="text-[12px] text-gray-500 mt-1">
-                                El RFC debe tener 13 dígitos.
-                              </p>
+                              <p className="text-[12px] text-gray-500 mt-1">El RFC debe tener 13 dígitos.</p>
                             </div>
-
                             <div>
                               <label htmlFor="phone" className="block text-[17px] font-[400] text-[#1d1d1f] mb-2.5">
                                 Número de Teléfono
@@ -577,7 +480,11 @@ const NamePage: FC = () => {
                               <PhoneInput
                                 international
                                 defaultCountry="MX"
-                                value={formValues.phoneNumber && formValues.countryPhoneCode ? `+${formValues.countryPhoneCode}${formValues.phoneNumber}` : undefined}
+                                value={
+                                  formValues.phoneNumber && formValues.countryPhoneCode
+                                    ? `+${formValues.countryPhoneCode}${formValues.phoneNumber}`
+                                    : undefined
+                                }
                                 onChange={handlePhoneChange}
                                 placeholder="Opcional"
                                 className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:border-[#047aff] transition-all"
@@ -586,11 +493,7 @@ const NamePage: FC = () => {
                           </div>
                         </div>
                       </div>
-
-                      {errorMessage && (
-                        <p className="text-red-500 text-[14px] text-center mt-0">{errorMessage}</p>
-                      )}
-
+                      {errorMessage && <p className="text-red-500 text-[14px] text-center mt-0">{errorMessage}</p>}
                       <div className="flex justify-end pt-6">
                         <PrimaryButton type="submit" disabled={loading}>
                           {loading ? <Spinner size={24} /> : "Guardar y continuar"}

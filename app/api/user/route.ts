@@ -8,12 +8,13 @@ export async function GET() {
     const tokenCookie = cookies().get("token");
     const userIdCookie = cookies().get("userId");
     if (!tokenCookie || !userIdCookie) {
-      return NextResponse.json({ error: "User not authenticated" }, { status: 401 });
+      return NextResponse.json({ error: "User not authexnticated" }, { status: 401 });
     }
     const userId = userIdCookie.value;
     // Ensure the API service has the token (in case it’s not already set)
     apiService.setToken(tokenCookie.value);
     const user = await apiService.getUser(userId);
+    console.log("User fetched from route:", user);
     return NextResponse.json({ user });
   } catch (error: any) {
     return NextResponse.json({ error: error.message || "Failed to fetch user" }, { status: 500 });

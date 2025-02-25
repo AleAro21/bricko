@@ -1,6 +1,5 @@
-// context/UserContext.tsx (client component)
 "use client";
-import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { createContext, useContext, useState, useEffect, ReactNode, useCallback } from 'react';
 import { User } from '@/types';
 
 interface UserContextType {
@@ -18,48 +17,52 @@ export function UserProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
+  let lastFetch = Date.now();
 
-  const refreshUser = async () => {
+  // 🛑 Prevent duplicate API calls
+  const refreshUser = useCallback(async () => {
     try {
       setLoading(true);
-      const response = await fetch('/api/user', {
-        credentials: 'include',
-      });
+      const response = await fetch('/api/user', { credentials: 'include' });
       if (!response.ok) {
         setUser(null);
         throw new Error("Failed to fetch user");
       }
       const data = await response.json();
-      setUser(data.user);
+      if (JSON.stringify(user) !== JSON.stringify(data.user)) {
+        setUser(data.user);
+      }
     } catch (err) {
       setError(err instanceof Error ? err : new Error('Failed to fetch user'));
       setUser(null);
     } finally {
       setLoading(false);
     }
-  };
+  }, [user]);
+  
 
+  // 🔹 Fetch user **once** when the component mounts
   useEffect(() => {
     refreshUser();
   }, []);
 
+  // 🔹 Fetch user **every 5 minutes**
   useEffect(() => {
-    const interval = setInterval(() => {
-      refreshUser();
-    }, REFRESH_INTERVAL);
-    return () => clearInterval(interval);
+    const interval = setInterval(refreshUser, REFRESH_INTERVAL);
+    return () => clearInterval(interval); // Cleanup on unmount
   }, []);
 
+  // 🔹 Fetch user **on tab focus**
   useEffect(() => {
     const handleVisibilityChange = () => {
-      if (document.visibilityState === 'visible') {
+      if (document.visibilityState === 'visible' && Date.now() - lastFetch > 5000) {
         refreshUser();
+        lastFetch = Date.now();
       }
     };
+
     document.addEventListener('visibilitychange', handleVisibilityChange);
-    return () => {
-      document.removeEventListener('visibilitychange', handleVisibilityChange);
-    };
+    return () => document.removeEventListener('visibilitychange', handleVisibilityChange);
   }, []);
 
   return (
