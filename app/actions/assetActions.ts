@@ -2,7 +2,7 @@
 'use server';
 
 import { apiService } from '@/app/apiService';
-import type { UserAsset } from '@/types';
+import type { GetAssetsCategoriesResponse, UserAsset } from '@/types';
 
 export async function getUserAssetsAction(userId: string): Promise<UserAsset[]> {
   try {
@@ -20,6 +20,16 @@ export async function createUserAssetAction(userId: string, assetData: UserAsset
     return createdAsset;
   } catch (error: any) {
     console.error("Error in createUserAssetAction:", error);
+    throw error;
+  }
+}
+
+export async function getAssetsCategoriesAction(): Promise<GetAssetsCategoriesResponse> {
+  try {
+    const response = await apiService.getAssetsCategories();
+    return response;
+  } catch (error: any) {
+    console.error("Error in getAssetsCategoriesAction:", error);
     throw error;
   }
 }
