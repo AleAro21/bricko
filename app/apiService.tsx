@@ -58,12 +58,20 @@ export class APIService {
       'Authorization': `Bearer ${token}`,
       ...options.headers,
     };
-  
+
+    console.log('Request Payload:', {
+      endpoint,
+      options: {
+        ...options,
+        headers,
+      },
+    });
+
     const response = await fetch(`${API_BASE_URL}${endpoint}`, {
       ...options,
       headers,
     });
-  
+
     if (!response.ok) {
       let errorDetails = '';
       try {
