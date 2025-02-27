@@ -1,9 +1,9 @@
-// components/people/PeoplePageClient.tsx
 'use client';
 
 import { FC, useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import Add, { HeirData } from '@/app/estate/people/Add'; 
+import DashboardLayout from '@/components/common/DashboardLayout';
+import Add, { HeirData } from '@/app/estate/people/Add';
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from 'recharts';
 import { motion } from 'framer-motion';
 import PrimaryButton from '@/components/reusables/PrimaryButton';
@@ -151,7 +151,7 @@ const PeoplePageClient: FC<PeoplePageClientProps> = ({
       });
       const responses = await Promise.all(assignmentPromises);
       console.log("Assignments created:", responses);
-      router.push("/estate/charities");
+      router.push("/summary");
     } catch (error) {
       console.error("Error creating assignments:", error);
     } finally {
@@ -160,9 +160,8 @@ const PeoplePageClient: FC<PeoplePageClientProps> = ({
   };
 
   // Chart helper functions
-  const getChartData = getAssetChartData;
   const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
-  
+
   const renderCustomizedLabel = ({
     cx,
     cy,
@@ -191,20 +190,8 @@ const PeoplePageClient: FC<PeoplePageClientProps> = ({
     );
   };
 
-  const CustomTooltip = ({ active, payload }: any) => {
-    if (active && payload && payload.length) {
-      return (
-        <div className="bg-white p-4 rounded-lg shadow-md border border-gray-100">
-          <p className="text-[#1d1d1f] font-medium">{payload[0].name}</p>
-          <p className="text-[#047aff] font-normal">{payload[0].value.toFixed(1)}%</p>
-        </div>
-      );
-    }
-    return null;
-  };
-
   return (
-    <>
+    <DashboardLayout>
       {/* Modal for adding a new heir/contact */}
       <Add showModal={showModal} setShowModal={setShowModal} onAddHeir={handleAddHeir} />
       <motion.div
@@ -221,10 +208,14 @@ const PeoplePageClient: FC<PeoplePageClientProps> = ({
               <div>
                 <div className="flex items-center gap-2 mb-2.5">
                   <div className="inline-flex items-center h-[32px] bg-[#047aff] bg-opacity-10 px-[12px] py-[6px] rounded-md">
-                    <span className="text-[#047aff] text-[14px] font-medium">DISTRIBUCIÓN POR ACTIVO</span>
+                    <span className="text-[#047aff] text-[14px] font-medium">
+                      DISTRIBUCIÓN POR ACTIVO
+                    </span>
                   </div>
                   <Link href="#" className="inline-flex items-center h-[32px] text-[#047aff] hover:text-[#0456b0]">
-                    <span className="w-5 h-5 inline-flex items-center justify-center rounded-full border border-[#047aff] text-sm">?</span>
+                    <span className="w-5 h-5 inline-flex items-center justify-center rounded-full border border-[#047aff] text-sm">
+                      ?
+                    </span>
                   </Link>
                 </div>
                 <h1 className="text-[32px] sm:text-[38px] font-medium tracking-[-1.5px] leading-[1.2] sm:leading-[52px] mb-[15px]">
@@ -338,7 +329,7 @@ const PeoplePageClient: FC<PeoplePageClientProps> = ({
           </div>
         </div>
       </motion.div>
-    </>
+    </DashboardLayout>
   );
 };
 

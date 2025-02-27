@@ -24,16 +24,45 @@ export function UserProvider({ children }: { children: ReactNode }) {
     try {
       setLoading(true);
       const response = await fetch('/api/user', { credentials: 'include' });
+      
+      if (response.status === 401) {
+        // Check if we need to redirect
+        const data = await response.json();
+        if (data.redirect) {
+          // Redirect to login or trigger a re-authentication
+          try {
+            // Try to refresh the session using v6 API
+            const { fetchAuthSession } = await import('aws-amplify/auth');
+            await fetchAuthSession({ forceRefresh: true });
+            console.log('Session refreshed');
+            // If successful, try again
+            await refreshUser();
+          } catch (authError) {
+            // If refresh fails, sign out
+            console.error('Failed to refresh session:', authError);
+            const { signOut } = await import('aws-amplify/auth');
+            await signOut();
+            setUser(null);
+            // Redirect to login page
+            window.location.href = '/login'; // Adjust to your login path
+          }
+          return;
+        }
+      }
+      
       if (!response.ok) {
         setUser(null);
         throw new Error("Failed to fetch user");
+        console.error('Failed to fetch user:', response.statusText);
       }
+      
       const data = await response.json();
       if (JSON.stringify(user) !== JSON.stringify(data.user)) {
         setUser(data.user);
       }
     } catch (err) {
       setError(err instanceof Error ? err : new Error('Failed to fetch user'));
+      console.error('Failed to fetch user:', err);
       setUser(null);
     } finally {
       setLoading(false);

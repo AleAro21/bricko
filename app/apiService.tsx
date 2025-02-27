@@ -19,6 +19,7 @@ import {
 } from '@/types';
 
 import { cookies } from 'next/headers';
+import { fetchAuthSession } from "aws-amplify/auth";
 
 const API_BASE_URL = "https://51lyy4n8z0.execute-api.us-east-2.amazonaws.com/dev";
 
@@ -47,6 +48,33 @@ export class APIService {
   setToken(token: string) {
     this.token = token;
   }
+
+  // For APIService class
+async refreshToken() {
+  try {
+    // Updated imports for Amplify v6
+    
+    const session = await fetchAuthSession();
+    
+    // Get the access token from the session
+    const newToken = session.tokens?.accessToken?.toString();
+    
+    if (!newToken) {
+      throw new Error('Failed to get new access token');
+    }
+    
+    // Update the token in your service
+    this.setToken(newToken);
+    
+    // Also update the token cookie
+    document.cookie = `token=${newToken}; path=/; max-age=${60 * 60}; SameSite=Strict`;
+    
+    return newToken;
+  } catch (error) {
+    console.error('Failed to refresh token:', error);
+    throw error;
+  }
+}
 
   private async fetchWithAuth(endpoint: string, options: RequestInit = {}, tokenOverride?: string) {
     const token = tokenOverride || this.token;
