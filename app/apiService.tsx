@@ -156,13 +156,19 @@ async refreshToken() {
       body: JSON.stringify(addressData),
     });
     console.log('API Response:', response);
-    return response.response;
+    
+    // Handle both possibilities - it could be an array or a single object
+    if (Array.isArray(response.response)) {
+      return response.response[0]; // Return the first item if it's an array
+    } else {
+      return response.response; // Return directly if it's an object
+    }
   }
 
-  async getUserAddress(userId: string): Promise<Address> {
+  async getUserAddress(userId: string): Promise<Address[]> {
     const response = await this.fetchWithAuth(`/wills/user/${userId}/address`);
     console.log('API Response:', response);
-    return response.response;
+    return response.response; // This is an array of addresses
   }
 
   async updateUserAddress(addressId: string, addressData: Partial<Address>): Promise<Address> {

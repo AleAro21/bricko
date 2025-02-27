@@ -39,6 +39,8 @@ export interface CreateUserData {
 }
 
 export interface Address {
+  id?: string;
+  length: number;
   street: string;
   city: string;
   state: string;

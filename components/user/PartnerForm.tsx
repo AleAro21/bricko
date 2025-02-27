@@ -118,7 +118,7 @@ const PartnerForm: FC<PartnerFormProps> = ({
     }
     try {
       setLoading(true);
-      // Update user's marital status using updateUserAction (which omits the id in its payload)
+      // Update user's marital status
       const updateResult = await updateUserAction({
         id: userId,
         maritalstatus: selectedItem.value,
@@ -126,19 +126,22 @@ const PartnerForm: FC<PartnerFormProps> = ({
       if (!updateResult.success) {
         throw new Error(updateResult.error || "Error updating user");
       }
-      // If the selected marital status requires a partner (Casado or Concubinato)
-      // and no partner has been added, do nothing (or optionally alert the user).
-      // Otherwise, if partner data exists and has an allowed relation, create the contact.
+      // For statuses that require a partner, ensure one is added
       if (
         (selectedItem.title === "Casado" ||
           selectedItem.title === "Concubinato") &&
         !partner
       ) {
-        // If no partner has been added, prompt the user to add one.
-        setErrorMessage("Por favor, agregue su pareja haciendo clic en 'Agregar Cónyuge' o 'Agregar Pareja'.");
+        setErrorMessage(
+          "Por favor, agregue su pareja haciendo clic en 'Agregar Cónyuge' o 'Agregar Pareja'."
+        );
         return;
       }
-      if (partner && (partner.relationToUser === "spouse" || partner.relationToUser === "albacea")) {
+      // Create the contact only if it doesn't already exist
+      if (
+        partner &&
+        (partner.relationToUser === "spouse" || partner.relationToUser === "albacea")
+      ) {
         const contactData = {
           name: partner.name,
           fatherLastName: partner.fatherLastName,
@@ -153,17 +156,24 @@ const PartnerForm: FC<PartnerFormProps> = ({
           governmentId: partner.governmentId || '',
           gender: partner.gender || '',
         };
-        await createContactAction(userId, contactData);
-        sessionStorage.setItem('userContact', JSON.stringify(contactData));
+  
+        // If no id exists, create the contact; otherwise, skip duplicate creation.
+        if (!partner.id) {
+          const createdContact = await createContactAction(userId, contactData);
+          sessionStorage.setItem('userContact', JSON.stringify(createdContact));
+        } else {
+          console.log("Existing contact detected. Skipping creation.");
+        }
       }
       router.push("/about-yourself/children");
     } catch (error: any) {
-      console.error('Error updating marital status and contact:', error);
+      console.error("Error updating marital status and contact:", error);
       setErrorMessage("Error al guardar los cambios. Por favor, intente nuevamente.");
     } finally {
       setLoading(false);
     }
   };
+  
 
   return (
     <DashboardLayout>
