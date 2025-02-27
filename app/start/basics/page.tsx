@@ -1,4 +1,3 @@
-// app/start/basics/page.tsx
 'use client';
 
 import { motion } from 'framer-motion';
@@ -12,6 +11,7 @@ import PrimaryButton from "@/components/reusables/PrimaryButton";
 import FooterTwo from '@/components/common/FooterTwo';
 import Spinner from "@/components/reusables/Spinner";
 import { Lock } from "phosphor-react";
+import { flushSync } from "react-dom";
 
 interface SocialButtonProps {
   src: string;
@@ -40,34 +40,40 @@ const BasicsPage: FC = () => {
   const [email, setEmail] = useState("");
   const [terms, setTerms] = useState(false);
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>): void => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
-    setIsLoading(true);
-
+    // Force the spinner on the button to render immediately.
+    flushSync(() => {
+      setIsLoading(true);
+    });
+    let didNavigate = false;
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
       alert("Por favor, ingresa un correo electrónico válido.");
       setIsLoading(false);
       return;
     }
-
     if (!terms) {
       alert("Por favor, acepta los términos y condiciones para continuar.");
       setIsLoading(false);
       return;
     }
-
     // Simulate an asynchronous action (e.g., an API call)
-    setTimeout(() => {
-      // Store user data in sessionStorage
-      sessionStorage.setItem("email", email);
-      sessionStorage.setItem("name", name);
-      sessionStorage.setItem("fatherLastName", fatherLastName);
-      sessionStorage.setItem("motherLastName", motherLastName);
-
+    await new Promise<void>((resolve) =>
+      setTimeout(() => {
+        // Store user data in sessionStorage
+        sessionStorage.setItem("email", email);
+        sessionStorage.setItem("name", name);
+        sessionStorage.setItem("fatherLastName", fatherLastName);
+        sessionStorage.setItem("motherLastName", motherLastName);
+        router.push("/start/password");
+        didNavigate = true;
+        resolve();
+      }, 1000)
+    );
+    if (!didNavigate) {
       setIsLoading(false);
-      router.push("/start/password");
-    }, 1000);
+    }
   };
 
   const handleLoginClick = (): void => {
@@ -96,20 +102,18 @@ const BasicsPage: FC = () => {
                 <div className="inline-flex items-center h-[32px] bg-[#047aff] bg-opacity-10 px-[12px] py-[6px] rounded-md mb-2.5 mt-5">
                   <span className="text-[#047aff] text-[14px] font-[400]">CREA TU CUENTA</span>
                 </div>
-
                 <h1 className="text-[32px] sm:text-[38px] font-[500] tracking-[-1.5px] leading-[1.2] sm:leading-[52px] mb-[15px]">
-                    <span className="text-[#1d1d1f]">Testamento digital </span>
-                    <span
-                      style={{
-                        backgroundImage:
-                          "linear-gradient(to right, #7abaff 1%, #047aff 60%, #0d4ba3 100%)",
-                      }}
-                      className="inline-block text-transparent bg-clip-text"
-                    >
-                     México
-                    </span>
-                  </h1>
-
+                  <span className="text-[#1d1d1f]">Testamento digital </span>
+                  <span
+                    style={{
+                      backgroundImage:
+                        "linear-gradient(to right, #7abaff 1%, #047aff 60%, #0d4ba3 100%)",
+                    }}
+                    className="inline-block text-transparent bg-clip-text"
+                  >
+                    México
+                  </span>
+                </h1>
                 <ul className="space-y-4 mb-8">
                   {[
                     "Desde $599 MXN",
@@ -141,7 +145,7 @@ const BasicsPage: FC = () => {
                     <Lock size={17} className="text-gray-500" />
                   </div>
                   <p className="text-gray-500 text-[14px] ml-2">
-                    <span className="font-bold text-textColor">Tus datos siempre seguros</span> <br />  
+                    <span className="font-bold text-textColor">Tus datos siempre seguros</span> <br />
                     En Testamento.mx, usamos cifrado <span className="font-bold">AES-256</span> <span className="font-bold">blockchain</span> para garantizar la seguridad, integridad y privacidad de tu información.
                   </p>
                 </div>
@@ -161,7 +165,7 @@ const BasicsPage: FC = () => {
                       <Lock size={17} className="text-gray-500" />
                     </div>
                     <p className="text-gray-500 text-[14px] ml-2">
-                      <span className="font-bold text-textColor">Tus datos siempre seguros</span> <br />  
+                      <span className="font-bold text-textColor">Tus datos siempre seguros</span> <br />
                       En Testamento.mx, usamos cifrado <span className="font-bold">AES-256</span> <span className="font-bold">blockchain</span> para garantizar la seguridad, integridad y privacidad de tu información.
                     </p>
                   </div>
@@ -254,7 +258,7 @@ const BasicsPage: FC = () => {
                     <div className="text-center mt-5">
                       <button
                         type="button"
-                        onClick={handleLoginClick}
+                        onClick={() => router.push("/start/login")}
                         className="text-[14px] text-[#1d1d1f] hover:underline"
                       >
                         Ya tengo cuenta <span className="text-blue-500">Ingresar</span>
@@ -288,5 +292,6 @@ const BasicsPage: FC = () => {
     </motion.div>
   );
 };
+
 
 export default BasicsPage;

@@ -63,6 +63,7 @@ export interface Contact {
   notes: string;
   governmentId: string;
   gender: string;
+  otherParentId?: string;
 }
 
 export interface Pet {

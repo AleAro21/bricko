@@ -1,4 +1,3 @@
-// components/common/OtpInput.tsx
 'use client';
 
 import React, { useState, useEffect, ChangeEvent } from 'react';
@@ -13,9 +12,8 @@ import { resendSignUpCode } from 'aws-amplify/auth';
 import { useUser } from '@/context/UserContext';
 import FooterTwo from '@/components/common/FooterTwo';
 import Spinner from '@/components/reusables/Spinner';
-
-// IMPORTANT: Import the server action from its server file
 import { confirmOtpAction } from '@/app/actions/otpActions';
+import { flushSync } from 'react-dom';
 
 interface OTPInputProps {
   length?: number;
@@ -99,7 +97,11 @@ const OTPInput: React.FC<OTPInputProps> = ({ length = 6, onComplete }) => {
   };
 
   const handleSubmit = async (): Promise<void> => {
-    setIsLoading(true);
+    // Force the spinner on the button to appear immediately.
+    flushSync(() => {
+      setIsLoading(true);
+    });
+    let didNavigate = false;
     const otpString = otp.join("");
     if (!email) {
       setIsLoading(false);
@@ -114,22 +116,19 @@ const OTPInput: React.FC<OTPInputProps> = ({ length = 6, onComplete }) => {
     }
 
     try {
-      // Call the server action to confirm OTP, sign in, and create the user.
-      // In production, sensitive details (like password) should be handled on the server.
       const result = await confirmOtpAction({
         email,
         otp: otpString,
-        password, // Omit or handle the password securely on the server.
+        password,
         name,
         fatherLastName,
         motherLastName,
       });
 
       if (result.success) {
-        // The server action sets secure HTTP‑only cookies.
-        // Now update the user context with the returned user data.
         setUser(result.user);
         router.push("/start/congratulation");
+        didNavigate = true;
       } else {
         alert(result.error);
       }
@@ -137,7 +136,9 @@ const OTPInput: React.FC<OTPInputProps> = ({ length = 6, onComplete }) => {
       console.error("Error during confirmation process:", error);
       alert(error.message || "An unexpected error occurred during confirmation");
     } finally {
-      setIsLoading(false);
+      if (!didNavigate) {
+        setIsLoading(false);
+      }
     }
   };
 
@@ -199,15 +200,6 @@ const OTPInput: React.FC<OTPInputProps> = ({ length = 6, onComplete }) => {
 
               <div className="w-full lg:w-3/5 flex items-center mt-[0px] lg:mt-0">
                 <div className="bg-white rounded-2xl px-4 sm:px-8 md:px-12 py-8 shadow-lg w-full max-w-xl mx-auto relative">
-                  {isLoading && (
-                    <div className="absolute inset-0 bg-white bg-opacity-80 flex items-center justify-center z-50 rounded-2xl">
-                      <div className="text-center">
-                        <Spinner size={50} />
-                        <p className="mt-4 text-[#047aff] font-medium">Verificando...</p>
-                      </div>
-                    </div>
-                  )}
-
                   <motion.div
                     key={currentMethod.id}
                     initial={{ opacity: 0, y: 20 }}

@@ -1,4 +1,3 @@
-// components/password/PasswordForm.client.tsx
 'use client';
 import { FC, FormEvent, useState, ChangeEvent } from "react";
 import { useRouter } from "next/navigation";
@@ -6,6 +5,7 @@ import { signUp } from "aws-amplify/auth";
 import Image from "next/image";
 import PrimaryButton from "@/components/reusables/PrimaryButton";
 import Spinner from "@/components/reusables/Spinner";
+import { flushSync } from "react-dom";
 
 export interface PasswordStrength {
   label: string;
@@ -51,14 +51,20 @@ const PasswordForm: FC = () => {
       setErrorMessage("Aún no cumples con todos los requisitos de la contraseña.");
       return;
     }
-
     const email = sessionStorage.getItem("email");
     if (!email) {
       setErrorMessage("No se encontró el correo electrónico. Por favor, regresa al paso anterior.");
       return;
     }
 
-    setIsLoading(true);
+    // Force the spinner to appear on the button immediately.
+    // Note: We gather necessary data before disabling any inputs.
+    const didNavigate = { value: false };
+    // Use flushSync so the spinner is visible immediately.
+    flushSync(() => {
+      setIsLoading(true);
+    });
+    
     try {
       sessionStorage.setItem("password", password);
       const { isSignUpComplete, nextStep } = await signUp({
@@ -68,12 +74,21 @@ const PasswordForm: FC = () => {
       });
       if (isSignUpComplete || nextStep.signUpStep === "CONFIRM_SIGN_UP") {
         router.push("/start/otp");
+        didNavigate.value = true;
       }
     } catch (error: any) {
       console.error("Sign up failed", error);
       setErrorMessage(error.message || "No se pudo completar el registro. Intenta de nuevo.");
+      sessionStorage.removeItem("password");
+      sessionStorage.removeItem("email");
+      sessionStorage.removeItem("name");
+      sessionStorage.removeItem("fatherLastName");
+      sessionStorage.removeItem("motherLastName");
+      router.push("/start/basics");
     } finally {
-      setIsLoading(false);
+      if (!didNavigate.value) {
+        setIsLoading(false);
+      }
     }
   };
 

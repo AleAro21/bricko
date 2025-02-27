@@ -134,7 +134,7 @@ const AddChild: FC<AddChildProps> = ({
       notes: '',
       governmentId,
       gender,
-      birthDate: isoBirthDate,
+      otherParentId: selectedParent.id,
     };
 
     setChild(childData);
@@ -172,7 +172,7 @@ const AddChild: FC<AddChildProps> = ({
         transition={{ duration: 0.3 }}
         className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50"
       >
-        <div className="bg-white rounded-2xl p-8 w-full max-w-md relative">
+        <div className="bg-white rounded-2xl p-8 w-full max-w-md relative max-h-[90vh] overflow-y-auto">
           <button
             onClick={() => setShowModal(false)}
             className="absolute right-4 top-4 text-gray-400 hover:text-gray-600 transition-colors"
