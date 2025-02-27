@@ -1,4 +1,3 @@
-// components/PartnerForm.client.tsx
 'use client';
 
 import { FC, useState } from 'react';
@@ -13,6 +12,7 @@ import { updateUserAction } from '@/app/actions/userActions';
 import { createContactAction } from '@/app/actions/contactActions';
 import type { Contact } from '@/types';
 import Add from "@/app/about-yourself/partner/Add";
+import { flushSync } from 'react-dom';
 
 interface MaritalStatusItem {
   title: string;
@@ -116,8 +116,12 @@ const PartnerForm: FC<PartnerFormProps> = ({
       setErrorMessage("No se encontró información del usuario");
       return;
     }
-    try {
+    // Force the spinner to show on the button immediately.
+    flushSync(() => {
       setLoading(true);
+    });
+    let didNavigate = false;
+    try {
       // Update user's marital status
       const updateResult = await updateUserAction({
         id: userId,
@@ -166,14 +170,16 @@ const PartnerForm: FC<PartnerFormProps> = ({
         }
       }
       router.push("/about-yourself/children");
+      didNavigate = true;
     } catch (error: any) {
       console.error("Error updating marital status and contact:", error);
       setErrorMessage("Error al guardar los cambios. Por favor, intente nuevamente.");
     } finally {
-      setLoading(false);
+      if (!didNavigate) {
+        setLoading(false);
+      }
     }
   };
-  
 
   return (
     <DashboardLayout>
@@ -222,16 +228,6 @@ const PartnerForm: FC<PartnerFormProps> = ({
             {/* Right Column: White container with marital options, Add button or partner card, and save button */}
             <div className="lg:w-3/5 w-full">
               <div className="bg-white rounded-2xl px-4 sm:px-8 md:px-12 py-10 shadow-lg relative">
-                {loading && (
-                  <div className="absolute inset-0 bg-white bg-opacity-80 flex items-center justify-center z-50 rounded-2xl">
-                    <div className="text-center">
-                      <Spinner size={50} />
-                      <p className="mt-4 text-[#047aff] font-medium">
-                        {loading ? 'Guardando...' : 'Cargando...'}
-                      </p>
-                    </div>
-                  </div>
-                )}
                 {/* Marital status option cards */}
                 <div className="space-y-4 mb-8">
                   {maritalStatusOptions.map((item, index) => (
@@ -321,10 +317,13 @@ const PartnerForm: FC<PartnerFormProps> = ({
 
                 {/* Save Button */}
                 <div className="flex justify-end pt-4 mt-4">
-                  <PrimaryButton onClick={handleSave}>
-                    Guardar y continuar
+                  <PrimaryButton onClick={handleSave} disabled={loading}>
+                    {loading ? <Spinner size={24} /> : "Guardar y continuar"}
                   </PrimaryButton>
                 </div>
+                {errorMessage && (
+                  <p className="text-red-500 text-[14px] text-center mt-4">{errorMessage}</p>
+                )}
               </div>
             </div>
           </div>

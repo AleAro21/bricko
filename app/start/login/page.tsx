@@ -1,4 +1,3 @@
-// app/start/login/page.tsx
 'use client';
 import { useState, FormEvent } from "react";
 import { motion } from "framer-motion";
@@ -14,6 +13,7 @@ import GradientCanvas from "@/components/reusables/GradientCanvas";
 import Spinner from "@/components/reusables/Spinner";
 import { useUser } from "@/context/UserContext";
 import { loginAction } from "@/app/actions/loginActions"; // server action import
+import { flushSync } from "react-dom";
 
 const SocialButton = ({ src, alt, width, height, className = "" }: {
   src: string;
@@ -39,17 +39,23 @@ const LoginPage = () => {
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setErrorMessage(null);
-    setIsLoading(true);
-
-    // Gather form data using FormData API.
+    
+    // Gather form data before disabling the inputs.
     const formData = new FormData(e.currentTarget);
-
+    
+    // Now force the spinner to show.
+    flushSync(() => {
+      setIsLoading(true);
+    });
+    
+    let didNavigate = false;
     try {
       const result = await loginAction(formData);
       if (result.success) {
         setUser(result.user);
         sessionStorage.setItem("userId", result.user.id);
         router.push("/summary");
+        didNavigate = true;
       } else {
         setErrorMessage(result.error ?? null);
       }
@@ -57,7 +63,9 @@ const LoginPage = () => {
       console.error("Login error:", error);
       setErrorMessage("Authentication failed. Please try again.");
     } finally {
-      setIsLoading(false);
+      if (!didNavigate) {
+        setIsLoading(false);
+      }
     }
   };
 

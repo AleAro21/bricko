@@ -98,11 +98,17 @@ const BasicsPage: FC = () => {
                 </div>
 
                 <h1 className="text-[32px] sm:text-[38px] font-[500] tracking-[-1.5px] leading-[1.2] sm:leading-[52px] mb-[15px]">
-                  <span className="text-[#1d1d1f]">Testamento digital en </span>
-                  <span className="bg-gradient-to-r from-[#3d9bff] to-[#047aff] inline-block text-transparent bg-clip-text">
-                    México
-                  </span>
-                </h1>
+                    <span className="text-[#1d1d1f]">Testamento digital </span>
+                    <span
+                      style={{
+                        backgroundImage:
+                          "linear-gradient(to right, #7abaff 1%, #047aff 60%, #0d4ba3 100%)",
+                      }}
+                      className="inline-block text-transparent bg-clip-text"
+                    >
+                     México
+                    </span>
+                  </h1>
 
                 <ul className="space-y-4 mb-8">
                   {[

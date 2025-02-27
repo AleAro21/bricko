@@ -1,4 +1,3 @@
-// components/ChildrenForm.client.tsx
 'use client';
 
 import { FC, useState } from 'react';
@@ -13,6 +12,7 @@ import { updateUserAction } from '@/app/actions/userActions';
 import { createContactAction } from '@/app/actions/contactActions';
 import type { Contact } from '@/types';
 import AddChild from '@/app/about-yourself/children/AddChild';
+import { flushSync } from 'react-dom';
 
 interface ChildOption {
   title: string;
@@ -93,8 +93,14 @@ const ChildrenForm: FC<ChildrenFormProps> = ({
       setErrorMessage("Por favor, agregue al menos un hijo");
       return;
     }
-    try {
+    
+    // Force the spinner to show immediately.
+    let didNavigate = false;
+    flushSync(() => {
       setLoading(true);
+    });
+
+    try {
       // Update user's "hasChildren" attribute.
       const updateResult = await updateUserAction({
         id: userId,
@@ -115,11 +121,15 @@ const ChildrenForm: FC<ChildrenFormProps> = ({
         sessionStorage.setItem('userChildren', JSON.stringify(children));
       }
       router.push("/summary");
+      didNavigate = true;
     } catch (error: any) {
       console.error('Error saving children:', error);
       setErrorMessage("Error al guardar los cambios. Por favor, intente nuevamente.");
     } finally {
-      setLoading(false);
+      // Only reset loading if navigation didn't occur.
+      if (!didNavigate) {
+        setLoading(false);
+      }
     }
   };
 
@@ -240,20 +250,9 @@ const ChildrenForm: FC<ChildrenFormProps> = ({
               )}
             </div>
 
-            {/* Right Column: White container with two option cards and save button */}
+            {/* Right Column: Options and Save Button */}
             <div className="w-full lg:w-3/5">
               <div className="bg-white rounded-2xl px-4 sm:px-8 md:px-12 py-8 shadow-lg relative">
-                {loading && (
-                  <div className="absolute inset-0 bg-white bg-opacity-80 flex items-center justify-center z-50 rounded-2xl">
-                    <div className="text-center">
-                      <Spinner size={50} />
-                      <p className="mt-4 text-[#047aff] font-medium">
-                        {loading ? 'Guardando...' : 'Cargando...'}
-                      </p>
-                    </div>
-                  </div>
-                )}
-                {/* Render the two options for children */}
                 <div className="space-y-4 mb-8">
                   {childOptions.map((item, index) => (
                     <div
@@ -279,7 +278,6 @@ const ChildrenForm: FC<ChildrenFormProps> = ({
                   ))}
                 </div>
 
-                {/* If "Sí" is selected and no child has been added, show an "Agregar Hijo" button */}
                 {activeIndex === 0 && children.length === 0 && (
                   <div
                     onClick={handleAddChild}
@@ -301,8 +299,8 @@ const ChildrenForm: FC<ChildrenFormProps> = ({
                 )}
 
                 <div className="flex justify-end pt-4 mt-4">
-                  <PrimaryButton onClick={handleSave}>
-                    Guardar y continuar
+                  <PrimaryButton onClick={handleSave} disabled={loading}>
+                    {loading ? <Spinner size={24} /> : "Guardar y continuar"}
                   </PrimaryButton>
                 </div>
               </div>

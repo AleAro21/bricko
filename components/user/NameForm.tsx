@@ -1,4 +1,3 @@
-// components/NameForm.client.tsx
 'use client';
 
 import { FC, FormEvent, useState } from 'react';
@@ -16,9 +15,8 @@ import PhoneInput from 'react-phone-number-input';
 import 'react-phone-number-input/style.css';
 import type { E164Number } from 'libphonenumber-js/core';
 import Spinner from "@/components/reusables/Spinner";
-
-// Import our server action for updating the user
 import { updateUserAction } from '@/app/actions/userActions';
+import { flushSync } from 'react-dom';
 
 interface FormValues {
   name: string;
@@ -28,7 +26,7 @@ interface FormValues {
   governmentId: string;
   birthDate: Date | null;
   nationality: string;
-  gender: "male" | "female"; // restricted to "male" or "female"
+  gender: "male" | "female";
   phoneNumber: string;
   countryPhoneCode: string;
 }
@@ -43,7 +41,7 @@ interface NameFormProps {
     governmentId: string;
     birthDate: string;
     nationality: string;
-    gender: string; // from your User type (could be any string)
+    gender: string;
     phoneNumber: string;
     countryPhoneCode: string;
   };
@@ -157,7 +155,6 @@ const NameForm: FC<NameFormProps> = ({ initialUser }) => {
     governmentId: initialUser.governmentId,
     birthDate: initialUser.birthDate ? new Date(initialUser.birthDate) : null,
     nationality: initialUser.nationality,
-    // Narrow gender to "male" or "female" or default to "male"
     gender:
       (initialUser.gender === "male" || initialUser.gender === "female")
         ? (initialUser.gender as "male" | "female")
@@ -170,6 +167,12 @@ const NameForm: FC<NameFormProps> = ({ initialUser }) => {
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    // Force the spinner on the button to render immediately.
+    flushSync(() => {
+      setIsSubmitting(true);
+    });
+    
     const {
       name,
       fatherLastName,
@@ -186,15 +189,18 @@ const NameForm: FC<NameFormProps> = ({ initialUser }) => {
     // Basic field validation.
     if (!name || !fatherLastName || !motherLastName || !governmentId || !nationality || !gender) {
       setErrorMessage("Por favor, complete todos los campos obligatorios");
+      setIsSubmitting(false);
       return;
     }
     const ageError = validateAge(birthDate);
     if (ageError) {
       setErrorMessage(ageError);
+      setIsSubmitting(false);
       return;
     }
     if (governmentId.length !== 13) {
       setErrorMessage("El RFC debe tener 13 dígitos");
+      setIsSubmitting(false);
       return;
     }
 
@@ -211,8 +217,8 @@ const NameForm: FC<NameFormProps> = ({ initialUser }) => {
       initialUser.phoneNumber !== phoneNumber ||
       initialUser.countryPhoneCode !== (countryPhoneCode ? `+${countryPhoneCode}` : undefined);
 
+    let didNavigate = false;
     try {
-      setIsSubmitting(true);
       if (hasDataChanged && initialUser.id) {
         // Convert birthDate to an ISO string if provided; otherwise, omit the field.
         const formattedBirthDate = birthDate ? birthDate.toISOString() : undefined;
@@ -235,11 +241,14 @@ const NameForm: FC<NameFormProps> = ({ initialUser }) => {
       }
       
       router.push("/about-yourself/basic");
+      didNavigate = true;
     } catch (error: any) {
       console.error('Error updating user:', error);
       setErrorMessage("Error al guardar la información. Por favor, intente nuevamente.");
     } finally {
-      setIsSubmitting(false);
+      if (!didNavigate) {
+        setIsSubmitting(false);
+      }
     }
   };
 
@@ -306,10 +315,18 @@ const NameForm: FC<NameFormProps> = ({ initialUser }) => {
                     <span className="text-[#047aff] text-[14px] font-[400]">DATOS PERSONALES</span>
                   </div>
                 </div>
-                <h1 className="text-[32px] sm:text-[38px] font-[500] tracking-[-1.5px] leading-[1d1d1f] sm:leading-[52px] mb-[15px]">
-                  <span className="text-[#1d1d1f]">Primero, vamos a </span>
-                  <span className="bg-gradient-to-r from-[#3d9bff] to-[#047aff] inline-block text-transparent bg-clip-text">conocerte</span>
-                </h1>
+                <h1 className="text-[32px] sm:text-[38px] font-[500] tracking-[-1.5px] leading-[1.2] sm:leading-[52px] mb-[15px]">
+                    <span className="text-[#1d1d1f]">Primero, vamos a </span>
+                    <span
+                      style={{
+                        backgroundImage:
+                          "linear-gradient(to right, #7abaff 1%, #047aff 60%, #0d4ba3 100%)",
+                      }}
+                      className="inline-block text-transparent bg-clip-text"
+                    >
+                      conocerte
+                    </span>
+                  </h1>
                 <p className="text-[16px] text-[#1d1d1f] leading-6 mb-5">
                   Necesitamos algunos datos personales para comenzar con tu testamento.
                 </p>
@@ -323,14 +340,6 @@ const NameForm: FC<NameFormProps> = ({ initialUser }) => {
               </div>
               <div className="w-full lg:w-3/5">
                 <div className="bg-white rounded-2xl px-4 sm:px-8 md:px-12 py-10 shadow-lg relative">
-                  {isSubmitting && (
-                    <div className="absolute inset-0 bg-white bg-opacity-80 flex items-center justify-center z-50 rounded-2xl">
-                      <div className="text-center">
-                        <Spinner size={50} />
-                        <p className="mt-4 text-[#047aff] font-medium">Guardando...</p>
-                      </div>
-                    </div>
-                  )}
                   <form onSubmit={handleSubmit} className="space-y-4">
                     <div className="space-y-7">
                       <div>

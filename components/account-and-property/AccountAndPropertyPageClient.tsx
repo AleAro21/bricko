@@ -1,4 +1,3 @@
-// components/account-and-property/AccountAndPropertyPageClient.tsx
 'use client';
 
 import { FC, useState } from 'react';
@@ -12,6 +11,8 @@ import Link from 'next/link';
 import { Baby, Users, Dog, Heart, UserPlus } from 'phosphor-react';
 import type { UserAsset, AssetOption, User, Will } from '@/types';
 import { createUserAssetAction } from '@/app/actions/assetActions';
+import { flushSync } from 'react-dom';
+import Spinner from '../reusables/Spinner';
 
 const COLORS = [
   '#0088FE',
@@ -106,6 +107,7 @@ const AccountAndPropertyPageClient: FC<AccountAndPropertyPageClientProps> = ({
   const router = useRouter();
   const [assets, setAssets] = useState<UserAsset[]>(initialAssets);
   const [showModal, setShowModal] = useState<boolean>(false);
+  const [isSaving, setIsSaving] = useState(false);
 
   // This handler opens the pop-up modal (managed by your AddAsset component)
   const handleAddAsset = async (newAsset: UserAsset) => {
@@ -117,6 +119,23 @@ const AccountAndPropertyPageClient: FC<AccountAndPropertyPageClientProps> = ({
       setShowModal(false);
     } catch (error) {
       console.error("Error creating asset:", error);
+    }
+  };
+
+  const handleSave = async () => {
+    flushSync(() => {
+      setIsSaving(true);
+    });
+    let didNavigate = false;
+    try {
+      router.push("/summary?completed=account-and-property");
+      didNavigate = true;
+    } catch (error: any) {
+      console.error("Error saving account and property:", error);
+    } finally {
+      if (!didNavigate) {
+        setIsSaving(false);
+      }
     }
   };
 
@@ -151,7 +170,7 @@ const AccountAndPropertyPageClient: FC<AccountAndPropertyPageClientProps> = ({
                     <span className="w-5 h-5 inline-flex items-center justify-center rounded-full border border-[#047aff] text-sm">?</span>
                   </Link>
                 </div>
-                <h1 className="text-[32px] sm:text-[38px] font-medium tracking-[-1.5px] leading-[1.2] sm:leading-[52px] mb-[15px]">
+                <h1 className="text-[32px] sm:text-[38px] font-medium tracking-[-1.5px] leading-[1d1d1f] sm:leading-[52px] mb-[15px]">
                   <span className="text-[#1d1d1f]">Enumere sus </span>
                   <span className="bg-gradient-to-r from-[#3d9bff] to-[#047aff] inline-block text-transparent bg-clip-text">
                     cuentas y propiedades
@@ -208,8 +227,8 @@ const AccountAndPropertyPageClient: FC<AccountAndPropertyPageClientProps> = ({
                 </div>
               )}
               <div className="pt-6 flex justify-end">
-                <PrimaryButton onClick={() => router.push("/summary?completed=account-and-property")}>
-                  Guardar y continuar
+                <PrimaryButton onClick={handleSave} disabled={isSaving}>
+                  {isSaving ? <Spinner size={24} /> : "Guardar y continuar"}
                 </PrimaryButton>
               </div>
             </div>

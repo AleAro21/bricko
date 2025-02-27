@@ -1,8 +1,8 @@
 'use client';
 
 import { FC, useState } from 'react';
-import DashboardLayout from '@/components/common/DashboardLayout';
-import { useRouter } from 'next/navigation';
+import DashboardLayout from "@/components/common/DashboardLayout";
+import { useRouter } from "next/navigation";
 import AddAsset from '@/app/digital-asset/AddAsset';
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from 'recharts';
 import { motion } from 'framer-motion';
@@ -18,6 +18,8 @@ import {
 } from 'phosphor-react';
 import type { UserAsset, AssetOption, User, Will } from '@/types';
 import { createUserAssetAction } from '@/app/actions/assetActions';
+import { flushSync } from 'react-dom';
+import Spinner from '../reusables/Spinner';
 
 const COLORS = [
   '#0088FE',
@@ -46,6 +48,7 @@ const DigitalAssetsPageClient: FC<DigitalAssetsPageClientProps> = ({
   const router = useRouter();
   const [showModal, setShowModal] = useState<boolean>(false);
   const [assets, setAssets] = useState<UserAsset[]>(initialAssets);
+  const [saving, setSaving] = useState(false);
 
   const assetTypeIcons: Record<string, JSX.Element> = {
     cloud_storage: <Cloud className="w-6 h-6" weight="thin" />,
@@ -123,6 +126,23 @@ const DigitalAssetsPageClient: FC<DigitalAssetsPageClientProps> = ({
     }
   };
 
+  const handleSave = async () => {
+    flushSync(() => {
+      setSaving(true);
+    });
+    let didNavigate = false;
+    try {
+      router.push("/summary?completed=digital-assets");
+      didNavigate = true;
+    } catch (error) {
+      console.error("Error saving digital assets:", error);
+    } finally {
+      if (!didNavigate) {
+        setSaving(false);
+      }
+    }
+  };
+
   return (
     <>
       <AddAsset
@@ -152,7 +172,7 @@ const DigitalAssetsPageClient: FC<DigitalAssetsPageClientProps> = ({
                       <span className="w-5 h-5 inline-flex items-center justify-center rounded-full border border-[#047aff] text-sm">?</span>
                     </Link>
                   </div>
-                  <h1 className="text-[32px] sm:text-[38px] font-medium tracking-[-1.5px] leading-[1.2] sm:leading-[52px] mb-[15px]">
+                  <h1 className="text-[32px] sm:text-[38px] font-medium tracking-[-1.5px] leading-[1d1d1f] sm:leading-[52px] mb-[15px]">
                     <span className="text-[#1d1d1f]">¿Tiene algún </span>
                     <span className="bg-gradient-to-r from-[#3d9bff] to-[#047aff] inline-block text-transparent bg-clip-text">
                       activo digital
@@ -227,8 +247,8 @@ const DigitalAssetsPageClient: FC<DigitalAssetsPageClientProps> = ({
                   </div>
                 )}
                 <div className="pt-6 flex justify-end">
-                  <PrimaryButton onClick={() => router.push("/summary?completed=digital-assets")}>
-                    Guardar y continuar
+                  <PrimaryButton onClick={handleSave} disabled={saving}>
+                    {saving ? <Spinner size={24} /> : "Guardar y continuar"}
                   </PrimaryButton>
                 </div>
               </div>

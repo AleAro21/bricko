@@ -1,4 +1,3 @@
-// AmplifyProvider.tsx
 'use client';
 
 import React, { useEffect, useState } from 'react';
@@ -8,6 +7,7 @@ import { Authenticator, useAuthenticator } from '@aws-amplify/ui-react';
 import awsConfig from '../../aws-exports';
 import '@aws-amplify/ui-react/styles.css';
 import { apiService } from '@/app/apiService';
+import LoadingFallback from '@/components/common/LoadingFallback';
 
 interface AmplifyProviderProps {
   children: React.ReactNode;
@@ -105,7 +105,7 @@ function AuthStateManager({ children }: { children: React.ReactNode }) {
     }
   }, [authStatus]);
 
-  return isInitialized ? children : <div>Initializing authentication...</div>;
+  return isInitialized ? children : <LoadingFallback />;
 }
 
 export default function AmplifyProvider({ children }: AmplifyProviderProps) {

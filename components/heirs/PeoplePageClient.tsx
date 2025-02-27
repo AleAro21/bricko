@@ -12,6 +12,8 @@ import { useUser } from '@/context/UserContext';
 import { fetchAuthSession } from 'aws-amplify/auth';
 import { AssignmentType } from '@/types';
 import { createAssignmentAction } from '@/app/actions/assignmentActions';
+import { flushSync } from 'react-dom';
+import Spinner from '../reusables/Spinner';
 
 export type AssetDistribution = { [heirId: string]: number };
 
@@ -130,7 +132,10 @@ const PeoplePageClient: FC<PeoplePageClientProps> = ({
       alert("Cada activo debe tener un total de 100% asignado.");
       return;
     }
-    setSavingAssignments(true);
+    flushSync(() => {
+      setSavingAssignments(true);
+    });
+    let didNavigate = false;
     try {
       // For each asset and each heir's percentage, call the server action.
       const assignmentPromises: Promise<any>[] = [];
@@ -152,10 +157,13 @@ const PeoplePageClient: FC<PeoplePageClientProps> = ({
       const responses = await Promise.all(assignmentPromises);
       console.log("Assignments created:", responses);
       router.push("/summary");
+      didNavigate = true;
     } catch (error) {
       console.error("Error creating assignments:", error);
     } finally {
-      setSavingAssignments(false);
+      if (!didNavigate) {
+        setSavingAssignments(false);
+      }
     }
   };
 
@@ -270,7 +278,7 @@ const PeoplePageClient: FC<PeoplePageClientProps> = ({
                   onClick={handleSaveAssignments}
                   disabled={savingAssignments || !validateDistributions()}
                 >
-                  {savingAssignments ? "Guardando..." : "Guardar y continuar"}
+                  {savingAssignments ? <Spinner size={24} /> : "Guardar y continuar"}
                 </PrimaryButton>
               </div>
             </div>

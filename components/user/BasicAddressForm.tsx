@@ -9,9 +9,11 @@ import PrimaryButton from "@/components/reusables/PrimaryButton";
 import ProgressIndicator from "@/components/reusables/ProgressIndicator";
 import Link from "next/link";
 import Spinner from "@/components/reusables/Spinner";
+import { Address } from "@/types";
 
 // Import the server action for updating the address.
-import { updateUserAddressAction, Address } from '@/app/actions/addressActions';
+import { updateUserAddressAction } from '@/app/actions/addressActions';
+import { flushSync } from 'react-dom';
 
 interface BasicAddressFormProps {
   initialAddress: Address | null;
@@ -49,9 +51,13 @@ const BasicAddressForm: FC<BasicAddressFormProps> = ({ initialAddress, userId })
       return;
     }
 
-    try {
+    // Force the spinner state to update immediately so it renders on the button.
+    flushSync(() => {
       setLoading(true);
-      
+    });
+    
+    let didNavigate = false;
+    try {
       const addressData: Address = {
         street,
         city,
@@ -71,11 +77,14 @@ const BasicAddressForm: FC<BasicAddressFormProps> = ({ initialAddress, userId })
       sessionStorage.setItem("userAddress", JSON.stringify(updatedAddress));
 
       router.push("/about-yourself/partner");
+      didNavigate = true;
     } catch (error: any) {
       console.error("Error handling address:", error);
       setErrorMessage("Error al guardar la dirección. Por favor, intente nuevamente.");
     } finally {
-      setLoading(false);
+      if (!didNavigate) {
+        setLoading(false);
+      }
     }
   };
 
@@ -103,9 +112,17 @@ const BasicAddressForm: FC<BasicAddressFormProps> = ({ initialAddress, userId })
                   <span className="text-[#047aff] text-[14px] font-[400]">DATOS PERSONALES</span>
                 </div>
               </div>
-              <h1 className="text-[32px] sm:text-[38px] font-[500] tracking-[-1.5px] leading-[1d1d1f] sm:leading-[52px] mb-[15px]">
+              <h1 className="text-[32px] sm:text-[38px] font-[500] tracking-[-1.5px] leading-[1.2] sm:leading-[52px] mb-[15px]">
                 <span className="text-[#1d1d1f]">¿Dónde </span>
-                <span className="bg-gradient-to-r from-[#3d9bff] to-[#047aff] inline-block text-transparent bg-clip-text">vives?</span>
+                <span
+                  style={{
+                    backgroundImage:
+                      "linear-gradient(to right, #7abaff 1%, #047aff 60%, #0d4ba3 100%)",
+                  }}
+                  className="inline-block text-transparent bg-clip-text"
+                >
+                  vives?
+                </span>
               </h1>
               <p className="text-[16px] text-[#1d1d1f] leading-6 mb-5">
                 Necesitamos tu dirección para completar el testamento.
@@ -122,14 +139,6 @@ const BasicAddressForm: FC<BasicAddressFormProps> = ({ initialAddress, userId })
             {/* Right column - Form */}
             <div className="w-full lg:w-3/5">
               <div className="bg-white rounded-2xl px-4 sm:px-8 md:px-12 py-10 shadow-lg relative">
-                {loading && (
-                  <div className="absolute inset-0 bg-white bg-opacity-80 flex items-center justify-center z-50 rounded-2xl">
-                    <div className="text-center">
-                      <Spinner size={50} />
-                      <p className="mt-4 text-[#047aff] font-medium">Guardando...</p>
-                    </div>
-                  </div>
-                )}
                 <form onSubmit={handleSubmit} className="space-y-4">
                   <div className="space-y-7">
                     <div>
@@ -210,8 +219,8 @@ const BasicAddressForm: FC<BasicAddressFormProps> = ({ initialAddress, userId })
                     <p className="text-red-500 text-[14px] text-center mt-0">{errorMessage}</p>
                   )}
                   <div className="flex justify-end pt-6">
-                    <PrimaryButton type="submit">
-                      Guardar y continuar
+                    <PrimaryButton type="submit" disabled={loading}>
+                      {loading ? <Spinner size={24} /> : "Guardar y continuar"}
                     </PrimaryButton>
                   </div>
                 </form>
