@@ -16,6 +16,8 @@ import {
   Check,
   PencilSimple,
   Clock,
+  Share,
+  ShieldCheck,
 } from "phosphor-react";
 import { useUser } from "@/context/UserContext";
 
@@ -157,27 +159,67 @@ const StepCard: FC<StepCardProps> = ({
   );
 };
 
-const PaymentSection: FC<{ onClick: () => void }> = ({ onClick }) => {
+interface PaymentSectionProps {
+  onClick: () => void;
+  disabled?: boolean;
+  progress: number;
+}
+
+const PaymentSection: FC<PaymentSectionProps> = ({ onClick, disabled, progress }) => {
   return (
-    <div onClick={onClick} className="mt-10 rounded-xl cursor-pointer group">
+    <div
+      onClick={!disabled ? onClick : undefined}
+      className={`mt-10 rounded-xl group ${disabled ? "cursor-not-allowed" : "cursor-pointer"}`}
+    >
       <div className="p-[1px] bg-gradient-to-br from-[#047aff] via-[#3d9bff] to-[#047aff] rounded-xl">
         <div className="bg-white rounded-[11px] p-[25px] hover:bg-gradient-to-br hover:from-[#f8faff] hover:to-white transition-all duration-500">
           <div className="flex items-start gap-5 flex-wrap">
-            <div className="bg-gradient-to-br from-[#047aff] to-[#3d9bff] p-[15px] rounded-xl shadow-md group-hover:scale-105 transition-transform duration-300">
-              <LockSimple weight="thin" className="text-white w-6 h-6" />
+            <div className={`bg-gradient-to-br ${disabled ? "from-[#047aff]/70 to-[#3d9bff]/70" : "from-[#047aff] to-[#3d9bff]"} p-[15px] rounded-xl shadow-md group-hover:scale-105 transition-transform duration-300`}>
+              {disabled ? (
+                <LockSimple weight="thin" className="text-white w-6 h-6" />
+              ) : (
+                <LockSimple weight="thin" className="text-white w-6 h-6" />
+              )}
             </div>
             <div className="flex-1 min-w-0">
               <div className="mb-5">
                 <h3 className="text-[20px] sm:text-[22px] text-[#1d1d1f] font-[500] tracking-[-0.5px] leading-[1.3] mb-5 break-words">
-                  Legaliza tu Testamento
+                  {disabled ? "Completa tu Testamento" : "Legaliza tu Testamento"}
                 </h3>
-                <p className="text-[15px] font-[300] text-[#1d1d1f]/80 tracking-[0.1px] leading-[1.3] break-words">
-                  Completa tu proceso realizando el pago para generar tu testamento oficial
-                </p>
+                {disabled ? (
+                  <div>
+                    <p className="text-[15px] font-[300] text-[#1d1d1f]/80 tracking-[0.1px] leading-[1.3] break-words mb-4">
+                      Termina tu testamento para poder legalizarlo y compartirlo con tus seres queridos.
+                    </p>
+                    <div className="flex items-center gap-3 text-[14px] font-[300] text-[#1d1d1f]/80 mb-2">
+                      <ShieldCheck weight="fill" className="text-[#047aff] w-5 h-5" />
+                      <span>Protege el futuro de tu familia</span>
+                    </div>
+                    <div className="flex items-center gap-3 text-[14px] font-[300] text-[#1d1d1f]/80">
+                      <Share weight="fill" className="text-[#047aff] w-5 h-5" />
+                      <span>Comparte tu voluntad con tus seres queridos</span>
+                    </div>
+                      <p className="text-[12px] mt-5 font-medium text-blue-700 mb-0">
+                        Te falta completar el {100 - progress}% para poder legalizar tu testamento
+                      </p>
+                    
+                  </div>
+                ) : (
+                  <p className="text-[15px] font-[300] text-[#1d1d1f]/80 tracking-[0.1px] leading-[1.3] break-words">
+                    Completa tu proceso realizando el pago para generar tu testamento oficial
+                  </p>
+                )}
               </div>
               <div className="flex justify-end">
-                <button className="bg-gradient-to-r from-[#047aff] to-[#3d9bff] text-white px-[25px] py-[10px] rounded-lg font-medium text-sm hover:shadow-md transition-all duration-300 flex items-center gap-5">
-                  Proceder al pago
+                <button
+                  disabled={disabled}
+                  className={`${
+                    disabled 
+                      ? "bg-gradient-to-r from-[#047aff]/70 to-[#3d9bff]/70" 
+                      : "bg-gradient-to-r from-[#047aff] to-[#3d9bff] hover:shadow-md"
+                  } text-white px-[25px] py-[10px] rounded-lg font-medium text-sm transition-all duration-300 flex items-center gap-5`}
+                >
+                  {"Proceder al pago"}
                   <CaretRight weight="bold" className="w-4 h-4" />
                 </button>
               </div>
@@ -234,7 +276,8 @@ const optionalSteps: Step[] = [
     id: "special-gifts",
     stepNumber: 0,
     title: "Regalos Especiales",
-    description: "Define objetos o bienes específicos para personas especiales",
+    description:
+      "Se conocen como Legados. Define objetos o bienes específicos para personas especiales.",
     duration: "3-5 minutos",
     route: "/special-gifts",
     icon: <Gift size={32} weight="thin" />,
@@ -264,6 +307,8 @@ const SummaryPageClient: FC<SummaryPageClientProps> = ({ progressMapping }) => {
     const totalProgress = mainStepsProgress.reduce((acc, curr) => acc + curr, 0);
     return Math.round(totalProgress / mainSteps.length);
   };
+
+  const totalProgress = calculateTotalProgress();
 
   const handlePaymentClick = () => {
     router.push("/payment");
@@ -315,7 +360,7 @@ const SummaryPageClient: FC<SummaryPageClientProps> = ({ progressMapping }) => {
           <div className="lg:w-2/5 w-full">
             <div className="sticky top-[25px]">
               <div className="bg-white rounded-xl p-5 sm:p-[25px] shadow-md">
-                <ProgressBar progress={calculateTotalProgress()} />
+                <ProgressBar progress={totalProgress} />
                 <h2 className="text-[20px] sm:text-[22px] font-[500] text-[#1d1d1f] mt-[25px] mb-2.5 tracking-[0.1px] leading-[1.3] break-words">
                   Tu Voluntad
                 </h2>
@@ -323,7 +368,11 @@ const SummaryPageClient: FC<SummaryPageClientProps> = ({ progressMapping }) => {
                   La primera parte de tu testamento tiene que ver contigo y tu familia. 
                   Completa la información en el Paso 1 para avanzar.
                 </p>
-                <PaymentSection onClick={handlePaymentClick} />
+                <PaymentSection 
+                  onClick={handlePaymentClick} 
+                  disabled={totalProgress !== 100} 
+                  progress={totalProgress}
+                />
               </div>
             </div>
           </div>

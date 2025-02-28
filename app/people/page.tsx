@@ -12,10 +12,11 @@ export default async function PeoplePage() {
     return <div>Error: Usuario no encontrado</div>;
   }
   const user = userResult.user;
-  const contacts = await getContactsAction(user.id);
+  const userId = userResult.user.id;
+  const contacts = await getContactsAction(userId);
   let pets: Pet[] = [];
   try {
-    pets = await getPetsAction(user.id);
+    pets = await getPetsAction(userId);
   } catch (err: any) {
     pets = [];
   }

@@ -35,7 +35,7 @@ const maritalStatusOptions: MaritalStatusItem[] = [
     title: "Soltero",
     value: "single",
     subTitle:
-      "Libre de vínculos matrimoniales; puede contraer matrimonio si lo desea.",
+      "Sin vínculo matrimonial; incluye a quienes nunca se han casado, viudos y divorciados, pudiendo contraer matrimonio.",
     items: { itemTiltle: "", itemData: null },
   },
   {

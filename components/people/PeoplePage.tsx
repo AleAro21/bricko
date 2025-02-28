@@ -1,4 +1,3 @@
-// components/PeoplePage.client.tsx
 'use client';
 
 import { FC, useState } from 'react';
@@ -7,15 +6,18 @@ import DashboardLayout from '@/components/common/DashboardLayout';
 import { Baby, Users, Dog, Heart, UserPlus, Pencil, Trash, CaretLeft } from 'phosphor-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import Spinner from '@/components/reusables/Spinner';
 import { apiService } from '@/app/apiService';
 import type { Contact, Pet, User } from '@/types';
+
+// Import modal components for adding contacts.
+import AddChild from '@/components/heirs/AddChild';
+import AddContact from '@/components/heirs/Add';
 
 interface Category {
   id: 'children' | 'trusted' | 'pets' | 'charity';
   title: string;
   description: string;
-  icon: string; // we'll map these to actual icon components below
+  icon: string;
   count: number;
 }
 
@@ -26,8 +28,17 @@ interface PeoplePageProps {
   categories: Category[];
 }
 
-const CategoryCard: FC<{ title: string; description: string; icon: JSX.Element; count: number; onClick: () => void; }> = ({ title, description, icon, count, onClick }) => (
-  <div onClick={onClick} className="relative flex flex-col items-start p-8 rounded-xl transition-all duration-500 cursor-pointer w-full min-h-[150px] bg-white/90 backdrop-blur-sm shadow-md hover:shadow-lg hover:scale-[1.02]">
+const CategoryCard: FC<{
+  title: string;
+  description: string;
+  icon: JSX.Element;
+  count: number;
+  onClick: () => void;
+}> = ({ title, description, icon, count, onClick }) => (
+  <div
+    onClick={onClick}
+    className="relative flex flex-col items-start p-8 rounded-xl transition-all duration-500 cursor-pointer w-full min-h-[150px] bg-white/90 backdrop-blur-sm shadow-md hover:shadow-lg hover:scale-[1.02]"
+  >
     <div className="flex items-center justify-between w-full mb-3">
       <div className="w-10 h-10 flex items-center justify-center text-[#047aff]">
         {icon}
@@ -41,7 +52,11 @@ const CategoryCard: FC<{ title: string; description: string; icon: JSX.Element; 
   </div>
 );
 
-const ContactCard: FC<{ contact: Contact; onEdit: (contact: Contact) => void; onDelete: (contactId: string) => void; }> = ({ contact, onEdit, onDelete }) => {
+const ContactCard: FC<{
+  contact: Contact;
+  onEdit: (contact: Contact) => void;
+  onDelete: (contactId: string) => void;
+}> = ({ contact, onEdit, onDelete }) => {
   const calculateAge = (dob: string): number => {
     const birthDate = new Date(dob);
     const diffMs = Date.now() - birthDate.getTime();
@@ -50,25 +65,27 @@ const ContactCard: FC<{ contact: Contact; onEdit: (contact: Contact) => void; on
   };
 
   const ageLabel = contact.birthDate
-    ? (calculateAge(contact.birthDate) < 18 ? "Menor de edad" : "Mayor de edad")
-    : "Mayor de edad";
+    ? calculateAge(contact.birthDate) < 18
+      ? 'Menor de edad'
+      : 'Mayor de edad'
+    : 'Mayor de edad';
 
   const formattedBirthDate = contact.birthDate
-    ? new Date(contact.birthDate).toLocaleDateString("es-ES", {
-        day: "numeric",
-        month: "long",
-        year: "numeric",
+    ? new Date(contact.birthDate).toLocaleDateString('es-ES', {
+        day: 'numeric',
+        month: 'long',
+        year: 'numeric',
       })
-    : "N/A";
+    : 'N/A';
 
   const relationshipLabels: Record<string, string> = {
-    sibling: "Hermano/a",
-    child: "Hijo/a",
-    spouse: "Cónyuge",
-    friend: "Amigo/a",
-    parent: "Padre/Madre",
-    albacea: "Albacea",
-    none: "Otro"
+    sibling: 'Hermano/a',
+    child: 'Hijo/a',
+    spouse: 'Cónyuge',
+    friend: 'Amigo/a',
+    parent: 'Padre/Madre',
+    albacea: 'Albacea',
+    none: 'Otro',
   };
 
   return (
@@ -79,40 +96,46 @@ const ContactCard: FC<{ contact: Contact; onEdit: (contact: Contact) => void; on
             {contact.name} {contact.fatherLastName}
           </h3>
           <span className="text-sm text-[#047aff] bg-[#047aff]/10 px-2 py-1 rounded-full mr-2">
-            {relationshipLabels[contact.relationToUser] || "Otro"}
+            {relationshipLabels[contact.relationToUser] || 'Otro'}
           </span>
           <span className="text-sm text-[#047aff] bg-[#047aff]/10 px-2 py-1 rounded-full">
             {ageLabel}
           </span>
         </div>
         <div className="flex gap-2">
-          <button
-            onClick={() => onEdit(contact)}
-            className="p-2 text-gray-600 hover:text-[#047aff] transition-colors"
-          >
+          <button onClick={() => onEdit(contact)} className="p-2 text-gray-600 hover:text-[#047aff] transition-colors">
             <Pencil size={20} />
           </button>
-          <button
-            onClick={() => onDelete(contact.id!)}
-            className="p-2 text-gray-600 hover:text-red-500 transition-colors"
-          >
+          <button onClick={() => onDelete(contact.id!)} className="p-2 text-gray-600 hover:text-red-500 transition-colors">
             <Trash size={20} />
           </button>
         </div>
       </div>
       <div className="space-y-2">
-        <p className="text-sm text-gray-600"><span className="font-medium">Email:</span> {contact.email}</p>
-        <p className="text-sm text-gray-600"><span className="font-medium">País:</span> {contact.country}</p>
-        <p className="text-sm text-gray-600"><span className="font-medium">Fecha de nacimiento:</span> {formattedBirthDate}</p>
+        <p className="text-sm text-gray-600">
+          <span className="font-medium">Email:</span> {contact.email}
+        </p>
+        <p className="text-sm text-gray-600">
+          <span className="font-medium">País:</span> {contact.country}
+        </p>
+        <p className="text-sm text-gray-600">
+          <span className="font-medium">Fecha de nacimiento:</span> {formattedBirthDate}
+        </p>
         {contact.governmentId && (
-          <p className="text-sm text-gray-600"><span className="font-medium">ID de Gobierno:</span> {contact.governmentId}</p>
+          <p className="text-sm text-gray-600">
+            <span className="font-medium">ID de Gobierno:</span> {contact.governmentId}
+          </p>
         )}
       </div>
     </div>
   );
 };
 
-const PetCard: FC<{ pet: Pet; onEdit: (pet: Pet) => void; onDelete: (petId: string) => void; }> = ({ pet, onEdit, onDelete }) => (
+const PetCard: FC<{
+  pet: Pet;
+  onEdit: (pet: Pet) => void;
+  onDelete: (petId: string) => void;
+}> = ({ pet, onEdit, onDelete }) => (
   <div className="bg-white/90 backdrop-blur-sm shadow-md rounded-xl p-6 hover:shadow-lg transition-all duration-300">
     <div className="flex justify-between items-start mb-4">
       <div>
@@ -129,9 +152,13 @@ const PetCard: FC<{ pet: Pet; onEdit: (pet: Pet) => void; onDelete: (petId: stri
       </div>
     </div>
     <div className="space-y-2">
-      <p className="text-sm text-gray-600"><span className="font-medium">Fecha de nacimiento:</span> {new Date(pet.dateOfBirth).toLocaleDateString()}</p>
+      <p className="text-sm text-gray-600">
+        <span className="font-medium">Fecha de nacimiento:</span> {new Date(pet.dateOfBirth).toLocaleDateString()}
+      </p>
       {pet.notes && (
-        <p className="text-sm text-gray-600"><span className="font-medium">Notas:</span> {pet.notes}</p>
+        <p className="text-sm text-gray-600">
+          <span className="font-medium">Notas:</span> {pet.notes}
+        </p>
       )}
     </div>
   </div>
@@ -145,16 +172,21 @@ const PeoplePageClient: FC<PeoplePageProps> = ({ user, contacts, pets, categorie
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  // Modal state for adding contacts.
+  // modalType 'child' for children, 'trusted' for normal contacts.
+  const [showAddModal, setShowAddModal] = useState(false);
+  const [modalType, setModalType] = useState<'child' | 'trusted' | null>(null);
+
   // Handlers for editing and deleting contacts and pets
   const handleEdit = {
     contact: (contact: Contact) => {
       console.log('Edit contact:', contact);
-      // Implement contact edit functionality
+      // Implement contact edit functionality as needed.
     },
     pet: (pet: Pet) => {
       console.log('Edit pet:', pet);
-      // Implement pet edit functionality
-    }
+      // Implement pet edit functionality.
+    },
   };
 
   const handleDelete = {
@@ -181,13 +213,58 @@ const PeoplePageClient: FC<PeoplePageProps> = ({ user, contacts, pets, categorie
           setError('Error al eliminar la mascota');
         }
       }
-    }
+    },
   };
 
-  // Filter contacts into children and trusted groups
+  // Separate contacts into children and trusted groups.
   const filteredContacts = {
     children: localContacts.filter(c => c.relationToUser === 'child'),
-    trusted: localContacts.filter(c => ['sibling', 'spouse', 'parent', 'albacea', 'friend'].includes(c.relationToUser))
+    trusted: localContacts.filter(c =>
+      ['sibling', 'spouse', 'parent', 'albacea', 'friend'].includes(c.relationToUser)
+    ),
+  };
+
+  // This callback is invoked when a new contact is created in the modal.
+  // It updates the local state with the new contact.
+  const handleAddContact = (newContact: Contact) => {
+    setLocalContacts(prev => [...prev, newContact]);
+  };
+
+  // Handler to open the correct modal based on the category.
+  const handleAddClick = (type: 'child' | 'trusted') => {
+    setModalType(type);
+    setShowAddModal(true);
+  };
+
+  const getEmptyState = () => {
+    const categoryData = categories.find(c => c.id === selectedCategory);
+    return (
+      <div className="text-center py-12 bg-white/90 backdrop-blur-sm rounded-xl shadow-md">
+        <div className="mx-auto text-gray-400 mb-4 w-12 h-12 flex items-center justify-center">
+          {selectedCategory === 'pets' ? <Dog size={28} weight="thin" /> : <Users size={28} weight="thin" />}
+        </div>
+        <h3 className="text-xl font-medium text-gray-900 mb-2">
+          No hay {categoryData?.title.toLowerCase()}
+        </h3>
+        <p className="text-gray-600 mb-4">
+          Comienza agregando {selectedCategory === 'pets' ? 'mascotas' : 'contactos'}
+        </p>
+        <button
+          onClick={() => handleAddClick(selectedCategory === 'children' ? 'child' : 'trusted')}
+          className="inline-flex items-center gap-2 bg-[#047aff] text-white px-4 py-2 rounded-lg hover:bg-[#0456b0] transition-colors"
+        >
+          <UserPlus size={20} />
+          <span>
+            Agregar{' '}
+            {selectedCategory === 'pets'
+              ? 'Mascota'
+              : selectedCategory === 'children'
+              ? 'Hijo'
+              : 'Contacto'}
+          </span>
+        </button>
+      </div>
+    );
   };
 
   const renderContent = () => {
@@ -230,47 +307,22 @@ const PeoplePageClient: FC<PeoplePageProps> = ({ user, contacts, pets, categorie
       );
     }
 
-    const getEmptyState = () => {
-      const categoryData = categories.find(c => c.id === selectedCategory);
-      return (
-        <div className="text-center py-12 bg-white/90 backdrop-blur-sm rounded-xl shadow-md">
-          <div className="mx-auto text-gray-400 mb-4 w-12 h-12 flex items-center justify-center">
-            {selectedCategory === 'pets' ? <Dog size={28} weight="thin" /> : <Users size={28} weight="thin" />}
-          </div>
-          <h3 className="text-xl font-medium text-gray-900 mb-2">No hay {categoryData?.title.toLowerCase()}</h3>
-          <p className="text-gray-600 mb-4">Comienza agregando {selectedCategory === 'pets' ? 'mascotas' : 'contactos'}</p>
-          <button
-            onClick={() => {/* Implement add functionality here if desired */}}
-            className="inline-flex items-center gap-2 bg-[#047aff] text-white px-4 py-2 rounded-lg hover:bg-[#0456b0] transition-colors"
-          >
-            <UserPlus size={20} />
-            <span>Agregar {selectedCategory === 'pets' ? 'Mascota' : 'Contacto'}</span>
-          </button>
-        </div>
-      );
-    };
-
     let content;
     if (selectedCategory === 'pets') {
       content = localPets.length === 0 ? getEmptyState() : (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {localPets.map((pet) => (
-            <PetCard
-              key={pet.id}
-              pet={pet}
-              onEdit={handleEdit.pet}
-              onDelete={handleDelete.pet}
-            />
+            <PetCard key={pet.id} pet={pet} onEdit={handleEdit.pet} onDelete={handleDelete.pet} />
           ))}
         </div>
       );
     } else {
-      const categoryContacts = selectedCategory === 'children'
-        ? filteredContacts.children
-        : selectedCategory === 'trusted'
+      const categoryContacts =
+        selectedCategory === 'children'
+          ? filteredContacts.children
+          : selectedCategory === 'trusted'
           ? filteredContacts.trusted
           : [];
-      
       content = categoryContacts.length === 0 ? getEmptyState() : (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {categoryContacts.map((contact) => (
@@ -301,7 +353,7 @@ const PeoplePageClient: FC<PeoplePageProps> = ({ user, contacts, pets, categorie
 
   return (
     <DashboardLayout>
-      <motion.div 
+      <motion.div
         className="min-h-screen bg-[#f5f5f7]"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
@@ -310,7 +362,7 @@ const PeoplePageClient: FC<PeoplePageProps> = ({ user, contacts, pets, categorie
       >
         <div className="max-w-6xl mx-auto px-4 sm:px-5 py-12">
           <div className="space-y-8">
-            {/* Header section */}
+            {/* Header Section */}
             <div>
               <div className="flex items-center justify-between mb-2.5">
                 <div className="inline-flex items-center h-[32px] bg-[#047aff] bg-opacity-10 px-[12px] py-[6px] rounded-md">
@@ -335,18 +387,25 @@ const PeoplePageClient: FC<PeoplePageProps> = ({ user, contacts, pets, categorie
                     </span>
                   </h1>
                   <p className="text-[16px] text-[#1d1d1f] leading-6">
-                    {selectedCategory 
+                    {selectedCategory
                       ? categories.find(c => c.id === selectedCategory)?.description
                       : 'Organiza y administra la información de las personas importantes en tu vida.'}
                   </p>
                 </div>
                 {selectedCategory && (
                   <button
-                    onClick={() => {/* Implement add functionality here if needed */}}
+                    onClick={() => handleAddClick(selectedCategory === 'children' ? 'child' : 'trusted')}
                     className="flex items-center gap-2 bg-[#047aff] text-white px-4 py-2 rounded-lg hover:bg-[#0456b0] transition-colors"
                   >
                     <UserPlus size={20} />
-                    <span>Agregar {selectedCategory === 'pets' ? 'Mascota' : 'Contacto'}</span>
+                    <span>
+                      Agregar{' '}
+                      {selectedCategory === 'pets'
+                        ? 'Mascota'
+                        : selectedCategory === 'children'
+                        ? 'Hijo'
+                        : 'Contacto'}
+                    </span>
                   </button>
                 )}
               </div>
@@ -356,6 +415,28 @@ const PeoplePageClient: FC<PeoplePageProps> = ({ user, contacts, pets, categorie
           </div>
         </div>
       </motion.div>
+
+      {/* Render modals based on modalType */}
+      {showAddModal && modalType === 'child' && (
+        <AddChild
+          showModal={showAddModal}
+          setShowModal={setShowAddModal}
+          onAddChild={(child: Contact) => handleAddContact(child)}
+          userId={user.id}
+          isEditing={false}
+          existingChild={null}
+          contacts={localContacts}
+        />
+      )}
+      {showAddModal && modalType === 'trusted' && (
+        <AddContact
+          showModal={showAddModal}
+          setShowModal={setShowAddModal}
+          setPartner={(partner: Contact | null) => {
+            if (partner) handleAddContact(partner);
+          } }
+          userId={user.id} isEditing={false} existingPartner={null}        />
+      )}
     </DashboardLayout>
   );
 };
