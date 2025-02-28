@@ -105,6 +105,7 @@ const ChildrenForm: FC<ChildrenFormProps> = ({
       const updateResult = await updateUserAction({
         id: userId,
         hasChildren: activeIndex === 0,
+    
       });
       if (!updateResult.success) {
         throw new Error(updateResult.error || "Error updating user");

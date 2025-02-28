@@ -1,4 +1,5 @@
 // app/account-and-property/page.tsx
+export const dynamic = "force-dynamic";
 import { getUserAction } from '@/app/actions/userActions';
 import { getUserAssetsAction } from '@/app/actions/assetActions';
 import { getAllWillsAction, createWillAction, updateWillAction } from '@/app/actions/willActions';
@@ -6,6 +7,8 @@ import { getAssetsCategoriesAction } from '@/app/actions/assetCategoryActions';
 import AccountAndPropertyPageClient from '@/components/account-and-property/AccountAndPropertyPageClient';
 import type { UserAsset, Will } from '@/types';
 import { WillStatus } from '@/types';
+
+
 
 export default async function AccountAndPropertyPage() {
   const userResult = await getUserAction();

@@ -19,7 +19,7 @@ export interface User {
   gender: string;
   phoneNumber: string;
   countryPhoneCode: string;
-  maritalstatus: string;
+  maritalstatus?: string;
   hasChildren: boolean;
 }
 
@@ -40,7 +40,7 @@ export interface CreateUserData {
 
 export interface Address {
   id?: string;
-  length: number;
+  length?: number;
   street: string;
   city: string;
   state: string;

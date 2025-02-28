@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 import { getUserAction } from '@/app/actions/userActions';
 import { getUserAssetsAction } from '@/app/actions/assetActions';
 import { getAllWillsAction, createWillAction, updateWillAction } from '@/app/actions/willActions';

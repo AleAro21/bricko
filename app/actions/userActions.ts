@@ -17,8 +17,8 @@ export interface UpdateUserInput {
   gender?: 'male' | 'female';
   phoneNumber?: string;
   countryPhoneCode?: string;
-  maritalstatus: string;
-  hasChildren: boolean;
+  maritalstatus?: string;
+  hasChildren?: boolean;
 }
 
 export async function updateUserAction(

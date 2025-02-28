@@ -1,4 +1,5 @@
 // app/people/page.tsx
+export const dynamic = "force-dynamic";
 import { getUserAction } from '@/app/actions/userActions';
 import { getContactsAction } from '@/app/actions/contactActions';
 import { getPetsAction } from '@/app/actions/petActions'; // Create this similar to getContactsAction

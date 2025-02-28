@@ -1,4 +1,5 @@
 // app/people/page.tsx
+export const dynamic = "force-dynamic";
 import { getUserAction } from '@/app/actions/userActions';
 import { getContactsAction } from '@/app/actions/contactActions';
 import { getUserAssetsAction } from '@/app/actions/assetActions';
@@ -6,6 +7,8 @@ import { getAllWillsAction } from '@/app/actions/willActions'; // assume this is
 import { getAssetsCategoriesAction } from '@/app/actions/assetActions'; // for asset categories
 import PeoplePageClient from '@/components/heirs/PeoplePageClient';
 import type { User, Contact, UserAsset, Will, AssetCategory, AssetOption } from '@/types';
+
+
 
 // This is your server component which uses your server actions
 export default async function PeoplePage() {

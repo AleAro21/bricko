@@ -1,8 +1,11 @@
 // app/about-yourself/children/page.tsx
+export const dynamic = "force-dynamic";
 import { getUserAction } from '@/app/actions/userActions';
 import { getContactsAction } from '@/app/actions/contactActions';
 import ChildrenForm from '@/components/user/ChildrenForm';
 import type { Contact } from '@/types';
+
+
 
 export default async function ChildrenPage() {
   const userResult = await getUserAction();

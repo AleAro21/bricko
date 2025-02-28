@@ -1,7 +1,10 @@
 // app/about-yourself/basic/page.tsx
+export const dynamic = "force-dynamic";
 import { getUserAction } from '@/app/actions/userActions';
 import { getAddressFromServer } from '@/app/actions/addressActions';
 import BasicAddressForm from '@/components/user/BasicAddressForm';
+
+
 
 export default async function BasicAddressPage() {
   const userResult = await getUserAction();

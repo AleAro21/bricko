@@ -1,8 +1,11 @@
 // app/about-yourself/partner/page.tsx
+export const dynamic = "force-dynamic";
 import { getUserAction } from "@/app/actions/userActions";
 import { getContactsAction } from "@/app/actions/contactActions";
 import PartnerForm from "@/components/user/PartnerForm";
 import type { Contact } from "@/types";
+
+
 
 export default async function PartnerPage() {
   const userResult = await getUserAction();

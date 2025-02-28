@@ -1,6 +1,10 @@
 // app/about-yourself/name/page.tsx
+export const dynamic = "force-dynamic";
 import { getUserAction } from '@/app/actions/userActions';
 import NameForm from '@/components/user/NameForm';
+
+
+
 
 
 export default async function NamePage() {

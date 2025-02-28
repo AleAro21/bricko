@@ -1,9 +1,12 @@
 // app/people/page.server.tsx
+export const dynamic = "force-dynamic";
 import { getUserAction } from '@/app/actions/userActions';
 import { getContactsAction } from '@/app/actions/contactActions';
 import { getAllWillsAction } from '@/app/actions/willActions';
-import { getAllExecutorsAction } from '@/app/actions/executorActions'; // assume this action exists
+import { getAllExecutorsAction } from '@/app/actions/executorActions'; 
 import ChooseExecutorsPageClient from '@/components/executors/ChooseExecutorsPageClient';
+
+
 
 export default async function ChooseExecutorsPageServer() {
   const userResult = await getUserAction();
