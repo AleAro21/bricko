@@ -500,8 +500,7 @@ async refreshToken() {
     console.log('API Response:', response);
     return response.response;
   }
-
-
+  
 }
 
 export const apiService = APIService.getInstance();

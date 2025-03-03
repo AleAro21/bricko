@@ -260,6 +260,10 @@ const mainSteps: Step[] = [
     route: "/estate/introduction",
     icon: <Coins size={32} weight="thin" />,
   },
+  
+];
+
+const optionalSteps: Step[] = [
   {
     id: "executors",
     stepNumber: 4,
@@ -269,10 +273,8 @@ const mainSteps: Step[] = [
     route: "/executers/introduction",
     icon: <Users size={32} weight="thin" />,
   },
-];
-
-const optionalSteps: Step[] = [
   {
+    
     id: "special-gifts",
     stepNumber: 0,
     title: "Regalos Especiales",

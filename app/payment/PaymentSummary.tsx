@@ -1,28 +1,32 @@
-import { FC } from 'react';
-import { FaCheckCircle } from 'react-icons/fa';
+// components/Payment/PaymentSummary.tsx
+import { FC } from "react";
+import { FaCheckCircle } from "react-icons/fa";
 
 interface PaymentSummaryProps {
   amount: number;
 }
 
 const PaymentSummary: FC<PaymentSummaryProps> = ({ amount }) => {
+  // Convert amount from smallest unit to formatted value (e.g., cents to dollars)
+  const formattedAmount = (amount / 100).toFixed(2);
+
   return (
     <div className="bg-white rounded-2xl shadow-md p-6">
       <h2 className="text-[22px] font-[500] text-[#1d1d1f] mb-6">Resumen de Pago</h2>
-      
+
       <div className="space-y-6">
         <div className="flex justify-between items-center">
           <span className="text-[16px] text-[#1d1d1f]">Testamento Digital</span>
           <span className="text-[16px] font-[500] text-[#1d1d1f]">
-            ${amount.toFixed(2)} MXN
+            ${formattedAmount} MXN
           </span>
         </div>
-        
+
         <div className="pt-4 border-t border-gray-100">
           <div className="flex justify-between items-center">
             <span className="text-[17px] font-[500] text-[#1d1d1f]">Total</span>
             <span className="text-[22px] font-[500] text-[#1d1d1f]">
-              ${amount.toFixed(2)} MXN
+              ${formattedAmount} MXN
             </span>
           </div>
         </div>
@@ -40,6 +44,6 @@ const PaymentSummary: FC<PaymentSummaryProps> = ({ amount }) => {
       </div>
     </div>
   );
-}
+};
 
 export default PaymentSummary;

@@ -1,4 +1,4 @@
-// app/summary/page.tsx (Server Component)
+
 import { getProgressAction } from "@/app/actions/getprogressAction";
 import SummaryPageClient from "@/components/summary/SummaryPageClient";
 import { cookies } from "next/headers";
@@ -18,14 +18,21 @@ export default async function SummaryPageServer() {
   }
   const progressData = progressResult.progressData;
 
-  // Map the progress values (assuming the API returns percentages as strings, e.g., "50%")
-  const parsePercentage = (percentage: string): number => parseFloat(percentage.replace("%", ""));
+  // Safely parse percentage values with null checks
+  const parsePercentage = (percentage: string | undefined): number => {
+    if (!percentage) return 0;
+    return parseFloat(percentage.replace("%", ""));
+  };
+
+  // Create the progress mapping without executors
   const progressMapping: Record<string, number> = {
     "personal-info": parsePercentage(progressData.profile),
     "assets": parsePercentage(progressData.assets),
     "inheritance": parsePercentage(progressData.assignments),
-    "executors": parsePercentage(progressData.executors),
+    // Remove executors from the progress mapping entirely
   };
 
+  console.log("Progress mapping:", progressMapping);
+  
   return <SummaryPageClient progressMapping={progressMapping} />;
 }
