@@ -15,7 +15,9 @@ import {
   Assignation,
   AssetCategory,
   GetAssetsCategoriesResponse,
-  UserProgress
+  UserProgress,
+  Payment,
+  paymentIntention
 } from '@/types';
 
 import { cookies } from 'next/headers';
@@ -465,6 +467,41 @@ async refreshToken() {
     });
     console.log('Executor deleted successfully');
   }
+
+  // ============================
+  // Payment Endpoints
+  // ============================ 
+  async createPayment(userId: string, paymentData: any): Promise<Payment> {
+    const response = await this.fetchWithAuth(`/payments/${userId}`, {
+      method: 'POST',
+      body: JSON.stringify(paymentData),
+    });
+    console.log('API Response:', response);
+    return response.response;
+  }
+
+  async createPaymentIntent(userId: string, paymentData: any): Promise<paymentIntention> {
+    const response = await this.fetchWithAuth(`/payments/intention/${userId}`, {
+      method: 'POST',
+      body: JSON.stringify(paymentData),
+    });
+    console.log('API Response:', response);
+    return response.response;
+  }
+
+  async getPaymentsById(paymentId: string): Promise<Payment> {
+    const response = await this.fetchWithAuth(`/payments/${paymentId}`);
+    console.log('API Response:', response);
+    return response.response;
+  }
+
+  async getIntentByUserId(userId: string): Promise<paymentIntention> { 
+    const response = await this.fetchWithAuth(`/payments/intention/${userId}`);
+    console.log('API Response:', response);
+    return response.response;
+  }
+
+
 }
 
 export const apiService = APIService.getInstance();

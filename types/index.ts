@@ -266,3 +266,36 @@ export interface Executor {
   updatedAt: string;
 }
 
+export interface Payment {
+  id?: string;
+  userId?: string;
+  amount?: number;
+  currency?: string;
+  methodpayment?: string;
+  paymentDate?: string;
+  itemspaid?: object;
+  paymentMetadata?: object;
+  intentionId?: string;
+  comments?: string;
+  paymentData?: string;
+  status?: string;
+}
+
+export interface serviceType {
+  suscription: string;
+  addon: string;
+}
+
+export interface paymentIntention {
+  id?: string;
+  userId?: string;
+  paymentAmount?: number;
+  currency?: string;
+  intentionDate?: string;
+  paymentDate?: string;
+  expireDate?: string;
+  paymentId?: string;
+  serviceType?: serviceType;
+  status?: string;
+}
+
