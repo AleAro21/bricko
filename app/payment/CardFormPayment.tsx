@@ -1,4 +1,3 @@
-
 // components/Payment/CardFormPayment.tsx
 "use client";
 
@@ -6,10 +5,33 @@ import { FC, useState, useEffect } from "react";
 import { loadStripe } from "@stripe/stripe-js";
 import { Elements, useStripe, useElements, CardElement } from "@stripe/react-stripe-js";
 import PrimaryButton from "@/components/reusables/PrimaryButton";
+import Spinner from "@/components/reusables/Spinner";
 import { useRouter } from "next/navigation";
 import { getUserAction } from "@/app/actions/userActions";
+import { Lock } from "phosphor-react";
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY as string);
+
+// Custom card element style to match the design
+const cardElementOptions = {
+  style: {
+    base: {
+      color: "#1d1d1f",
+      fontFamily: '"Inter", sans-serif',
+      fontSmoothing: "antialiased",
+      fontSize: "16px",
+      "::placeholder": {
+        color: "#aab7c4",
+      },
+      padding: "10px 12px",
+    },
+    invalid: {
+      color: "#ef4444",
+      iconColor: "#ef4444",
+    },
+  },
+  hidePostalCode: true,
+};
 
 const CheckoutForm: FC<{ amount: number }> = ({ amount }) => {
   const stripe = useStripe();
@@ -19,6 +41,7 @@ const CheckoutForm: FC<{ amount: number }> = ({ amount }) => {
   const [cardholderName, setCardholderName] = useState("");
   const [userId, setUserId] = useState<string | null>(null);
   const [token, setToken] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     // Get the current user and token
@@ -47,9 +70,10 @@ const CheckoutForm: FC<{ amount: number }> = ({ amount }) => {
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
+    setError(null);
 
     if (!stripe || !elements || !userId) {
-      console.error("Stripe has not loaded correctly or user not found.");
+      setError("No se pudo conectar con el procesador de pagos. Por favor, intente de nuevo.");
       return;
     }
 
@@ -64,7 +88,7 @@ const CheckoutForm: FC<{ amount: number }> = ({ amount }) => {
           "Authorization": `Bearer ${token}`
         },
         body: JSON.stringify({
-          paymentAmount: amount, // amount in the smallest currency unit (e.g., cents)
+          paymentAmount: amount,
           currency: "MXN",
           serviceType: "subscription",
           userId: userId
@@ -72,15 +96,14 @@ const CheckoutForm: FC<{ amount: number }> = ({ amount }) => {
       });
       
       const intentData = await intentResponse.json();
-      console.log("Payment Intent Response:", intentData);
       
       if (!intentResponse.ok) {
-        throw new Error(intentData.error || "Failed to create payment intent");
+        throw new Error(intentData.error || "No se pudo crear la intención de pago");
       }
 
       const clientSecret = intentData.clientSecret;
       if (!clientSecret) {
-        throw new Error("No client secret returned from API.");
+        throw new Error("No se recibió el secreto del cliente desde la API.");
       }
 
       // 2. Confirm the payment with Stripe
@@ -90,11 +113,9 @@ const CheckoutForm: FC<{ amount: number }> = ({ amount }) => {
           billing_details: { name: cardholderName },
         },
       });
-      
-      console.log("Stripe Confirm Result:", result);
 
       if (result.error) {
-        throw new Error(result.error.message || "Payment failed");
+        throw new Error(result.error.message || "El pago falló");
       } else if (result.paymentIntent?.status === "succeeded") {
         // 3. Confirm the payment on your backend
         const confirmResponse = await fetch("/api/payments", {
@@ -114,17 +135,16 @@ const CheckoutForm: FC<{ amount: number }> = ({ amount }) => {
         });
         
         const confirmData = await confirmResponse.json();
-        console.log("Backend Payment Confirmation Response:", confirmData);
 
         if (confirmResponse.ok) {
           router.push("/payment-success");
         } else {
-          throw new Error(confirmData.error || "Error confirming payment on backend");
+          throw new Error(confirmData.error || "Error al confirmar el pago en el servidor");
         }
       }
     } catch (error: any) {
       console.error("Payment error:", error);
-      alert(error.message);
+      setError(error.message);
     }
 
     setLoading(false);
@@ -133,7 +153,7 @@ const CheckoutForm: FC<{ amount: number }> = ({ amount }) => {
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
       <div className="space-y-2">
-        <label htmlFor="cardholder-name" className="block text-sm font-medium text-gray-700">
+        <label htmlFor="cardholder-name" className="block text-[17px] font-[400] text-[#1d1d1f] mb-2.5">
           Nombre en la tarjeta
         </label>
         <input
@@ -141,15 +161,38 @@ const CheckoutForm: FC<{ amount: number }> = ({ amount }) => {
           type="text"
           value={cardholderName}
           onChange={(e) => setCardholderName(e.target.value)}
-          className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
+          className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:border-blue-500 transition-all"
           placeholder="Juan Pérez"
           required
+          disabled={loading}
         />
       </div>
-      <CardElement className="p-4 border rounded-lg" />
-      <PrimaryButton type="submit" className="w-full" disabled={!stripe || loading || !userId}>
-        {loading ? "Procesando..." : "Pagar Ahora"}
-      </PrimaryButton>
+      
+      <div className="space-y-2">
+        <label htmlFor="card-element" className="block text-[17px] font-[400] text-[#1d1d1f] mb-2.5">
+          Información de la tarjeta
+        </label>
+        <div className="p-3 border border-gray-300 rounded-lg focus-within:border-blue-500 transition-all">
+          <CardElement id="card-element" options={cardElementOptions} />
+        </div>
+      </div>
+      
+      {error && (
+        <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-lg">
+          {error}
+        </div>
+      )}
+      
+      <div className="flex items-center gap-2 text-gray-500 mt-2">
+        <Lock weight="thin" size={16} />
+        <span className="text-[14px]">Sus datos están protegidos con cifrado AES-256</span>
+      </div>
+      
+      <div className="pt-4">
+        <PrimaryButton type="submit" className="w-full" disabled={!stripe || loading || !userId}>
+          {loading ? <Spinner size={24} /> : `Pagar $${amount.toFixed(2)} MXN`}
+        </PrimaryButton>
+      </div>
     </form>
   );
 };

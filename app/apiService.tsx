@@ -17,7 +17,11 @@ import {
   GetAssetsCategoriesResponse,
   UserProgress,
   Payment,
-  paymentIntention
+  paymentIntention,
+  PaymentIntention,
+  SubscriptionCatalogResponse,
+  UserSubscriptionsResponse,
+  UserSubscription
 } from '@/types';
 
 import { cookies } from 'next/headers';
@@ -52,31 +56,31 @@ export class APIService {
   }
 
   // For APIService class
-async refreshToken() {
-  try {
-    // Updated imports for Amplify v6
-    
-    const session = await fetchAuthSession();
-    
-    // Get the access token from the session
-    const newToken = session.tokens?.accessToken?.toString();
-    
-    if (!newToken) {
-      throw new Error('Failed to get new access token');
+  async refreshToken() {
+    try {
+      // Updated imports for Amplify v6
+
+      const session = await fetchAuthSession();
+
+      // Get the access token from the session
+      const newToken = session.tokens?.accessToken?.toString();
+
+      if (!newToken) {
+        throw new Error('Failed to get new access token');
+      }
+
+      // Update the token in your service
+      this.setToken(newToken);
+
+      // Also update the token cookie
+      document.cookie = `token=${newToken}; path=/; max-age=${60 * 60}; SameSite=Strict`;
+
+      return newToken;
+    } catch (error) {
+      console.error('Failed to refresh token:', error);
+      throw error;
     }
-    
-    // Update the token in your service
-    this.setToken(newToken);
-    
-    // Also update the token cookie
-    document.cookie = `token=${newToken}; path=/; max-age=${60 * 60}; SameSite=Strict`;
-    
-    return newToken;
-  } catch (error) {
-    console.error('Failed to refresh token:', error);
-    throw error;
   }
-}
 
   private async fetchWithAuth(endpoint: string, options: RequestInit = {}, tokenOverride?: string) {
     const token = tokenOverride || this.token;
@@ -115,7 +119,7 @@ async refreshToken() {
     }
     return response.json();
   }
-  
+
 
   // ============================
   // Existing User/Address/Contact/Pet/Asset methods
@@ -158,7 +162,7 @@ async refreshToken() {
       body: JSON.stringify(addressData),
     });
     console.log('API Response:', response);
-    
+
     // Handle both possibilities - it could be an array or a single object
     if (Array.isArray(response.response)) {
       return response.response[0]; // Return the first item if it's an array
@@ -495,12 +499,36 @@ async refreshToken() {
     return response.response;
   }
 
-  async getIntentByUserId(userId: string): Promise<paymentIntention> { 
+  async getIntentByUserId(userId: string): Promise<PaymentIntention> {
     const response = await this.fetchWithAuth(`/payments/intention/${userId}`);
     console.log('API Response:', response);
     return response.response;
   }
+
+  async getSubscriptionCatalog(): Promise<SubscriptionCatalogResponse> {
+    const queryParams = new URLSearchParams({
+      page: "1",
+      limit: "3",
+      country: "MX",
+      type: "subscription"
+    });
+    const response = await this.fetchWithAuth(`/wills/payments/catalog/services?${queryParams.toString()}`);
+    console.log('API Response:', response);
+    return response.response;
+  }
   
+  async getUserSubscriptions(userId: string): Promise<UserSubscriptionsResponse> {
+    const response = await this.fetchWithAuth(`/payments/subscriptions/${userId}`);
+    console.log('API Response:', response);
+    return response.response;
+  }
+
+  async getServiceById(paymentId: string): Promise<UserSubscription> {
+    const response = await this.fetchWithAuth(`/payments/subscription/${paymentId}`);
+    console.log('API Response:', response);
+    return response.response;
+  }
+
 }
 
 export const apiService = APIService.getInstance();

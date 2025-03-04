@@ -24,12 +24,13 @@ export async function POST(request: Request) {
     apiService.setToken(tokenCookie.value);
     
     // Amount is expected in the smallest currency unit (e.g., cents)
-    const amount = paymentAmount;
+// Amount is expected in the smallest currency unit (e.g., cents)
+    const amount = Math.round(paymentAmount * 100);
 
     const paymentIntent = await stripe.paymentIntents.create({
-      amount,
-      currency,
-      metadata: { serviceType: serviceType, userId },
+    amount,
+    currency,
+    metadata: { serviceType: serviceType, userId },
     });
 
     // Create a payment intention record using the existing createPaymentIntent method
