@@ -41,6 +41,7 @@ export async function loginAction(formData: FormData): Promise<{ success: boolea
     // Retrieve the authenticated user data.
     // Replace "123" with the appropriate identifier or API logic as needed.
     const userData = await apiService.getUser("123");
+    console.log("User data: recieved in login Actions", userData);
 
     // Set a cookie with the user ID for later server-side use.
     cookies().set("userId", userData.id, {
@@ -52,6 +53,7 @@ export async function loginAction(formData: FormData): Promise<{ success: boolea
     return { success: true, user: userData };
   } catch (error: any) {
     await signOut();
+    console.error("Login error:", error);
     return { success: false, error: error.message || "Authentication failed" };
   }
 }

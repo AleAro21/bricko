@@ -72,7 +72,8 @@ function AuthStateManager({ children }: { children: React.ReactNode }) {
     const refreshInterval = setInterval(async () => {
       if (authStatus === 'authenticated') {
         try {
-          await apiService.refreshToken();
+          const newToken = await apiService.refreshToken();
+          document.cookie = `token=${newToken}; path=/; max-age=${60 * 60}; SameSite=Strict; secure`;
           console.log('Token refreshed successfully');
         } catch (error) {
           console.error('Token refresh interval failed:', error);
@@ -94,7 +95,8 @@ function AuthStateManager({ children }: { children: React.ReactNode }) {
         if (!tokenCookie) {
           console.log('Token cookie disappeared, refreshing...');
           try {
-            await apiService.refreshToken();
+            const newToken = await apiService.refreshToken();
+            document.cookie = `token=${newToken}; path=/; max-age=${60 * 60}; SameSite=Strict; secure`;
           } catch (error) {
             console.error('Quick token refresh failed:', error);
           }
