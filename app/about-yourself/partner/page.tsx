@@ -4,13 +4,14 @@ import { getUserAction } from "@/app/actions/userActions";
 import { getContactsAction } from "@/app/actions/contactActions";
 import PartnerForm from "@/components/user/PartnerForm";
 import type { Contact } from "@/types";
+import RedirectLoader from '@/components/reusables/RedirectLoader'; // adjust the import path as needed
 
 
 
 export default async function PartnerPage() {
   const userResult = await getUserAction();
   if (!userResult.success || !userResult.user) {
-    return <div>Error: Usuario no encontrado</div>;
+    return <RedirectLoader />;
   }
   const userId = userResult.user.id;
   const maritalStatus = userResult.user.maritalstatus || null;

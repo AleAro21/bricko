@@ -7,6 +7,7 @@ import { getAllWillsAction } from '@/app/actions/willActions'; // assume this is
 import { getAssetsCategoriesAction } from '@/app/actions/assetActions'; // for asset categories
 import PeoplePageClient from '@/components/heirs/PeoplePageClient';
 import type { User, Contact, UserAsset, Will, AssetCategory, AssetOption } from '@/types';
+import RedirectLoader from '@/components/reusables/RedirectLoader'; // adjust the import path as needed
 
 
 
@@ -14,7 +15,7 @@ import type { User, Contact, UserAsset, Will, AssetCategory, AssetOption } from 
 export default async function PeoplePage() {
   const userResult = await getUserAction();
   if (!userResult.success || !userResult.user) {
-    return <div>Error: Usuario no encontrado</div>;
+    return <RedirectLoader />;
   }
   const user: User = userResult.user;
 

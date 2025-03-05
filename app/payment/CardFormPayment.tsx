@@ -1,4 +1,3 @@
-// components/Payment/CardFormPayment.tsx
 "use client";
 
 import { FC, useState, useEffect } from "react";
@@ -12,7 +11,6 @@ import { Lock } from "phosphor-react";
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY as string);
 
-// Custom card element style to match the design
 const cardElementOptions = {
   style: {
     base: {
@@ -44,7 +42,6 @@ const CheckoutForm: FC<{ amount: number }> = ({ amount }) => {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    // Get the current user and token
     const fetchUser = async () => {
       try {
         const userResult = await getUserAction();
@@ -53,18 +50,15 @@ const CheckoutForm: FC<{ amount: number }> = ({ amount }) => {
         } else {
           console.error("Failed to get user");
         }
-        
-        // Get token from cookies
-        const cookies = document.cookie.split(';');
-        const tokenCookie = cookies.find(cookie => cookie.trim().startsWith('token='));
+        const cookies = document.cookie.split(";");
+        const tokenCookie = cookies.find((cookie) => cookie.trim().startsWith("token="));
         if (tokenCookie) {
-          setToken(tokenCookie.split('=')[1]);
+          setToken(tokenCookie.split("=")[1]);
         }
       } catch (error) {
         console.error("Error fetching user:", error);
       }
     };
-    
     fetchUser();
   }, []);
 
@@ -80,33 +74,30 @@ const CheckoutForm: FC<{ amount: number }> = ({ amount }) => {
     setLoading(true);
 
     try {
-      // 1. Create a Payment Intent
+      // 1. Crear el PaymentIntent en el servidor
       const intentResponse = await fetch("/api/stripe/payment-intent", {
         method: "POST",
-        headers: { 
+        headers: {
           "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
           paymentAmount: amount,
           currency: "MXN",
           serviceType: "subscription",
-          userId: userId
+          userId: userId,
         }),
       });
-      
       const intentData = await intentResponse.json();
-      
       if (!intentResponse.ok) {
         throw new Error(intentData.error || "No se pudo crear la intención de pago");
       }
-
       const clientSecret = intentData.clientSecret;
       if (!clientSecret) {
         throw new Error("No se recibió el secreto del cliente desde la API.");
       }
 
-      // 2. Confirm the payment with Stripe
+      // 2. Confirmar el pago con Stripe
       const result = await stripe.confirmCardPayment(clientSecret, {
         payment_method: {
           card: elements.getElement(CardElement)!,
@@ -117,12 +108,12 @@ const CheckoutForm: FC<{ amount: number }> = ({ amount }) => {
       if (result.error) {
         throw new Error(result.error.message || "El pago falló");
       } else if (result.paymentIntent?.status === "succeeded") {
-        // 3. Confirm the payment on your backend
+        // 3. Confirmar el pago en el backend
         const confirmResponse = await fetch("/api/payments", {
           method: "POST",
-          headers: { 
+          headers: {
             "Content-Type": "application/json",
-            "Authorization": `Bearer ${token}`
+            Authorization: `Bearer ${token}`,
           },
           body: JSON.stringify({
             userId: userId,
@@ -133,9 +124,7 @@ const CheckoutForm: FC<{ amount: number }> = ({ amount }) => {
             stripePaymentId: result.paymentIntent.id,
           }),
         });
-        
         const confirmData = await confirmResponse.json();
-
         if (confirmResponse.ok) {
           router.push("/payment-success");
         } else {
@@ -146,7 +135,6 @@ const CheckoutForm: FC<{ amount: number }> = ({ amount }) => {
       console.error("Payment error:", error);
       setError(error.message);
     }
-
     setLoading(false);
   };
 
@@ -167,7 +155,7 @@ const CheckoutForm: FC<{ amount: number }> = ({ amount }) => {
           disabled={loading}
         />
       </div>
-      
+
       <div className="space-y-2">
         <label htmlFor="card-element" className="block text-[17px] font-[400] text-[#1d1d1f] mb-2.5">
           Información de la tarjeta
@@ -176,18 +164,18 @@ const CheckoutForm: FC<{ amount: number }> = ({ amount }) => {
           <CardElement id="card-element" options={cardElementOptions} />
         </div>
       </div>
-      
+
       {error && (
         <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-lg">
           {error}
         </div>
       )}
-      
+
       <div className="flex items-center gap-2 text-gray-500 mt-2">
         <Lock weight="thin" size={16} />
         <span className="text-[14px]">Sus datos están protegidos con cifrado AES-256</span>
       </div>
-      
+
       <div className="pt-4">
         <PrimaryButton type="submit" className="w-full" disabled={!stripe || loading || !userId}>
           {loading ? <Spinner size={24} /> : `Pagar $${amount.toFixed(2)} MXN`}

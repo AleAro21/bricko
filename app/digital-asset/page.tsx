@@ -6,11 +6,12 @@ import { getAssetsCategoriesAction } from '@/app/actions/assetCategoryActions';
 import DigitalAssetsPageClient from '@/components/digital-assets/DigitalAssetsPageClient';
 import type { UserAsset, Will, AssetOption } from '@/types';
 import { WillStatus } from '@/types';
+import RedirectLoader from '@/components/reusables/RedirectLoader'; // adjust the import path as needed
 
 export default async function DigitalAssetsPage() {
   const userResult = await getUserAction();
   if (!userResult.success || !userResult.user) {
-    return <div>Error: Usuario no encontrado</div>;
+    return <RedirectLoader />;
   }
   const user = userResult.user;
 

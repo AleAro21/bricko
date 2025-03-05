@@ -342,13 +342,7 @@ const AddChild: FC<AddChildProps> = ({
           </div>
 
           <div className="flex justify-end gap-4 mt-6">
-            <button
-              onClick={() => setShowModal(false)}
-              className="px-6 py-2 text-[#6e6e73] hover:text-[#1d1d1f] transition-colors"
-              disabled={loading}
-            >
-              Cancelar
-            </button>
+         
             <button
               onClick={handleSubmit}
               className="px-6 py-2 bg-[#047aff] text-white rounded-lg hover:bg-[#0456b0] transition-colors disabled:opacity-50"

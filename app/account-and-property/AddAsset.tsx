@@ -70,7 +70,16 @@ const AddAsset: FC<AddAssetProps> = ({ setShowModal, showModal, onAddAsset, asse
 
   return (
     <Modal setShowModal={setShowModal} showModal={showModal}>
-      <div className="w-full min-w-[400px] max-w-2xl mx-auto">
+      <div className="w-full min-w-[400px] max-w-2xl mx-auto relative">
+        <button
+          onClick={() => setShowModal(false)}
+          className="absolute top-4 right-4 w-8 h-8 bg-[#e8e8ed] rounded-full flex items-center justify-center"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text[#6e6e73]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+
         <div className="inline-flex items-center h-[32px] bg-[#047aff] bg-opacity-10 px-[12px] py-[6px] rounded-md mb-2.5">
           <span className="text-[#047aff] text-[14px] font-normal">NUEVO REGISTRO</span>
         </div>

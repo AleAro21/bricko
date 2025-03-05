@@ -149,12 +149,14 @@ const Add: FC<AddProps> = ({
       transition={{ duration: 0.3 }}
       className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50"
     >
-      <div className="bg-white rounded-2xl p-8 w-full max-w-md relative">
-        <button
+      <div className="bg-white rounded-2xl p-8 w-full max-w-md relative max-h-[90vh] overflow-y-auto">
+      <button
           onClick={() => setShowModal(false)}
-          className="absolute right-4 top-4 text-gray-400 hover:text-gray-600 transition-colors"
+          className="absolute top-4 right-4 w-8 h-8 bg-[#e8e8ed] rounded-full flex items-center justify-center"
         >
-          <X size={24} weight="bold" />
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text[#6e6e73]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+          </svg>
         </button>
 
         <h2 className="text-xl font-semibold mb-6 text-[#1d1d1f]">
@@ -281,13 +283,7 @@ const Add: FC<AddProps> = ({
         </div>
 
         <div className="flex justify-end gap-4 mt-6">
-          <button
-            onClick={() => setShowModal(false)}
-            className="px-6 py-2 text-[#6e6e73] hover:text-[#1d1d1f] transition-colors"
-            disabled={loading}
-          >
-            Cancelar
-          </button>
+         
           <button
             onClick={handleSubmit}
             className="px-6 py-2 bg-[#047aff] text-white rounded-lg hover:bg-[#0456b0] transition-colors disabled:opacity-50"

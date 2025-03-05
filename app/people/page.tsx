@@ -5,11 +5,12 @@ import { getContactsAction } from '@/app/actions/contactActions';
 import { getPetsAction } from '@/app/actions/petActions'; // Create this similar to getContactsAction
 import PeoplePageClient from '@/components/people/PeoplePage';
 import type { Contact, Pet } from '@/types';
+import RedirectLoader from '@/components/reusables/RedirectLoader'; // adjust the import path as needed
 
 export default async function PeoplePage() {
   const userResult = await getUserAction();
   if (!userResult.success || !userResult.user) {
-    return <div>Error: Usuario no encontrado</div>;
+    return <RedirectLoader />;
   }
   const user = userResult.user;
   const userId = userResult.user.id;

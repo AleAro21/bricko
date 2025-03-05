@@ -1,7 +1,6 @@
-// app/api/payments/route.ts
 import { NextResponse } from "next/server";
-import { cookies } from 'next/headers';
-import { apiService } from '@/app/apiService';
+import { cookies } from "next/headers";
+import { apiService } from "@/app/apiService";
 
 export async function POST(request: Request) {
   try {
@@ -14,7 +13,6 @@ export async function POST(request: Request) {
     // Get authentication token from cookies
     const tokenCookie = cookies().get("token");
     const userIdCookie = cookies().get("userId");
-    
     if (!tokenCookie || !userIdCookie) {
       return NextResponse.json({ error: "User not authenticated" }, { status: 401 });
     }
@@ -22,24 +20,24 @@ export async function POST(request: Request) {
     // Set token in apiService for authentication
     apiService.setToken(tokenCookie.value);
 
-    // Create payment with the correct structure based on the example
+    // Record the payment in your backend without confirming it again on Stripe.
     const paymentData = await apiService.createPayment(userId, {
       amount,
-      currency,
-      methodPayment: "paymentgw", // One of the allowed payment methods
+      currency: 'MXN',
+      methodPayment: "paymentgw",
       itemsPaid: [
         {
           id: "1",
           quantity: 1,
-          serviceType: "subscription"
-        }
+          serviceType: "subscription",
+        },
       ],
       paymentMetadata: {
-        stripePaymentId: stripePaymentId
+        stripePaymentId: stripePaymentId,
       },
       intentionId,
-      status: "New", // One of the allowed status values
-      comments: "Payment processed via Stripe"
+      status: "New", // Update status based on your logic (or later via webhook)
+      comments: "Payment processed via Stripe",
     });
 
     console.log("Payment creation successful:", paymentData);

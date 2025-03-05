@@ -5,13 +5,14 @@ import { getContactsAction } from '@/app/actions/contactActions';
 import { getAllWillsAction } from '@/app/actions/willActions';
 import { getAllExecutorsAction } from '@/app/actions/executorActions'; 
 import ChooseExecutorsPageClient from '@/components/executors/ChooseExecutorsPageClient';
+import RedirectLoader from '@/components/reusables/RedirectLoader'; // adjust the import path as needed
 
 
 
 export default async function ChooseExecutorsPageServer() {
   const userResult = await getUserAction();
   if (!userResult.success || !userResult.user) {
-    return <div>Error: Usuario no encontrado</div>;
+    return <RedirectLoader />;
   }
   const user = userResult.user;
   const contacts = await getContactsAction(user.id);

@@ -507,8 +507,8 @@ export class APIService {
 
   async getSubscriptionCatalog(): Promise<SubscriptionCatalogResponse> {
     const queryParams = new URLSearchParams({
-      page: "1",
-      limit: "3",
+      page: "2",
+      limit: "1",
       country: "MX",
       type: "subscription"
     });

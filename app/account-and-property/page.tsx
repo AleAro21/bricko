@@ -7,13 +7,14 @@ import { getAssetsCategoriesAction } from '@/app/actions/assetCategoryActions';
 import AccountAndPropertyPageClient from '@/components/account-and-property/AccountAndPropertyPageClient';
 import type { UserAsset, Will } from '@/types';
 import { WillStatus } from '@/types';
+import RedirectLoader from '@/components/reusables/RedirectLoader'; // adjust the import path as needed
 
 
 
 export default async function AccountAndPropertyPage() {
   const userResult = await getUserAction();
   if (!userResult.success || !userResult.user) {
-    return <div>Error: Usuario no encontrado</div>;
+    return <RedirectLoader />;
   }
   const user = userResult.user;
 

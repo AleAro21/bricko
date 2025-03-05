@@ -1,8 +1,7 @@
-
 import { NextResponse } from "next/server";
 import Stripe from "stripe";
-import { cookies } from 'next/headers';
-import { apiService } from '@/app/apiService';
+import { cookies } from "next/headers";
+import { apiService } from "@/app/apiService";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   apiVersion: "2025-02-24.acacia",
@@ -10,35 +9,44 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
 
 export async function POST(request: Request) {
   try {
-    const { paymentAmount, currency = "MXN", serviceType, userId } = await request.json();
+    // Extract values from the request body but do NOT trust the userId from here.
+    const { paymentAmount, currency = "MXN", serviceType } = await request.json();
     
-    // Get authentication token from cookies
+    // Get authentication token and userId from cookies.
     const tokenCookie = cookies().get("token");
     const userIdCookie = cookies().get("userId");
-    
     if (!tokenCookie || !userIdCookie) {
       return NextResponse.json({ error: "User not authenticated" }, { status: 401 });
     }
     
-    // Set token in apiService for authentication
+    // Use the userId from cookies (which is expected to be a valid uuid).
+    const userId = userIdCookie.value;
+    
+    // Set token in apiService for authentication.
     apiService.setToken(tokenCookie.value);
     
-    // Amount is expected in the smallest currency unit (e.g., cents)
-// Amount is expected in the smallest currency unit (e.g., cents)
+    // Convert amount to the smallest currency unit (e.g., cents)
     const amount = Math.round(paymentAmount * 100);
 
     const paymentIntent = await stripe.paymentIntents.create({
-    amount,
-    currency,
-    metadata: { serviceType: serviceType, userId },
+      amount,
+      currency: "MXN",
+      payment_method_types: ['card', 'oxxo'],
+      payment_method_options: {
+        card: {
+          installments: {
+            enabled: true,
+          },
+        },
+      },
+      metadata: { serviceType, userId },
     });
 
-    // Create a payment intention record using the existing createPaymentIntent method
-    // Note: using servicetype (lowercase t) instead of serviceType
+    // Create the payment intention record in your backend.
     const intentionData = await apiService.createPaymentIntent(userId, {
       paymentAmount,
       currency,
-      servicetype: serviceType, // Changed from serviceType to servicetype
+      servicetype: serviceType, // Using lowercase key if required by your backend
     });
     
     return NextResponse.json({
