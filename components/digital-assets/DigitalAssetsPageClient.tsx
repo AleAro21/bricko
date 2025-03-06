@@ -174,11 +174,15 @@ const DigitalAssetsPageClient: FC<DigitalAssetsPageClientProps> = ({
                   </div>
                   <h1 className="text-[32px] sm:text-[38px] font-medium tracking-[-1.5px] leading-[1d1d1f] sm:leading-[52px] mb-[15px]">
                     <span className="text-[#1d1d1f]">¿Tiene algún </span>
-                    <span className="bg-gradient-to-r from-[#3d9bff] to-[#047aff] inline-block text-transparent bg-clip-text">
+                    <span
+                      style={{ backgroundImage: "linear-gradient(to right, #7abaff 1%, #047aff 60%, #0d4ba3 100%)" }}
+                      className="inline-block text-transparent bg-clip-text"
+                    >
                       activo digital
                     </span>
                     <span className="text-[#1d1d1f]">?</span>
                   </h1>
+
                   <p className="text-[16px] text-[#1d1d1f] leading-6">
                     Los activos digitales incluyen cuentas en línea, redes sociales, criptomonedas y otros contenidos digitales que desee gestionar después de su fallecimiento.
                   </p>

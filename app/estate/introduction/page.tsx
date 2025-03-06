@@ -11,7 +11,7 @@ const IntroductionPage: FC = () => {
 
   return (
     <DashboardLayout>
-      <motion.div 
+      <motion.div
         className="min-h-screen bg-[#f5f5f7]"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
@@ -34,10 +34,14 @@ const IntroductionPage: FC = () => {
 
                 <h1 className="text-[32px] sm:text-[38px] font-[500] tracking-[-1.5px] leading-[1.2] sm:leading-[52px] mb-[15px]">
                   <span className="text-[#1d1d1f]">Consultar </span>
-                  <span className="bg-gradient-to-r from-[#3d9bff] to-[#047aff] inline-block text-transparent bg-clip-text">
+                  <span
+                    style={{ backgroundImage: "linear-gradient(to right, #7abaff 1%, #047aff 60%, #0d4ba3 100%)" }}
+                    className="inline-block text-transparent bg-clip-text"
+                  >
                     abogados
                   </span>
                 </h1>
+
 
                 <div className="space-y-4">
                   <p className="text-[16px] text-[#1d1d1f] leading-6">

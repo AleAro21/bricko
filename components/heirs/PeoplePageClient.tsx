@@ -227,8 +227,15 @@ const PeoplePageClient: FC<PeoplePageClientProps> = ({
                   </Link>
                 </div>
                 <h1 className="text-[32px] sm:text-[38px] font-medium tracking-[-1.5px] leading-[1.2] sm:leading-[52px] mb-[15px]">
-                  Asigna el % de cada activo a cada heredero
+                  Asigna el % de cada activo a cada{" "}
+                  <span
+                    style={{ backgroundImage: "linear-gradient(to right, #7abaff 1%, #047aff 60%, #0d4ba3 100%)" }}
+                    className="inline-block text-transparent bg-clip-text"
+                  >
+                    heredero
+                  </span>
                 </h1>
+
                 <p className="text-[16px] text-[#1d1d1f] leading-6">
                   Para cada activo, ajusta los porcentajes asignados a cada heredero. La suma de cada activo debe ser 100%.
                 </p>

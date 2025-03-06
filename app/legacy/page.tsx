@@ -30,7 +30,7 @@ const AssignLegacyPage: FC = () => {
 
   return (
     <DashboardLayout>
-      <motion.div 
+      <motion.div
         className="min-h-screen bg-[#f5f5f7]"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
@@ -52,10 +52,14 @@ const AssignLegacyPage: FC = () => {
 
                 <h1 className="text-[32px] sm:text-[38px] font-[500] tracking-[-1.5px] leading-[1.2] sm:leading-[52px] mb-[15px]">
                   <span className="text-[#1d1d1f]">Asignar </span>
-                  <span className="bg-gradient-to-r from-[#3d9bff] to-[#047aff] inline-block text-transparent bg-clip-text">
+                  <span
+                    style={{ backgroundImage: "linear-gradient(to right, #7abaff 1%, #047aff 60%, #0d4ba3 100%)" }}
+                    className="inline-block text-transparent bg-clip-text"
+                  >
                     {legacyTypeNames[type as keyof typeof legacyTypeNames]}
                   </span>
                 </h1>
+
                 <p className="text-[16px] text-[#1d1d1f] leading-6 mb-8">
                   Describa el legado que desea asignar y seleccione a la persona que lo recibirá.
                 </p>
