@@ -51,13 +51,13 @@ export default async function PeoplePage() {
       icon: 'Dog',
       count: pets.length,
     },
-    {
-      id: 'charity' as const,
-      title: "Caridad",
-      description: "Contribuye a causas importantes incluyendo organizaciones benéficas en tu testamento",
-      icon: 'Heart',
-      count: 0,
-    },
+    // {
+    //   id: 'charity' as const,
+    //   title: "Caridad",
+    //   description: "Contribuye a causas importantes incluyendo organizaciones benéficas en tu testamento",
+    //   icon: 'Heart',
+    //   count: 0,
+    // },
   ];
 
   return (

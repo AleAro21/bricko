@@ -190,9 +190,17 @@ const OTPInput: React.FC<OTPInputProps> = ({ length = 6, onComplete }) => {
                   <span className="text-[#047aff] text-[14px] font-[400]">VERIFICACIÓN EN 2 PASOS</span>
                 </div>
                 <h1 className="text-[32px] sm:text-[38px] font-[500] tracking-[-1.5px] leading-[1.2] sm:leading-[52px] mb-[15px]">
-                  <span className="text-[#1d1d1f]">Ingresa tu código de </span>
-                  <span className="bg-gradient-to-r from-[#3d9bff] to-[#047aff] inline-block text-transparent bg-clip-text">verificación</span>
-                </h1>
+                    <span className="text-[#1d1d1f]">Ingresa tu código de </span>
+                    <span
+                      style={{
+                        backgroundImage:
+                          "linear-gradient(to right, #7abaff 1%, #047aff 60%, #0d4ba3 100%)",
+                      }}
+                      className="inline-block text-transparent bg-clip-text"
+                    >
+                      verificación
+                    </span>
+                  </h1>
                 <p className="text-[16px] text-[#1d1d1f] leading-6 mb-4">
                   Es un código de 6 dígitos enviado a <span className="font-bold">{email}</span>
                 </p>

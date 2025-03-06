@@ -9,9 +9,10 @@ import { useRouter } from 'next/navigation';
 import { apiService } from '@/app/apiService';
 import type { Contact, Pet, User } from '@/types';
 
-// Import modal components for adding contacts.
+// Import modal components for adding contacts and pets.
 import AddChild from '@/components/heirs/AddChild';
 import AddContact from '@/components/heirs/Add';
+import AddPet from '@/components/heirs/AddPet';
 
 interface Category {
   id: 'children' | 'trusted' | 'pets' | 'charity';
@@ -172,10 +173,9 @@ const PeoplePageClient: FC<PeoplePageProps> = ({ user, contacts, pets, categorie
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // Modal state for adding contacts.
-  // modalType 'child' for children, 'trusted' for normal contacts.
+  // Modal state for adding contacts/pets.
   const [showAddModal, setShowAddModal] = useState(false);
-  const [modalType, setModalType] = useState<'child' | 'trusted' | null>(null);
+  const [modalType, setModalType] = useState<'child' | 'trusted' | 'pet' | null>(null);
 
   // Handlers for editing and deleting contacts and pets
   const handleEdit = {
@@ -224,14 +224,13 @@ const PeoplePageClient: FC<PeoplePageProps> = ({ user, contacts, pets, categorie
     ),
   };
 
-  // This callback is invoked when a new contact is created in the modal.
-  // It updates the local state with the new contact.
+  // Callback when a new contact is created.
   const handleAddContact = (newContact: Contact) => {
     setLocalContacts(prev => [...prev, newContact]);
   };
 
   // Handler to open the correct modal based on the category.
-  const handleAddClick = (type: 'child' | 'trusted') => {
+  const handleAddClick = (type: 'child' | 'trusted' | 'pet') => {
     setModalType(type);
     setShowAddModal(true);
   };
@@ -250,17 +249,12 @@ const PeoplePageClient: FC<PeoplePageProps> = ({ user, contacts, pets, categorie
           Comienza agregando {selectedCategory === 'pets' ? 'mascotas' : 'contactos'}
         </p>
         <button
-          onClick={() => handleAddClick(selectedCategory === 'children' ? 'child' : 'trusted')}
+          onClick={() => handleAddClick(selectedCategory === 'pets' ? 'pet' : (selectedCategory === 'children' ? 'child' : 'trusted'))}
           className="inline-flex items-center gap-2 bg-[#047aff] text-white px-4 py-2 rounded-lg hover:bg-[#0456b0] transition-colors"
         >
           <UserPlus size={20} />
           <span>
-            Agregar{' '}
-            {selectedCategory === 'pets'
-              ? 'Mascota'
-              : selectedCategory === 'children'
-              ? 'Hijo'
-              : 'Contacto'}
+            Agregar {selectedCategory === 'pets' ? 'Mascota' : selectedCategory === 'children' ? 'Hijo' : 'Contacto'}
           </span>
         </button>
       </div>
@@ -394,17 +388,20 @@ const PeoplePageClient: FC<PeoplePageProps> = ({ user, contacts, pets, categorie
                 </div>
                 {selectedCategory && (
                   <button
-                    onClick={() => handleAddClick(selectedCategory === 'children' ? 'child' : 'trusted')}
+                    onClick={() => {
+                      if (selectedCategory === 'children') {
+                        handleAddClick('child');
+                      } else if (selectedCategory === 'trusted') {
+                        handleAddClick('trusted');
+                      } else if (selectedCategory === 'pets') {
+                        handleAddClick('pet');
+                      }
+                    }}
                     className="flex items-center gap-2 bg-[#047aff] text-white px-4 py-2 rounded-lg hover:bg-[#0456b0] transition-colors"
                   >
                     <UserPlus size={20} />
                     <span>
-                      Agregar{' '}
-                      {selectedCategory === 'pets'
-                        ? 'Mascota'
-                        : selectedCategory === 'children'
-                        ? 'Hijo'
-                        : 'Contacto'}
+                      Agregar {selectedCategory === 'pets' ? 'Mascota' : selectedCategory === 'children' ? 'Hijo' : 'Contacto'}
                     </span>
                   </button>
                 )}
@@ -434,8 +431,22 @@ const PeoplePageClient: FC<PeoplePageProps> = ({ user, contacts, pets, categorie
           setShowModal={setShowAddModal}
           setPartner={(partner: Contact | null) => {
             if (partner) handleAddContact(partner);
-          } }
-          userId={user.id} isEditing={false} existingPartner={null}        />
+          }}
+          userId={user.id}
+          isEditing={false}
+          existingPartner={null}
+        />
+      )}
+      {showAddModal && modalType === 'pet' && (
+        <AddPet
+          showModal={showAddModal}
+          setShowModal={setShowAddModal}
+          setPets={setLocalPets}
+          pets={localPets}
+          isEditing={false}
+          existingPet={null}
+          userId={user.id}
+        />
       )}
     </DashboardLayout>
   );
