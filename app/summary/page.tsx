@@ -1,5 +1,6 @@
 
 import { getProgressAction } from "@/app/actions/getprogressAction";
+import RedirectLoader from "@/components/reusables/RedirectLoader";
 import SummaryPageClient from "@/components/summary/SummaryPageClient";
 import { cookies } from "next/headers";
 
@@ -7,14 +8,16 @@ export default async function SummaryPageServer() {
   // Retrieve the user ID from the HTTP‑only cookie
   const userIdCookie = cookies().get("userId");
   if (!userIdCookie || !userIdCookie.value) {
-    throw new Error("User ID cookie not found");
+    return <RedirectLoader />;
+
   }
   const userId = userIdCookie.value; // This should be a valid UUID
 
   // Call the server action to get progress data
   const progressResult = await getProgressAction(userId);
   if (!progressResult.success) {
-    throw new Error(progressResult.error || "Failed to load progress data");
+    return <RedirectLoader />;
+
   }
   const progressData = progressResult.progressData;
 
