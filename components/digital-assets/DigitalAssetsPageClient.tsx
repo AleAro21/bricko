@@ -75,40 +75,13 @@ const DigitalAssetsPageClient: FC<DigitalAssetsPageClientProps> = ({
     return data.map(item => ({ ...item, percentage: total ? (item.value / total) * 100 : 0 }));
   };
 
-  const renderCustomizedLabel = ({
-    cx,
-    cy,
-    midAngle,
-    innerRadius,
-    outerRadius,
-    percent,
-    name,
-  }: any) => {
-    const RADIAN = Math.PI / 180;
-    const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
-    const x = cx + radius * Math.cos(-midAngle * RADIAN);
-    const y = cy + radius * Math.sin(-midAngle * RADIAN);
-    if (percent < 0.05) return null;
-    return (
-      <text
-        x={x}
-        y={y}
-        fill="#1d1d1f"
-        textAnchor={x > cx ? 'start' : 'end'}
-        dominantBaseline="central"
-        className="text-[14px] font-normal"
-      >
-        {`${name} (${(percent * 100).toFixed(1)}%)`}
-      </text>
-    );
-  };
-
   const CustomTooltip = ({ active, payload }: any) => {
     if (active && payload && payload.length) {
+      const value = payload[0].payload.value;
       return (
         <div className="bg-white p-4 rounded-lg shadow-md border border-gray-100">
           <p className="text-[#1d1d1f] font-medium">{payload[0].name}</p>
-          <p className="text-[#047aff] font-normal">{`${payload[0].payload.value} activo${payload[0].payload.value !== 1 ? 's' : ''}`}</p>
+          <p className="text-[#047aff] font-normal">{`${value} activo${value !== 1 ? 's' : ''}`}</p>
           <p className="text-[#047aff] font-normal">{payload[0].payload.percentage.toFixed(1)}%</p>
         </div>
       );
@@ -260,17 +233,15 @@ const DigitalAssetsPageClient: FC<DigitalAssetsPageClientProps> = ({
               {/* Right column: Either a chart if assets exist or fallback info */}
               {assets.length > 0 ? (
                 <div className="bg-white rounded-2xl shadow-md p-6 h-fit lg:sticky lg:top-6">
-                  <h2 className="text-[22px] font-medium text-[#1d1d1f] mb-4">Distribución de Activos Digitales</h2>
-                  <div className="h-[300px]">
+                  <h2 className="text-[22px] font-medium text-[#1d1d1f] mb-6">Distribución de Activos Digitales</h2>
+                  <div className="w-full aspect-square max-h-[400px]">
                     <ResponsiveContainer width="100%" height="100%">
                       <PieChart>
                         <Pie
                           data={getChartData()}
                           cx="50%"
                           cy="50%"
-                          labelLine={false}
-                          label={renderCustomizedLabel}
-                          outerRadius={120}
+                          outerRadius="90%"
                           fill="#8884d8"
                           dataKey="value"
                         >
@@ -282,14 +253,14 @@ const DigitalAssetsPageClient: FC<DigitalAssetsPageClientProps> = ({
                       </PieChart>
                     </ResponsiveContainer>
                   </div>
-                  <div className="mt-8 space-y-4">
+                  <div className="mt-8 space-y-4 max-h-[300px] overflow-y-auto pr-2">
                     {getChartData().map((item, index) => (
-                      <div key={index} className="flex items-center justify-between">
-                        <div className="flex items-center gap-3">
-                          <div className="w-4 h-4 rounded-full" style={{ backgroundColor: COLORS[index % COLORS.length] }} />
-                          <span className="text-[16px] text-[#1d1d1f]">{item.name}</span>
+                      <div key={index} className="flex items-center justify-between py-2 hover:bg-gray-50 rounded-lg px-2">
+                        <div className="flex items-center gap-3 min-w-0">
+                          <div className="w-4 h-4 rounded-full flex-shrink-0" style={{ backgroundColor: COLORS[index % COLORS.length] }} />
+                          <span className="text-[16px] text-[#1d1d1f] truncate max-w-[200px]">{item.name}</span>
                         </div>
-                        <div className="text-right">
+                        <div className="text-right flex-shrink-0">
                           <p className="text-[16px] font-medium text-[#1d1d1f]">
                             {item.value} activo{item.value !== 1 ? 's' : ''}
                           </p>
@@ -297,6 +268,14 @@ const DigitalAssetsPageClient: FC<DigitalAssetsPageClientProps> = ({
                         </div>
                       </div>
                     ))}
+                  </div>
+                  <div className="pt-4 mt-4 border-t border-gray-100">
+                    <div className="flex justify-between items-center">
+                      <span className="text-[18px] font-medium text-[#1d1d1f]">Total</span>
+                      <span className="text-[18px] font-medium text-[#1d1d1f]">
+                        {assets.length} activo{assets.length !== 1 ? 's' : ''}
+                      </span>
+                    </div>
                   </div>
                 </div>
               ) : (
