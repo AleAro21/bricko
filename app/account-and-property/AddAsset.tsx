@@ -73,9 +73,9 @@ const AddAsset: FC<AddAssetProps> = ({ setShowModal, showModal, onAddAsset, asse
       <div className="w-full min-w-[400px] max-w-2xl mx-auto relative">
         <button
           onClick={() => setShowModal(false)}
-          className="absolute top-4 right-4 w-8 h-8 bg-[#e8e8ed] rounded-full flex items-center justify-center"
+          className="absolute -top-0 -right-2 w-8 h-8 bg-[#e8e8ed] rounded-full flex items-center justify-center"
         >
-          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text[#6e6e73]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-[#6e6e73]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
           </svg>
         </button>
@@ -89,11 +89,11 @@ const AddAsset: FC<AddAssetProps> = ({ setShowModal, showModal, onAddAsset, asse
         </h2>
 
         <div className="w-full">
-          <form className="space-y-6" onSubmit={handleSubmit}>
+          <form className="space-y-4" onSubmit={handleSubmit}>
             {/* Asset Category Dropdown */}
             <div>
               <label htmlFor="assetType" className="block text-[17px] font-normal text-[#1d1d1f] mb-2.5">
-                Tipo de activo <span className="text-[#047aff]">*</span>
+               Activo <span className="text-[#047aff]">*</span>
               </label>
               <select
                 id="assetType"
@@ -117,7 +117,7 @@ const AddAsset: FC<AddAssetProps> = ({ setShowModal, showModal, onAddAsset, asse
             {selectedCategoryId && (
               <div>
                 <label htmlFor="subcategory" className="block text-[17px] font-normal text-[#1d1d1f] mb-2.5">
-                  Subcategoría <span className="text-[#047aff]">*</span>
+                  Tipo de activo <span className="text-[#047aff]">*</span>
                 </label>
                 <select
                   id="subcategory"
@@ -193,7 +193,7 @@ const AddAsset: FC<AddAssetProps> = ({ setShowModal, showModal, onAddAsset, asse
               />
             </div>
 
-            <div className="pt-2">
+            <div className="pt-0 pb-2.5">
               <PrimaryButton type="submit" className="w-full">
                 Agregar
               </PrimaryButton>

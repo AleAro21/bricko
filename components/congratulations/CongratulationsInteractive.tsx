@@ -1,14 +1,16 @@
-// components/congratulations/CongratulationsInteractive.client.tsx
 'use client';
 import { useState } from 'react';
 import CardStart from '@/components/common/CardStart';
 import { Globe, Users, Newspaper, Buildings } from 'phosphor-react';
 import { useRouter } from 'next/navigation';
 import PrimaryButton from '@/components/reusables/PrimaryButton';
+import Spinner from '@/components/reusables/Spinner';
+import { flushSync } from 'react-dom';
 
 export default function CongratulationsInteractive() {
   const router = useRouter();
   const [selectedCards, setSelectedCards] = useState<number[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
   const maxSelections = 1;
 
   const cards = [
@@ -35,6 +37,8 @@ export default function CongratulationsInteractive() {
   ];
 
   const handleCardClick = (index: number) => {
+    if (isLoading) return;
+    
     setSelectedCards(prev => {
       if (prev.includes(index)) {
         return prev.filter(i => i !== index);
@@ -47,10 +51,19 @@ export default function CongratulationsInteractive() {
     });
   };
 
-  const handleContinue = () => {
-    // Before proceeding, you might want to send the selected recommendation securely to your API.
-    // Consider an API route with proper authentication instead of routing directly.
-    router.push('/about-yourself/name');
+  const handleContinue = async () => {
+    // Force the spinner to show immediately
+    flushSync(() => {
+      setIsLoading(true);
+    });
+
+    try {
+      // Here you could add any API calls needed before navigation
+      router.push('/about-yourself/name');
+    } catch (error) {
+      console.error('Navigation error:', error);
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -71,12 +84,13 @@ export default function CongratulationsInteractive() {
         ))}
       </div>
       <div className="flex flex-col items-center sm:items-end w-full gap-4 pb-8 sm:pb-0">
-        <PrimaryButton type="button" onClick={handleContinue}>
-          Continuar
+        <PrimaryButton type="button" onClick={handleContinue} disabled={isLoading}>
+          {isLoading ? <Spinner size={24} /> : "Continuar"}
         </PrimaryButton>
         <button
           onClick={handleContinue}
-          className="text-[14px] font-[400] text-[#0066CC] hover:text-[#0066CC] hover:underline transition-colors duration-200 flex items-center justify-center gap-1 tracking-[-0.22px] leading-[20px]"
+          disabled={isLoading}
+          className="text-[14px] font-[400] text-[#0066CC] hover:text-[#0066CC] hover:underline transition-colors duration-200 flex items-center justify-center gap-1 tracking-[-0.22px] leading-[20px] disabled:opacity-50 disabled:cursor-not-allowed"
         >
           Ninguno aplica
           <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">

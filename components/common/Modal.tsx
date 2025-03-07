@@ -28,7 +28,7 @@ const Modal: React.FC<ModalProps> = ({ children, setShowModal, showModal }) => {
       <div className='justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none'>
         <div className='relative w-auto my-6 mx-auto max-w-3x1'>
           <div className='modal-content border-0 px-12 py-4 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none'>
-            <button
+            {/* <button
               className='absolute z-50 right-[10px] top-[10px] p-1 ml-auto border-0 text-black float-right text-3xl leading-none font-semibold outline-none focus:outline-none'
               onClick={() => setShowModal(false)}
               aria-label="Close modal"
@@ -36,7 +36,7 @@ const Modal: React.FC<ModalProps> = ({ children, setShowModal, showModal }) => {
               <span className='text-black text-2xl block outline-none focus:outline-none'>
                 ×
               </span>
-            </button>
+            </button> */}
             {children}
           </div>
         </div>

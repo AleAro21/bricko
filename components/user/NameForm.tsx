@@ -341,7 +341,7 @@ const NameForm: FC<NameFormProps> = ({ initialUser }) => {
               <div className="w-full lg:w-3/5">
                 <div className="bg-white rounded-2xl px-4 sm:px-8 md:px-12 py-10 shadow-lg relative">
                   <form onSubmit={handleSubmit} className="space-y-4">
-                    <div className="space-y-7">
+                    <div className="space-y-4">
                       <div>
                         <h2 className="text-[20px] font-[500] text-[#1d1d1f] mb-2">
                           ¿Cuál es tu nombre legal completo?
@@ -349,7 +349,7 @@ const NameForm: FC<NameFormProps> = ({ initialUser }) => {
                         <p className="text-[14px] text-[#6e6e73] mb-5">
                           Este es el nombre que figura en tu pasaporte o permiso de conducir.
                         </p>
-                        <div className="space-y-7">
+                        <div className="space-y-4">
                           <div>
                             <label htmlFor="name" className="block text-[17px] font-[400] text-[#1d1d1f] mb-2.5">
                               Nombre <span className="text-[#047aff]">*</span>

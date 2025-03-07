@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import { FC } from "react";
 import { useRouter } from "next/navigation";
@@ -16,12 +16,11 @@ import {
   Check,
   PencilSimple,
   Clock,
-  Share,
   ShieldCheck,
 } from "phosphor-react";
 import { useUser } from "@/context/UserContext";
+import SummaryCard from "./SummaryCard";
 
-// ----- Types -----
 interface Step {
   id: string;
   stepNumber: number;
@@ -42,12 +41,10 @@ interface ProgressBarProps {
 }
 
 interface StepCardProps extends Step {
-  onClick: () => void;
   isOptional?: boolean;
   progress: number;
 }
 
-// ----- Utility Functions -----
 const getProgressColor = (progress: number): string => {
   if (progress === 100) return "#047aff";
   if (progress >= 11) return "#f97316";
@@ -60,7 +57,6 @@ const getProgressBadgeColor = (progress: number): { bg: string; text: string } =
   return { bg: "bg-red-100", text: "text-red-800" };
 };
 
-// ----- Components -----
 const ProgressBar: FC<ProgressBarProps> = ({ progress, showLabel = true }) => {
   const color = getProgressColor(progress);
   return (
@@ -88,7 +84,6 @@ const StepCard: FC<StepCardProps> = ({
   title,
   description,
   duration,
-  onClick,
   isOptional,
   progress = 0,
   icon,
@@ -105,15 +100,14 @@ const StepCard: FC<StepCardProps> = ({
           <span
             className={`${
               isOptional ? "text-gray-600" : "text-[#047aff]"
-            } text-[14px] font-[400]`}
+            } text-[14px] font-[600]`}
           >
             {isOptional ? "Opcional" : `Paso ${stepNumber}`}
           </span>
         </div>
       </div>
       <div
-        onClick={onClick}
-        className="bg-white rounded-xl p-[25px] transition-all duration-500 cursor-pointer w-full shadow-md hover:shadow-lg relative"
+        className="bg-white rounded-xl p-[25px] transition-all duration-500 w-full shadow-md hover:shadow-lg relative"
         style={{ borderTopLeftRadius: "0" }}
       >
         <div className="flex justify-between items-start flex-wrap">
@@ -168,22 +162,18 @@ interface PaymentSectionProps {
 const PaymentSection: FC<PaymentSectionProps> = ({ onClick, disabled, progress }) => {
   return (
     <div
-      onClick={!disabled ? onClick : undefined}
-      className={`mt-10 rounded-xl group ${disabled ? "cursor-not-allowed" : "cursor-pointer"}`}
+      onClick={!disabled ? onClick : () => alert("Completa tu testamento para proceder con el pago")}
+      className={`mt-5 rounded-xl group ${disabled ? "cursor-not-allowed opacity-50" : "cursor-pointer"}`}
     >
       <div className="p-[1px] bg-gradient-to-br from-[#047aff] via-[#3d9bff] to-[#047aff] rounded-xl">
         <div className="bg-white rounded-[11px] p-[25px] hover:bg-gradient-to-br hover:from-[#f8faff] hover:to-white transition-all duration-500">
           <div className="flex items-start gap-5 flex-wrap">
             <div className={`bg-gradient-to-br ${disabled ? "from-[#047aff]/70 to-[#3d9bff]/70" : "from-[#047aff] to-[#3d9bff]"} p-[15px] rounded-xl shadow-md group-hover:scale-105 transition-transform duration-300`}>
-              {disabled ? (
-                <LockSimple weight="thin" className="text-white w-6 h-6" />
-              ) : (
-                <LockSimple weight="thin" className="text-white w-6 h-6" />
-              )}
+              <LockSimple weight="thin" className="text-white w-6 h-6" />
             </div>
             <div className="flex-1 min-w-0">
               <div className="mb-5">
-                <h3 className="text-[20px] sm:text-[22px] text-[#1d1d1f] font-[500] tracking-[-0.5px] leading-[1.3] mb-5 break-words">
+                <h3 className="text-[20px] sm:text-[22px] text-[#1d1d1f] font-[500] tracking-[-0.5px] leading-[1.3] mb-2.5 break-words">
                   {disabled ? "Completa tu Testamento" : "Legaliza tu Testamento"}
                 </h3>
                 {disabled ? (
@@ -195,14 +185,9 @@ const PaymentSection: FC<PaymentSectionProps> = ({ onClick, disabled, progress }
                       <ShieldCheck weight="fill" className="text-[#047aff] w-5 h-5" />
                       <span>Protege el futuro de tu familia</span>
                     </div>
-                    <div className="flex items-center gap-3 text-[14px] font-[300] text-[#1d1d1f]/80">
-                      <Share weight="fill" className="text-[#047aff] w-5 h-5" />
-                      <span>Comparte tu voluntad con tus seres queridos</span>
-                    </div>
-                      <p className="text-[12px] mt-5 font-medium text-blue-700 mb-0">
-                        Te falta completar el {100 - progress}% para poder legalizar tu testamento
-                      </p>
-                    
+                    <p className="text-[12px] mt-5 font-medium text-blue-700 mb-0">
+                      Te falta completar el {100 - progress}% para poder legalizar tu testamento
+                    </p>
                   </div>
                 ) : (
                   <p className="text-[15px] font-[300] text-[#1d1d1f]/80 tracking-[0.1px] leading-[1.3] break-words">
@@ -214,12 +199,12 @@ const PaymentSection: FC<PaymentSectionProps> = ({ onClick, disabled, progress }
                 <button
                   disabled={disabled}
                   className={`${
-                    disabled 
-                      ? "bg-gradient-to-r from-[#047aff]/70 to-[#3d9bff]/70" 
+                    disabled
+                      ? "bg-gradient-to-r from-[#047aff]/70 to-[#3d9bff]/70"
                       : "bg-gradient-to-r from-[#047aff] to-[#3d9bff] hover:shadow-md"
                   } text-white px-[25px] py-[10px] rounded-lg font-medium text-sm transition-all duration-300 flex items-center gap-5`}
                 >
-                  {"Proceder al pago"}
+                  Proceder al pago
                   <CaretRight weight="bold" className="w-4 h-4" />
                 </button>
               </div>
@@ -231,7 +216,6 @@ const PaymentSection: FC<PaymentSectionProps> = ({ onClick, disabled, progress }
   );
 };
 
-// ----- Step Definitions -----
 const mainSteps: Step[] = [
   {
     id: "personal-info",
@@ -260,13 +244,12 @@ const mainSteps: Step[] = [
     route: "/estate/introduction",
     icon: <Coins size={32} weight="thin" />,
   },
-  
 ];
 
 const optionalSteps: Step[] = [
   {
     id: "executors",
-    stepNumber: 4,
+    stepNumber: 0,
     title: "Albaceas",
     description: "Selecciona a la persona o personas encargadas de cumplir tus últimas voluntades",
     duration: "3-5 minutos",
@@ -274,12 +257,19 @@ const optionalSteps: Step[] = [
     icon: <Users size={32} weight="thin" />,
   },
   {
-    
+    id: "guardians",
+    stepNumber: 0,
+    title: "Tutores o guardianes",
+    description: "Selecciona a la persona o personas tutoras o guardianas de tus hijos menores",
+    duration: "3-5 minutos",
+    route: "/guardians/introduction",
+    icon: <Users size={32} weight="thin" />,
+  },
+  {
     id: "special-gifts",
     stepNumber: 0,
     title: "Regalos Especiales",
-    description:
-      "Se conocen como Legados. Define objetos o bienes específicos para personas especiales.",
+    description: "Se conocen como Legados. Define objetos o bienes específicos para personas especiales.",
     duration: "3-5 minutos",
     route: "/special-gifts",
     icon: <Gift size={32} weight="thin" />,
@@ -295,7 +285,6 @@ const optionalSteps: Step[] = [
   },
 ];
 
-// ----- SummaryPage Client Component -----
 const SummaryPageClient: FC<SummaryPageClientProps> = ({ progressMapping }) => {
   const router = useRouter();
   const { user } = useUser();
@@ -333,30 +322,32 @@ const SummaryPageClient: FC<SummaryPageClientProps> = ({ progressMapping }) => {
                 {user?.name || "Usuario"}
               </span>
             </h1>
-            <p className="text-[15px] sm:text-[17px] font-[400] tracking-[-0.1px] leading-[1.3] text-[#1d1d1f] text-start mb-[25px] break-words">
+            <p className="text-[15px] sm:text-[17px] font-[400] tracking-[-0.1px] leading-[1.3] text-[#1d1d1f] text-start mb-[15px] break-words">
               Te guiamos en cada etapa para asegurar que tu voluntad se refleje con claridad.
             </p>
-            <div className="space-y-[25px]">
-              {mainSteps.map((step) => (
-                <StepCard
-                  key={step.id}
-                  {...step}
-                  progress={getStepProgress(step.id)}
-                  onClick={() => router.push(step.route)}
-                />
-              ))}
-              <h2 className="text-[22px] sm:text-[28px] font-[500] text-[#1d1d1f] mt-[25px] mb-[15px] tracking-[0.1px] leading-[1.3] break-words">
-                Pasos Opcionales
-              </h2>
-              {optionalSteps.map((step) => (
-                <StepCard
-                  key={step.id}
-                  {...step}
-                  progress={getStepProgress(step.id)}
-                  onClick={() => router.push(step.route)}
-                  isOptional
-                />
-              ))}
+            <div className="space-y-[15px]">
+              {mainSteps.map((step, index) => {
+                // For main steps, disable if any previous step is not 100% complete.
+                const isDisabled =
+                  index !== 0 &&
+                  !mainSteps.slice(0, index).every((s) => getStepProgress(s.id) === 100);
+                const handleClick = () => {
+                  if (isDisabled) {
+                    alert("Completa los pasos anteriores primero");
+                  } else {
+                    router.push(step.route);
+                  }
+                };
+                return (
+                  <div
+                    key={step.id}
+                    onClick={handleClick}
+                    className={isDisabled ? "cursor-not-allowed opacity-50" : "cursor-pointer"}
+                  >
+                    <StepCard {...step} progress={getStepProgress(step.id)} />
+                  </div>
+                );
+              })}
             </div>
           </div>
           <div className="lg:w-2/5 w-full">
@@ -366,17 +357,47 @@ const SummaryPageClient: FC<SummaryPageClientProps> = ({ progressMapping }) => {
                 <h2 className="text-[20px] sm:text-[22px] font-[500] text-[#1d1d1f] mt-[25px] mb-2.5 tracking-[0.1px] leading-[1.3] break-words">
                   Tu Voluntad
                 </h2>
-                <p className="text-[14px] font-[300] text-[#1d1d1f] mb-2.5 tracking-[0.1px] leading-[1.3] break-words">
-                  La primera parte de tu testamento tiene que ver contigo y tu familia. 
+                <p className="text-[14px] font-[300] text-[#1d1d1f] pb-10 tracking-[0.1px] leading-[1.3] break-words">
+                  La primera parte de tu testamento tiene que ver contigo y tu familia.
                   Completa la información en el Paso 1 para avanzar.
                 </p>
-                <PaymentSection 
-                  onClick={handlePaymentClick} 
-                  disabled={totalProgress !== 100} 
+                <PaymentSection
+                  onClick={handlePaymentClick}
+                  disabled={totalProgress !== 100}
                   progress={totalProgress}
                 />
               </div>
             </div>
+          </div>
+        </div>
+        
+        <div className="mt-[35px] w-full">
+          {/* Optional Steps: Block until all main steps are 100% complete */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
+            {optionalSteps.map((step) => {
+              const isOptionalDisabled = !mainSteps.every((s) => getStepProgress(s.id) === 100);
+              const handleClick = () => {
+                if (isOptionalDisabled) {
+                  alert("Completa todos los pasos principales primero");
+                } else {
+                  router.push(step.route);
+                }
+              };
+              return (
+                <div
+                  key={step.id}
+                  onClick={handleClick}
+                  className={isOptionalDisabled ? "cursor-not-allowed opacity-50" : "cursor-pointer"}
+                >
+                  <SummaryCard
+                    icon={step.icon}
+                    title={step.title}
+                    description={step.description}
+                    {...(!isOptionalDisabled && { href: step.route })}
+                  />
+                </div>
+              );
+            })}
           </div>
         </div>
       </motion.div>

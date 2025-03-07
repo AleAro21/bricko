@@ -190,15 +190,15 @@ const ChildrenForm: FC<ChildrenFormProps> = ({
 
               <div className="space-y-4 mb-5">
                 <p className="text-[16px] text-[#1d1d1f] leading-6">
-                  Si tu primer hijo está en camino, seleccione "No" por ahora.
-                  Siempre podrás actualizar esto en el futuro.
+                  Si tu primer hijo está en camino, selecciona "No" por ahora.
+                  Podrás actualizarlo en el futuro.
                 </p>
                 <p className="text-[16px] text-[#1d1d1f] leading-6">
                   Agrega todos tus hijos biológicos y legalmente adoptados,
                   quieras o no dejarlos en tu testamento.
                 </p>
                 <p className="text-[16px] text-[#1d1d1f] leading-6 mb-8">
-                  No agregues hijastros aquí. Podrás agregarlos más tarde si deseas incluirlos.
+                  No agregues hijastros aquí. Podrás agregarlos más adelante en la sección de legados.
                 </p>
               </div>
 

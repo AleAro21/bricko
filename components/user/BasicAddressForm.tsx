@@ -140,7 +140,7 @@ const BasicAddressForm: FC<BasicAddressFormProps> = ({ initialAddress, userId })
             <div className="w-full lg:w-3/5">
               <div className="bg-white rounded-2xl px-4 sm:px-8 md:px-12 py-10 shadow-lg relative">
                 <form onSubmit={handleSubmit} className="space-y-4">
-                  <div className="space-y-7">
+                  <div className="space-y-4">
                     <div>
                       <h2 className="text-[20px] font-[500] text-[#1d1d1f] mb-2">
                         Tu Dirección
@@ -148,10 +148,10 @@ const BasicAddressForm: FC<BasicAddressFormProps> = ({ initialAddress, userId })
                       <p className="text-[14px] text-[#6e6e73] mb-5">
                         Ingresa la dirección donde resides actualmente.
                       </p>
-                      <div className="space-y-5">
+                      <div className="space-y-4">
                         <div>
                           <label htmlFor="address-input" className="block text-[17px] font-[400] text-[#1d1d1f] mb-2.5">
-                            Dirección Línea 1 <span className="text-[#047aff]">*</span>
+                            Dirección<span className="text-[#047aff]">*</span>
                           </label>
                           <AddressAutocomplete
                             key={formValues.street}

@@ -239,7 +239,7 @@ const Add: FC<AddProps> = ({
           {country === 'MX' && (
             <div>
               <label className="block text-sm font-medium text-[#6e6e73] mb-1">
-                ID de Gobierno <span className="text-[#047aff]">*</span>
+                Identificación (CURP) <span className="text-[#047aff]">*</span>
               </label>
               <input
                 type="text"

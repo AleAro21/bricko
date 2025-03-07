@@ -1,15 +1,13 @@
-// app/account-and-property/page.tsx
 export const dynamic = "force-dynamic";
 import { getUserAction } from '@/app/actions/userActions';
 import { getUserAssetsAction } from '@/app/actions/assetActions';
 import { getAllWillsAction, createWillAction, updateWillAction } from '@/app/actions/willActions';
 import { getAssetsCategoriesAction } from '@/app/actions/assetCategoryActions';
+import { getContactsAction } from '@/app/actions/contactActions';
 import AccountAndPropertyPageClient from '@/components/account-and-property/AccountAndPropertyPageClient';
-import type { UserAsset, Will } from '@/types';
+import type { UserAsset, Will, Contact } from '@/types';
 import { WillStatus } from '@/types';
-import RedirectLoader from '@/components/reusables/RedirectLoader'; // adjust the import path as needed
-
-
+import RedirectLoader from '@/components/reusables/RedirectLoader';
 
 export default async function AccountAndPropertyPage() {
   const userResult = await getUserAction();
@@ -20,6 +18,9 @@ export default async function AccountAndPropertyPage() {
 
   // Get user's assets
   const assets: UserAsset[] = await getUserAssetsAction(user.id);
+
+  // Get user's contacts
+  const contacts: Contact[] = await getContactsAction(user.id);
 
   // Load existing wills; if none, create and then update it to ACTIVE.
   const wills = await getAllWillsAction(user.id);
@@ -106,6 +107,7 @@ export default async function AccountAndPropertyPage() {
       assets={assets}
       testament={testament}
       assetOptions={assetOptions}
+      contacts={contacts}
     />
   );
 }
