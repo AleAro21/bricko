@@ -96,7 +96,9 @@ export default async function AccountAndPropertyPage() {
       key: cat.name.toLowerCase().replace(/\s+/g, '_'),
       label: prettyNames[cat.name] || cat.name,
       description: cat.description,
-      subcategories: cat.metadata.subcategories.map(sub => prettySubcategories[sub] || sub),
+      subcategories: (cat.metadata?.subcategories || []).map(
+        (sub: string) => prettySubcategories[sub] || sub
+      ),
       type: cat.type || ''
     }));
 

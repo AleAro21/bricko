@@ -7,7 +7,9 @@ import type { GetAssetsCategoriesResponse } from '@/types';
 export async function getAssetsCategoriesAction(): Promise<GetAssetsCategoriesResponse> {
   try {
     const categoriesResponse = await apiService.getAssetsCategories();
+    console.log("categoriesResponse:", categoriesResponse);
     return categoriesResponse;
+
   } catch (error: any) {
     console.error("Error in getAssetsCategoriesAction:", error);
     throw error;

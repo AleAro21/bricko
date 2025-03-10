@@ -392,6 +392,8 @@ export class APIService {
   async getAssetsCategories(): Promise<GetAssetsCategoriesResponse> {
     const response = await this.fetchWithAuth('/wills/assets/categories');
     console.log('Get Assets Categories Response:', response);
+    console.log("response", response.response);
+    console.log("response", response.response.metadata);
     return response.response;
   }
 

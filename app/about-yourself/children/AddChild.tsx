@@ -106,7 +106,7 @@ const AddChild: FC<AddChildProps> = ({
   };
 
   const handleSubmit = () => {
-    if (!name || !fatherLastName || !motherLastName || gender === 'none' || !birthDate || !country) {
+    if (!name || !fatherLastName || !motherLastName || gender === 'none' || !birthDate || !country  || !email) {
       alert("Por favor, complete todos los campos obligatorios (Nombre, apellidos, género, fecha de nacimiento y país).");
       return;
     }
@@ -238,20 +238,6 @@ const AddChild: FC<AddChildProps> = ({
                 className="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:border-[#047aff]"
               />
             </div>
-
-            <div>
-              <label className="block text-sm font-medium text-[#6e6e73] mb-1">
-                Correo Electrónico (Opcional)
-              </label>
-              <input
-                type="email"
-                placeholder="Correo Electrónico"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:border-[#047aff]"
-              />
-            </div>
-
             <div>
               <label className="block text-sm font-medium text-[#6e6e73] mb-1">
                 Género <span className="text-[#047aff]">*</span>
@@ -310,6 +296,19 @@ const AddChild: FC<AddChildProps> = ({
                 />
               </div>
             )}
+
+            <div>
+              <label className="block text-sm font-medium text-[#6e6e73] mb-1">
+                Correo Electrónico <span className="text-[#047aff]">*</span>
+              </label>
+              <input
+                type="email"
+                placeholder="Correo Electrónico"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:border-[#047aff]"
+              />
+            </div>
           </div>
 
           <div className="p-6 border-t border-gray-200">

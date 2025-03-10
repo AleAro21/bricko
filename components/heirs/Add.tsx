@@ -56,6 +56,7 @@ const Add: FC<AddProps> = ({
   const [relationship, setRelationship] = useState<string>('none');
   const [loading, setLoading] = useState(false);
   const [gender, setGender] = useState<string>('none');
+  const [birthDate, setBirthDate] = useState<string>(''); // New birthdate state
   const [country, setCountry] = useState<string>('MX');
   const [governmentId, setGovernmentId] = useState<string>('');
 
@@ -67,6 +68,11 @@ const Add: FC<AddProps> = ({
       setEmail(existingPartner.email || '');
       setRelationship(existingPartner.relationToUser || 'none');
       setGender(existingPartner.gender || 'none');
+      setBirthDate(
+        existingPartner.birthDate
+          ? new Date(existingPartner.birthDate).toISOString().split('T')[0]
+          : ''
+      );
       setCountry(existingPartner.country || 'MX');
       setGovernmentId(existingPartner.governmentId || '');
     } else {
@@ -77,6 +83,7 @@ const Add: FC<AddProps> = ({
       setEmail('');
       setRelationship('none');
       setGender('none');
+      setBirthDate('');
       setCountry('MX');
       setGovernmentId('');
     }
@@ -104,6 +111,7 @@ const Add: FC<AddProps> = ({
       !motherLastName ||
       !email ||
       relationship === 'none' ||
+      !birthDate ||
       !country
     ) {
       alert('Por favor, complete todos los campos obligatorios.');
@@ -123,6 +131,7 @@ const Add: FC<AddProps> = ({
       notes: '',
       governmentId,
       gender,
+      birthDate, // Add birthdate to the data
     };
 
     try {
@@ -150,11 +159,17 @@ const Add: FC<AddProps> = ({
       className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50"
     >
       <div className="bg-white rounded-2xl p-8 w-full max-w-md relative max-h-[90vh] overflow-y-auto">
-      <button
+        <button
           onClick={() => setShowModal(false)}
           className="absolute top-4 right-4 w-8 h-8 bg-[#e8e8ed] rounded-full flex items-center justify-center"
         >
-          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text[#6e6e73]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="h-5 w-5 text[#6e6e73]"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
           </svg>
         </button>
@@ -176,6 +191,7 @@ const Add: FC<AddProps> = ({
               className="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:border-[#047aff]"
             />
           </div>
+
           <div>
             <label className="block text-sm font-medium text-[#6e6e73] mb-1">
               Apellido Paterno <span className="text-[#047aff]">*</span>
@@ -232,6 +248,18 @@ const Add: FC<AddProps> = ({
 
           <div>
             <label className="block text-sm font-medium text-[#6e6e73] mb-1">
+              Fecha de Nacimiento <span className="text-[#047aff]">*</span>
+            </label>
+            <input
+              type="date"
+              value={birthDate}
+              onChange={(e) => setBirthDate(e.target.value)}
+              className="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:border-[#047aff]"
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-[#6e6e73] mb-1">
               País de Nacimiento <span className="text-[#047aff]">*</span>
             </label>
             <select
@@ -283,7 +311,6 @@ const Add: FC<AddProps> = ({
         </div>
 
         <div className="flex justify-end gap-4 mt-6">
-         
           <button
             onClick={handleSubmit}
             className="px-6 py-2 bg-[#047aff] text-white rounded-lg hover:bg-[#0456b0] transition-colors disabled:opacity-50"
