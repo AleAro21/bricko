@@ -120,6 +120,41 @@ export class APIService {
     return response.json();
   }
 
+  public async getTestamentPDF(testamentId: string): Promise<Blob> {
+    // Ensure the token is available (optionally refresh if needed)
+    if (!this.token) {
+      await this.refreshToken();
+    }
+    const headers = {
+      'Authorization': `Bearer ${this.token}`,
+      'Accept': 'application/pdf'
+    };
+
+    console.log('Fetching PDF for testament:', testamentId);
+    console.log('Headers:', headers);
+    console.log('Token:', this.token);
+    const url = `http://18.218.124.48:3000/dev/wills/testaments/${testamentId}?type=pdf`;
+    console.log('URL:', url);
+    // Include ?type=pdf in the URL
+    const response = await fetch(url, {
+      method: 'GET',
+      headers,
+    });
+    console.log('PDF Response:', response);
+    if (!response.ok) {
+      let errorDetails = '';
+      try {
+        errorDetails = await response.text();
+      } catch (err) {
+        console.log('Error fetching PDF:', err);
+        errorDetails = 'No additional details';
+      }
+      console.log('Error fetching PDF:', response.status, response.statusText, errorDetails);
+      throw new Error(`API call failed: ${response.status} ${response.statusText} - ${errorDetails}`);
+    }
+    return response.blob();
+  }
+  
 
   // ============================
   // Existing User/Address/Contact/Pet/Asset methods

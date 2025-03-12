@@ -1,20 +1,34 @@
 'use client';
 
-import { FC, useState } from 'react';
+import { FC, useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { CheckCircle, Share, Download, Eye, Lock } from 'phosphor-react';
 import PrimaryButton from '@/components/reusables/PrimaryButton';
 import DashboardLayout from '@/components/common/DashboardLayout';
-import Image from 'next/image';
-import graylogo from '@/assets/greylogo.png';
+import { getTestamentPDFAction } from '@/app/actions/testamentActions';
 
 const DocumentViewClient: FC = () => {
   const router = useRouter();
   const [showShareModal, setShowShareModal] = useState(false);
+  // Default fallback URL in case fetching fails.
+  const [pdfUrl, setPdfUrl] = useState('/sample-testament.pdf');
 
-  // Using a public URL path for the PDF
-  const pdfUrl = '/sample-testament.pdf';
+  useEffect(() => {
+    async function fetchPDF() {
+      const result = await getTestamentPDFAction('d376d12b-9beb-41ed-bed8-f103dfc185d1');
+      if (result.error) {
+        console.error("Error fetching PDF: ", result.error);
+        return;
+      }
+      if (result.pdfBase64) {
+        // Create a data URL from the base64 string
+        const url = `data:application/pdf;base64,${result.pdfBase64}`;
+        setPdfUrl(url);
+      }
+    }
+    fetchPDF();
+  }, []);
 
   const handleShare = () => {
     setShowShareModal(true);
