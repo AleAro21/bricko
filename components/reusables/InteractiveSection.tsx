@@ -14,22 +14,22 @@ export default function InteractiveSection() {
 
   const cards = [
     {
-      icon: <Heartbeat size={70} weight="thin" />,
+      icon: <Heartbeat size={70} weight="regular" />,
       title: "Save",
       description: "Get $180-$650 in credit toward iPhone 16 or iPhone 16 Pro",
     },
     {
-      icon: <Headphones size={70} weight="thin" />,
+      icon: <Headphones size={70} weight="regular" />,
       title: "Soltero",
       description: "Para personas que no están en una relación actualmente",
     },
     {
-      icon: <HourglassMedium size={40} weight="thin" />,
+      icon: <HourglassMedium size={40} weight="regular" />,
       title: "Familia",
       description: "Para familias con hijos o dependientes",
     },
     {
-      icon: <CreditCard size={70} weight="thin" />,
+      icon: <CreditCard size={70} weight="regular" />,
       title: "Convivencia",
       description: "Para personas que comparten vivienda",
     }

@@ -172,7 +172,7 @@ const CheckoutForm: FC<{ amount: number }> = ({ amount }) => {
       )}
 
       <div className="flex items-center gap-2 text-gray-500 mt-2">
-        <Lock weight="thin" size={16} />
+        <Lock weight="regular" size={16} />
         <span className="text-[14px]">Sus datos están protegidos con cifrado AES-256</span>
       </div>
 

@@ -40,37 +40,37 @@ const AccountAndPropertyPage: FC = () => {
         {
             title: "Artículo Único",
             description: "Un artículo especial como un anillo de bodas, obra de arte o reloj",
-            icon: <Diamond size={24} weight="thin" />,
+            icon: <Diamond size={24} weight="regular" />,
             onClick: () => router.push('/legacy?type=single')
         },
         {
             title: "Colección",
             description: "Una colección de artículos como discos, tazas, etc",
-            icon: <Stack size={24} weight="thin" />,
+            icon: <Stack size={24} weight="regular" />,
             onClick: () => router.push('/legacy?type=collection')
         },
         {
             title: "Vehículo",
             description: "Un automóvil, motocicleta u otro tipo de vehículo",
-            icon: <Car size={24} weight="thin" />,
+            icon: <Car size={24} weight="regular" />,
             onClick: () => router.push('/legacy?type=vehicle')
         },
         {
             title: "Mascota",
             description: "Un perro, gato u otra mascota que necesite cuidados futuros",
-            icon: <Dog size={24} weight="thin" />,
+            icon: <Dog size={24} weight="regular" />,
             onClick: () => router.push('/legacy?type=pet')
         },
         {
             title: "Dinero",
             description: "Una cantidad específica de dinero para legar",
-            icon: <Money size={24} weight="thin" />,
+            icon: <Money size={24} weight="regular" />,
             onClick: () => router.push('/legacy?type=money')
         },
         {
             title: "Otro",
             description: "Cualquier otro tipo de legado que desee asignar",
-            icon: <Question size={24} weight="thin" />,
+            icon: <Question size={24} weight="regular" />,
             onClick: () => router.push('/legacy?type=other')
         }
     ];
@@ -100,7 +100,7 @@ const AccountAndPropertyPage: FC = () => {
                                 <h1 className="text-[32px] sm:text-[38px] font-[500] tracking-[-1.5px] leading-[1.2] sm:leading-[52px] mb-[15px]">
                                     <span className="text-[#1d1d1f]">Seleccione el tipo de </span>
                                     <span
-                                        style={{ backgroundImage: "linear-gradient(to right, #7abaff 1%, #047aff 60%, #0d4ba3 100%)" }}
+                                        style={{ backgroundImage: "linear-gradient(to left, #047aff 30%, #0d4ba3 100%)" }}
                                         className="inline-block text-transparent bg-clip-text"
                                     >
                                         legado

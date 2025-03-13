@@ -10,8 +10,6 @@ import ProgressIndicator from "@/components/reusables/ProgressIndicator";
 import Link from "next/link";
 import Spinner from "@/components/reusables/Spinner";
 import { Address } from "@/types";
-
-// Import the server action for updating the address.
 import { updateUserAddressAction } from '@/app/actions/addressActions';
 import { flushSync } from 'react-dom';
 
@@ -51,7 +49,6 @@ const BasicAddressForm: FC<BasicAddressFormProps> = ({ initialAddress, userId })
       return;
     }
 
-    // Force the spinner state to update immediately so it renders on the button.
     flushSync(() => {
       setLoading(true);
     });
@@ -66,14 +63,12 @@ const BasicAddressForm: FC<BasicAddressFormProps> = ({ initialAddress, userId })
         country: "MX",
       };
 
-      // Call the server action. Pass currentCity if there is an initial address.
       const updatedAddress = await updateUserAddressAction(
         userId,
         addressData,
         initialAddress ? initialAddress.city : undefined
       );
 
-      // Optionally, store the returned address in sessionStorage.
       sessionStorage.setItem("userAddress", JSON.stringify(updatedAddress));
 
       router.push("/about-yourself/partner");
@@ -105,7 +100,6 @@ const BasicAddressForm: FC<BasicAddressFormProps> = ({ initialAddress, userId })
       >
         <div className="w-full max-w-6xl mx-auto flex flex-col min-h-[75vh] mb-4 px-4 sm:px-5">
           <div className="flex flex-col lg:flex-row gap-8 lg:gap-24 h-full py-12">
-            {/* Left column - Title Section */}
             <div className="lg:w-1/3">
               <div className="flex items-center justify-between mb-2.5">
                 <div className="inline-flex items-center h-[32px] bg-[#047aff] bg-opacity-10 px-[12px] py-[6px] rounded-md">
@@ -117,7 +111,7 @@ const BasicAddressForm: FC<BasicAddressFormProps> = ({ initialAddress, userId })
                 <span
                   style={{
                     backgroundImage:
-                      "linear-gradient(to right, #7abaff 1%, #047aff 60%, #0d4ba3 100%)",
+                      "linear-gradient(to left, #047aff 30%, #0d4ba3 100%)",
                   }}
                   className="inline-block text-transparent bg-clip-text"
                 >
@@ -133,12 +127,13 @@ const BasicAddressForm: FC<BasicAddressFormProps> = ({ initialAddress, userId })
                 </Link>
                 <p className="text-[14px] text-[#000000]">Articulo relacionado</p>
               </div>
-              <ProgressIndicator currentSection={2} totalSections={5} title="Progreso de la sección" />
             </div>
 
-            {/* Right column - Form */}
             <div className="w-full lg:w-3/5">
               <div className="bg-white rounded-2xl px-4 sm:px-8 md:px-12 py-10 shadow-lg relative">
+                <div className="mb-8">
+                  <ProgressIndicator currentSection={2} totalSections={4} title="Progreso del formulario" />
+                </div>
                 <form onSubmit={handleSubmit} className="space-y-4">
                   <div className="space-y-4">
                     <div>

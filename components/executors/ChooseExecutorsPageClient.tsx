@@ -174,7 +174,7 @@ const ChooseExecutorsPageClient: FC<ChooseExecutorsPageClientProps> = ({
                                         <span className="text-[#1d1d1f]">
                                             ¿A quién le gustaría elegir como su </span>
                                         <span
-                                            style={{ backgroundImage: "linear-gradient(to right, #7abaff 1%, #047aff 60%, #0d4ba3 100%)" }}
+                                            style={{ backgroundImage: "linear-gradient(to left, #047aff 30%, #0d4ba3 100%)" }}
                                             className="inline-block text-transparent bg-clip-text"
                                         >
                                              albacea?

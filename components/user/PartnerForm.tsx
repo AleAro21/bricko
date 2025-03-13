@@ -116,7 +116,7 @@ const PartnerForm: FC<PartnerFormProps> = ({
       setErrorMessage("No se encontró información del usuario");
       return;
     }
-    
+
     flushSync(() => {
       setLoading(true);
     });
@@ -129,7 +129,7 @@ const PartnerForm: FC<PartnerFormProps> = ({
       if (!updateResult.success) {
         throw new Error(updateResult.error || "Error updating user");
       }
-      
+
       if (
         (selectedItem.title === "Casado" ||
           selectedItem.title === "Concubinato") &&
@@ -140,7 +140,7 @@ const PartnerForm: FC<PartnerFormProps> = ({
         );
         return;
       }
-      
+
       if (
         partner &&
         (partner.relationToUser === "spouse" || partner.relationToUser === "albacea")
@@ -159,7 +159,7 @@ const PartnerForm: FC<PartnerFormProps> = ({
           governmentId: partner.governmentId || '',
           gender: partner.gender || '',
         };
-  
+
         if (!partner.id) {
           const createdContact = await createContactAction(userId, contactData);
           sessionStorage.setItem('userContact', JSON.stringify(createdContact));
@@ -197,7 +197,6 @@ const PartnerForm: FC<PartnerFormProps> = ({
       >
         <div className="w-full max-w-6xl mx-auto flex flex-col min-h-[100vh] mb-4 px-4 sm:px-5">
           <div className="py-12">
-            {/* Top section with two columns */}
             <div className="flex flex-col lg:flex-row gap-8 lg:gap-24 mb-8">
               <div className="lg:w-1/3">
                 <div className="flex items-center gap-2 mb-2.5">
@@ -210,19 +209,27 @@ const PartnerForm: FC<PartnerFormProps> = ({
                 </div>
                 <h1 className="text-[32px] sm:text-[38px] font-[500] tracking-[-1.5px] leading-[1.2] sm:leading-[52px] mb-[15px]">
                   <span className="text-[#1d1d1f]">¿Cuál es tu </span>
-                  <span className="bg-gradient-to-r from-[#3d9bff] to-[#047aff] inline-block text-transparent bg-clip-text">
-                    situación civil
+                  <span
+                    style={{
+                      backgroundImage:
+                        "linear-gradient(to left, #047aff 30%, #0d4ba3 100%)",
+                    }}
+                    className="inline-block text-transparent bg-clip-text"
+                  >
+                    situación civil?
                   </span>
-                  <span className="text-[#1d1d1f]">?</span>
                 </h1>
                 <p className="text-[16px] text-[#1d1d1f] leading-6 mb-8">
-                  Seleccione su estado legal actual, incluso si sabe que va a cambiar pronto. Siempre podrá actualizar esto en el futuro.
+                  Selecciona tu estado legal actual, incluso si sabe que va a cambiar pronto. Siempre podrá actualizar esto en el futuro.
                 </p>
-                <ProgressIndicator currentSection={3} totalSections={5} title="Progreso de la sección" />
               </div>
 
               <div className="lg:w-3/5">
                 <div className="bg-white rounded-2xl px-4 sm:px-8 md:px-12 py-8 shadow-lg relative">
+                  <div className="mb-8">
+                    <ProgressIndicator currentSection={3} totalSections={4} title="Progreso del formulario" />
+                  </div>
+                  
                   <div className="space-y-4 mb-8">
                     {maritalStatusOptions.map((item, index) => (
                       <div
@@ -233,14 +240,18 @@ const PartnerForm: FC<PartnerFormProps> = ({
                         <div
                           className={`px-6 py-4 rounded-xl border ${
                             activeIndex === index
-                              ? 'bg-[#047aff] border-[#047aff]'
+                              ? 'bg-[#e5f1ff] border-[#047aff]'
                               : 'border-gray-200 hover:border-[#047aff]'
                           }`}
                         >
-                          <h3 className={`text-[17px] font-[400] ${activeIndex === index ? 'text-white' : 'text-[#1d1d1f]'}`}>
+                          <h3 className={`text-[17px] font-[400] ${
+                            activeIndex === index ? 'text-[#1d1d1f]' : 'text-[#1d1d1f]'
+                          }`}>
                             {item.title}
                           </h3>
-                          <p className={`mt-1 text-[14px] ${activeIndex === index ? 'text-blue-100' : 'text-[#6e6e73]'}`}>
+                          <p className={`mt-1 text-[14px] ${
+                            activeIndex === index ? 'text-[#6e6e73]' : 'text-[#6e6e73]'
+                          }`}>
                             {item.subTitle}
                           </p>
                         </div>
@@ -280,7 +291,6 @@ const PartnerForm: FC<PartnerFormProps> = ({
               </div>
             </div>
 
-            {/* Partner card section - Single card width */}
             {partner && (partner.relationToUser === "spouse" || partner.relationToUser === "albacea") && (
               <div className="mt-8">
                 <h3 className="text-lg font-semibold mb-4">
@@ -295,13 +305,13 @@ const PartnerForm: FC<PartnerFormProps> = ({
                           onClick={handleEditPartner}
                           className="text-blue-600 hover:text-blue-800"
                         >
-                          <PencilSimple size={20} weight="thin" />
+                          <PencilSimple size={20} weight="regular" />
                         </button>
                         <button
                           onClick={handleDeletePartner}
                           className="text-red-600 hover:text-red-800"
                         >
-                          <Trash size={20} weight="thin" />
+                          <Trash size={20} weight="regular" />
                         </button>
                       </div>
                     </div>

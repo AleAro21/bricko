@@ -37,7 +37,7 @@ const Card: React.FC<CardProps> = ({ linkNo, linkyes, titleNo, titleYes }) => {
         )}
         <div className="flex items-center mb-3">
           <div className="w-10 h-10 flex items-center justify-center text-xl text-[#047aff]">
-            <Check size={40} weight="thin" />
+            <Check size={40} weight="regular" />
           </div>
         </div>
         <h3 className="text-[28px] text-[#1d1d1f] font-[500] mb-2 pr-2 tracking-[0.1px] leading-[1.3]">Sí</h3>
@@ -59,7 +59,7 @@ const Card: React.FC<CardProps> = ({ linkNo, linkyes, titleNo, titleYes }) => {
         )}
         <div className="flex items-center mb-3">
           <div className="w-10 h-10 flex items-center justify-center text-xl text-[#ff3d51]">
-            <X size={40} weight="thin" />
+            <X size={40} weight="regular" />
           </div>
         </div>
         <h3 className="text-[28px] text-[#1d1d1f] font-[500] mb-2 pr-2 tracking-[0.1px] leading-[1.3]">No</h3>

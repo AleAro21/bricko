@@ -181,7 +181,7 @@ const AccountAndPropertyPageClient: FC<AccountAndPropertyPageClientProps> = ({
                 <h1 className="text-[32px] sm:text-[38px] font-medium tracking-[-1.5px] leading-[1d1d1f] sm:leading-[52px] mb-[15px]">
                   <span className="text-[#1d1d1f]">Enumere sus </span>
                   <span
-                    style={{ backgroundImage: "linear-gradient(to right, #7abaff 1%, #047aff 60%, #0d4ba3 100%)" }}
+                    style={{ backgroundImage: "linear-gradient(to left, #047aff 30%, #0d4ba3 100%)" }}
                     className="inline-block text-transparent bg-clip-text"
                   >
                     cuentas y propiedades

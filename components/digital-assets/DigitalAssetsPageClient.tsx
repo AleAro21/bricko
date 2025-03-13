@@ -51,12 +51,12 @@ const DigitalAssetsPageClient: FC<DigitalAssetsPageClientProps> = ({
   const [saving, setSaving] = useState(false);
 
   const assetTypeIcons: Record<string, JSX.Element> = {
-    cloud_storage: <Cloud className="w-6 h-6" weight="thin" />,
-    cryptocurrencies: <CurrencyBtc className="w-6 h-6" weight="thin" />,
-    domain_names: <Globe className="w-6 h-6" weight="thin" />,
-    email_accounts: <Envelope className="w-6 h-6" weight="thin" />,
-    gaming_accounts: <GameController className="w-6 h-6" weight="thin" />,
-    other_digital_assets: <Question className="w-6 h-6" weight="thin" />,
+    cloud_storage: <Cloud className="w-6 h-6" weight="regular" />,
+    cryptocurrencies: <CurrencyBtc className="w-6 h-6" weight="regular" />,
+    domain_names: <Globe className="w-6 h-6" weight="regular" />,
+    email_accounts: <Envelope className="w-6 h-6" weight="regular" />,
+    gaming_accounts: <GameController className="w-6 h-6" weight="regular" />,
+    other_digital_assets: <Question className="w-6 h-6" weight="regular" />,
   };
 
   const getChartData = () => {
@@ -148,7 +148,7 @@ const DigitalAssetsPageClient: FC<DigitalAssetsPageClientProps> = ({
                   <h1 className="text-[32px] sm:text-[38px] font-medium tracking-[-1.5px] leading-[1d1d1f] sm:leading-[52px] mb-[15px]">
                     <span className="text-[#1d1d1f]">¿Tiene algún </span>
                     <span
-                      style={{ backgroundImage: "linear-gradient(to right, #7abaff 1%, #047aff 60%, #0d4ba3 100%)" }}
+                      style={{ backgroundImage: "linear-gradient(to left, #047aff 30%, #0d4ba3 100%)" }}
                       className="inline-block text-transparent bg-clip-text"
                     >
                       activo digital

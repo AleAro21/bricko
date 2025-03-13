@@ -74,12 +74,12 @@ const PaymentSummary: FC<PaymentSummaryProps> = ({
         {/* Benefits and Security */}
         <div className="space-y-4 pt-6 border-t border-gray-100">
           <div className="flex items-center gap-2 text-gray-500">
-            <ShieldCheck weight="thin" size={20} />
+            <ShieldCheck weight="regular" size={20} />
             <span className="text-[14px]">Pago 100% seguro y encriptado</span>
           </div>
           
           <div className="flex items-center gap-2 text-gray-500">
-            <Clock weight="thin" size={20} />
+            <Clock weight="regular" size={20} />
             <span className="text-[14px]">Proceso de pago: 2-3 minutos</span>
           </div>
         </div>

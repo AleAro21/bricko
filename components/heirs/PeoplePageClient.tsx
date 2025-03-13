@@ -229,7 +229,7 @@ const PeoplePageClient: FC<PeoplePageClientProps> = ({
                 <h1 className="text-[32px] sm:text-[38px] font-medium tracking-[-1.5px] leading-[1.2] sm:leading-[52px] mb-[15px]">
                   Asigna el % de cada activo a cada{" "}
                   <span
-                    style={{ backgroundImage: "linear-gradient(to right, #7abaff 1%, #047aff 60%, #0d4ba3 100%)" }}
+                    style={{ backgroundImage: "linear-gradient(to left, #047aff 30%, #0d4ba3 100%)" }}
                     className="inline-block text-transparent bg-clip-text"
                   >
                     heredero

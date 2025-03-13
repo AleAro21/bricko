@@ -240,7 +240,7 @@ const PeoplePageClient: FC<PeoplePageProps> = ({ user, contacts, pets, categorie
     return (
       <div className="text-center py-12 bg-white/90 backdrop-blur-sm rounded-xl shadow-md">
         <div className="mx-auto text-gray-400 mb-4 w-12 h-12 flex items-center justify-center">
-          {selectedCategory === 'pets' ? <Dog size={28} weight="thin" /> : <Users size={28} weight="thin" />}
+          {selectedCategory === 'pets' ? <Dog size={28} weight="regular" /> : <Users size={28} weight="regular" />}
         </div>
         <h3 className="text-xl font-medium text-gray-900 mb-2">
           No hay {categoryData?.title.toLowerCase()}
@@ -288,10 +288,10 @@ const PeoplePageClient: FC<PeoplePageProps> = ({ user, contacts, pets, categorie
               title={category.title}
               description={category.description}
               icon={
-                category.id === 'children' ? <Baby size={28} weight="thin" /> :
-                category.id === 'trusted' ? <Users size={28} weight="thin" /> :
-                category.id === 'pets' ? <Dog size={28} weight="thin" /> :
-                <Heart size={28} weight="thin" />
+                category.id === 'children' ? <Baby size={28} weight="regular" /> :
+                category.id === 'trusted' ? <Users size={28} weight="regular" /> :
+                category.id === 'pets' ? <Dog size={28} weight="regular" /> :
+                <Heart size={28} weight="regular" />
               }
               count={category.count}
               onClick={() => setSelectedCategory(category.id)}

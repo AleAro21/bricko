@@ -24,9 +24,9 @@ const PaymentMethod: FC<PaymentMethodProps> = ({ method, selected, onSelect }) =
       <div className="p-5 flex items-center gap-4">
         <div className={`p-3 rounded-full ${selected ? "bg-[#047aff]/10" : "bg-[#047aff]/5"}`}>
           {method === "card" ? (
-            <CreditCard weight="thin" size={24} className="text-[#047aff]" />
+            <CreditCard weight="regular" size={24} className="text-[#047aff]" />
           ) : (
-            <Bank weight="thin" size={24} className="text-[#047aff]" />
+            <Bank weight="regular" size={24} className="text-[#047aff]" />
           )}
         </div>
         <div>

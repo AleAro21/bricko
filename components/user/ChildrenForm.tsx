@@ -56,7 +56,6 @@ const ChildrenForm: FC<ChildrenFormProps> = ({
 
   const handleOptionClick = (index: number): void => {
     setActiveIndex(index);
-    // If "No" is selected (index 1), clear children.
     if (index === 1) {
       setChildren([]);
       sessionStorage.removeItem('userChildren');
@@ -89,29 +88,24 @@ const ChildrenForm: FC<ChildrenFormProps> = ({
       setErrorMessage("Por favor, seleccione una opción");
       return;
     }
-    // If option "Sí" is chosen but no child has been added, alert the user.
     if (activeIndex === 0 && children.length === 0) {
       setErrorMessage("Por favor, agregue al menos un hijo");
       return;
     }
     
-    // Force the spinner to show immediately.
     let didNavigate = false;
     flushSync(() => {
       setLoading(true);
     });
 
     try {
-      // Update user's "hasChildren" attribute.
       const updateResult = await updateUserAction({
         id: userId,
         hasChildren: activeIndex === 0,
-    
       });
       if (!updateResult.success) {
         throw new Error(updateResult.error || "Error updating user");
       }
-      // If option "Sí" is selected, create each child that does not yet have an id.
       if (activeIndex === 0) {
         for (const child of children) {
           if (!child.id) {
@@ -128,14 +122,12 @@ const ChildrenForm: FC<ChildrenFormProps> = ({
       console.error('Error saving children:', error);
       setErrorMessage("Error al guardar los cambios. Por favor, intente nuevamente.");
     } finally {
-      // Only reset loading if navigation didn't occur.
       if (!didNavigate) {
         setLoading(false);
       }
     }
   };
 
-  // setChild is called from the AddChild modal when a child is added or edited.
   const setChild = (childData: Contact) => {
     if (isEditing && selectedChild) {
       const updatedChildren = children.map(child =>
@@ -170,7 +162,6 @@ const ChildrenForm: FC<ChildrenFormProps> = ({
       >
         <div className="w-full max-w-6xl mx-auto flex flex-col min-h-[100vh] mb-4 px-4 sm:px-5">
           <div className="py-12">
-            {/* Top section with two columns */}
             <div className="flex flex-col lg:flex-row gap-8 lg:gap-24 mb-8">
               <div className="lg:w-1/3">
                 <div className="flex items-center gap-2 mb-2.5">
@@ -184,7 +175,13 @@ const ChildrenForm: FC<ChildrenFormProps> = ({
 
                 <h1 className="text-[32px] sm:text-[38px] font-[500] tracking-[-1.5px] leading-[1.2] sm:leading-[52px] mb-[15px]">
                   <span className="text-[#1d1d1f]">¿Tienes </span>
-                  <span className="bg-gradient-to-r from-[#3d9bff] to-[#047aff] inline-block text-transparent bg-clip-text">
+                  <span
+                    style={{
+                      backgroundImage:
+                        "linear-gradient(to left, #047aff 30%, #0d4ba3 100%)",
+                    }}
+                    className="inline-block text-transparent bg-clip-text"
+                  >
                     hijos
                   </span>
                   <span className="text-[#1d1d1f]">?</span>
@@ -199,20 +196,18 @@ const ChildrenForm: FC<ChildrenFormProps> = ({
                     Agrega todos tus hijos biológicos y legalmente adoptados,
                     quieras o no dejarlos en tu testamento.
                   </p>
-                  <p className="text-[16px] text-[#1d1d1f] leading-6 mb-8">
+                  <p className="text-[16px] text-[#1d1d1f] leading-6">
                     No agregues hijastros aquí. Podrás agregarlos más adelante en la sección de legados.
                   </p>
                 </div>
-
-                <ProgressIndicator
-                  currentSection={4}
-                  totalSections={5}
-                  title="Progreso de la sección"
-                />
               </div>
 
               <div className="lg:w-3/5">
                 <div className="bg-white rounded-2xl px-4 sm:px-8 md:px-12 py-8 shadow-lg relative">
+                  <div className="mb-8">
+                    <ProgressIndicator currentSection={4} totalSections={4} title="Progreso del formulario" />
+                  </div>
+
                   <div className="space-y-4 mb-8">
                     {childOptions.map((item, index) => (
                       <div
@@ -223,14 +218,14 @@ const ChildrenForm: FC<ChildrenFormProps> = ({
                         <div
                           className={`px-6 py-4 rounded-xl border ${
                             activeIndex === index
-                              ? 'bg-[#047aff] border-[#047aff]'
+                              ? 'bg-[#e5f1ff] border-[#047aff]'
                               : 'border-gray-200 hover:border-[#047aff]'
                           }`}
                         >
-                          <h3 className={`text-[17px] font-[400] ${activeIndex === index ? 'text-white' : 'text-[#1d1d1f]'}`}>
+                          <h3 className={`text-[17px] font-[400] ${activeIndex === index ? 'text-[#1d1d1f]' : 'text-[#1d1d1f]'}`}>
                             {item.title}
                           </h3>
-                          <p className={`mt-1 text-[14px] ${activeIndex === index ? 'text-blue-100' : 'text-[#6e6e73]'}`}>
+                          <p className={`mt-1 text-[14px] ${activeIndex === index ? 'text-[#6e6e73]' : 'text-[#6e6e73]'}`}>
                             {item.subTitle}
                           </p>
                         </div>
@@ -267,7 +262,6 @@ const ChildrenForm: FC<ChildrenFormProps> = ({
               </div>
             </div>
 
-            {/* Children cards section - Full width, starting from left */}
             {children.length > 0 && (
               <div className="mt-8">
                 <h3 className="text-lg font-semibold mb-4">Hijos Registrados</h3>
@@ -281,13 +275,13 @@ const ChildrenForm: FC<ChildrenFormProps> = ({
                             onClick={() => handleEditChild(child)}
                             className="text-blue-600 hover:text-blue-800"
                           >
-                            <PencilSimple size={20} weight="thin" />
+                            <PencilSimple size={20} weight="regular" />
                           </button>
                           <button
                             onClick={() => handleDeleteChild(child)}
                             className="text-red-600 hover:text-red-800"
                           >
-                            <Trash size={20} weight="thin" />
+                            <Trash size={20} weight="regular" />
                           </button>
                         </div>
                       </div>

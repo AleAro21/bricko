@@ -29,7 +29,7 @@ export default function PasswordPage() {
                   <span
                     style={{
                       backgroundImage:
-                        "linear-gradient(to right, #7abaff 1%, #047aff 60%, #0d4ba3 100%)",
+                        "linear-gradient(to left, #047aff 30%, #0d4ba3 100%)",
                     }}
                     className="inline-block text-transparent bg-clip-text"
                   >

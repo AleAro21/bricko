@@ -98,7 +98,7 @@ const LoginPage = () => {
                     <span
                       style={{
                         backgroundImage:
-                          "linear-gradient(to right, #7abaff 1%, #047aff 60%, #0d4ba3 100%)",
+                          "linear-gradient(to left, #047aff 30%, #0d4ba3 100%)",
                       }}
                       className="inline-block text-transparent bg-clip-text"
                     >
@@ -133,7 +133,7 @@ const LoginPage = () => {
                   </ul>
                   <div className="flex items-start gap-1">
                     <div className="flex-shrink-0 w-6 h-6 flex items-center justify-center mt-0">
-                      <Lock weight="thin" size={17} className="text-gray-500" />
+                      <Lock weight="regular" size={17} className="text-gray-500" />
                     </div>
                     <p className="text-gray-500 text-[14px] ml-2">
                       En Testamento.mx, usamos cifrado <span className="font-bold">AES-256</span>{" "}
@@ -237,7 +237,7 @@ const LoginPage = () => {
             <div className="px-4 py-6 text-start lg:hidden">
               <div className="flex items-start gap-0">
                 <div className="flex-shrink-0 w-6 h-6 flex items-center justify-start mt-0">
-                  <Lock weight="thin" size={17} className="text-gray-500" />
+                  <Lock weight="regular" size={17} className="text-gray-500" />
                 </div>
                 <p className="text-gray-500 text-[14px] ml-2">
                   En Testamento.mx, usamos cifrado <span className="font-bold">AES-256</span>{" "}

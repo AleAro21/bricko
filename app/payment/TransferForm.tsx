@@ -48,7 +48,7 @@ const TransferForm: FC<TransferFormProps> = ({ amount }) => {
             <p className="text-[16px] font-medium">{bankDetails.bank}</p>
           </div>
           <div className="w-10 h-10 bg-[#f5f5f7] rounded-full flex items-center justify-center">
-            <Bank weight="thin" size={24} className="text-[#047aff]" />
+            <Bank weight="regular" size={24} className="text-[#047aff]" />
           </div>
         </div>
 

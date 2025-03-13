@@ -15,22 +15,22 @@ export default function CongratulationsInteractive() {
 
   const cards = [
     {
-      icon: <Globe size={70} weight="thin" />,
+      icon: <Globe size={70} weight="regular" />,
       title: "Internet",
       description: "Google, redes sociales, sitio web o app",
     },
     {
-      icon: <Users size={70} weight="thin" />,
+      icon: <Users size={70} weight="regular" />,
       title: "Recomendación",
       description: "Amigos, familia o colegas",
     },
     {
-      icon: <Buildings size={70} weight="thin" />,
+      icon: <Buildings size={70} weight="regular" />,
       title: "Producto",
       description: "Banco, Seguro, Afore o Pensión",
     },
     {
-      icon: <Newspaper size={70} weight="thin" />,
+      icon: <Newspaper size={70} weight="regular" />,
       title: "Medios",
       description: "Periódico, revista, TV o radio",
     }

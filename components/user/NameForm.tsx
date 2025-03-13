@@ -168,7 +168,6 @@ const NameForm: FC<NameFormProps> = ({ initialUser }) => {
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    // Force the spinner on the button to render immediately.
     flushSync(() => {
       setIsSubmitting(true);
     });
@@ -186,7 +185,6 @@ const NameForm: FC<NameFormProps> = ({ initialUser }) => {
       countryPhoneCode,
     } = formValues;
 
-    // Basic field validation.
     if (!name || !fatherLastName || !motherLastName || !governmentId || !nationality || !gender) {
       setErrorMessage("Por favor, complete todos los campos obligatorios");
       setIsSubmitting(false);
@@ -204,7 +202,6 @@ const NameForm: FC<NameFormProps> = ({ initialUser }) => {
       return;
     }
 
-    // Check if data has changed compared to the initial user.
     const hasDataChanged =
       initialUser.name !== name ||
       initialUser.middleName !== middleName ||
@@ -220,7 +217,6 @@ const NameForm: FC<NameFormProps> = ({ initialUser }) => {
     let didNavigate = false;
     try {
       if (hasDataChanged && initialUser.id) {
-        // Convert birthDate to an ISO string if provided; otherwise, omit the field.
         const formattedBirthDate = birthDate ? birthDate.toISOString() : undefined;
         const updateResult = await updateUserAction({
           id: initialUser.id,
@@ -255,7 +251,6 @@ const NameForm: FC<NameFormProps> = ({ initialUser }) => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { id, value } = e.target;
     setFormValues(prev => ({ ...prev, [id]: value }));
-    console.log("Form values:", formValues);
     setErrorMessage(null);
   };
 
@@ -316,17 +311,17 @@ const NameForm: FC<NameFormProps> = ({ initialUser }) => {
                   </div>
                 </div>
                 <h1 className="text-[32px] sm:text-[38px] font-[500] tracking-[-1.5px] leading-[1.2] sm:leading-[52px] mb-[15px]">
-                    <span className="text-[#1d1d1f]">Primero, vamos a </span>
-                    <span
-                      style={{
-                        backgroundImage:
-                          "linear-gradient(to right, #7abaff 1%, #047aff 60%, #0d4ba3 100%)",
-                      }}
-                      className="inline-block text-transparent bg-clip-text"
-                    >
-                      conocerte
-                    </span>
-                  </h1>
+                  <span className="text-[#1d1d1f]">Primero, vamos a </span>
+                  <span
+                    style={{
+                      backgroundImage:
+                        "linear-gradient(to left, #047aff 30%, #0d4ba3 100%)",
+                    }}
+                    className="inline-block text-transparent bg-clip-text"
+                  >
+                    conocerte
+                  </span>
+                </h1>
                 <p className="text-[16px] text-[#1d1d1f] leading-6 mb-5">
                   Necesitamos algunos datos personales para comenzar con tu testamento.
                 </p>
@@ -336,10 +331,12 @@ const NameForm: FC<NameFormProps> = ({ initialUser }) => {
                   </Link>
                   <p className="text-[14px] text-[#000000]">Articulo relacionado</p>
                 </div>
-                <ProgressIndicator currentSection={1} totalSections={5} title="Progreso de la sección" />
               </div>
               <div className="w-full lg:w-3/5">
                 <div className="bg-white rounded-2xl px-4 sm:px-8 md:px-12 py-10 shadow-lg relative">
+                  <div className="mb-8">
+                    <ProgressIndicator currentSection={1} totalSections={4} title="Progreso de la sección" />
+                  </div>
                   <form onSubmit={handleSubmit} className="space-y-4">
                     <div className="space-y-4">
                       <div>

@@ -169,7 +169,7 @@ const PaymentSection: FC<PaymentSectionProps> = ({ onClick, disabled, progress }
         <div className="bg-white rounded-[11px] p-[25px] hover:bg-gradient-to-br hover:from-[#f8faff] hover:to-white transition-all duration-500">
           <div className="flex items-start gap-5 flex-wrap">
             <div className={`bg-gradient-to-br ${disabled ? "from-[#047aff]/70 to-[#3d9bff]/70" : "from-[#047aff] to-[#3d9bff]"} p-[15px] rounded-xl shadow-md group-hover:scale-105 transition-transform duration-300`}>
-              <LockSimple weight="thin" className="text-white w-6 h-6" />
+              <LockSimple weight="regular" className="text-white w-6 h-6" />
             </div>
             <div className="flex-1 min-w-0">
               <div className="mb-5">
@@ -224,7 +224,7 @@ const mainSteps: Step[] = [
     description: "Información para personalizar tu testamento",
     duration: "2-4 minutos",
     route: "/about-yourself/name",
-    icon: <Heart size={32} weight="thin" />,
+    icon: <Heart size={32} weight="regular" />,
   },
   {
     id: "assets",
@@ -233,7 +233,7 @@ const mainSteps: Step[] = [
     description: "Menciona dónde están tus activos",
     duration: "1-4 minutos",
     route: "/account-and-property",
-    icon: <Buildings size={32} weight="thin" />,
+    icon: <Buildings size={32} weight="regular" />,
   },
   {
     id: "inheritance",
@@ -242,7 +242,7 @@ const mainSteps: Step[] = [
     description: "Define a las personas o entidades que heredarán tus bienes",
     duration: "3-5 minutos",
     route: "/estate/introduction",
-    icon: <Coins size={32} weight="thin" />,
+    icon: <Coins size={32} weight="regular" />,
   },
 ];
 
@@ -254,7 +254,7 @@ const optionalSteps: Step[] = [
     description: "Selecciona a la persona o personas encargadas de cumplir tus últimas voluntades",
     duration: "3-5 minutos",
     route: "/executers/introduction",
-    icon: <Users size={32} weight="thin" />,
+    icon: <Users size={32} weight="regular" />,
   },
   {
     id: "guardians",
@@ -263,7 +263,7 @@ const optionalSteps: Step[] = [
     description: "Selecciona a la persona o personas tutoras o guardianas de tus hijos menores",
     duration: "3-5 minutos",
     route: "/guardians/introduction",
-    icon: <Users size={32} weight="thin" />,
+    icon: <Users size={32} weight="regular" />,
   },
   {
     id: "special-gifts",
@@ -272,7 +272,7 @@ const optionalSteps: Step[] = [
     description: "Se conocen como Legados. Define objetos o bienes específicos para personas especiales.",
     duration: "3-5 minutos",
     route: "/special-gifts",
-    icon: <Gift size={32} weight="thin" />,
+    icon: <Gift size={32} weight="regular" />,
   },
   {
     id: "digital-assets",
@@ -281,7 +281,7 @@ const optionalSteps: Step[] = [
     description: "Gestiona tus cuentas y activos en línea",
     duration: "3-5 minutos",
     route: "/digital-asset",
-    icon: <Globe size={32} weight="thin" />,
+    icon: <Globe size={32} weight="regular" />,
   },
 ];
 
@@ -316,12 +316,18 @@ const SummaryPageClient: FC<SummaryPageClientProps> = ({ progressMapping }) => {
       >
         <div className="flex flex-col lg:flex-row gap-[25px]">
           <div className="lg:w-3/5 w-full">
-            <h1 className="text-[28px] sm:text-[46px] font-[500] tracking-[-1.5px] leading-[1.2] sm:leading-[52px] mb-5 break-words">
-              <span className="text-[#1d1d1f]">Hola </span>
-              <span className="bg-gradient-to-r from-[#3d9bff] to-[#047aff] inline-block text-transparent bg-clip-text">
-                {user?.name || "Usuario"}
-              </span>
-            </h1>
+          <h1 className="text-[28px] sm:text-[46px] font-[500] tracking-[-1.5px] leading-[1.2] sm:leading-[52px] mb-5 break-words">
+  <span className="text-[#1d1d1f]">Hola </span>
+  <span
+    style={{
+      backgroundImage: "linear-gradient(to left, #3d9bff, #348aff)",
+    }}
+    className="inline-block text-transparent bg-clip-text"
+  >
+    {user?.name || "Usuario"}
+  </span>
+</h1>
+
             <p className="text-[15px] sm:text-[17px] font-[400] tracking-[-0.1px] leading-[1.3] text-[#1d1d1f] text-start mb-[15px] break-words">
               Te guiamos en cada etapa para asegurar que tu voluntad se refleje con claridad.
             </p>
