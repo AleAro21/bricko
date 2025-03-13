@@ -37,6 +37,8 @@ export default async function PeoplePage() {
       type: cat.type || ''
     }));
 
+    console.log("castegroie metadata", categoriesResponse.categories[0].metadata.subcategories)
+
   return (
     <PeoplePageClient 
       user={user}

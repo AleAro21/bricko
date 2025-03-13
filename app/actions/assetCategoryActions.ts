@@ -8,6 +8,7 @@ export async function getAssetsCategoriesAction(): Promise<GetAssetsCategoriesRe
   try {
     const categoriesResponse = await apiService.getAssetsCategories();
     console.log("categoriesResponse:", categoriesResponse);
+    console.log("categorie metadata", categoriesResponse.categories[0].metadata)
     return categoriesResponse;
 
   } catch (error: any) {

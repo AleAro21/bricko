@@ -96,11 +96,12 @@ export default async function AccountAndPropertyPage() {
       key: cat.name.toLowerCase().replace(/\s+/g, '_'),
       label: prettyNames[cat.name] || cat.name,
       description: cat.description,
-      subcategories: (cat.metadata?.subcategories || []).map(
-        (sub: string) => prettySubcategories[sub] || sub
-      ),
+      subcategories: Array.isArray(cat.metadata)
+        ? cat.metadata.map((sub: string) => prettySubcategories[sub] || sub)
+        : [],
       type: cat.type || ''
     }));
+
 
   // Pass data to the client component
   return (

@@ -53,29 +53,29 @@ export default async function DigitalAssetsPage() {
     "google_drive": "Google Drive",
     "onedrive": "OneDrive",
     "icloud": "iCloud",
-    
+
     // Cryptocurrencies
     "bitcoin": "Bitcoin",
     "ethereum": "Ethereum",
     "litecoin": "Litecoin",
-    
+
     // Domain Names
     "godaddy": "GoDaddy",
     "namecheap": "Namecheap",
     "google_domains": "Google Domains",
-    
+
     // Email Accounts
     "gmail": "Gmail",
     "outlook": "Outlook",
     "yahoo": "Yahoo",
     "protonmail": "ProtonMail",
-    
+
     // Gaming Accounts
     "steam": "Steam",
     "xbox": "Xbox",
     "playstation": "PlayStation",
     "nintendo": "Nintendo",
-    
+
     // Other Digital Assets
     "ebooks": "Libros electrónicos",
     "online_courses": "Cursos en línea",
@@ -83,16 +83,19 @@ export default async function DigitalAssetsPage() {
   };
 
   // Map categories to digital asset options (filter only for digital)
-  const assetOptions: AssetOption[] = categoriesResponse.categories
-    .filter(cat => cat.type === 'digital')
-    .map(cat => ({
+  const assetOptions = categoriesResponse.categories
+    .filter((cat) => cat.type === 'physical')
+    .map((cat) => ({
       id: cat.id,
       key: cat.name.toLowerCase().replace(/\s+/g, '_'),
       label: prettyNames[cat.name] || cat.name,
       description: cat.description,
-      subcategories: (cat.metadata?.subcategories || []).map((sub: string) => prettySubcategories[sub] || sub),
-      type: cat.type || 'digital'
+      subcategories: Array.isArray(cat.metadata)
+        ? cat.metadata.map((sub: string) => prettySubcategories[sub] || sub)
+        : [],
+      type: cat.type || ''
     }));
+
 
   // Filter user's assets to only include digital assets
   const digitalAssets = assets.filter(asset =>
