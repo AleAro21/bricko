@@ -257,11 +257,13 @@ export interface AssetOption {
   type: string; 
 }
 
+
 export interface Executor {
   id: string;
   testamentHeaderId: string;
-  type: string; // e.g. "Contact"
   contactId: string;
+  type: string;
+  priorityOrder: number;
   createdAt: string;
   updatedAt: string;
 }

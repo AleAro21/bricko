@@ -21,22 +21,14 @@ import {
   PaymentIntention,
   SubscriptionCatalogResponse,
   UserSubscriptionsResponse,
-  UserSubscription
+  UserSubscription,
+  Executor
 } from '@/types';
 
 import { cookies } from 'next/headers';
 import { fetchAuthSession } from "aws-amplify/auth";
 
 const API_BASE_URL = "https://51lyy4n8z0.execute-api.us-east-2.amazonaws.com/dev";
-
-export interface Executor {
-  id: string;
-  testamentHeaderId: string;
-  type: string;
-  contactId: string;
-  createdAt: string;
-  updatedAt: string;
-}
 
 export class APIService {
   private static instance: APIService;
@@ -458,52 +450,50 @@ export class APIService {
    *   "type": "Contact"
    * }
    */
-  async createExecutor(testamentHeaderId: string, contactId: string, type: string): Promise<Executor> {
-    const body = { testamentHeaderId, contactId, type };
-    const response = await this.fetchWithAuth('/wills/executors', {
+  async createExecutor(
+    testamentHeaderId: string, 
+    contactId: string, 
+    type: string,
+    priorityOrder: number
+  ): Promise<Executor> {
+    const body = { 
+      contactId, 
+      type,
+      priorityOrder 
+    };
+    const response = await this.fetchWithAuth(`/wills/testaments/${testamentHeaderId}/executors`, {
       method: 'POST',
       body: JSON.stringify(body)
     });
     console.log('Create Executor Response:', response);
     return response.response;
   }
-
-  /**
-   * Retrieve an executor by its ID.
-   * GET wills/executors/{{execId}}
-   */
-
-  async getExecutorById(execId: string): Promise<Executor> {
-    const response = await this.fetchWithAuth(`/wills/executors/${execId}`);
-    console.log('Get Executor By Id Response:', response);
-    return response
-  }
-
+  
   async getAllExecutors(userId: string): Promise<Executor[]> {
     const response = await this.fetchWithAuth(`/wills/${userId}/executors`);
     console.log('Get All Executors Response:', response);
-    const executors = response.response.executors || response.response; // adjust based on your API response structure
+    const executors = response.response.executors || response.response;
     return Array.isArray(executors) ? executors : [executors];
   }
-
-
-  /**
-   * Update an existing executor.
-   * PUT wills/executors/{{execId}}
-   */
-  async updateExecutor(execId: string, data: { testamentHeaderId: string; contactId: string; type: string }): Promise<Executor> {
-    const response = await this.fetchWithAuth(`/wills/executors/${execId}`, {
+  
+  async getExecutorById(execId: string): Promise<Executor> {
+    const response = await this.fetchWithAuth(`/wills/executors/${execId}`);
+    console.log('Get Executor By Id Response:', response);
+    return response.response;
+  }
+  
+  async updateExecutor(
+    execId: string, 
+    data: { contactId: string; type: string; priorityOrder: number }
+  ): Promise<Executor> {
+    const response = await this.fetchWithAuth(`/wills/testaments/executors/${execId}`, {
       method: 'PUT',
       body: JSON.stringify(data)
     });
     console.log('Update Executor Response:', response);
     return response.response;
   }
-
-  /**
-   * Delete an executor.
-   * DELETE wills/executors/{{execId}}
-   */
+  
   async deleteExecutor(execId: string): Promise<void> {
     await this.fetchWithAuth(`/wills/executors/${execId}`, {
       method: 'DELETE'

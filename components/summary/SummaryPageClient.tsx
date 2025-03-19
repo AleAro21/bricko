@@ -383,7 +383,7 @@ const SummaryPageClient: FC<SummaryPageClientProps> = ({ progressMapping }) => {
             {optionalSteps.map((step) => {
               const isOptionalDisabled = !mainSteps.every((s) => getStepProgress(s.id) === 100);
               const handleClick = () => {
-                if (!isOptionalDisabled) {
+                if (isOptionalDisabled) {
                   alert("Completa todos los pasos principales primero");
                 } else {
                   router.push(step.route);

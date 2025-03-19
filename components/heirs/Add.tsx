@@ -131,7 +131,7 @@ const Add: FC<AddProps> = ({
       notes: '',
       governmentId,
       gender,
-      birthDate, // Add birthdate to the data
+      birthDate: new Date(birthDate).toISOString(),
     };
 
     try {

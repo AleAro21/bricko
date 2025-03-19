@@ -2,6 +2,22 @@
 
 import { FC, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import {
+  DndContext,
+  closestCenter,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+  DragEndEvent
+} from '@dnd-kit/core';
+import {
+  arrayMove,
+  SortableContext,
+  sortableKeyboardCoordinates,
+  verticalListSortingStrategy,
+} from '@dnd-kit/sortable';
+import { SortableExecutor } from './SortableExecutor';
 import DashboardLayout from "@/components/common/DashboardLayout";
 import Add, { ExecutorData } from "@/app/executers/choose/Add";
 import { motion } from 'framer-motion';
@@ -10,11 +26,10 @@ import Link from "next/link";
 import Spinner from "@/components/reusables/Spinner";
 import { Contact, Will, Executor } from '@/types';
 import { useUser } from "@/context/UserContext";
-import { createExecutorAction } from '@/app/actions/executorActions';
+import { createExecutorAction, updateExecutorAction } from '@/app/actions/executorActions';
 import { apiService } from '@/app/apiService';
 import { flushSync } from 'react-dom';
 
-// Helper: Map contact's relation to a valid executor type.
 const mapRelationToExecutorType = (relation: string): string => {
     const r = relation.toLowerCase();
     const familyRelations = ["sibling", "child", "spouse", "parent", "albacea"];
@@ -27,7 +42,7 @@ const mapRelationToExecutorType = (relation: string): string => {
 };
 
 interface ChooseExecutorsPageClientProps {
-    user: any; // Replace with your proper User type
+    user: any;
     contacts: Contact[];
     testament: Will | null;
     executors: Executor[];
@@ -40,8 +55,6 @@ const ChooseExecutorsPageClient: FC<ChooseExecutorsPageClientProps> = ({
     executors: initialExecutors,
 }) => {
     const router = useRouter();
-
-    // Initialize state from props.
     const [executors, setExecutors] = useState<Executor[]>(initialExecutors);
     const [contacts, setContacts] = useState<Contact[]>(initialContacts);
     const [testament, setTestament] = useState<Will | null>(initialTestament);
@@ -49,7 +62,13 @@ const ChooseExecutorsPageClient: FC<ChooseExecutorsPageClientProps> = ({
     const [loading, setLoading] = useState<boolean>(false);
     const [showModal, setShowModal] = useState<boolean>(false);
 
-    // Toggle selection for existing contacts.
+    const sensors = useSensors(
+        useSensor(PointerSensor),
+        useSensor(KeyboardSensor, {
+            coordinateGetter: sortableKeyboardCoordinates,
+        })
+    );
+
     const toggleContactSelection = (contactId: string) => {
         setSelectedContactIds((prev) =>
             prev.includes(contactId)
@@ -58,19 +77,57 @@ const ChooseExecutorsPageClient: FC<ChooseExecutorsPageClientProps> = ({
         );
     };
 
-    // Compute available contacts: those not already linked as executors.
     const availableContacts = contacts.filter(
         (c) => !executors.some((e) => e.contactId === c.id)
     );
 
-    // Handler for adding a new executor via the Add modal.
+    const handleDragEnd = async (event: DragEndEvent) => {
+        const { active, over } = event;
+        
+        if (!over || active.id === over.id) {
+            return;
+        }
+
+        const oldIndex = executors.findIndex(exec => exec.id === active.id);
+        const newIndex = executors.findIndex(exec => exec.id === over.id);
+
+        const updatedExecutors = arrayMove(executors, oldIndex, newIndex);
+        
+        // Update priority orders
+        const reorderedExecutors = updatedExecutors.map((executor, index) => ({
+            ...executor,
+            priorityOrder: index + 1
+        }));
+
+        setExecutors(reorderedExecutors);
+
+        // Update the priority orders in the backend
+        try {
+            for (const executor of reorderedExecutors) {
+                const result = await updateExecutorAction(executor.id, {
+                    contactId: executor.contactId,
+                    type: executor.type,
+                    priorityOrder: executor.priorityOrder
+                });
+                
+                if (!result.success) {
+                    throw new Error(result.error || 'Failed to update executor');
+                }
+            }
+        } catch (error) {
+            console.error('Error updating executor priorities:', error);
+            alert('Error al actualizar el orden de los albaceas');
+            // Revert the state if update fails
+            setExecutors(executors);
+        }
+    };
+
     const handleAddExecutor = async (executorData: ExecutorData): Promise<void> => {
         if (!user?.id || !testament) {
             alert("No se encontró el usuario o testamento.");
             return;
         }
         try {
-            // Create a new contact.
             const newContact = await apiService.createContact(user.id, {
                 name: executorData.name,
                 fatherLastName: "",
@@ -85,15 +142,22 @@ const ChooseExecutorsPageClient: FC<ChooseExecutorsPageClientProps> = ({
                 governmentId: "",
                 gender: "",
             });
-            console.log("New contact created:", newContact);
+            
             const executorType = mapRelationToExecutorType(newContact.relationToUser);
-            // Call the server action to create the executor.
-            const executorResult = await createExecutorAction(testament.id!, newContact.id!, executorType);
+            const nextPriority = executors.length + 1;
+            
+            const executorResult = await createExecutorAction(
+                testament.id!, 
+                newContact.id!, 
+                executorType,
+                nextPriority
+            );
+            
             if (!executorResult.success || !executorResult.executor) {
                 throw new Error(executorResult.error || "Error creating executor");
             }
+            
             const newExecutor = executorResult.executor;
-            console.log("New executor created:", newExecutor);
             setExecutors((prev) => [...prev, newExecutor]);
             setContacts((prev) => [...prev, newContact]);
         } catch (error) {
@@ -102,7 +166,6 @@ const ChooseExecutorsPageClient: FC<ChooseExecutorsPageClientProps> = ({
         }
     };
 
-    // Handler for saving executors based on selected existing contacts.
     const handleSaveExecutors = async (): Promise<void> => {
         if (!user?.id || !testament) {
             alert("No se encontró usuario o testamento.");
@@ -113,22 +176,29 @@ const ChooseExecutorsPageClient: FC<ChooseExecutorsPageClientProps> = ({
         });
         let didNavigate = false;
         try {
-            for (const contactId of selectedContactIds) {
+            const selectedContactsWithIndices = selectedContactIds.map((id, index) => ({ id, index }));
+            
+            for (const { id: contactId, index } of selectedContactsWithIndices) {
                 if (executors.some((e) => e.contactId === contactId)) continue;
                 const contact = contacts.find((c) => c.id === contactId);
                 if (!contact) continue;
+                
                 const executorType = mapRelationToExecutorType(contact.relationToUser);
-                const execResult = await createExecutorAction(testament.id!, contact.id!, executorType);
+                const nextPriority = executors.length + index + 1;
+                
+                const execResult = await createExecutorAction(
+                    testament.id!, 
+                    contactId,
+                    executorType,
+                    nextPriority
+                );
+                
                 if (!execResult.success || !execResult.executor) {
                     console.error("Error creating executor for contact:", contact);
-                    continue; // or alert the user
+                    continue;
                 }
-                console.log("Created executor for contact:", execResult.executor);
-                setExecutors((prev) =>
-                    prev.map((executor) => {
-                        return { ...executor, modified: true } as Executor;
-                    }).filter((item): item is Executor => Boolean(item))
-                );
+                
+                setExecutors((prev) => [...prev, execResult.executor!]);
             }
             router.push("/summary?completed=executors");
             didNavigate = true;
@@ -160,7 +230,7 @@ const ChooseExecutorsPageClient: FC<ChooseExecutorsPageClientProps> = ({
                     <div className="max-w-6xl mx-auto px-4 sm:px-5 py-12">
                         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-24">
                             <div className="space-y-8">
-                                {/* Header */}
+                                {/* Header section */}
                                 <div>
                                     <div className="flex items-center gap-2 mb-2.5">
                                         <div className="inline-flex items-center h-[32px] bg-[#047aff] bg-opacity-10 px-[12px] py-[6px] rounded-md">
@@ -180,45 +250,50 @@ const ChooseExecutorsPageClient: FC<ChooseExecutorsPageClientProps> = ({
                                              albacea?
                                         </span>
                                     </h1>
-
                                     <p className="text-[16px] text-[#1d1d1f] leading-6 mb-4">
                                         Seleccione contactos de confianza para administrar su patrimonio.
                                     </p>
+                                    <div className="bg-blue-50 p-4 rounded-lg mt-4">
+                                        <p className="text-sm text-blue-700">
+                                            <strong>Nota sobre el orden de prioridad:</strong><br />
+                                            El orden de los albaceas determina su prioridad. El primer albacea (Prioridad 1) es el principal,
+                                            los siguientes actuarán como suplentes en caso de que el albacea principal no pueda cumplir con sus funciones.
+                                            Puede arrastrar y soltar los albaceas para cambiar su orden de prioridad.
+                                        </p>
+                                    </div>
                                 </div>
 
-                                {/* Display executors already created */}
+                                {/* Display executors with drag and drop */}
                                 <div>
                                     <h2 className="text-[22px] font-[500] text-[#1d1d1f] mb-4">
                                         Albaceas agregados
                                     </h2>
                                     {executors.length > 0 ? (
                                         <div className="bg-white rounded-2xl shadow-md p-6 mb-4">
-                                            <div className="space-y-4">
-                                                {executors.map((executor) => {
-                                                    const contact = contacts.find(c => c.id === executor.contactId);
-                                                    return (
-                                                        <div key={executor.id} className="border-b border-gray-100 pb-4 last:border-b-0 last:pb-0">
-                                                            <div className="flex justify-between items-center">
-                                                                <div>
-                                                                    <h3 className="text-[17px] font-[500] text-[#1d1d1f]">
-                                                                        {contact ? contact.name : executor.contactId}
-                                                                    </h3>
-                                                                    <p className="text-[14px] text-gray-500">{executor.type}</p>
-                                                                </div>
-                                                                <div>
-                                                                    <input
-                                                                        type="checkbox"
-                                                                        checked
-                                                                        className="h-6 w-6 rounded border-gray-300 text-[#047aff] focus:ring-[#047aff]"
-                                                                        aria-label="Seleccionar albacea"
-                                                                        readOnly
-                                                                    />
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    );
-                                                })}
-                                            </div>
+                                            <DndContext
+                                                sensors={sensors}
+                                                collisionDetection={closestCenter}
+                                                onDragEnd={handleDragEnd}
+                                            >
+                                                <SortableContext
+                                                    items={executors.map(e => e.id)}
+                                                    strategy={verticalListSortingStrategy}
+                                                >
+                                                    <div className="space-y-4">
+                                                        {executors.map((executor, index) => {
+                                                            const contact = contacts.find(c => c.id === executor.contactId);
+                                                            return (
+                                                                <SortableExecutor
+                                                                    key={executor.id}
+                                                                    executor={executor}
+                                                                    contact={contact}
+                                                                    index={index}
+                                                                />
+                                                            );
+                                                        })}
+                                                    </div>
+                                                </SortableContext>
+                                            </DndContext>
                                         </div>
                                     ) : (
                                         <p className="text-gray-500">No se han agregado albaceas aún.</p>
@@ -252,25 +327,6 @@ const ChooseExecutorsPageClient: FC<ChooseExecutorsPageClientProps> = ({
                                     )}
                                 </div>
 
-                                {/* Button to open the Add modal */}
-                                <div
-                                    onClick={() => setShowModal(true)}
-                                    className="bg-white rounded-2xl shadow-md hover:shadow-lg transition-all cursor-pointer overflow-hidden"
-                                >
-                                    <div className="flex items-center justify-center gap-2 py-8">
-                                        <svg
-                                            xmlns="http://www.w3.org/2000/svg"
-                                            viewBox="0 0 448 512"
-                                            width="24"
-                                            height="24"
-                                            className="fill-[#047aff]"
-                                        >
-                                            <path d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z" />
-                                        </svg>
-                                        <span className="text-[#047aff] font-[500]">Agregar Albacea</span>
-                                    </div>
-                                </div>
-
                                 {/* Save executors button */}
                                 <div className="pt-6 flex justify-end">
                                     <PrimaryButton onClick={handleSaveExecutors} disabled={loading}>
@@ -279,30 +335,27 @@ const ChooseExecutorsPageClient: FC<ChooseExecutorsPageClientProps> = ({
                                 </div>
                             </div>
 
-                            {/* Optional summary panel */}
+                            {/* Summary panel with priority */}
                             <div className="bg-white rounded-2xl shadow-md p-6">
                                 <h2 className="text-[22px] font-[500] text-[#1d1d1f] mb-4">Resumen de Albaceas</h2>
                                 {executors.length > 0 ? (
                                     <div className="space-y-6">
-                                        {executors.map((executor) => {
+                                        {executors.map((executor, index) => {
                                             const contact = contacts.find(c => c.id === executor.contactId);
                                             return (
-                                                <div key={executor.id} className="flex items-center gap-3">
-                                                    <div className="flex-shrink-0 w-6 h-6 rounded-full bg-[#047aff] flex items-center justify-center">
-                                                        <svg
-                                                            className="w-3.5 h-3.5 text-white"
-                                                            fill="none"
-                                                            viewBox="0 0 24 24"
-                                                            stroke="currentColor"
-                                                        >
-                                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
-                                                        </svg>
+                                                <div key={executor.id} className="flex items-center gap-4">
+                                                    <div className="flex-shrink-0 w-8 h-8 bg-[#047aff] rounded-full flex items-center justify-center">
+                                                        <span className="text-white font-medium">
+                                                            {index + 1}
+                                                        </span>
                                                     </div>
                                                     <div>
                                                         <p className="text-[16px] font-[500] text-[#1d1d1f]">
                                                             {contact ? contact.name : executor.contactId}
                                                         </p>
-                                                        <p className="text-[14px] text-gray-500">{executor.type}</p>
+                                                        <p className="text-[14px] text-gray-500">
+                                                            {executor.type} • {index === 0 ? 'Albacea Principal' : `Suplente #${index}`}
+                                                        </p>
                                                     </div>
                                                 </div>
                                             );
@@ -313,13 +366,11 @@ const ChooseExecutorsPageClient: FC<ChooseExecutorsPageClientProps> = ({
                                 )}
                             </div>
                         </div>
-
                     </div>
                 </motion.div>
             </DashboardLayout>
         </>
     );
-}
-
+};
 
 export default ChooseExecutorsPageClient;
