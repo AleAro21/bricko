@@ -45,7 +45,7 @@ const PeoplePageClient: FC<PeoplePageClientProps> = ({
     }))
   );
 
-  const [localAssets, setLocalAssets] = useState<any[]>(assets);
+  const [localAssets, setLocalAssets] = useState<any[]>(assets || []);
   const [localTestament, setLocalTestament] = useState<any>(testament);
   const [distribution, setDistribution] = useState<{ [assetId: string]: AssetDistribution }>({});
   const [selectedAssetId, setSelectedAssetId] = useState<string>('');

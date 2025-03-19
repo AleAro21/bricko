@@ -1,13 +1,13 @@
-export const dynamic = "force-dynamic";
 import { getUserAction } from '@/app/actions/userActions';
 import { getUserAssetsAction } from '@/app/actions/assetActions';
-import { getAllWillsAction, createWillAction, updateWillAction } from '@/app/actions/willActions';
+import { getAllWillsAction } from '@/app/actions/willActions';
 import { getAssetsCategoriesAction } from '@/app/actions/assetCategoryActions';
 import { getContactsAction } from '@/app/actions/contactActions';
 import AccountAndPropertyPageClient from '@/components/account-and-property/AccountAndPropertyPageClient';
 import type { UserAsset, Will, Contact } from '@/types';
-import { WillStatus } from '@/types';
 import RedirectLoader from '@/components/reusables/RedirectLoader';
+
+export const dynamic = "force-dynamic";
 
 export default async function AccountAndPropertyPage() {
   const userResult = await getUserAction();
@@ -22,25 +22,18 @@ export default async function AccountAndPropertyPage() {
   // Get user's contacts
   const contacts: Contact[] = await getContactsAction(user.id);
 
-  // Load existing wills; if none, create and then update it to ACTIVE.
+  // Load existing wills; if none exist, set testament to null.
   const wills = await getAllWillsAction(user.id);
   let testament: Will | null = null;
   if (wills.length > 0) {
     testament = wills[0];
     console.log("Testament already exists:", testament);
   } else {
-    const newWillData = { legalAdvisor: "", notes: "", terms: "" };
-    const newWill = await createWillAction(user.id, newWillData);
-    console.log("Created new will:", newWill);
-    const updateData = { status: WillStatus.Active } as const;
-    testament = await updateWillAction(newWill.id as string, updateData);
-    console.log("Updated will to active:", testament);
+    console.log("No testament exists; will be created after inheritance type selection.");
   }
 
-  // Load asset categories
+  // Load asset categories and map them
   const categoriesResponse = await getAssetsCategoriesAction();
-
-  // Map categories to AssetOption[]
   const prettyNames: Record<string, string> = {
     "cloud_storage": "Almacenamiento en la nube",
     "cryptocurrencies": "Criptomonedas",
@@ -102,8 +95,6 @@ export default async function AccountAndPropertyPage() {
       type: cat.type || ''
     }));
 
-
-  // Pass data to the client component
   return (
     <AccountAndPropertyPageClient
       user={user}

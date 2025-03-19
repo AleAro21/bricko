@@ -27,17 +27,17 @@ export default async function PeoplePage() {
   const categoriesResponse = await getAssetsCategoriesAction();
   // Map raw categories into AssetOption objects (apply your mapping as needed)
   const assetOptions: AssetOption[] = categoriesResponse.categories
-    .filter((cat: AssetCategory) => cat.type === 'physical')
-    .map((cat: AssetCategory) => ({
-      id: cat.id,
-      key: cat.name.toLowerCase().replace(/\s+/g, '_'),
-      label: cat.name, // You can add your pretty mapping here if needed
-      description: cat.description,
-      subcategories: cat.metadata.subcategories,
-      type: cat.type || ''
-    }));
-
-    console.log("castegroie metadata", categoriesResponse.categories[0].metadata.subcategories)
+  .filter((cat: AssetCategory) => cat.type === 'physical')
+  .map((cat: AssetCategory) => ({
+    id: cat.id,
+    key: cat.name.toLowerCase().replace(/\s+/g, '_'),
+    label: cat.name,
+    description: cat.description,
+    subcategories: Array.isArray(cat.metadata) ? cat.metadata : [],
+    type: cat.type || ''
+  }));
+  console.log('assets prop:', assets);
+  console.log("category metadata", categoriesResponse.categories[0].metadata); // Logs the array
 
   return (
     <PeoplePageClient 

@@ -1,4 +1,3 @@
-// app/actions/willActions.ts
 'use server';
 
 import { apiService } from '@/app/apiService';
@@ -17,6 +16,10 @@ export async function getAllWillsAction(userId: string): Promise<Will[]> {
 
 export async function createWillAction(userId: string, willData: CreateWillRequest): Promise<Will> {
   try {
+    // Ensure inheritanceType is provided (should be one of "HP", "HL", or "HU")
+    if (!willData.inheritanceType) {
+      throw new Error("inheritanceType is required in the payload.");
+    }
     const newWill = await apiService.createWill(userId, willData);
     return newWill;
   } catch (error: any) {

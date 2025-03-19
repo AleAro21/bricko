@@ -1,6 +1,7 @@
 // app/about-yourself/name/page.tsx
 export const dynamic = "force-dynamic";
 import { getUserAction } from '@/app/actions/userActions';
+import RedirectLoader from '@/components/reusables/RedirectLoader';
 import NameForm from '@/components/user/NameForm';
 
 
@@ -13,7 +14,7 @@ export default async function NamePage() {
   
   if (!userResponse.success || !userResponse.user) {
     // Optionally, redirect or render an error message.
-    return <div>No se encontró el usuario. Por favor, inicia sesión.</div>;
+    return <RedirectLoader />;
     
   }
 

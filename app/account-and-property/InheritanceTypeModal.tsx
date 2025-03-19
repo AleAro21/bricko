@@ -1,12 +1,12 @@
 import { FC } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useRouter } from 'next/navigation';
 import { Users, User, HandPointing } from 'phosphor-react';
+import { useRouter } from 'next/navigation';
 
 interface InheritanceTypeModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSelect: (type: 'manual' | 'legal' | 'universal') => void;
+  onSelect: (type: "HP" | "HL" | "HU") => void;
 }
 
 const InheritanceTypeModal: FC<InheritanceTypeModalProps> = ({
@@ -23,21 +23,21 @@ const InheritanceTypeModal: FC<InheritanceTypeModalProps> = ({
 
   const options = [
     {
-      type: 'legal',
+      type: "HL",
       title: 'Herederos legales',
       description:
         'Distribuye tus bienes según la ley sin definir beneficiarios ni activos. Una opción tradicional y automática.',
       icon: <Users size={24} weight="regular" color="#047aff" />,
     },
     {
-      type: 'universal',
+      type: "HU",
       title: 'Heredero universal',
       description:
         'Asigna todos los activos a un único heredero. Centraliza la herencia para una distribución simplificada.',
       icon: <User size={24} weight="regular" color="#047aff" />,
     },
     {
-      type: 'manual',
+      type: "HP",
       title: 'Carga manual',
       description:
         'Personaliza la asignación de cada bien y beneficiario. Ideal para estructuras patrimoniales complejas.',
@@ -54,6 +54,7 @@ const InheritanceTypeModal: FC<InheritanceTypeModalProps> = ({
           exit={{ opacity: 0 }}
           className="fixed inset-0 flex items-center justify-center z-50 p-4 sm:p-6"
         >
+          {/* Clicking the overlay will just call onClose */}
           <div className="fixed inset-0 bg-black/50" onClick={handleClose} />
           <motion.div
             initial={{ scale: 0.95, opacity: 0 }}
@@ -96,9 +97,7 @@ const InheritanceTypeModal: FC<InheritanceTypeModalProps> = ({
                   key={option.type}
                   whileHover={{ scale: 1.02 }}
                   className="bg-white rounded-xl p-4 sm:p-6 cursor-pointer border border-gray-200 hover:border-[#047aff] hover:shadow-lg transition-all relative"
-                  onClick={() =>
-                    onSelect(option.type as 'manual' | 'legal' | 'universal')
-                  }
+                  onClick={() => onSelect(option.type as "HP" | "HL" | "HU")}
                 >
                   <div className="absolute top-2 right-2 sm:top-4 sm:right-4">
                     <span className="w-5 h-5 inline-flex items-center justify-center rounded-full border border-[#047aff] text-[#047aff] text-sm cursor-help">

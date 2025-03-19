@@ -306,8 +306,10 @@ export class APIService {
   async getUserAssets(userId: string): Promise<UserAsset[]> {
     const response = await this.fetchWithAuth(`/wills/user/${userId}/assets`);
     console.log('API Response:', response);
-    return response.response;
+    // Assuming the API response structure is as logged:
+    return response.response.assets;
   }
+  
 
   async getUserAsset(userId: string, assetId: string): Promise<UserAsset> {
     const response = await this.fetchWithAuth(`/wills/asset/${assetId}`);

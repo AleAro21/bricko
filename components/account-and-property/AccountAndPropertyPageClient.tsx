@@ -8,12 +8,12 @@ import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from 'recharts';
 import { motion } from 'framer-motion';
 import PrimaryButton from '@/components/reusables/PrimaryButton';
 import Link from 'next/link';
-import { Baby, Users, Dog, Heart, UserPlus } from 'phosphor-react';
-import { createUserAssetAction } from '@/app/actions/assetActions';
 import { flushSync } from 'react-dom';
 import Spinner from '../reusables/Spinner';
 import type { UserAsset, AssetOption, User, Will, Contact } from '@/types';
 import InheritanceTypeModal from '@/app/account-and-property/InheritanceTypeModal';
+import { createWillAction } from '@/app/actions/willActions';
+import { createUserAssetAction } from '@/app/actions/assetActions';
 
 const COLORS = [
   '#0088FE',
@@ -76,12 +76,12 @@ const CustomTooltip: FC<CustomTooltipProps> = ({ active, payload }) => {
   return null;
 };
 
-type InheritanceType = 'manual' | 'legal' | 'universal';
+type InheritanceType = "HP" | "HL" | "HU";
 
 interface AccountAndPropertyPageClientProps {
   user: User;
   assets: UserAsset[];
-  testament: Will;
+  testament: Will | null;
   assetOptions: AssetOption[];
   contacts: Contact[];
 }
@@ -89,7 +89,7 @@ interface AccountAndPropertyPageClientProps {
 const AccountAndPropertyPageClient: FC<AccountAndPropertyPageClientProps> = ({
   user,
   assets: initialAssets,
-  testament,
+  testament: initialTestament,
   assetOptions,
   contacts,
 }) => {
@@ -97,16 +97,30 @@ const AccountAndPropertyPageClient: FC<AccountAndPropertyPageClientProps> = ({
   const [assets, setAssets] = useState<UserAsset[]>(initialAssets);
   const [showModal, setShowModal] = useState<boolean>(false);
   const [isSaving, setIsSaving] = useState(false);
-  const [inheritanceType, setInheritanceType] = useState<InheritanceType>('manual');
+  // State now holds backend codes ("HP", "HL", or "HU")
+  const [inheritanceType, setInheritanceType] = useState<InheritanceType>("HP");
   const [selectedLegalHeirId, setSelectedLegalHeirId] = useState<string>('');
   const [showInheritanceModal, setShowInheritanceModal] = useState(true);
+  const [testament, setTestament] = useState<Will | null>(initialTestament);
 
-  const handleInheritanceTypeSelect = (type: InheritanceType) => {
-    setInheritanceType(type);
+  // For non-universal modes ("HP" or "HL"), create the testament immediately on selection.
+  const handleInheritanceTypeSelect = async (selectedType: "HP" | "HL" | "HU") => {
+    setInheritanceType(selectedType);
     setShowInheritanceModal(false);
 
-    if (type === 'legal') {
-      router.push('/summary');
+    // For universal mode ("HU"), wait until the universal heir is chosen in the UI.
+    if (selectedType !== "HU" && !testament) {
+      const newWillData = {
+        terms: "This testament adheres to the laws of the state of California and includes all specified assets.",
+        legalAdvisor: "John Smith - Senior Legal Advisor",
+        inheritanceType: selectedType,
+      };
+      try {
+        const newWill = await createWillAction(user.id, newWillData);
+        setTestament(newWill);
+      } catch (error: any) {
+        console.error("Error creating testament on selection:", error);
+      }
     }
   };
 
@@ -126,10 +140,24 @@ const AccountAndPropertyPageClient: FC<AccountAndPropertyPageClientProps> = ({
     });
     let didNavigate = false;
     try {
-      if (inheritanceType === 'universal' && !selectedLegalHeirId) {
+      // For universal mode, ensure a universal heir is selected.
+      if (inheritanceType === 'HU' && !selectedLegalHeirId) {
         alert("Por favor selecciona un heredero universal");
         setIsSaving(false);
         return;
+      }
+      
+      // Fallback: If the testament was not created earlier, create it now.
+      if (!testament) {
+        const newWillData = {
+          terms: "This testament adheres to the laws of the state of California and includes all specified assets.",
+          legalAdvisor: "John Smith - Senior Legal Advisor",
+          inheritanceType,
+          // Only include universalHeirId when inheritanceType is HU.
+          ...(inheritanceType === "HU" && { universalHeirId: selectedLegalHeirId }),
+        };
+        const newWill = await createWillAction(user.id, newWillData);
+        setTestament(newWill);
       }
       
       router.push("/summary?completed=account-and-property");
@@ -196,8 +224,8 @@ const AccountAndPropertyPageClient: FC<AccountAndPropertyPageClientProps> = ({
                 </p>
               </div>
 
-              {/* Add Asset Button - Only show if using manual mode */}
-              {inheritanceType === 'manual' && (
+              {/* Add Asset Button – visible only in HP (manual) mode */}
+              {inheritanceType === 'HP' && (
                 <div
                   onClick={() => setShowModal(true)}
                   className="bg-white rounded-2xl shadow-md hover:shadow-lg transition-all cursor-pointer overflow-hidden"
@@ -213,8 +241,8 @@ const AccountAndPropertyPageClient: FC<AccountAndPropertyPageClientProps> = ({
                 </div>
               )}
 
-              {/* Assets List - Only show if using manual mode */}
-              {inheritanceType === 'manual' && assets.length > 0 && (
+              {/* Assets List – only shown in HP (manual) mode */}
+              {inheritanceType === 'HP' && assets.length > 0 && (
                 <div className="bg-white rounded-2xl shadow-md overflow-hidden">
                   <div className="p-6">
                     <h2 className="text-[22px] font-medium text-[#1d1d1f] mb-4">Activos</h2>
@@ -243,8 +271,8 @@ const AccountAndPropertyPageClient: FC<AccountAndPropertyPageClientProps> = ({
                 </div>
               )}
 
-              {/* Contact Selection for Universal Heir */}
-              {inheritanceType === 'universal' && (
+              {/* Contact Selection for Universal Heir (HU) */}
+              {inheritanceType === 'HU' && (
                 <div className="bg-white rounded-2xl shadow-md p-6">
                   <h2 className="text-[22px] font-medium text-[#1d1d1f] mb-6">Selecciona el heredero universal</h2>
                   {contacts.length > 0 ? (
@@ -297,15 +325,15 @@ const AccountAndPropertyPageClient: FC<AccountAndPropertyPageClientProps> = ({
               <div className="pt-6 flex justify-end">
                 <PrimaryButton 
                   onClick={handleSave} 
-                  disabled={isSaving || (inheritanceType === 'universal' && !selectedLegalHeirId)}
+                  disabled={isSaving || (inheritanceType === 'HU' && !selectedLegalHeirId)}
                 >
                   {isSaving ? <Spinner size={24} /> : "Guardar y continuar"}
                 </PrimaryButton>
               </div>
             </div>
 
-            {/* Assets Distribution Chart - Only show if using manual mode */}
-            {inheritanceType === 'manual' && assets.length > 0 && (
+            {/* Assets Distribution Chart – visible only in HP (manual) mode */}
+            {inheritanceType === 'HP' && assets.length > 0 && (
               <div className="bg-white rounded-2xl shadow-md p-6 lg:sticky lg:top-6">
                 <h2 className="text-[22px] font-medium text-[#1d1d1f] mb-6">Distribución de Activos</h2>
                 <div className="w-full aspect-square max-h-[400px]">

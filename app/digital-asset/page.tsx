@@ -1,7 +1,7 @@
 export const dynamic = "force-dynamic";
 import { getUserAction } from '@/app/actions/userActions';
 import { getUserAssetsAction } from '@/app/actions/assetActions';
-import { getAllWillsAction, createWillAction, updateWillAction } from '@/app/actions/willActions';
+import { getAllWillsAction} from '@/app/actions/willActions';
 import { getAssetsCategoriesAction } from '@/app/actions/assetCategoryActions';
 import DigitalAssetsPageClient from '@/components/digital-assets/DigitalAssetsPageClient';
 import type { UserAsset, Will, AssetOption } from '@/types';
@@ -26,10 +26,7 @@ export default async function DigitalAssetsPage() {
     console.log("Testament already exists:", testament);
   } else {
     const newWillData = { legalAdvisor: "", notes: "", terms: "" };
-    const newWill = await createWillAction(user.id, newWillData);
-    console.log("Created new will:", newWill);
     const updateData = { status: WillStatus.Active } as const;
-    testament = await updateWillAction(newWill.id as string, updateData);
     console.log("Updated will to active:", testament);
   }
 
