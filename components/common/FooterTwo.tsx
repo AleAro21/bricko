@@ -1,6 +1,6 @@
 import React from 'react';
 import Image from 'next/image';
-import logo from '../../assets/greylogo.png';
+import logo from '../../assets/greylogo.jpeg';
 import GradientCanvas from '../reusables/GradientCanvas';
 
 interface FooterTwoLink {
@@ -34,7 +34,7 @@ const FooterTwo: React.FC = () => {
         <div className="flex gap-4 items-center">
 
           <p className='text-[14px] text-[#1F202780] font-[300]'>
-            © {currentYear} Testamento.mx
+            © {currentYear} GNP Seguros
           </p>
         </div>
         {/* <div className="flex items-center gap-4">

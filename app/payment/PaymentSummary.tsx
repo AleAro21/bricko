@@ -1,86 +1,99 @@
-import { FC } from "react";
-import { Check, ShieldCheck, Clock } from "phosphor-react";
+import { FC } from 'react';
+import Image from 'next/image';
+import { Check, ShieldCheck, Heart } from 'phosphor-react';
+import logo from '../../assets/greylogo.svg';
 
 interface PaymentSummaryProps {
   amount: number;
   basePrice: number;
-  addonPrice: number;
-  addonSelected: boolean;
+  planName: string;
+  features: string[];
+  coverage?: number;
+  isInsurance?: boolean;
 }
 
-const PaymentSummary: FC<PaymentSummaryProps> = ({ 
-  amount, 
-  basePrice, 
-  addonPrice,
-  addonSelected 
+const PaymentSummary: FC<PaymentSummaryProps> = ({
+  amount,
+  basePrice,
+  planName,
+  features,
+  coverage,
+  isInsurance = false,
 }) => {
-  return (
-    <div className="bg-white/90 backdrop-blur-sm rounded-xl shadow-lg p-6">
-      <h2 className="text-[22px] font-[500] text-[#1d1d1f] mb-6">Resumen de Compra</h2>
+  const formatCurrency = (amount: number) => {
+    return new Intl.NumberFormat('es-MX', {
+      style: 'currency',
+      currency: 'MXN',
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0,
+    }).format(amount);
+  };
 
-      <div className="space-y-6">
-        {/* Base Service */}
-        <div>
+  return (
+    <div className="bg-white rounded-xl shadow-lg p-6">
+      <h2 className="text-xl font-semibold mb-4">Resumen de {isInsurance ? 'cobertura' : 'compra'}</h2>
+      <div className="absolute top-4 right-4 z-10">
+            <Image
+              src={logo}
+              alt="Company Logo"
+              width={100}
+              height={30}
+              className="h-5 w-auto"
+            />
+          </div>
+      <div className="space-y-4">
+        <div className="pb-4 border-b border-gray-100">
           <div className="flex justify-between items-start mb-2">
             <div>
-              <span className="text-[16px] font-medium text-[#1d1d1f]">Testamento Digital</span>
-              <p className="text-sm text-gray-600 mt-1">Servicio base completo</p>
+              <h3 className="font-medium text-gray-900">{planName}</h3>
+              {isInsurance && coverage && (
+                <div className="flex items-center gap-2 mt-1">
+                  <ShieldCheck weight="fill" className="text-blue-500 w-4 h-4" />
+                  <span className="text-sm text-gray-600">
+                    Cobertura hasta {formatCurrency(coverage)}
+                  </span>
+                </div>
+              )}
             </div>
-            <span className="text-[16px] font-[500] text-[#1d1d1f]">
-              ${basePrice.toFixed(2)} MXN
-            </span>
+            <div className="text-right">
+              <p className="text-lg font-semibold text-gray-900">${basePrice}</p>
+              <p className="text-sm text-gray-500">{isInsurance ? 'MXN/mes' : 'MXN'}</p>
+            </div>
           </div>
-          <ul className="mt-3 space-y-2">
-            <li className="flex items-center gap-2 text-sm text-gray-600">
-              <Check size={16} className="text-green-500" />
-              Creación de testamento digital legal
-            </li>
-            <li className="flex items-center gap-2 text-sm text-gray-600">
-              <Check size={16} className="text-green-500" />
-              Asesoría legal incluida
-            </li>
-            <li className="flex items-center gap-2 text-sm text-gray-600">
-              <Check size={16} className="text-green-500" />
-              Almacenamiento seguro
-            </li>
-          </ul>
+          
+          <div className="space-y-2 mt-4">
+            {features.map((feature, index) => (
+              <div key={index} className="flex items-center gap-2 text-sm text-gray-600">
+                <Check size={16} className="text-green-500" />
+                {feature}
+              </div>
+            ))}
+          </div>
         </div>
 
-        {/* Add-on Section */}
-        {addonSelected && (
-          <div className="pt-4 border-t border-gray-100">
-            <div className="flex justify-between items-start">
+        {isInsurance && (
+          <div className="py-4 border-b border-gray-100">
+            <div className="flex items-start gap-3">
+              <Heart weight="fill" className="text-red-500 w-5 h-5 mt-1" />
               <div>
-                <span className="text-[16px] font-medium text-[#047aff]">Seguro de Modificaciones</span>
-                <p className="text-sm text-gray-600 mt-1">3 modificaciones futuras incluidas</p>
+                <h4 className="text-sm font-medium text-gray-900">Protección Garantizada</h4>
+                <p className="text-xs text-gray-600 mt-1">
+                  Tu póliza estará activa inmediatamente después del primer pago
+                </p>
               </div>
-              <span className="text-[16px] font-[500] text-[#047aff]">
-                +${addonPrice.toFixed(2)} MXN
-              </span>
             </div>
           </div>
         )}
 
-        {/* Total */}
-        <div className="pt-4 border-t border-gray-100">
-          <div className="flex justify-between items-center">
-            <span className="text-[17px] font-[500] text-[#1d1d1f]">Total</span>
-            <span className="text-[22px] font-[500] text-[#047aff]">
-              ${amount.toFixed(2)} MXN
+        <div className="pt-4">
+          <div className="flex justify-between items-center mb-2">
+            <span className="text-gray-600">
+              {isInsurance ? 'Pago mensual' : 'Total'}
             </span>
-          </div>
-        </div>
-
-        {/* Benefits and Security */}
-        <div className="space-y-4 pt-6 border-t border-gray-100">
-          <div className="flex items-center gap-2 text-gray-500">
-            <ShieldCheck weight="regular" size={20} />
-            <span className="text-[14px]">Pago 100% seguro y encriptado</span>
-          </div>
-          
-          <div className="flex items-center gap-2 text-gray-500">
-            <Clock weight="regular" size={20} />
-            <span className="text-[14px]">Proceso de pago: 2-3 minutos</span>
+            <div className="text-right">
+              <p className="text-2xl font-semibold text-[#047aff]">${amount}</p>
+              <p className="text-sm text-gray-500">{isInsurance ? 'MXN/mes' : 'MXN'}</p>
+            </div>
           </div>
         </div>
       </div>

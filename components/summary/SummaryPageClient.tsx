@@ -17,9 +17,10 @@ import {
   PencilSimple,
   Clock,
   ShieldCheck,
+  Eye,
 } from "phosphor-react";
 import { useUser } from "@/context/UserContext";
-import SummaryCard from "./SummaryCard";
+import SummaryCard from "@/components/common/SummaryCard";
 
 interface Step {
   id: string;
@@ -162,7 +163,7 @@ interface PaymentSectionProps {
 const PaymentSection: FC<PaymentSectionProps> = ({ onClick, disabled, progress }) => {
   return (
     <div
-      onClick={!disabled ? onClick : () => alert("Completa tu testamento para proceder con el pago")}
+      onClick={!disabled ? onClick : undefined}
       className={`mt-5 rounded-xl group ${disabled ? "cursor-not-allowed opacity-50" : "cursor-pointer"}`}
     >
       <div className="p-[1px] bg-gradient-to-br from-[#047aff] via-[#3d9bff] to-[#047aff] rounded-xl">
@@ -302,7 +303,11 @@ const SummaryPageClient: FC<SummaryPageClientProps> = ({ progressMapping }) => {
   const totalProgress = calculateTotalProgress();
 
   const handlePaymentClick = () => {
-    router.push("/payment");
+    if (totalProgress === 100) {
+      router.push('/preview');
+    } else {
+      alert("Completa tu testamento para proceder con el pago");
+    }
   };
 
   return (
@@ -316,24 +321,23 @@ const SummaryPageClient: FC<SummaryPageClientProps> = ({ progressMapping }) => {
       >
         <div className="flex flex-col lg:flex-row gap-[25px]">
           <div className="lg:w-3/5 w-full">
-          <h1 className="text-[28px] sm:text-[46px] font-[500] tracking-[-1.5px] leading-[1.2] sm:leading-[52px] mb-5 break-words">
-  <span className="text-[#1d1d1f]">Hola </span>
-  <span
-    style={{
-      backgroundImage: "linear-gradient(to left, #3d9bff, #348aff)",
-    }}
-    className="inline-block text-transparent bg-clip-text"
-  >
-    {user?.name || "Usuario"}
-  </span>
-</h1>
+            <h1 className="text-[28px] sm:text-[46px] font-[500] tracking-[-1.5px] leading-[1.2] sm:leading-[52px] mb-5 break-words">
+              <span className="text-[#1d1d1f]">Hola </span>
+              <span
+                style={{
+                  backgroundImage: "linear-gradient(to left, #3d9bff, #348aff)",
+                }}
+                className="inline-block text-transparent bg-clip-text"
+              >
+                {user?.name || "Usuario"}
+              </span>
+            </h1>
 
             <p className="text-[15px] sm:text-[17px] font-[400] tracking-[-0.1px] leading-[1.3] text-[#1d1d1f] text-start mb-[15px] break-words">
               Te guiamos en cada etapa para asegurar que tu voluntad se refleje con claridad.
             </p>
             <div className="space-y-[15px]">
               {mainSteps.map((step, index) => {
-                // For main steps, disable if any previous step is not 100% complete.
                 const isDisabled =
                   index !== 0 &&
                   !mainSteps.slice(0, index).every((s) => getStepProgress(s.id) === 100);
@@ -367,6 +371,26 @@ const SummaryPageClient: FC<SummaryPageClientProps> = ({ progressMapping }) => {
                   La primera parte de tu testamento tiene que ver contigo y tu familia.
                   Completa la información en el Paso 1 para avanzar.
                 </p>
+
+                {totalProgress === 100 && (
+                  <div 
+                    onClick={() => router.push('/preview')}
+                    className="mb-5 p-4 bg-blue-50 rounded-xl cursor-pointer hover:bg-blue-100 transition-colors"
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center">
+                        <Eye size={24} className="text-blue-600" />
+                      </div>
+                      <div>
+                        <h3 className="text-[16px] font-[500] text-[#1d1d1f] mb-1">Vista Previa Disponible</h3>
+                        <p className="text-[14px] text-gray-600">
+                          Revisa tu testamento antes de proceder con el pago
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
                 <PaymentSection
                   onClick={handlePaymentClick}
                   disabled={totalProgress !== 100}
@@ -378,7 +402,6 @@ const SummaryPageClient: FC<SummaryPageClientProps> = ({ progressMapping }) => {
         </div>
         
         <div className="mt-[35px] w-full">
-          {/* Optional Steps: Block until all main steps are 100% complete */}
           <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
             {optionalSteps.map((step) => {
               const isOptionalDisabled = !mainSteps.every((s) => getStepProgress(s.id) === 100);

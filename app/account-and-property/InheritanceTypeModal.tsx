@@ -21,6 +21,19 @@ const InheritanceTypeModal: FC<InheritanceTypeModalProps> = ({
     router.push('/summary');
   };
 
+  const handleSelect = (type: "HP" | "HL" | "HU") => {
+    onSelect(type);
+    if (type === "HL") {
+      // Call onSelect first
+      onSelect(type);
+      // Then refresh and redirect to summary
+      window.location.href = '/summary';
+    } else {
+      // For other types, just call onSelect
+      onSelect(type);
+    }
+  };
+
   const options = [
     {
       type: "HL",
@@ -97,7 +110,7 @@ const InheritanceTypeModal: FC<InheritanceTypeModalProps> = ({
                   key={option.type}
                   whileHover={{ scale: 1.02 }}
                   className="bg-white rounded-xl p-4 sm:p-6 cursor-pointer border border-gray-200 hover:border-[#047aff] hover:shadow-lg transition-all relative"
-                  onClick={() => onSelect(option.type as "HP" | "HL" | "HU")}
+                  onClick={() => handleSelect(option.type as "HP" | "HL" | "HU")}
                 >
                   <div className="absolute top-2 right-2 sm:top-4 sm:right-4">
                     <span className="w-5 h-5 inline-flex items-center justify-center rounded-full border border-[#047aff] text-[#047aff] text-sm cursor-help">

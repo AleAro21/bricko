@@ -1,6 +1,6 @@
 import React from 'react';
 import Image from 'next/image';
-import logo from '../../assets/greylogo.png';
+import logo from '../../assets/greylogo.svg';
 
 interface FooterLink {
   href: string;
@@ -37,7 +37,7 @@ const Footer: React.FC = () => {
             className='max-w-[100px] max-h-[50px] my-auto' 
           />
           <p className='text-[14px] text-[#1F202780] font-[300]'>
-            © {currentYear} Testamento.mx
+            © {currentYear} GNP Seguros
           </p>
         </div>
         <div className="flex items-center gap-4">

@@ -11,7 +11,7 @@ interface DashboardLayoutProps {
 const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
   return (
     <div className='w-full relative'>
-      <Navbar />
+      {/* <Navbar /> */}
       <div className='w-full'>{children}</div>
       <Footer />
       <div className="fixed bottom-[20px] right-[20px]">

@@ -7,12 +7,12 @@ import { CheckCircle } from 'phosphor-react';
 import Image from 'next/image';
 import graylogo from '@/assets/greylogo.png';
 
-const PaymentSuccessClient: FC = () => {
+const DocumentUploadSucessClient: FC = () => {
   const router = useRouter();
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      router.push('/document-signature');
+      router.push('/plan-payment');
     }, 3000);
 
     return () => clearTimeout(timer);
@@ -29,6 +29,7 @@ const PaymentSuccessClient: FC = () => {
       >
         <main className="container mx-auto flex flex-col flex-grow overflow-hidden">
           <div className="w-full max-w-6xl mx-auto flex flex-col min-h-[75vh] mb-4">
+           
             
             <div className="flex-grow flex items-center justify-center px-4 sm:px-5">
               <div className="bg-white rounded-2xl p-8 sm:p-12 shadow-lg max-w-2xl w-full text-center">
@@ -39,19 +40,19 @@ const PaymentSuccessClient: FC = () => {
                 </div>
                 
                 <h1 className="text-[28px] sm:text-[32px] font-[500] tracking-[-1px] leading-[1.2] mb-4">
-                  <span className="text-[#1d1d1f]">¡Gracias por tu </span>
+                  <span className="text-[#1d1d1f]">Exito al subir tu </span>
                   <span
                     style={{
                       backgroundImage: "linear-gradient(to right, #34d399, #10b981)",
                     }}
                     className="inline-block text-transparent bg-clip-text"
                   >
-                    pago!
+                     identificación
                   </span>
                 </h1>
                 
                 <p className="text-[16px] text-[#1d1d1f] mb-8">
-                  Pago exitoso. A continuación por favor define a tus beneficiarios.
+                  Estamos preparando y certificando tu poliza de seguro. Este proceso tomará solo unos segundos.
                 </p>
 
                 <div className="flex justify-center items-center gap-3">
@@ -67,4 +68,4 @@ const PaymentSuccessClient: FC = () => {
   );
 };
 
-export default PaymentSuccessClient;
+export default DocumentUploadSucessClient;
