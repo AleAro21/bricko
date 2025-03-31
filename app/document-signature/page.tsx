@@ -82,7 +82,7 @@ const DocumentSignature: FC = () => {
                 <h1 className="text-[32px] sm:text-[38px] font-[500] tracking-[-1.5px] leading-[1.2] sm:leading-[52px] text-center mb-4">
                   <span className="text-[#1d1d1f]">Revisa y firma tu </span>
                   <span className="bg-gradient-to-r from-[#3d9bff] to-[#047aff] inline-block text-transparent bg-clip-text">
-                    poliza de seguro
+                    contrato
                   </span>
                 </h1>
                 

@@ -4,8 +4,10 @@ import { FC, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import DashboardLayout from '@/components/common/DashboardLayout';
 import { motion } from 'framer-motion';
-import { User, Phone, Envelope, IdentificationCard, CaretRight, Info } from 'phosphor-react';
+import { User, Phone, Envelope, IdentificationCard, CaretRight, Info, Question } from 'phosphor-react';
 import PrimaryButton from '@/components/reusables/PrimaryButton';
+import ProgressIndicator from "@/components/reusables/ProgressIndicator";
+import Modal from '@/components/common/Modal';
 
 interface UserData {
   firstName: string;
@@ -19,6 +21,7 @@ interface UserData {
 
 const UserProfileClient: FC = () => {
   const router = useRouter();
+  const [showModal, setShowModal] = useState(false);
   const [userData, setUserData] = useState<UserData>({
     firstName: '',
     lastName: '',
@@ -66,19 +69,68 @@ const UserProfileClient: FC = () => {
                     <div className="inline-flex items-center h-[32px] bg-[#047aff] bg-opacity-10 px-[12px] py-[6px] rounded-md mb-2.5">
                       <span className="text-[#047aff] text-[14px] font-[400]">PERFIL</span>
                     </div>
-                    <h1 className="text-[32px] sm:text-[38px] font-[500] tracking-[-1.5px] leading-[1.2] sm:leading-[52px] mb-[15px]">
-                      <span className="text-[#1d1d1f]">Completa tu </span>
-                      <span
-                        style={{
-                          backgroundImage: "linear-gradient(to left, #047aff 30%, #0d4ba3 100%)",
-                        }}
-                        className="inline-block text-transparent bg-clip-text"
-                      >
-                        información
-                      </span>
-                    </h1>
+                    <div className="flex items-center space-x-8 mb-[15px]">
+                      <h1 className="text-[32px] sm:text-[38px] font-[500] tracking-[-1.5px] leading-[1.2] sm:leading-[52px]">
+                        <span className="text-[#1d1d1f]">Completa tu </span>
+                        <span
+                          style={{
+                            backgroundImage: "linear-gradient(to left, #047aff 30%, #0d4ba3 100%)",
+                          }}
+                          className="inline-block text-transparent bg-clip-text"
+                        >
+                          información
+                        </span>
+                      </h1>
+                      <div className="flex items-center">
+                        <Question 
+                          weight="regular"
+                          className="text-blue-500 w-7 h-7 cursor-pointer hover:opacity-80 transition-opacity"
+                          onClick={() => setShowModal(true)}
+                        />
+                      </div>
+                    </div>
+
+                    <Modal showModal={showModal} setShowModal={setShowModal}>
+                      <h2 className="text-[30px] font-semibold text-[#1d1d1f] mb-4">
+                        ¿Por qué necesitamos tu información?
+                      </h2>
+                      <p className="text-[17px] font-[400] text-gray-700 tracking-[0.1px] leading-[1.6]">
+                        La información personal que proporcionas es esencial para el proceso de tokenización de activos. 
+                        Esta información nos permite crear un perfil legal y verificable que garantiza la seguridad y 
+                        legitimidad de todas las transacciones.
+                      </p>
+                      <div className="mt-6">
+                        <h3 className="text-[20px] font-semibold text-[#1d1d1f] mb-3">
+                          Datos requeridos:
+                        </h3>
+                        <ul className="space-y-3 text-[17px] text-gray-700">
+                          <li className="flex items-start gap-2">
+                            <span className="text-blue-500 mt-1">•</span>
+                            <span>Información personal: Necesaria para identificarte como propietario legal</span>
+                          </li>
+                          <li className="flex items-start gap-2">
+                            <span className="text-blue-500 mt-1">•</span>
+                            <span>Datos fiscales: Requeridos para cumplir con las regulaciones financieras</span>
+                          </li>
+                          <li className="flex items-start gap-2">
+                            <span className="text-blue-500 mt-1">•</span>
+                            <span>Contacto: Necesario para mantener comunicación sobre tu activo</span>
+                          </li>
+                          <li className="flex items-start gap-2">
+                            <span className="text-blue-500 mt-1">•</span>
+                            <span>Dirección: Importante para la documentación legal del proceso</span>
+                          </li>
+                        </ul>
+                      </div>
+                    </Modal>
 
                     <div className="bg-white rounded-xl p-6 shadow-lg mb-6">
+                      <ProgressIndicator
+                        currentSection={1}
+                        totalSections={4}
+                        title="Completa tus datos"
+                      />
+                      <br />
                       <div className="flex items-start gap-3 mb-6">
                         <Info weight="fill" className="text-blue-500 w-5 h-5 mt-1" />
                         <p className="text-sm text-gray-600">

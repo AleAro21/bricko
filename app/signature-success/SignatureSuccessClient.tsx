@@ -47,7 +47,7 @@ const SignatureSucessClient: FC = () => {
                     }}
                     className="inline-block text-transparent bg-clip-text"
                   >
-                     poliza de seguro
+                     contrato
                   </span>
                 </h1>
                 

@@ -48,7 +48,7 @@ const DocumentView: FC = () => {
   const documents: Document[] = [
     {
       id: 1,
-      name: 'Póliza de Seguro',
+      name: 'Contrato y póliza de seguro',
       description: 'Documento oficial de tu seguro de vida',
       type: 'pdf',
       icon: CheckCircle,
@@ -57,7 +57,7 @@ const DocumentView: FC = () => {
     },
     {
       id: 2,
-      name: 'NOM-151',
+      name: 'Bitácora NOM-151',
       description: 'Norma Oficial Mexicana de Seguros',
       type: 'pdf',
       icon: CheckCircle,
@@ -73,9 +73,7 @@ const DocumentView: FC = () => {
       tokens: 50,
       percentage: 50,
       benefits: [
-        'Tokens de propiedad',
-        'Derechos de voto',
-        'Cobertura básica',
+        'Tokens de propiedad',      
         'Beneficio por fallecimiento'
       ]
     },
@@ -86,16 +84,14 @@ const DocumentView: FC = () => {
       percentage: 50,
       benefits: [
         'Tokens de propiedad',
-        'Derechos de voto',
-        'Cobertura básica',
         'Beneficio por fallecimiento'
       ]
     }
   ];
 
-  const totalTokens = 100;
+  const totalTokens = 1000;
   const tokenValue = 30000;
-  const insuranceCoverage = 1000000;
+  const insuranceCoverage = 500000;
 
   const handleDownload = (documentId: number) => {
     const doc = documents.find(d => d.id === documentId);
@@ -137,14 +133,14 @@ const DocumentView: FC = () => {
             <div className="flex-grow px-4 sm:px-5">
               <div className="bg-white rounded-2xl p-6 sm:p-8 shadow-lg mb-8">
                 <h1 className="text-[32px] sm:text-[38px] font-[500] tracking-[-1.5px] leading-[1.2] sm:leading-[52px] text-center mb-4">
-                  <span className="text-[#1d1d1f]">Tu activo y </span>
+                  <span className="text-[#1d1d1f]">Tokenizaste tu </span>
                   <span
                     style={{
                       backgroundImage: "linear-gradient(to left, #047aff 30%, #0d4ba3 100%)",
                     }}
                     className="inline-block text-transparent bg-clip-text"
                   >
-                    protección
+                    activo
                   </span>
                 </h1>
 
@@ -172,7 +168,7 @@ const DocumentView: FC = () => {
                       {new Intl.NumberFormat('es-MX', {
                         style: 'currency',
                         currency: 'MXN'
-                      }).format(tokenValue * totalTokens)}
+                      }).format(tokenValue * totalTokens * 0.1)}
                     </p>
                   </div>
                   <div className="bg-green-50 rounded-xl p-4">
@@ -192,37 +188,42 @@ const DocumentView: FC = () => {
                 <div className="space-y-6">
                   <h2 className="text-[24px] font-[500] text-[#1d1d1f] mb-6">Documentos</h2>
 
-                  {documents.map((doc) => (
-                    <div key={doc.id} className="bg-white rounded-2xl p-6 shadow-lg">
-                      <div className="flex items-start gap-4">
-                        <div className="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center">
-                          <doc.icon size={24} className="text-blue-600" />
-                        </div>
-                        <div className="flex-1">
-                          <h3 className="text-[18px] font-[500] text-[#1d1d1f] mb-1">{doc.name}</h3>
-                          <p className="text-[14px] text-gray-600 mb-2">{doc.description}</p>
-                          <p className="text-[12px] text-gray-500 mb-4">Última actualización: {doc.date}</p>
-
-                          <div className="flex gap-3">
-                            <button
-                              onClick={() => handlePreview(doc.id)}
-                              className="flex items-center gap-2 px-4 py-2 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors text-sm"
-                            >
-                              <Eye size={16} />
-                              <span>Ver</span>
-                            </button>
-                            <button
-                              onClick={() => handleDownload(doc.id)}
-                              className="flex items-center gap-2 px-4 py-2 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors text-sm"
-                            >
-                              <Download size={16} />
-                              <span>Descargar</span>
-                            </button>
+                  <div className="space-y-6">
+                    {documents.map((doc) => (
+                      <div key={doc.id} className="bg-white rounded-2xl shadow-lg min-h-[200px] flex flex-col">
+                        <div className="flex-1 p-6">
+                          <div className="flex items-start gap-4 h-full">
+                            <div className="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center flex-shrink-0">
+                              <doc.icon size={24} className="text-blue-600" />
+                            </div>
+                            <div className="flex-1 min-h-[120px] flex flex-col">
+                              <div>
+                                <h3 className="text-[18px] font-[500] text-[#1d1d1f] mb-1">{doc.name}</h3>
+                                <p className="text-[14px] text-gray-600 mb-2">{doc.description}</p>
+                                <p className="text-[12px] text-gray-500">{doc.date}</p>
+                              </div>
+                              <div className="flex gap-3 mt-auto pt-4">
+                                <button
+                                  onClick={() => handlePreview(doc.id)}
+                                  className="flex items-center gap-2 px-4 py-2 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors text-sm"
+                                >
+                                  <Eye size={16} />
+                                  <span>Ver</span>
+                                </button>
+                                <button
+                                  onClick={() => handleDownload(doc.id)}
+                                  className="flex items-center gap-2 px-4 py-2 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors text-sm"
+                                >
+                                  <Download size={16} />
+                                  <span>Descargar</span>
+                                </button>
+                              </div>
+                            </div>
                           </div>
                         </div>
                       </div>
-                    </div>
-                  ))}
+                    ))}
+                  </div>
 
                   <div className="grid grid-cols-2 gap-4">
                     <div className="bg-gradient-to-r from-green-50 to-green-100 rounded-2xl p-6">
@@ -259,38 +260,43 @@ const DocumentView: FC = () => {
                 <div className="space-y-6">
                   <h2 className="text-[24px] font-[500] text-[#1d1d1f] mb-6">Beneficiarios</h2>
 
-                  {beneficiaries.map((beneficiary, index) => (
-                    <div key={index} className="bg-white rounded-2xl p-6 shadow-lg">
-                      <div className="flex items-start gap-4">
-                        <div className="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center">
-                          <User size={24} className="text-blue-600" />
-                        </div>
-                        <div className="flex-1">
-                          <div className="flex items-center justify-between mb-2">
-                            <h3 className="text-[18px] font-[500] text-[#1d1d1f]">{beneficiary.name}</h3>
-                            <div className="flex gap-2">
-                              <span className="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-1 rounded">
-                                {beneficiary.tokens} tokens
-                              </span>
-                              <span className="bg-green-100 text-green-800 text-xs font-medium px-2.5 py-1 rounded">
-                                {beneficiary.percentage}% seguro
-                              </span>
+                  <div className="space-y-6">
+                    {beneficiaries.map((beneficiary, index) => (
+                      <div key={index} className="bg-white rounded-2xl shadow-lg min-h-[200px] flex flex-col">
+                        <div className="flex-1 p-6">
+                          <div className="flex items-start gap-4 h-full">
+                            <div className="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center flex-shrink-0">
+                              <User size={24} className="text-blue-600" />
                             </div>
-                          </div>
-                          <p className="text-[14px] text-gray-600 mb-3">{beneficiary.relationship}</p>
-
-                          <div className="space-y-2">
-                            {beneficiary.benefits.map((benefit, benefitIndex) => (
-                              <div key={benefitIndex} className="flex items-center gap-2 text-sm text-gray-600">
-                                <CheckCircle size={16} className="text-blue-500" />
-                                <span>{benefit}</span>
+                            <div className="flex-1 min-h-[120px] flex flex-col">
+                              <div>
+                                <div className="flex items-center justify-between mb-2">
+                                  <h3 className="text-[18px] font-[500] text-[#1d1d1f]">{beneficiary.name}</h3>
+                                  <div className="flex gap-2">
+                                    <span className="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-1 rounded">
+                                      {beneficiary.tokens} tokens
+                                    </span>
+                                    <span className="bg-green-100 text-green-800 text-xs font-medium px-2.5 py-1 rounded">
+                                      {beneficiary.percentage}% seguro
+                                    </span>
+                                  </div>
+                                </div>
+                                <p className="text-[14px] text-gray-600 mb-3">{beneficiary.relationship}</p>
                               </div>
-                            ))}
+                              <div className="space-y-2 mt-auto">
+                                {beneficiary.benefits.map((benefit, benefitIndex) => (
+                                  <div key={benefitIndex} className="flex items-center gap-2 text-sm text-gray-600">
+                                    <CheckCircle size={16} className="text-blue-500" />
+                                    <span>{benefit}</span>
+                                  </div>
+                                ))}
+                              </div>
+                            </div>
                           </div>
                         </div>
                       </div>
-                    </div>
-                  ))}
+                    ))}
+                  </div>
 
                   <div className="bg-gradient-to-r from-blue-50 to-blue-100 rounded-2xl p-6">
                     <div className="flex items-start gap-3">

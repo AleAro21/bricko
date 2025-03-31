@@ -107,7 +107,7 @@ const AddressAutocomplete: React.FC<AddressAutocompleteProps> = ({
       document.getElementById('address-input') as HTMLInputElement,
       {
         types: ['address'],
-        componentRestrictions: { country: 'MX' }, // Restrict to Spain
+        componentRestrictions: { country: 'MX' },
       }
     );
 
@@ -126,7 +126,6 @@ const AddressAutocomplete: React.FC<AddressAutocompleteProps> = ({
         state: ''
       };
 
-      // Extract address components
       addressComponents.forEach(component => {
         const types = component.types;
       
@@ -145,11 +144,10 @@ const AddressAutocomplete: React.FC<AddressAutocompleteProps> = ({
         if (types.includes('country')) {
           addressData.country = component.long_name;
         }
-        if (types.includes('administrative_area_level_1')) { // <-- Add this block
+        if (types.includes('administrative_area_level_1')) {
           addressData.state = component.long_name;
         }
       });
-      
 
       onAddressSelect(addressData);
       setInputValue(place.formatted_address || '');

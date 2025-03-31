@@ -4,8 +4,10 @@ import { FC, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import DashboardLayout from '@/components/common/DashboardLayout';
 import { motion } from 'framer-motion';
-import { Plus, Trash, Warning, Info, CaretRight, Coins } from 'phosphor-react';
+import { Plus, Trash, Warning, Info, CaretRight, Coins, Question } from 'phosphor-react';
 import PrimaryButton from '@/components/reusables/PrimaryButton';
+import ProgressIndicator from '@/components/reusables/ProgressIndicator';
+import Modal from '@/components/common/Modal';
 
 interface Beneficiary {
   id: string;
@@ -16,14 +18,26 @@ interface Beneficiary {
 
 const BeneficiariesClient: FC = () => {
   const router = useRouter();
+  const [showModal, setShowModal] = useState(false);
   const [beneficiaries, setBeneficiaries] = useState<Beneficiary[]>([
-    { id: '1', name: '', relationship: '', tokens: 100 }
+    { id: '1', name: '', relationship: '', tokens: 1000 }
   ]);
 
-  const totalTokens = 100; // This should come from the previous step
+  const assetValue = 3000000; // 3M MXN
+  const totalTokens = 1000; // This should come from the previous step
+  const tokenValue = assetValue / totalTokens; // Value per token
+
+  const formatCurrency = (amount: number) => {
+    return new Intl.NumberFormat('es-MX', {
+      style: 'currency',
+      currency: 'MXN',
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0,
+    }).format(amount);
+  };
 
   const addBeneficiary = () => {
-    if (beneficiaries.length >= 5) return;
+    if (beneficiaries.length >= 4) return;
     
     const currentTotal = beneficiaries.reduce((sum, b) => sum + b.tokens, 0);
     const newTokens = Math.max(0, totalTokens - currentTotal);
@@ -78,24 +92,72 @@ const BeneficiariesClient: FC = () => {
                     <div className="inline-flex items-center h-[32px] bg-[#047aff] bg-opacity-10 px-[12px] py-[6px] rounded-md mb-2.5">
                       <span className="text-[#047aff] text-[14px] font-[400]">BENEFICIARIOS</span>
                     </div>
-                    <h1 className="text-[32px] sm:text-[38px] font-[500] tracking-[-1.5px] leading-[1.2] sm:leading-[52px] mb-[15px]">
-                      <span className="text-[#1d1d1f]">Asigna los </span>
-                      <span
-                        style={{
-                          backgroundImage: "linear-gradient(to left, #047aff 30%, #0d4ba3 100%)",
-                        }}
-                        className="inline-block text-transparent bg-clip-text"
-                      >
-                        tokens
-                      </span>
-                    </h1>
+                    <div className="flex items-center space-x-8 mb-[15px]">
+                      <h1 className="text-[32px] sm:text-[38px] font-[500] tracking-[-1.5px] leading-[1.2] sm:leading-[52px]">
+                        <span className="text-[#1d1d1f]">Asignación de </span>
+                        <span
+                          style={{
+                            backgroundImage: "linear-gradient(to left, #047aff 30%, #0d4ba3 100%)",
+                          }}
+                          className="inline-block text-transparent bg-clip-text"
+                        >
+                          tokens
+                        </span>
+                      </h1>
+                      <div className="flex items-center">
+                        <Question 
+                          weight="regular"
+                          className="text-blue-500 w-7 h-7 cursor-pointer hover:opacity-80 transition-opacity"
+                          onClick={() => setShowModal(true)}
+                        />
+                      </div>
+                    </div>
+
+                    <Modal showModal={showModal} setShowModal={setShowModal}>
+                      <h2 className="text-[30px] font-semibold text-[#1d1d1f] mb-4">
+                        ¿Cómo funciona la asignación de tokens?
+                      </h2>
+                      <p className="text-[17px] font-[400] text-gray-700 tracking-[0.1px] leading-[1.6]">
+                      Tus beneficiarios recibirán los tokens asignados que representan partes del activo tokenizado mas la indemisación de la poliza de vida.
+                      </p>
+                      <div className="mt-6">
+                        <h3 className="text-[20px] font-semibold text-[#1d1d1f] mb-3">
+                          Aspectos importantes:
+                        </h3>
+                        <ul className="space-y-3 text-[17px] text-gray-700">
+                          <li className="flex items-start gap-2">
+                            <span className="text-blue-500 mt-1">•</span>
+                            <span>Distribución: Puedes asignar los tokens entre 1 y 5 beneficiarios</span>
+                          </li>
+                          <li className="flex items-start gap-2">
+                            <span className="text-blue-500 mt-1">•</span>
+                            <span>Porcentaje: El total de tokens debe sumar 1000, representando el 100% del activo ({formatCurrency(assetValue)})</span>
+                          </li>
+                          <li className="flex items-start gap-2">
+                            <span className="text-blue-500 mt-1">•</span>
+                            <span>Beneficiarios: Deben ser personas mayores de edad y no puedes incluirte a ti mismo</span>
+                          </li>
+                          <li className="flex items-start gap-2">
+                            <span className="text-blue-500 mt-1">•</span>
+                            <span>Modificaciones: Podrás actualizar la distribución de tokens en el futuro si es necesario</span>
+                          </li>
+                        </ul>
+                      </div>
+                    </Modal>
 
                     <div className="bg-white rounded-xl p-6 shadow-lg mb-6">
+                      <ProgressIndicator
+                        currentSection={3}
+                        totalSections={4}
+                        title="Completa tus datos"
+                      />
+                      <br />
                       <div className="flex items-start gap-3 mb-6">
                         <Info weight="fill" className="text-blue-500 w-5 h-5 mt-1" />
                         <p className="text-sm text-gray-600">
-                          Designa a las personas que recibirán los tokens de tu activo. 
-                          Puedes agregar hasta 5 beneficiarios y distribuir los {totalTokens} tokens entre ellos.
+                          Designa a las personas que recibirán los tokens de tu activo y beneficios del seguro.
+                          Puedes agregar hasta 4 beneficiarios y distribuir los {totalTokens} tokens entre ellos.
+                          Cada token tiene un valor de {formatCurrency(tokenValue)}.
                         </p>
                       </div>
 
@@ -158,6 +220,9 @@ const BeneficiariesClient: FC = () => {
                                   min="0"
                                   max={totalTokens}
                                 />
+                                <p className="text-sm text-gray-500 mt-1">
+                                  Valor estimado: {formatCurrency(beneficiary.tokens * tokenValue)}
+                                </p>
                               </div>
                             </div>
                           </div>
@@ -209,17 +274,27 @@ const BeneficiariesClient: FC = () => {
                                 </p>
                               </div>
                             </div>
-                            <span className="font-medium text-blue-500">
-                              {beneficiary.tokens} tokens
-                            </span>
+                            <div className="text-right">
+                              <p className="font-medium text-blue-500">
+                                {beneficiary.tokens} tokens
+                              </p>
+                              <p className="text-sm text-gray-500">
+                                {formatCurrency(beneficiary.tokens * tokenValue)}
+                              </p>
+                            </div>
                           </div>
                         ))}
 
                         <div className="flex justify-between font-medium pt-2">
                           <span>Total asignado:</span>
-                          <span className={totalAssignedTokens === totalTokens ? 'text-green-500' : 'text-red-500'}>
-                            {totalAssignedTokens} / {totalTokens} tokens
-                          </span>
+                          <div className="text-right">
+                            <p className={totalAssignedTokens === totalTokens ? 'text-green-500' : 'text-red-500'}>
+                              {totalAssignedTokens} / {totalTokens} tokens
+                            </p>
+                            <p className="text-sm text-gray-500">
+                              {formatCurrency(totalAssignedTokens * tokenValue)} / {formatCurrency(assetValue)}
+                            </p>
+                          </div>
                         </div>
                       </div>
 
@@ -248,6 +323,7 @@ const BeneficiariesClient: FC = () => {
                           </h3>
                           <p className="text-[14px] text-gray-600">
                             Tus beneficiarios recibirán los tokens asignados que representan partes del activo tokenizado.
+                            Cada token tiene un valor de {formatCurrency(tokenValue)}.
                           </p>
                         </div>
                       </div>

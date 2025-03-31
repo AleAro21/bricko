@@ -21,7 +21,7 @@
     "@fortawesome/react-fontawesome": "^0.2.2",
     "@headlessui/react": "^1.7.18",
     "@mui/material": "^6.4.3",
-    "@react-google-maps/api": "^2.20.3",
+    "@react-google-maps/api": "^2.20.6",
     "@stripe/react-stripe-js": "^3.1.1",
     "@stripe/stripe-js": "^5.7.0",
     "aws-amplify": "^6.12.2",

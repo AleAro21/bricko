@@ -1,4 +1,5 @@
-import React, { useEffect, ReactNode } from 'react';
+import React, { ReactNode } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 
 interface ModalProps {
   children: ReactNode;
@@ -7,42 +8,48 @@ interface ModalProps {
 }
 
 const Modal: React.FC<ModalProps> = ({ children, setShowModal, showModal }) => {
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      const target = event.target as HTMLElement;
-      if (showModal && !target.closest('.modal-content')) {
-        setShowModal(false);
-      }
-    };
-
-    document.body.addEventListener('click', handleClickOutside);
-    return () => {
-      document.body.removeEventListener('click', handleClickOutside);
-    };
-  }, [showModal, setShowModal]);
-
-  if (!showModal) return null;
+  const handleOverlayClick = () => {
+    setShowModal(false);
+  };
 
   return (
-    <>
-      <div className='justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none'>
-        <div className='relative w-auto my-6 mx-auto max-w-3x1'>
-          <div className='modal-content border-0 px-12 py-4 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none'>
-            {/* <button
-              className='absolute z-50 right-[10px] top-[10px] p-1 ml-auto border-0 text-black float-right text-3xl leading-none font-semibold outline-none focus:outline-none'
+    <AnimatePresence>
+      {showModal && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className="fixed inset-0 flex items-center justify-center z-50"
+        >
+          <div
+            className="fixed inset-0 bg-black/50"
+            onClick={handleOverlayClick}
+          />
+          <div className="relative bg-white rounded-2xl p-8 shadow-2xl w-full max-w-2xl z-10">
+            <button
               onClick={() => setShowModal(false)}
-              aria-label="Close modal"
+              className="absolute top-4 right-4 w-8 h-8 bg-[#e8e8ed] rounded-full flex items-center justify-center"
             >
-              <span className='text-black text-2xl block outline-none focus:outline-none'>
-                ×
-              </span>
-            </button> */}
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-5 w-5 text-[#6e6e73]"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              </svg>
+            </button>
             {children}
           </div>
-        </div>
-      </div>
-      <div className='opacity-75 fixed inset-0 z-40 bg-black'></div>
-    </>
+        </motion.div>
+      )}
+    </AnimatePresence>
   );
 };
 
