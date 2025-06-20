@@ -66,15 +66,15 @@ const UserProfileClient: FC = () => {
                 {/* Left Column */}
                 <div className="space-y-8">
                   <div>
-                    <div className="inline-flex items-center h-[32px] bg-[#047aff] bg-opacity-10 px-[12px] py-[6px] rounded-md mb-2.5">
-                      <span className="text-[#047aff] text-[14px] font-[400]">PERFIL</span>
+                    <div className="inline-flex items-center h-[32px] bg-[#f95940] bg-opacity-10 px-[12px] py-[6px] rounded-md mb-2.5">
+                      <span className="text-[#f95940] text-[14px] font-[400]">PERFIL</span>
                     </div>
                     <div className="flex items-center space-x-8 mb-[15px]">
                       <h1 className="text-[32px] sm:text-[38px] font-[500] tracking-[-1.5px] leading-[1.2] sm:leading-[52px]">
                         <span className="text-[#1d1d1f]">Completa tu </span>
                         <span
                           style={{
-                            backgroundImage: "linear-gradient(to left, #047aff 30%, #0d4ba3 100%)",
+                            backgroundImage: "linear-gradient(to left, #f95940 30%, #f95940 100%)",
                           }}
                           className="inline-block text-transparent bg-clip-text"
                         >
@@ -84,7 +84,7 @@ const UserProfileClient: FC = () => {
                       <div className="flex items-center">
                         <Question 
                           weight="regular"
-                          className="text-blue-500 w-7 h-7 cursor-pointer hover:opacity-80 transition-opacity"
+                          className="text-[#f95940] w-7 h-7 cursor-pointer hover:opacity-80 transition-opacity"
                           onClick={() => setShowModal(true)}
                         />
                       </div>
@@ -105,19 +105,19 @@ const UserProfileClient: FC = () => {
                         </h3>
                         <ul className="space-y-3 text-[17px] text-gray-700">
                           <li className="flex items-start gap-2">
-                            <span className="text-blue-500 mt-1">•</span>
+                            <span className="text-[#f95940] mt-1">•</span>
                             <span>Información personal: Necesaria para identificarte como propietario legal</span>
                           </li>
                           <li className="flex items-start gap-2">
-                            <span className="text-blue-500 mt-1">•</span>
+                            <span className="text-[#f95940] mt-1">•</span>
                             <span>Datos fiscales: Requeridos para cumplir con las regulaciones financieras</span>
                           </li>
                           <li className="flex items-start gap-2">
-                            <span className="text-blue-500 mt-1">•</span>
+                            <span className="text-[#f95940] mt-1">•</span>
                             <span>Contacto: Necesario para mantener comunicación sobre tu activo</span>
                           </li>
                           <li className="flex items-start gap-2">
-                            <span className="text-blue-500 mt-1">•</span>
+                            <span className="text-[#f95940] mt-1">•</span>
                             <span>Dirección: Importante para la documentación legal del proceso</span>
                           </li>
                         </ul>
@@ -132,7 +132,7 @@ const UserProfileClient: FC = () => {
                       />
                       <br />
                       <div className="flex items-start gap-3 mb-6">
-                        <Info weight="fill" className="text-blue-500 w-5 h-5 mt-1" />
+                        <Info weight="fill" className="text-[#f95940] w-5 h-5 mt-1" />
                         <p className="text-sm text-gray-600">
                           Para poder tokenizar tus activos, necesitamos algunos datos personales. 
                           Esta información es necesaria para el proceso legal.
@@ -251,7 +251,7 @@ const UserProfileClient: FC = () => {
                       
                       <div className="space-y-4 mb-6">
                         <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
-                          <User className="text-blue-500 w-5 h-5" />
+                          <User className="text-[#f95940] w-5 h-5" />
                           <div>
                             <p className="text-sm text-gray-500">Nombre completo</p>
                             <p className="font-medium">
@@ -263,7 +263,7 @@ const UserProfileClient: FC = () => {
                         </div>
 
                         <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
-                          <Envelope className="text-blue-500 w-5 h-5" />
+                          <Envelope className="text-[#f95940] w-5 h-5" />
                           <div>
                             <p className="text-sm text-gray-500">Correo electrónico</p>
                             <p className="font-medium">
@@ -273,7 +273,7 @@ const UserProfileClient: FC = () => {
                         </div>
 
                         <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
-                          <Phone className="text-blue-500 w-5 h-5" />
+                          <Phone className="text-[#f95940] w-5 h-5" />
                           <div>
                             <p className="text-sm text-gray-500">Teléfono</p>
                             <p className="font-medium">
@@ -283,7 +283,7 @@ const UserProfileClient: FC = () => {
                         </div>
 
                         <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
-                          <IdentificationCard className="text-blue-500 w-5 h-5" />
+                          <IdentificationCard className="text-[#f95940] w-5 h-5" />
                           <div>
                             <p className="text-sm text-gray-500">Identificación fiscal</p>
                             <p className="font-medium">
@@ -309,9 +309,9 @@ const UserProfileClient: FC = () => {
                       </p>
                     </div>
 
-                    <div className="bg-blue-50 rounded-xl p-6">
+                    <div className="bg-[#f95940]/20 rounded-xl p-6">
                       <div className="flex items-start gap-3">
-                        <Info weight="fill" className="text-blue-600 flex-shrink-0 w-5 h-5 mt-1" />
+                        <Info weight="fill" className="text-[#f95940] flex-shrink-0 w-5 h-5 mt-1" />
                         <div>
                           <h3 className="text-[16px] font-[500] text-[#1d1d1f] mb-2">
                             Información segura

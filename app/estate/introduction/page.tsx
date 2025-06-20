@@ -24,18 +24,18 @@ const IntroductionPage: FC = () => {
             <div className="space-y-8">
               <div>
                 <div className="flex items-center gap-2 mb-2.5">
-                  <div className="inline-flex items-center h-[32px] bg-[#047aff] bg-opacity-10 px-[12px] py-[6px] rounded-md">
-                    <span className="text-[#047aff] text-[14px] font-[400]">RECOMENDACIONES</span>
+                  <div className="inline-flex items-center h-[32px] bg-[#f95940] bg-opacity-10 px-[12px] py-[6px] rounded-md">
+                    <span className="text-[#f95940] text-[14px] font-[400]">RECOMENDACIONES</span>
                   </div>
-                  <Link href="#" className="inline-flex items-center h-[32px] text-[#047aff] hover:text-[#0456b0]">
-                    <span className="w-5 h-5 inline-flex items-center justify-center rounded-full border border-[#047aff] text-sm">?</span>
+                  <Link href="#" className="inline-flex items-center h-[32px] text-[#f95940] hover:text-[#0456b0]">
+                    <span className="w-5 h-5 inline-flex items-center justify-center rounded-full border border-[#f95940] text-sm">?</span>
                   </Link>
                 </div>
 
                 <h1 className="text-[32px] sm:text-[38px] font-[500] tracking-[-1.5px] leading-[1.2] sm:leading-[52px] mb-[15px]">
                   <span className="text-[#1d1d1f]">Consultar </span>
                   <span
-                    style={{ backgroundImage: "linear-gradient(to left, #047aff 30%, #0d4ba3 100%)" }}
+                    style={{ backgroundImage: "linear-gradient(to left, #f95940 30%, #f95940 100%)" }}
                     className="inline-block text-transparent bg-clip-text"
                   >
                     abogados

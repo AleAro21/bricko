@@ -58,13 +58,13 @@ const SharePage: FC = () => {
             {/* Left Column - Title and Description */}
             <div className="space-y-8">
               <div>
-                <div className="inline-flex items-center h-[32px] bg-[#047aff] bg-opacity-10 px-[12px] py-[6px] rounded-md mb-2.5">
-                  <span className="text-[#047aff] text-[14px] font-[400]">BENEFICIARIOS SECUNDARIOS</span>
+                <div className="inline-flex items-center h-[32px] bg-[#f95940] bg-opacity-10 px-[12px] py-[6px] rounded-md mb-2.5">
+                  <span className="text-[#f95940] text-[14px] font-[400]">BENEFICIARIOS SECUNDARIOS</span>
                 </div>
 
                 <h1 className="text-[32px] sm:text-[38px] font-[500] tracking-[-1.5px] leading-[1.2] sm:leading-[52px] mb-[15px]">
                   <span className="text-[#1d1d1f]">Si su contacto de confianza fallece, </span>
-                  <span className="bg-gradient-to-r from-[#3d9bff] to-[#047aff] inline-block text-transparent bg-clip-text">
+                  <span className="bg-gradient-to-r from-[#3d9bff] to-[#f95940] inline-block text-transparent bg-clip-text">
                     ¿quién heredará su parte?
                   </span>
                 </h1>
@@ -111,8 +111,8 @@ const SharePage: FC = () => {
                         index !== 0 ? 'border-t border-gray-100' : ''
                       } ${
                         activeIndex === index
-                          ? 'bg-[#047aff] text-white'
-                          : 'hover:bg-[#047aff] hover:bg-opacity-5'
+                          ? 'bg-[#f95940] text-white'
+                          : 'hover:bg-[#f95940] hover:bg-opacity-5'
                       }`}
                     >
                       <h3 className="text-[17px] font-[500]">

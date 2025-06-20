@@ -34,10 +34,10 @@ const TransferForm: FC<TransferFormProps> = ({ amount }) => {
 
   return (
     <div className="space-y-6">
-      <div className="bg-blue-50 rounded-lg p-4 border border-blue-100">
+      <div className="bg-[#f95940]/20 rounded-lg p-4 border border-blue-100">
         <p className="text-[15px] text-[#1d1d1f]">
           Realiza una transferencia bancaria por el monto de{" "}
-          <span className="font-bold text-[#047aff]">${amount.toFixed(2)} MXN</span> a la siguiente cuenta:
+          <span className="font-bold text-[#f95940]">${amount.toFixed(2)} MXN</span> a la siguiente cuenta:
         </p>
       </div>
 
@@ -48,7 +48,7 @@ const TransferForm: FC<TransferFormProps> = ({ amount }) => {
             <p className="text-[16px] font-medium">{bankDetails.bank}</p>
           </div>
           <div className="w-10 h-10 bg-[#f5f5f7] rounded-full flex items-center justify-center">
-            <Bank weight="regular" size={24} className="text-[#047aff]" />
+            <Bank weight="regular" size={24} className="text-[#f95940]" />
           </div>
         </div>
 
@@ -59,7 +59,7 @@ const TransferForm: FC<TransferFormProps> = ({ amount }) => {
           </div>
           <button
             onClick={() => copyToClipboard(bankDetails.accountName, "accountName")}
-            className="text-[#047aff] hover:text-[#0d4ba3] transition-colors"
+            className="text-[#f95940] hover:text-[#f95940] transition-colors"
           >
             {copied === "accountName" ? (
               <CheckCircle weight="fill" size={20} />
@@ -76,7 +76,7 @@ const TransferForm: FC<TransferFormProps> = ({ amount }) => {
           </div>
           <button
             onClick={() => copyToClipboard(bankDetails.accountNumber, "accountNumber")}
-            className="text-[#047aff] hover:text-[#0d4ba3] transition-colors"
+            className="text-[#f95940] hover:text-[#f95940] transition-colors"
           >
             {copied === "accountNumber" ? (
               <CheckCircle weight="fill" size={20} />
@@ -93,7 +93,7 @@ const TransferForm: FC<TransferFormProps> = ({ amount }) => {
           </div>
           <button
             onClick={() => copyToClipboard(bankDetails.clabe, "clabe")}
-            className="text-[#047aff] hover:text-[#0d4ba3] transition-colors"
+            className="text-[#f95940] hover:text-[#f95940] transition-colors"
           >
             {copied === "clabe" ? (
               <CheckCircle weight="fill" size={20} />
@@ -106,11 +106,11 @@ const TransferForm: FC<TransferFormProps> = ({ amount }) => {
         <div className="flex justify-between items-center">
           <div>
             <p className="text-[14px] text-gray-500">Referencia (importante)</p>
-            <p className="text-[16px] font-medium text-[#047aff]">{bankDetails.reference}</p>
+            <p className="text-[16px] font-medium text-[#f95940]">{bankDetails.reference}</p>
           </div>
           <button
             onClick={() => copyToClipboard(bankDetails.reference, "reference")}
-            className="text-[#047aff] hover:text-[#0d4ba3] transition-colors"
+            className="text-[#f95940] hover:text-[#f95940] transition-colors"
           >
             {copied === "reference" ? (
               <CheckCircle weight="fill" size={20} />

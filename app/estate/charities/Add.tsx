@@ -47,8 +47,8 @@ const Add: FC<AddProps> = ({ setShowModal, showModal, onAddCharity }) => {
   return (
     <Modal setShowModal={setShowModal} showModal={showModal}>
       <div className="w-full min-w-[400px] max-w-2xl mx-auto">
-        <div className="inline-flex items-center h-[32px] bg-[#047aff] bg-opacity-10 px-[12px] py-[6px] rounded-md mb-2.5">
-          <span className="text-[#047aff] text-[14px] font-[400]">NUEVA ORGANIZACIÓN</span>
+        <div className="inline-flex items-center h-[32px] bg-[#f95940] bg-opacity-10 px-[12px] py-[6px] rounded-md mb-2.5">
+          <span className="text-[#f95940] text-[14px] font-[400]">NUEVA ORGANIZACIÓN</span>
         </div>
 
         <h2 className="text-[22px] font-[500] text-[#1d1d1f] mb-6">
@@ -59,27 +59,27 @@ const Add: FC<AddProps> = ({ setShowModal, showModal, onAddCharity }) => {
           <form className="space-y-6" onSubmit={handleSubmit}>
             <div>
               <label htmlFor="name" className="block text-[17px] font-[400] text-[#1d1d1f] mb-2.5">
-                Nombre de la organización <span className="text-[#047aff]">*</span>
+                Nombre de la organización <span className="text-[#f95940]">*</span>
               </label>
               <input
                 type="text"
                 id="name"
                 name="name"
                 required
-                className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:border-[#047aff] transition-all text-[16px]"
+                className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:border-[#f95940] transition-all text-[16px]"
                 placeholder="Nombre de la organización benéfica"
               />
             </div>
 
             <div>
               <label htmlFor="cause" className="block text-[17px] font-[400] text-[#1d1d1f] mb-2.5">
-                Causa <span className="text-[#047aff]">*</span>
+                Causa <span className="text-[#f95940]">*</span>
               </label>
               <select
                 id="cause"
                 name="cause"
                 required
-                className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:border-[#047aff] transition-all text-[16px]"
+                className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:border-[#f95940] transition-all text-[16px]"
                 defaultValue=""
               >
                 <option value="" disabled>Seleccionar causa</option>
@@ -93,7 +93,7 @@ const Add: FC<AddProps> = ({ setShowModal, showModal, onAddCharity }) => {
 
             <div>
               <label htmlFor="percentage" className="block text-[17px] font-[400] text-[#1d1d1f] mb-2.5">
-                Porcentaje de donación <span className="text-[#047aff]">*</span>
+                Porcentaje de donación <span className="text-[#f95940]">*</span>
               </label>
               <input
                 type="number"
@@ -102,7 +102,7 @@ const Add: FC<AddProps> = ({ setShowModal, showModal, onAddCharity }) => {
                 required
                 min="0"
                 max="100"
-                className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:border-[#047aff] transition-all text-[16px]"
+                className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:border-[#f95940] transition-all text-[16px]"
                 placeholder="0"
               />
             </div>
@@ -115,7 +115,7 @@ const Add: FC<AddProps> = ({ setShowModal, showModal, onAddCharity }) => {
                 type="text"
                 id="registrationNumber"
                 name="registrationNumber"
-                className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:border-[#047aff] transition-all text-[16px]"
+                className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:border-[#f95940] transition-all text-[16px]"
                 placeholder="Número de registro de la organización"
               />
             </div>

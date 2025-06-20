@@ -68,7 +68,7 @@ const CardPaymentForm: FC<CardPaymentFormProps> = ({ onSubmit }) => {
           value={formData.cardNumber}
           onChange={handleInputChange}
           placeholder="1234 5678 9012 3456"
-          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-[#047aff] focus:border-[#047aff]"
+          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-[#f95940] focus:border-[#f95940]"
           maxLength={19}
           required
         />
@@ -86,7 +86,7 @@ const CardPaymentForm: FC<CardPaymentFormProps> = ({ onSubmit }) => {
             value={formData.expiry}
             onChange={handleInputChange}
             placeholder="MM/YY"
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-[#047aff] focus:border-[#047aff]"
+            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-[#f95940] focus:border-[#f95940]"
             maxLength={5}
             required
           />
@@ -103,7 +103,7 @@ const CardPaymentForm: FC<CardPaymentFormProps> = ({ onSubmit }) => {
             value={formData.cvv}
             onChange={handleInputChange}
             placeholder="123"
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-[#047aff] focus:border-[#047aff]"
+            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-[#f95940] focus:border-[#f95940]"
             maxLength={4}
             required
           />
@@ -121,14 +121,14 @@ const CardPaymentForm: FC<CardPaymentFormProps> = ({ onSubmit }) => {
           value={formData.name}
           onChange={handleInputChange}
           placeholder="Como aparece en la tarjeta"
-          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-[#047aff] focus:border-[#047aff]"
+          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-[#f95940] focus:border-[#f95940]"
           required
         />
       </div>
 
       <button
         type="submit"
-        className="w-full bg-[#047aff] text-white py-3 rounded-lg font-medium hover:bg-[#0366d6] transition-colors duration-200"
+        className="w-full bg-[#f95940] text-white py-3 rounded-lg font-medium hover:bg-[#f95940 transition-colors duration-200"
       >
         Pagar ahora
       </button>

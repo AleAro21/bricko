@@ -65,12 +65,12 @@ const DocumentSignature: FC = () => {
           <div className="w-full max-w-6xl mx-auto flex flex-col min-h-[75vh] mb-4">
             <div className="py-4 px-4 sm:px-5">
               <div className="flex items-center justify-between mb-2.5">
-                <div className="inline-flex items-center h-[32px] bg-[#047aff] bg-opacity-10 px-[12px] py-[6px] rounded-md">
-                  <span className="text-[#047aff] text-[14px] font-[400]">FIRMA DE DOCUMENTO</span>
+                <div className="inline-flex items-center h-[32px] bg-[#f95940] bg-opacity-10 px-[12px] py-[6px] rounded-md">
+                  <span className="text-[#f95940] text-[14px] font-[400]">FIRMA DE DOCUMENTO</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <a href="#" className="inline-flex items-center h-[32px] text-[#047aff] hover:text-[#0456b0]">
-                    <span className="w-5 h-5 inline-flex items-center justify-center rounded-full border border-[#047aff] text-sm">?</span>
+                  <a href="#" className="inline-flex items-center h-[32px] text-[#f95940] hover:text-[#f95940]">
+                    <span className="w-5 h-5 inline-flex items-center justify-center rounded-full border border-[#f95940] text-sm">?</span>
                   </a>
                   <p className="text-[14px] text-[#000000]">Ayuda</p>
                 </div>
@@ -81,7 +81,7 @@ const DocumentSignature: FC = () => {
               <div className="bg-white rounded-2xl p-6 sm:p-8 shadow-lg mb-8">
                 <h1 className="text-[32px] sm:text-[38px] font-[500] tracking-[-1.5px] leading-[1.2] sm:leading-[52px] text-center mb-4">
                   <span className="text-[#1d1d1f]">Revisa y firma tu </span>
-                  <span className="bg-gradient-to-r from-[#3d9bff] to-[#047aff] inline-block text-transparent bg-clip-text">
+                  <span className="bg-gradient-to-r from-[#f95940] to-[#f95940] inline-block text-transparent bg-clip-text">
                     contrato
                   </span>
                 </h1>
@@ -130,12 +130,12 @@ const DocumentSignature: FC = () => {
 
                     {signature ? (
                       <div className="mb-6">
-                        <div className="border-2 border-blue-500 rounded-lg p-4 bg-blue-50">
+                        <div className="border-2 border-blue-500 rounded-lg p-4 bg-[#f95940]/20">
                           <img src={signature} alt="Firma" className="max-h-32 mx-auto" />
                         </div>
                         <button
                           onClick={() => setShowSignatureModal(true)}
-                          className="mt-4 text-blue-500 text-sm hover:underline w-full text-center"
+                          className="mt-4 text-[#f95940] text-sm hover:underline w-full text-center"
                         >
                           Volver a firmar
                         </button>
@@ -167,7 +167,7 @@ const DocumentSignature: FC = () => {
 
                   <div className="bg-white rounded-2xl p-6 shadow-lg">
                     <div className="flex items-start gap-3">
-                      <Lock size={24} className="text-[#047aff]" />
+                      <Lock size={24} className="text-[#f95940]" />
                       <div>
                         <h3 className="text-[17px] font-[500] text-[#1d1d1f] mb-2">Firma segura</h3>
                         <p className="text-[14px] text-gray-600">
@@ -181,7 +181,7 @@ const DocumentSignature: FC = () => {
                     <h2 className="text-[20px] font-[500] text-[#1d1d1f] mb-4">Pasos de verificación</h2>
                     <ul className="space-y-4">
                       <li className="flex items-start gap-3">
-                        <div className="flex-shrink-0 w-6 h-6 rounded-full bg-[#047aff] flex items-center justify-center mt-0.5">
+                        <div className="flex-shrink-0 w-6 h-6 rounded-full bg-[#f95940] flex items-center justify-center mt-0.5">
                           <CheckCircle weight="fill" className="w-3.5 h-3.5 text-white" />
                         </div>
                         <span className="text-[15px] text-[#1d1d1f] leading-6">
@@ -189,7 +189,7 @@ const DocumentSignature: FC = () => {
                         </span>
                       </li>
                       <li className="flex items-start gap-3">
-                        <div className="flex-shrink-0 w-6 h-6 rounded-full bg-[#047aff] flex items-center justify-center mt-0.5">
+                        <div className="flex-shrink-0 w-6 h-6 rounded-full bg-[#f95940] flex items-center justify-center mt-0.5">
                           <CheckCircle weight="fill" className="w-3.5 h-3.5 text-white" />
                         </div>
                         <span className="text-[15px] text-[#1d1d1f] leading-6">
@@ -197,7 +197,7 @@ const DocumentSignature: FC = () => {
                         </span>
                       </li>
                       <li className="flex items-start gap-3">
-                        <div className="flex-shrink-0 w-6 h-6 rounded-full bg-[#047aff] flex items-center justify-center mt-0.5">
+                        <div className="flex-shrink-0 w-6 h-6 rounded-full bg-[#f95940] flex items-center justify-center mt-0.5">
                           <CheckCircle weight="fill" className="w-3.5 h-3.5 text-white" />
                         </div>
                         <span className="text-[15px] text-[#1d1d1f] leading-6">

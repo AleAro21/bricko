@@ -72,8 +72,8 @@ const AddAsset: FC<AddAssetProps> = ({ setShowModal, showModal, onAddAsset, asse
   return (
     <Modal setShowModal={setShowModal} showModal={showModal}>
       <div className="w-full min-w-[400px] max-w-2xl mx-auto">
-        <div className="inline-flex items-center h-[32px] bg-[#047aff] bg-opacity-10 px-[12px] py-[6px] rounded-md mb-2.5">
-          <span className="text-[#047aff] text-[14px] font-normal">NUEVO ACTIVO DIGITAL</span>
+        <div className="inline-flex items-center h-[32px] bg-[#f95940] bg-opacity-10 px-[12px] py-[6px] rounded-md mb-2.5">
+          <span className="text-[#f95940] text-[14px] font-normal">NUEVO ACTIVO DIGITAL</span>
         </div>
 
         <h2 className="text-[22px] font-medium text-[#1d1d1f] mb-6">
@@ -84,13 +84,13 @@ const AddAsset: FC<AddAssetProps> = ({ setShowModal, showModal, onAddAsset, asse
           <form className="space-y-6" onSubmit={handleSubmit}>
             <div>
               <label htmlFor="assetType" className="block text-[17px] font-normal text-[#1d1d1f] mb-2.5">
-                Tipo de activo digital <span className="text-[#047aff]">*</span>
+                Tipo de activo digital <span className="text-[#f95940]">*</span>
               </label>
               <select
                 id="assetType"
                 name="assetType"
                 required
-                className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:border-[#047aff] transition-all text-[16px]"
+                className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:border-[#f95940] transition-all text-[16px]"
                 value={selectedCategoryId}
                 onChange={handleCategoryChange}
               >
@@ -106,13 +106,13 @@ const AddAsset: FC<AddAssetProps> = ({ setShowModal, showModal, onAddAsset, asse
             {selectedCategoryId && (
               <div>
                 <label htmlFor="subcategory" className="block text-[17px] font-normal text-[#1d1d1f] mb-2.5">
-                  Plataforma <span className="text-[#047aff]">*</span>
+                  Plataforma <span className="text-[#f95940]">*</span>
                 </label>
                 <select
                   id="subcategory"
                   name="subcategory"
                   required
-                  className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:border-[#047aff] transition-all text-[16px]"
+                  className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:border-[#f95940] transition-all text-[16px]"
                   value={selectedSubcategory}
                   onChange={handleSubcategoryChange}
                 >
@@ -131,7 +131,7 @@ const AddAsset: FC<AddAssetProps> = ({ setShowModal, showModal, onAddAsset, asse
             {selectedSubcategory === 'Otro' && (
               <div>
                 <label htmlFor="customPlatform" className="block text-[17px] font-normal text-[#1d1d1f] mb-2.5">
-                  Especificar plataforma <span className="text-[#047aff]">*</span>
+                  Especificar plataforma <span className="text-[#f95940]">*</span>
                 </label>
                 <input
                   type="text"
@@ -140,7 +140,7 @@ const AddAsset: FC<AddAssetProps> = ({ setShowModal, showModal, onAddAsset, asse
                   required
                   value={customPlatform}
                   onChange={(e) => setCustomPlatform(e.target.value)}
-                  className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:border-[#047aff] transition-all text-[16px]"
+                  className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:border-[#f95940] transition-all text-[16px]"
                   placeholder="Escriba el nombre de la plataforma"
                 />
               </div>
@@ -148,28 +148,28 @@ const AddAsset: FC<AddAssetProps> = ({ setShowModal, showModal, onAddAsset, asse
 
             <div>
               <label htmlFor="name" className="block text-[17px] font-normal text-[#1d1d1f] mb-2.5">
-                Nombre del activo <span className="text-[#047aff]">*</span>
+                Nombre del activo <span className="text-[#f95940]">*</span>
               </label>
               <input
                 type="text"
                 id="name"
                 name="name"
                 required
-                className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:border-[#047aff] transition-all text-[16px]"
+                className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:border-[#f95940] transition-all text-[16px]"
                 placeholder="Ej: Cuenta de Facebook, Wallet de Bitcoin"
               />
             </div>
 
             <div>
               <label htmlFor="accountName" className="block text-[17px] font-normal text-[#1d1d1f] mb-2.5">
-                Nombre de la cuenta o identificador <span className="text-[#047aff]">*</span>
+                Nombre de la cuenta o identificador <span className="text-[#f95940]">*</span>
               </label>
               <input
                 type="text"
                 id="accountName"
                 name="accountName"
                 required
-                className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:border-[#047aff] transition-all text-[16px]"
+                className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:border-[#f95940] transition-all text-[16px]"
                 placeholder="@usuario o nombre de cuenta"
               />
             </div>
@@ -182,7 +182,7 @@ const AddAsset: FC<AddAssetProps> = ({ setShowModal, showModal, onAddAsset, asse
                 id="instructions"
                 name="instructions"
                 rows={3}
-                className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:border-[#047aff] transition-all text-[16px] resize-none"
+                className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:border-[#f95940] transition-all text-[16px] resize-none"
                 placeholder="Instrucciones sobre qué hacer con esta cuenta"
               />
             </div>
@@ -194,7 +194,7 @@ const AddAsset: FC<AddAssetProps> = ({ setShowModal, showModal, onAddAsset, asse
                   id="hasBackupCodes"
                   name="hasBackupCodes"
                   value="true"
-                  className="h-6 w-6 rounded border-gray-300 text-[#047aff] focus:ring-[#047aff] transition-all"
+                  className="h-6 w-6 rounded border-gray-300 text-[#f95940] focus:ring-[#f95940] transition-all"
                 />
                 <label htmlFor="hasBackupCodes" className="text-[16px] font-normal text-[#1d1d1f]">
                   Tengo códigos de respaldo o recuperación
@@ -209,7 +209,7 @@ const AddAsset: FC<AddAssetProps> = ({ setShowModal, showModal, onAddAsset, asse
                   type="text"
                   id="backupLocation"
                   name="backupLocation"
-                  className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:border-[#047aff] transition-all text-[16px]"
+                  className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:border-[#f95940] transition-all text-[16px]"
                   placeholder="Ej: Gestor de contraseñas, archivo específico"
                 />
               </div>

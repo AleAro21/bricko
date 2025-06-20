@@ -35,19 +35,19 @@ const CardStart = ({
       onClick={handleClick}
       className={`relative flex flex-col items-start p-4 sm:p-6 rounded-xl transition-all duration-500 cursor-pointer w-full h-auto min-h-[150px] sm:min-h-[280px] shadow-md hover:shadow-lg
         ${isSelected 
-          ? 'bg-blue-50 border border-blue-500' 
+          ? 'bg-[#f95940]/20 border border-blue-500' 
           : (!isSelected && maxSelections && currentSelections >= maxSelections)
             ? 'bg-gray-50 cursor-not-allowed opacity-60'
             : 'bg-white hover:scale-[1.02]'
         }`}
     >
       {isSelected && (
-        <div className="absolute top-4 right-4 w-5 h-5 rounded-full bg-blue-500 flex items-center justify-center">
+        <div className="absolute top-4 right-4 w-5 h-5 rounded-full bg-[#f95940]/200 flex items-center justify-center">
           <FaCheck className="text-white text-xs" />
         </div>
       )}
       <div className="flex items-center mb-3">
-        <div className="w-10 h-10 flex items-center justify-center text-xl text-[#047aff]">
+        <div className="w-10 h-10 flex items-center justify-center text-xl text-[#f95940]">
           {icon}
         </div>
       </div>

@@ -54,8 +54,8 @@ const Add: FC<AddProps> = ({ setShowModal, showModal, onAddProperty }) => {
   return (
     <Modal setShowModal={setShowModal} showModal={showModal}>
       <div className="w-full min-w-[400px] max-w-2xl mx-auto">
-        <div className="inline-flex items-center h-[32px] bg-[#047aff] bg-opacity-10 px-[12px] py-[6px] rounded-md mb-2.5">
-          <span className="text-[#047aff] text-[14px] font-[400]">NUEVO ACTIVO</span>
+        <div className="inline-flex items-center h-[32px] bg-[#f95940] bg-opacity-10 px-[12px] py-[6px] rounded-md mb-2.5">
+          <span className="text-[#f95940] text-[14px] font-[400]">NUEVO ACTIVO</span>
         </div>
 
         <h2 className="text-[22px] font-[500] text-[#1d1d1f] mb-6">
@@ -66,12 +66,12 @@ const Add: FC<AddProps> = ({ setShowModal, showModal, onAddProperty }) => {
           <form className="space-y-6" onSubmit={handleSubmit}>
             <div>
               <label htmlFor="assetType" className="block text-[17px] font-[400] text-[#1d1d1f] mb-2.5">
-                Tipo de activo <span className="text-[#047aff]">*</span>
+                Tipo de activo <span className="text-[#f95940]">*</span>
               </label>
               <select
                 id="assetType"
                 name="assetType"
-                className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:border-[#047aff] transition-all text-[16px]"
+                className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:border-[#f95940] transition-all text-[16px]"
                 required
                 defaultValue=""
               >
@@ -86,21 +86,21 @@ const Add: FC<AddProps> = ({ setShowModal, showModal, onAddProperty }) => {
 
             <div>
               <label htmlFor="name" className="block text-[17px] font-[400] text-[#1d1d1f] mb-2.5">
-                Nombre del activo <span className="text-[#047aff]">*</span>
+                Nombre del activo <span className="text-[#f95940]">*</span>
               </label>
               <input
                 type="text"
                 id="name"
                 name="name"
                 required
-                className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:border-[#047aff] transition-all text-[16px]"
+                className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:border-[#f95940] transition-all text-[16px]"
                 placeholder="Ej: Casa Principal, Cuenta BBVA"
               />
             </div>
 
             <div>
               <label htmlFor="value" className="block text-[17px] font-[400] text-[#1d1d1f] mb-2.5">
-                Valor estimado (MXN) <span className="text-[#047aff]">*</span>
+                Valor estimado (MXN) <span className="text-[#f95940]">*</span>
               </label>
               <input
                 type="number"
@@ -109,7 +109,7 @@ const Add: FC<AddProps> = ({ setShowModal, showModal, onAddProperty }) => {
                 required
                 min="0"
                 step="0.01"
-                className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:border-[#047aff] transition-all text-[16px]"
+                className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:border-[#f95940] transition-all text-[16px]"
                 placeholder="0.00"
               />
             </div>
@@ -122,7 +122,7 @@ const Add: FC<AddProps> = ({ setShowModal, showModal, onAddProperty }) => {
                 type="text"
                 id="location"
                 name="location"
-                className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:border-[#047aff] transition-all text-[16px]"
+                className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:border-[#f95940] transition-all text-[16px]"
                 placeholder="Ej: BBVA, Av. Reforma 123"
               />
             </div>
@@ -135,7 +135,7 @@ const Add: FC<AddProps> = ({ setShowModal, showModal, onAddProperty }) => {
                 id="description"
                 name="description"
                 rows={3}
-                className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:border-[#047aff] transition-all text-[16px] resize-none"
+                className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:border-[#f95940] transition-all text-[16px] resize-none"
                 placeholder="Información adicional relevante"
               />
             </div>

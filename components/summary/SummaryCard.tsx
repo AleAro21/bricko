@@ -34,7 +34,7 @@ const SummaryCard = ({
         <FaArrowRight className="text-gray-600 text-[10px]" />
       </div>
       <div className="flex items-center mb-2">
-        <div className="w-8 h-8 flex items-center justify-center text-lg text-[#047aff]">
+        <div className="w-8 h-8 flex items-center justify-center text-lg text-[#f95940]">
           {icon}
         </div>
       </div>

@@ -80,8 +80,8 @@ const AddAsset: FC<AddAssetProps> = ({ setShowModal, showModal, onAddAsset, asse
           </svg>
         </button>
 
-        <div className="inline-flex items-center h-[32px] bg-[#047aff] bg-opacity-10 px-[12px] py-[6px] rounded-md mb-2.5">
-          <span className="text-[#047aff] text-[14px] font-normal">NUEVO REGISTRO</span>
+        <div className="inline-flex items-center h-[32px] bg-[#f95940] bg-opacity-10 px-[12px] py-[6px] rounded-md mb-2.5">
+          <span className="text-[#f95940] text-[14px] font-normal">NUEVO REGISTRO</span>
         </div>
 
         <h2 className="text-[22px] font-medium text-[#1d1d1f] mb-6">
@@ -93,12 +93,12 @@ const AddAsset: FC<AddAssetProps> = ({ setShowModal, showModal, onAddAsset, asse
             {/* Asset Category Dropdown */}
             <div>
               <label htmlFor="assetType" className="block text-[17px] font-normal text-[#1d1d1f] mb-2.5">
-               Activo <span className="text-[#047aff]">*</span>
+               Activo <span className="text-[#f95940]">*</span>
               </label>
               <select
                 id="assetType"
                 name="assetType"
-                className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:border-[#047aff] transition-all text-[16px]"
+                className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:border-[#f95940] transition-all text-[16px]"
                 required
                 value={selectedCategoryId}
                 onChange={handleCategoryChange}
@@ -117,12 +117,12 @@ const AddAsset: FC<AddAssetProps> = ({ setShowModal, showModal, onAddAsset, asse
             {selectedCategoryId && (
               <div>
                 <label htmlFor="subcategory" className="block text-[17px] font-normal text-[#1d1d1f] mb-2.5">
-                  Tipo de activo <span className="text-[#047aff]">*</span>
+                  Tipo de activo <span className="text-[#f95940]">*</span>
                 </label>
                 <select
                   id="subcategory"
                   name="subcategory"
-                  className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:border-[#047aff] transition-all text-[16px]"
+                  className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:border-[#f95940] transition-all text-[16px]"
                   required
                   value={selectedSubcategory}
                   onChange={handleSubcategoryChange}
@@ -139,21 +139,21 @@ const AddAsset: FC<AddAssetProps> = ({ setShowModal, showModal, onAddAsset, asse
 
             <div>
               <label htmlFor="name" className="block text-[17px] font-normal text-[#1d1d1f] mb-2.5">
-                Nombre del activo <span className="text-[#047aff]">*</span>
+                Nombre del activo <span className="text-[#f95940]">*</span>
               </label>
               <input
                 type="text"
                 id="name"
                 name="name"
                 required
-                className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:border-[#047aff] transition-all text-[16px]"
+                className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:border-[#f95940] transition-all text-[16px]"
                 placeholder="Ej: Casa Principal, Cuenta BBVA"
               />
             </div>
 
             <div>
               <label htmlFor="value" className="block text-[17px] font-normal text-[#1d1d1f] mb-2.5">
-                Valor estimado (MXN) <span className="text-[#047aff]">*</span>
+                Valor estimado (MXN) <span className="text-[#f95940]">*</span>
               </label>
               <input
                 type="number"
@@ -162,7 +162,7 @@ const AddAsset: FC<AddAssetProps> = ({ setShowModal, showModal, onAddAsset, asse
                 required
                 min="0"
                 step="0.01"
-                className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:border-[#047aff] transition-all text-[16px]"
+                className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:border-[#f95940] transition-all text-[16px]"
                 placeholder="0.00"
               />
             </div>
@@ -175,7 +175,7 @@ const AddAsset: FC<AddAssetProps> = ({ setShowModal, showModal, onAddAsset, asse
                 type="text"
                 id="location"
                 name="location"
-                className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:border-[#047aff] transition-all text-[16px]"
+                className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:border-[#f95940] transition-all text-[16px]"
                 placeholder="Ej: BBVA, Av. Reforma 123"
               />
             </div>
@@ -188,7 +188,7 @@ const AddAsset: FC<AddAssetProps> = ({ setShowModal, showModal, onAddAsset, asse
                 id="description"
                 name="description"
                 rows={3}
-                className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:border-[#047aff] transition-all text-[16px] resize-none"
+                className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:border-[#f95940] transition-all text-[16px] resize-none"
                 placeholder="Información adicional relevante"
               />
             </div>

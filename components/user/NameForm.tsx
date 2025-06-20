@@ -80,10 +80,10 @@ const theme = createTheme({
             height: '46px',
             borderRadius: '0.5rem',
             '&:hover .MuiOutlinedInput-notchedOutline': {
-              borderColor: '#047aff',
+              borderColor: '#f95940',
             },
             '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-              borderColor: '#047aff',
+              borderColor: '#f95940',
             },
           },
           '& .MuiOutlinedInput-notchedOutline': {
@@ -98,7 +98,7 @@ const theme = createTheme({
         },
         option: {
           '&[aria-selected="true"]': {
-            backgroundColor: '#047aff !important',
+            backgroundColor: '#f95940 !important',
             color: 'white',
           },
           '&:hover': {
@@ -115,10 +115,10 @@ const theme = createTheme({
         root: {
           '& .MuiOutlinedInput-root': {
             '&:hover .MuiOutlinedInput-notchedOutline': {
-              borderColor: '#047aff',
+              borderColor: '#f95940',
             },
             '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-              borderColor: '#047aff',
+              borderColor: '#f95940',
             },
           },
         },
@@ -129,7 +129,7 @@ const theme = createTheme({
         root: {
           color: '#D1D5DB',
           '&.Mui-checked': {
-            color: '#047aff',
+            color: '#f95940',
           },
         },
       },
@@ -306,8 +306,8 @@ const NameForm: FC<NameFormProps> = ({ initialUser }) => {
             <div className="flex flex-col lg:flex-row gap-8 lg:gap-24 h-full py-12">
               <div className="lg:w-1/3">
                 <div className="flex items-center justify-between mb-2.5">
-                  <div className="inline-flex items-center h-[32px] bg-[#047aff] bg-opacity-10 px-[12px] py-[6px] rounded-md">
-                    <span className="text-[#047aff] text-[14px] font-[400]">DATOS PERSONALES</span>
+                  <div className="inline-flex items-center h-[32px] bg-[#f95940] bg-opacity-10 px-[12px] py-[6px] rounded-md">
+                    <span className="text-[#f95940] text-[14px] font-[400]">DATOS PERSONALES</span>
                   </div>
                 </div>
                 <h1 className="text-[32px] sm:text-[38px] font-[500] tracking-[-1.5px] leading-[1.2] sm:leading-[52px] mb-[15px]">
@@ -315,7 +315,7 @@ const NameForm: FC<NameFormProps> = ({ initialUser }) => {
                   <span
                     style={{
                       backgroundImage:
-                        "linear-gradient(to left, #047aff 30%, #0d4ba3 100%)",
+                        "linear-gradient(to left, #f95940 30%, #f95940 100%)",
                     }}
                     className="inline-block text-transparent bg-clip-text"
                   >
@@ -326,8 +326,8 @@ const NameForm: FC<NameFormProps> = ({ initialUser }) => {
                   Necesitamos algunos datos personales para comenzar con tu testamento.
                 </p>
                 <div className="flex justify-end items-center gap-2 mb-5">
-                  <Link href="#" className="inline-flex items-center h-[32px] text-[#047aff] hover:text-[#0456b0]">
-                    <span className="w-5 h-5 inline-flex items-center justify-center rounded-full border border-[#047aff] text-sm">?</span>
+                  <Link href="#" className="inline-flex items-center h-[32px] text-[#f95940] hover:text-[#0456b0]">
+                    <span className="w-5 h-5 inline-flex items-center justify-center rounded-full border border-[#f95940] text-sm">?</span>
                   </Link>
                   <p className="text-[14px] text-[#000000]">Articulo relacionado</p>
                 </div>
@@ -349,14 +349,14 @@ const NameForm: FC<NameFormProps> = ({ initialUser }) => {
                         <div className="space-y-4">
                           <div>
                             <label htmlFor="name" className="block text-[17px] font-[400] text-[#1d1d1f] mb-2.5">
-                              Nombre <span className="text-[#047aff]">*</span>
+                              Nombre <span className="text-[#f95940]">*</span>
                             </label>
                             <input
                               type="text"
                               id="name"
                               value={formValues.name}
                               onChange={handleChange}
-                              className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:border-[#047aff] transition-all"
+                              className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:border-[#f95940] transition-all"
                               required
                             />
                           </div>
@@ -369,38 +369,38 @@ const NameForm: FC<NameFormProps> = ({ initialUser }) => {
                               id="middleName"
                               value={formValues.middleName}
                               onChange={handleChange}
-                              className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:border-[#047aff] transition-all"
+                              className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:border-[#f95940] transition-all"
                             />
                           </div>
                           <div>
                             <label htmlFor="fatherLastName" className="block text-[17px] font-[400] text-[#1d1d1f] mb-2.5">
-                              Apellido Paterno <span className="text-[#047aff]">*</span>
+                              Apellido Paterno <span className="text-[#f95940]">*</span>
                             </label>
                             <input
                               type="text"
                               id="fatherLastName"
                               value={formValues.fatherLastName}
                               onChange={handleChange}
-                              className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:border-[#047aff] transition-all"
+                              className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:border-[#f95940] transition-all"
                               required
                             />
                           </div>
                           <div>
                             <label htmlFor="motherLastName" className="block text-[17px] font-[400] text-[#1d1d1f] mb-2.5">
-                              Apellido Materno <span className="text-[#047aff]">*</span>
+                              Apellido Materno <span className="text-[#f95940]">*</span>
                             </label>
                             <input
                               type="text"
                               id="motherLastName"
                               value={formValues.motherLastName}
                               onChange={handleChange}
-                              className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:border-[#047aff] transition-all"
+                              className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:border-[#f95940] transition-all"
                               required
                             />
                           </div>
                           <div>
                             <label className="block text-[17px] font-[400] text-[#1d1d1f] mb-2.5">
-                              Género <span className="text-[#047aff]">*</span>
+                              Género <span className="text-[#f95940]">*</span>
                             </label>
                             <FormControl component="fieldset">
                               <RadioGroup row value={formValues.gender} onChange={handleGenderChange}>
@@ -411,7 +411,7 @@ const NameForm: FC<NameFormProps> = ({ initialUser }) => {
                           </div>
                           <div>
                             <label htmlFor="country" className="block text-[17px] font-[400] text-[#1d1d1f] mb-2.5">
-                              País de Nacimiento <span className="text-[#047aff]">*</span>
+                              País de Nacimiento <span className="text-[#f95940]">*</span>
                             </label>
                             <Autocomplete
                               options={COUNTRIES}
@@ -425,7 +425,7 @@ const NameForm: FC<NameFormProps> = ({ initialUser }) => {
                           </div>
                           <div>
                             <label htmlFor="birthDate" className="block text-[17px] font-[400] text-[#1d1d1f] mb-2.5">
-                              Fecha de nacimiento <span className="text-[#047aff]">*</span>
+                              Fecha de nacimiento <span className="text-[#f95940]">*</span>
                             </label>
                             <Calendar
                               selectedDate={formValues.birthDate}
@@ -433,19 +433,19 @@ const NameForm: FC<NameFormProps> = ({ initialUser }) => {
                               minDate={new Date(1923, 0, 1)}
                               maxDate={new Date()}
                               placeholderText="Seleccionar fecha de nacimiento"
-                              className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:border-[#047aff] transition-all"
+                              className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:border-[#f95940] transition-all"
                             />
                           </div>
                           <div>
                             <label htmlFor="governmentId" className="block text-[17px] font-[400] text-[#1d1d1f] mb-2.5">
-                              RFC <span className="text-[#047aff]">*</span>
+                              RFC <span className="text-[#f95940]">*</span>
                             </label>
                             <input
                               type="text"
                               id="governmentId"
                               value={formValues.governmentId}
                               onChange={handleChange}
-                              className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:border-[#047aff] transition-all"
+                              className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:border-[#f95940] transition-all"
                               required
                             />
                             <p className="text-[12px] text-gray-500 mt-1">El RFC debe tener 13 dígitos.</p>
@@ -467,7 +467,7 @@ const NameForm: FC<NameFormProps> = ({ initialUser }) => {
                               }
                               onChange={handlePhoneChange}
                               placeholder="Opcional"
-                              className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:border-[#047aff] transition-all"
+                              className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:border-[#f95940] transition-all"
                             />
                           </div>
                         </div>

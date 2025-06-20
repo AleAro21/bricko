@@ -26,17 +26,17 @@ const Card: React.FC<CardProps> = ({ linkNo, linkyes, titleNo, titleYes }) => {
         onClick={() => handleCardClick('yes')}
         className={`relative flex flex-col items-start p-4 sm:p-4 rounded-xl transition-all duration-500 cursor-pointer w-full sm:w-[260px] h-auto min-h-[150px] sm:h-[280px] shadow-md hover:shadow-lg
           ${selectedCard === 'yes'
-            ? 'bg-blue-50 border border-blue-500' 
+            ? 'bg-[#f95940]/20 border border-blue-500' 
             : 'bg-white hover:scale-[1.02]'
           }`}
       >
         {selectedCard === 'yes' && (
-          <div className="absolute top-4 right-4 w-5 h-5 rounded-full bg-blue-500 flex items-center justify-center">
+          <div className="absolute top-4 right-4 w-5 h-5 rounded-full bg-[#f95940]/200 flex items-center justify-center">
             <Check weight="bold" className="text-white text-xs" />
           </div>
         )}
         <div className="flex items-center mb-3">
-          <div className="w-10 h-10 flex items-center justify-center text-xl text-[#047aff]">
+          <div className="w-10 h-10 flex items-center justify-center text-xl text-[#f95940]">
             <Check size={40} weight="regular" />
           </div>
         </div>
@@ -48,12 +48,12 @@ const Card: React.FC<CardProps> = ({ linkNo, linkyes, titleNo, titleYes }) => {
         onClick={() => handleCardClick('no')}
         className={`relative flex flex-col items-start p-4 sm:p-4 rounded-xl transition-all duration-500 cursor-pointer w-full sm:w-[260px] h-auto min-h-[150px] sm:h-[280px] shadow-md hover:shadow-lg
           ${selectedCard === 'no' 
-            ? 'bg-blue-50 border border-blue-500' 
+            ? 'bg-[#f95940]/20 border border-blue-500' 
             : 'bg-white hover:scale-[1.02]'
           }`}
       >
         {selectedCard === 'no' && (
-          <div className="absolute top-4 right-4 w-5 h-5 rounded-full bg-blue-500 flex items-center justify-center">
+          <div className="absolute top-4 right-4 w-5 h-5 rounded-full bg-[#f95940]/200 flex items-center justify-center">
             <Check weight="bold" className="text-white text-xs" />
           </div>
         )}

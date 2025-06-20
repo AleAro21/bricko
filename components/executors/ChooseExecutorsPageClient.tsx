@@ -233,18 +233,18 @@ const ChooseExecutorsPageClient: FC<ChooseExecutorsPageClientProps> = ({
                                 {/* Header section */}
                                 <div>
                                     <div className="flex items-center gap-2 mb-2.5">
-                                        <div className="inline-flex items-center h-[32px] bg-[#047aff] bg-opacity-10 px-[12px] py-[6px] rounded-md">
-                                            <span className="text-[#047aff] text-[14px] font-[400]">ALBACEAS</span>
+                                        <div className="inline-flex items-center h-[32px] bg-[#f95940] bg-opacity-10 px-[12px] py-[6px] rounded-md">
+                                            <span className="text-[#f95940] text-[14px] font-[400]">ALBACEAS</span>
                                         </div>
-                                        <Link href="#" className="inline-flex items-center h-[32px] text-[#047aff] hover:text-[#0456b0]">
-                                            <span className="w-5 h-5 inline-flex items-center justify-center rounded-full border border-[#047aff] text-sm">?</span>
+                                        <Link href="#" className="inline-flex items-center h-[32px] text-[#f95940] hover:text-[#0456b0]">
+                                            <span className="w-5 h-5 inline-flex items-center justify-center rounded-full border border-[#f95940] text-sm">?</span>
                                         </Link>
                                     </div>
                                     <h1 className="text-[32px] sm:text-[38px] font-[500] tracking-[-1.5px] leading-[1.2] sm:leading-[52px] mb-[15px]">
                                         <span className="text-[#1d1d1f]">
                                             ¿A quién le gustaría elegir como su </span>
                                         <span
-                                            style={{ backgroundImage: "linear-gradient(to left, #047aff 30%, #0d4ba3 100%)" }}
+                                            style={{ backgroundImage: "linear-gradient(to left, #f95940 30%, #f95940 100%)" }}
                                             className="inline-block text-transparent bg-clip-text"
                                         >
                                              albacea?
@@ -253,7 +253,7 @@ const ChooseExecutorsPageClient: FC<ChooseExecutorsPageClientProps> = ({
                                     <p className="text-[16px] text-[#1d1d1f] leading-6 mb-4">
                                         Seleccione contactos de confianza para administrar su patrimonio.
                                     </p>
-                                    <div className="bg-blue-50 p-4 rounded-lg mt-4">
+                                    <div className="bg-[#f95940]/20 p-4 rounded-lg mt-4">
                                         <p className="text-sm text-blue-700">
                                             <strong>Nota sobre el orden de prioridad:</strong><br />
                                             El orden de los albaceas determina su prioridad. El primer albacea (Prioridad 1) es el principal,
@@ -311,7 +311,7 @@ const ChooseExecutorsPageClient: FC<ChooseExecutorsPageClientProps> = ({
                                                 <div key={contact.id} className="flex items-center gap-4">
                                                     <input
                                                         type="checkbox"
-                                                        className="h-5 w-5 text-[#047aff] border-gray-300"
+                                                        className="h-5 w-5 text-[#f95940] border-gray-300"
                                                         checked={selectedContactIds.includes(contact.id!)}
                                                         onChange={() => toggleContactSelection(contact.id!)}
                                                     />
@@ -344,7 +344,7 @@ const ChooseExecutorsPageClient: FC<ChooseExecutorsPageClientProps> = ({
                                             const contact = contacts.find(c => c.id === executor.contactId);
                                             return (
                                                 <div key={executor.id} className="flex items-center gap-4">
-                                                    <div className="flex-shrink-0 w-8 h-8 bg-[#047aff] rounded-full flex items-center justify-center">
+                                                    <div className="flex-shrink-0 w-8 h-8 bg-[#f95940] rounded-full flex items-center justify-center">
                                                         <span className="text-white font-medium">
                                                             {index + 1}
                                                         </span>

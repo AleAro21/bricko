@@ -34,7 +34,7 @@ const FooterTwo: React.FC = () => {
         <div className="flex gap-4 items-center">
 
           <p className='text-[14px] text-[#1F202780] font-[300]'>
-            © {currentYear} GNP Seguros
+            © {currentYear} Bricko
           </p>
         </div>
         {/* <div className="flex items-center gap-4">

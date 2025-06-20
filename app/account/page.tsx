@@ -23,13 +23,13 @@ const AccountPage: FC = () => {
           <div className="flex flex-col lg:flex-row gap-8 lg:gap-24 h-full py-12">
             {/* Left column - Title section */}
             <div className="lg:w-1/3">
-              <div className="inline-flex items-center h-[32px] bg-[#047aff] bg-opacity-10 px-[12px] py-[6px] rounded-md mb-2.5">
-                <span className="text-[#047aff] text-[14px] font-[400]">CONFIGURACIÓN</span>
+              <div className="inline-flex items-center h-[32px] bg-[#f95940] bg-opacity-10 px-[12px] py-[6px] rounded-md mb-2.5">
+                <span className="text-[#f95940] text-[14px] font-[400]">CONFIGURACIÓN</span>
               </div>
 
               <h1 className='text-[32px] sm:text-[38px] font-[500] tracking-[-1.5px] leading-[1.2] sm:leading-[52px] mb-[15px]'>
                 <span className='text-[#1d1d1f]'>Ajustes de tu </span>
-                <span className='bg-gradient-to-r from-[#3d9bff] to-[#047aff] inline-block text-transparent bg-clip-text'>cuenta</span>
+                <span className='bg-gradient-to-r from-[#3d9bff] to-[#f95940] inline-block text-transparent bg-clip-text'>cuenta</span>
               </h1>
 
               <p className="text-[16px] text-[#1d1d1f] leading-6 mb-8">
@@ -49,7 +49,7 @@ const AccountPage: FC = () => {
                     className={`block px-4 py-3 rounded-xl text-[14px] font-[400] transition-colors ${
                       item.isDelete 
                         ? 'text-red-600 hover:bg-red-50' 
-                        : 'text-[#1d1d1f] hover:bg-[#047aff] hover:bg-opacity-10 hover:text-[#047aff]'
+                        : 'text-[#1d1d1f] hover:bg-[#f95940] hover:bg-opacity-10 hover:text-[#f95940]'
                     }`}
                   >
                     {item.text}
@@ -73,7 +73,7 @@ const AccountPage: FC = () => {
                       <input
                         type="email"
                         id="email"
-                        className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:border-[#047aff] transition-all"
+                        className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:border-[#f95940] transition-all"
                         required
                       />
                     </div>
@@ -84,7 +84,7 @@ const AccountPage: FC = () => {
                       <input
                         type="password"
                         id="password"
-                        className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:border-[#047aff] transition-all"
+                        className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:border-[#f95940] transition-all"
                         required
                       />
                     </div>
@@ -107,7 +107,7 @@ const AccountPage: FC = () => {
                       <input
                         type="password"
                         id="oldPassword"
-                        className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:border-[#047aff] transition-all"
+                        className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:border-[#f95940] transition-all"
                         required
                       />
                     </div>
@@ -118,7 +118,7 @@ const AccountPage: FC = () => {
                       <input
                         type="password"
                         id="newPassword"
-                        className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:border-[#047aff] transition-all"
+                        className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:border-[#f95940] transition-all"
                         required
                         minLength={10}
                       />
@@ -145,7 +145,7 @@ const AccountPage: FC = () => {
                           <input
                             type="checkbox"
                             id={preference.id}
-                            className="h-5 w-5 rounded border-gray-300 text-[#047aff] focus:ring-[#047aff] transition-colors"
+                            className="h-5 w-5 rounded border-gray-300 text-[#f95940] focus:ring-[#f95940] transition-colors"
                           />
                           <label htmlFor={preference.id} className="ml-3 text-[16px] text-[#1d1d1f]">
                             {preference.label}

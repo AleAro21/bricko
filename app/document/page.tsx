@@ -56,12 +56,12 @@ const DocumentViewClient: FC = () => {
           <div className="w-full max-w-6xl mx-auto flex flex-col min-h-[75vh] mb-4">
             <div className="py-4 px-4 sm:px-5">
               <div className="flex items-center justify-between mb-2.5">
-                <div className="inline-flex items-center h-[32px] bg-[#047aff] bg-opacity-10 px-[12px] py-[6px] rounded-md">
-                  <span className="text-[#047aff] text-[14px] font-[400]">TESTAMENTO DIGITAL</span>
+                <div className="inline-flex items-center h-[32px] bg-[#f95940] bg-opacity-10 px-[12px] py-[6px] rounded-md">
+                  <span className="text-[#f95940] text-[14px] font-[400]">TESTAMENTO DIGITAL</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <a href="#" className="inline-flex items-center h-[32px] text-[#047aff] hover:text-[#0456b0]">
-                    <span className="w-5 h-5 inline-flex items-center justify-center rounded-full border border-[#047aff] text-sm">?</span>
+                  <a href="#" className="inline-flex items-center h-[32px] text-[#f95940] hover:text-[#0456b0]">
+                    <span className="w-5 h-5 inline-flex items-center justify-center rounded-full border border-[#f95940] text-sm">?</span>
                   </a>
                   <p className="text-[14px] text-[#000000]">Artículo relacionado</p>
                 </div>
@@ -78,7 +78,7 @@ const DocumentViewClient: FC = () => {
                 
                 <h1 className="text-[32px] sm:text-[38px] font-[500] tracking-[-1.5px] leading-[1.2] sm:leading-[52px] text-center mb-4">
                   <span className="text-[#1d1d1f]">Tu testamento está </span>
-                  <span className="bg-gradient-to-r from-[#3d9bff] to-[#047aff] inline-block text-transparent bg-clip-text">
+                  <span className="bg-gradient-to-r from-[#3d9bff] to-[#f95940] inline-block text-transparent bg-clip-text">
                     listo
                   </span>
                 </h1>
@@ -131,7 +131,7 @@ const DocumentViewClient: FC = () => {
 
                   <div className="bg-white rounded-2xl p-6 shadow-lg">
                     <div className="flex items-start gap-3 mb-4">
-                      <Lock size={24} className="text-[#047aff]" />
+                      <Lock size={24} className="text-[#f95940]" />
                       <div>
                         <h3 className="text-[17px] font-[500] text-[#1d1d1f] mb-2">Seguridad garantizada</h3>
                         <p className="text-[14px] text-gray-600">
@@ -145,7 +145,7 @@ const DocumentViewClient: FC = () => {
                     <h2 className="text-[20px] font-[500] text-[#1d1d1f] mb-4">Próximos pasos</h2>
                     <ul className="space-y-4">
                       <li className="flex items-start gap-3">
-                        <div className="flex-shrink-0 w-6 h-6 rounded-full bg-[#047aff] flex items-center justify-center mt-0.5">
+                        <div className="flex-shrink-0 w-6 h-6 rounded-full bg-[#f95940] flex items-center justify-center mt-0.5">
                           <CheckCircle weight="fill" className="w-3.5 h-3.5 text-white" />
                         </div>
                         <span className="text-[15px] text-[#1d1d1f] leading-6">
@@ -153,7 +153,7 @@ const DocumentViewClient: FC = () => {
                         </span>
                       </li>
                       <li className="flex items-start gap-3">
-                        <div className="flex-shrink-0 w-6 h-6 rounded-full bg-[#047aff] flex items-center justify-center mt-0.5">
+                        <div className="flex-shrink-0 w-6 h-6 rounded-full bg-[#f95940] flex items-center justify-center mt-0.5">
                           <CheckCircle weight="fill" className="w-3.5 h-3.5 text-white" />
                         </div>
                         <span className="text-[15px] text-[#1d1d1f] leading-6">
@@ -161,7 +161,7 @@ const DocumentViewClient: FC = () => {
                         </span>
                       </li>
                       <li className="flex items-start gap-3">
-                        <div className="flex-shrink-0 w-6 h-6 rounded-full bg-[#047aff] flex items-center justify-center mt-0.5">
+                        <div className="flex-shrink-0 w-6 h-6 rounded-full bg-[#f95940] flex items-center justify-center mt-0.5">
                           <CheckCircle weight="fill" className="w-3.5 h-3.5 text-white" />
                         </div>
                         <span className="text-[15px] text-[#1d1d1f] leading-6">
@@ -190,7 +190,7 @@ const DocumentViewClient: FC = () => {
               <div className="space-y-4">
                 <button className="w-full flex items-center gap-3 p-4 rounded-lg hover:bg-gray-50 transition-colors">
                   <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center">
-                    <Share size={20} className="text-blue-600" />
+                    <Share size={20} className="text-[#f95940]" />
                   </div>
                   <div className="text-left">
                     <p className="text-[15px] font-[500] text-[#1d1d1f]">Generar enlace seguro</p>

@@ -20,7 +20,7 @@ const LegacyCard: FC<LegacyCardProps> = ({ title, description, icon, onClick }) 
         className="relative flex flex-col items-start p-6 rounded-xl transition-all duration-500 cursor-pointer w-full h-auto min-h-[120px] bg-white shadow-md hover:shadow-lg hover:scale-[1.02]"
     >
         <div className="flex items-center mb-2">
-            <div className="w-8 h-8 flex items-center justify-center text-lg text-[#047aff]">
+            <div className="w-8 h-8 flex items-center justify-center text-lg text-[#f95940]">
                 {icon}
             </div>
         </div>
@@ -89,18 +89,18 @@ const AccountAndPropertyPage: FC = () => {
                         <div className="space-y-6">
                             <div>
                                 <div className="flex items-center gap-2 mb-2.5">
-                                    <div className="inline-flex items-center h-[32px] bg-[#047aff] bg-opacity-10 px-[12px] py-[6px] rounded-md">
-                                        <span className="text-[#047aff] text-[14px] font-[400]">LEGADOS</span>
+                                    <div className="inline-flex items-center h-[32px] bg-[#f95940] bg-opacity-10 px-[12px] py-[6px] rounded-md">
+                                        <span className="text-[#f95940] text-[14px] font-[400]">LEGADOS</span>
                                     </div>
-                                    <Link href="#" className="inline-flex items-center h-[32px] text-[#047aff] hover:text-[#0456b0]">
-                                        <span className="w-5 h-5 inline-flex items-center justify-center rounded-full border border-[#047aff] text-sm">?</span>
+                                    <Link href="#" className="inline-flex items-center h-[32px] text-[#f95940] hover:text-[#0456b0]">
+                                        <span className="w-5 h-5 inline-flex items-center justify-center rounded-full border border-[#f95940] text-sm">?</span>
                                     </Link>
                                 </div>
 
                                 <h1 className="text-[32px] sm:text-[38px] font-[500] tracking-[-1.5px] leading-[1.2] sm:leading-[52px] mb-[15px]">
                                     <span className="text-[#1d1d1f]">Seleccione el tipo de </span>
                                     <span
-                                        style={{ backgroundImage: "linear-gradient(to left, #047aff 30%, #0d4ba3 100%)" }}
+                                        style={{ backgroundImage: "linear-gradient(to left, #f95940 30%, #f95940 100%)" }}
                                         className="inline-block text-transparent bg-clip-text"
                                     >
                                         legado
@@ -127,7 +127,7 @@ const AccountAndPropertyPage: FC = () => {
                                 </p>
                                 <ul className="space-y-3">
                                     <li className="flex items-start gap-3">
-                                        <div className="flex-shrink-0 w-5 h-5 rounded-full bg-[#047aff] flex items-center justify-center mt-0.5">
+                                        <div className="flex-shrink-0 w-5 h-5 rounded-full bg-[#f95940] flex items-center justify-center mt-0.5">
                                             <svg className="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
                                             </svg>
@@ -137,7 +137,7 @@ const AccountAndPropertyPage: FC = () => {
                                         </span>
                                     </li>
                                     <li className="flex items-start gap-3">
-                                        <div className="flex-shrink-0 w-5 h-5 rounded-full bg-[#047aff] flex items-center justify-center mt-0.5">
+                                        <div className="flex-shrink-0 w-5 h-5 rounded-full bg-[#f95940] flex items-center justify-center mt-0.5">
                                             <svg className="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
                                             </svg>
@@ -147,7 +147,7 @@ const AccountAndPropertyPage: FC = () => {
                                         </span>
                                     </li>
                                     <li className="flex items-start gap-3">
-                                        <div className="flex-shrink-0 w-5 h-5 rounded-full bg-[#047aff] flex items-center justify-center mt-0.5">
+                                        <div className="flex-shrink-0 w-5 h-5 rounded-full bg-[#f95940] flex items-center justify-center mt-0.5">
                                             <svg className="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
                                             </svg>

@@ -79,7 +79,7 @@ const Add: FC<AddProps> = ({ setShowModal, showModal, onAddExecutor }) => {
               required
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:border-[#047aff] transition-all text-[16px]"
+              className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:border-[#f95940] transition-all text-[16px]"
               placeholder="Nombre del albacea"
             />
           </div>
@@ -94,7 +94,7 @@ const Add: FC<AddProps> = ({ setShowModal, showModal, onAddExecutor }) => {
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:border-[#047aff] transition-all text-[16px]"
+              className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:border-[#f95940] transition-all text-[16px]"
               placeholder="correo@ejemplo.com"
             />
           </div>
@@ -108,7 +108,7 @@ const Add: FC<AddProps> = ({ setShowModal, showModal, onAddExecutor }) => {
               name="phone"
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
-              className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:border-[#047aff] transition-all text-[16px]"
+              className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:border-[#f95940] transition-all text-[16px]"
               placeholder="(opcional)"
             />
           </div>
@@ -122,7 +122,7 @@ const Add: FC<AddProps> = ({ setShowModal, showModal, onAddExecutor }) => {
               required
               value={relationship}
               onChange={(e) => setRelationship(e.target.value)}
-              className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:border-[#047aff] transition-all text-[16px]"
+              className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:border-[#f95940] transition-all text-[16px]"
             >
               <option value="" disabled>Seleccionar relación</option>
               {relationshipOptions.map((option) => (
@@ -142,7 +142,7 @@ const Add: FC<AddProps> = ({ setShowModal, showModal, onAddExecutor }) => {
             </button>
             <button
               type="submit"
-              className="px-6 py-2 bg-[#047aff] text-white rounded-lg hover:bg-[#0456b0] transition-colors"
+              className="px-6 py-2 bg-[#f95940] text-white rounded-lg hover:bg-[#0456b0] transition-colors"
             >
               Agregar
             </button>

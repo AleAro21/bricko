@@ -51,7 +51,7 @@ const PaymentSummary: FC<PaymentSummaryProps> = ({
               <h3 className="font-medium text-gray-900">Seguro de Vida - {planName}</h3>
               {coverage && (
                 <div className="flex items-center gap-2 mt-1">
-                  <ShieldCheck weight="fill" className="text-blue-500 w-4 h-4" />
+                  <ShieldCheck weight="fill" className="text-[#f95940] w-4 h-4" />
                   <span className="text-sm text-gray-600">
                     Cobertura hasta {formatCurrency(coverage)}
                   </span>
@@ -89,7 +89,7 @@ const PaymentSummary: FC<PaymentSummaryProps> = ({
             </div>
           </div>
           <div className="flex items-start gap-3 mt-3">
-            <Coins weight="fill" className="text-blue-500 w-5 h-5 mt-1" />
+            <Coins weight="fill" className="text-[#f95940] w-5 h-5 mt-1" />
             <p className="text-xs text-gray-600">
               Esta comisión cubre los gastos de tokenización y registro de tu activo en la blockchain
             </p>
@@ -117,7 +117,7 @@ const PaymentSummary: FC<PaymentSummaryProps> = ({
               <p className="text-sm text-gray-500">Incluye seguro y tokenización</p>
             </div>
             <div className="text-right">
-              <p className="text-2xl font-semibold text-[#047aff]">{formatCurrency(amount)}</p>
+              <p className="text-2xl font-semibold text-[#f95940]">{formatCurrency(amount)}</p>
               <p className="text-sm text-gray-500">MXN</p>
             </div>
           </div>

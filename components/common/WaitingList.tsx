@@ -65,8 +65,8 @@ const WaitingList: React.FC = () => {
               <div className='flex flex-col lg:flex-row gap-8 lg:gap-24 h-full'>
                 {/* Left column - Title section */}
                 <div className="hidden lg:block lg:w-1/3">
-                  <div className="inline-flex items-center h-[32px] bg-[#047aff] bg-opacity-10 px-[12px] py-[6px] rounded-md mb-2.5 mt-5">
-                    <span className="text-[#047aff] text-[14px] font-[400]">LISTA DE ESPERA</span>
+                  <div className="inline-flex items-center h-[32px] bg-[#f95940] bg-opacity-10 px-[12px] py-[6px] rounded-md mb-2.5 mt-5">
+                    <span className="text-[#f95940] text-[14px] font-[400]">LISTA DE ESPERA</span>
                   </div>
 
                   <h1 className="text-[32px] sm:text-[38px] font-[500] tracking-[-1.5px] leading-[1.2] sm:leading-[52px] mb-[15px]">
@@ -74,7 +74,7 @@ const WaitingList: React.FC = () => {
                     <span
                       style={{
                         backgroundImage:
-                          "linear-gradient(to left, #047aff 30%, #0d4ba3 100%)",
+                          "linear-gradient(to left, #f95940 30%, #f95940 100%)",
                       }}
                       className="inline-block text-transparent bg-clip-text"
                     >

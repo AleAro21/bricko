@@ -49,7 +49,7 @@ const PeopleModal: FC<PeopleModalProps> = ({ setShowModal, showModal }) => {
                   type="radio"
                   name="ageGroup"
                   value="over18"
-                  className="h-4 w-4 text-blue-500 focus:ring-blue-400"
+                  className="h-4 w-4 text-[#f95940] focus:ring-blue-400"
                   required
                 />
                 <span className="ml-2 text-sm text-gray-700">mayores de 18</span>
@@ -59,7 +59,7 @@ const PeopleModal: FC<PeopleModalProps> = ({ setShowModal, showModal }) => {
                   type="radio"
                   name="ageGroup"
                   value="under18"
-                  className="h-4 w-4 text-blue-500 focus:ring-blue-400"
+                  className="h-4 w-4 text-[#f95940] focus:ring-blue-400"
                 />
                 <span className="ml-2 text-sm text-gray-700">menores de 18 años</span>
               </label>
@@ -68,7 +68,7 @@ const PeopleModal: FC<PeopleModalProps> = ({ setShowModal, showModal }) => {
 
           <button
             type="submit"
-            className="w-full bg-[#047aff] text-white px-4 py-2.5 rounded-lg hover:bg-[#0171e3] transition-colors duration-200"
+            className="w-full bg-[#f95940] text-white px-4 py-2.5 rounded-lg hover:bg-[#f95940] transition-colors duration-200"
           >
             Agregar
           </button>

@@ -99,15 +99,15 @@ const BasicsPage: FC = () => {
             <div className="flex flex-col lg:flex-row gap-8 lg:gap-24 h-full">
               {/* Left column - Title section (hidden on mobile) */}
               <div className="hidden lg:block lg:w-1/3">
-                <div className="inline-flex items-center h-[32px] bg-[#047aff] bg-opacity-10 px-[12px] py-[6px] rounded-md mb-2.5 mt-5">
-                  <span className="text-[#047aff] text-[14px] font-[400]">CREA TU CUENTA</span>
+                <div className="inline-flex items-center h-[32px] bg-[#f95940] bg-opacity-10 px-[12px] py-[6px] rounded-md mb-2.5 mt-5">
+                  <span className="text-[#f95940] text-[14px] font-[400]">CREA TU CUENTA</span>
                 </div>
                 <h1 className="text-[32px] sm:text-[38px] font-[500] tracking-[-1.5px] leading-[1.2] sm:leading-[52px] mb-[15px]">
                   <span className="text-[#1d1d1f]">Testamento digital </span>
                   <span
                     style={{
                       backgroundImage:
-                        "linear-gradient(to left, #047aff 30%, #0d4ba3 100%)",
+                        "linear-gradient(to left, #f95940 30%, #f95940 100%)",
                     }}
                     className="inline-block text-transparent bg-clip-text"
                   >
@@ -121,7 +121,7 @@ const BasicsPage: FC = () => {
                     "100% seguro y legal"
                   ].map((text, index) => (
                     <li key={index} className="flex items-start gap-3">
-                      <div className="flex-shrink-0 w-6 h-6 rounded-full bg-[#047aff] flex items-center justify-center mt-0.5">
+                      <div className="flex-shrink-0 w-6 h-6 rounded-full bg-[#f95940] flex items-center justify-center mt-0.5">
                         <svg
                           className="w-3.5 h-3.5 text-[#FFFFFF]"
                           fill="none"
@@ -233,15 +233,15 @@ const BasicsPage: FC = () => {
                           id="terms"
                           checked={terms}
                           onChange={(e) => setTerms(e.target.checked)}
-                          className="self-center h-5 w-5 sm:h-3 sm:w-3 rounded border-gray-300 text-blue-500 focus:ring-blue-500 mt-2.5 transition-all"
+                          className="self-center h-5 w-5 sm:h-3 sm:w-3 rounded border-gray-300 text-[#f95940] focus:ring-blue-500 mt-2.5 transition-all"
                         />
                         <span className="text-[12px] pt-2.5 text-[#1d1d1f]">
                           Acepto los{" "}
-                          <a href="https://www.testamento.mx/terminos" className="text-blue-500 underline">
+                          <a href="https://www.testamento.mx/terminos" className="text-[#f95940] underline">
                             términos y condiciones
                           </a>{" "}
                           y{" "}
-                          <a href="https://www.testamento.mx/privacidad" className="text-blue-500 underline">
+                          <a href="https://www.testamento.mx/privacidad" className="text-[#f95940] underline">
                             políticas de privacidad
                           </a>{" "}
                           de Testamento.mx
@@ -261,7 +261,7 @@ const BasicsPage: FC = () => {
                         onClick={() => router.push("/start/login")}
                         className="text-[14px] text-[#1d1d1f] hover:underline"
                       >
-                        Ya tengo cuenta <span className="text-blue-500">Ingresar</span>
+                        Ya tengo cuenta <span className="text-[#f95940]">Ingresar</span>
                       </button>
                     </div>
 
@@ -277,7 +277,7 @@ const BasicsPage: FC = () => {
 
                     <div className="text-center text-sm text-gray-500 mt-5">
                       ¿Problemas para registrarte?{" "}
-                      <a href="mailto:ayuda@testamento.mx" className="text-blue-500 underline text-[14px]">
+                      <a href="mailto:ayuda@testamento.mx" className="text-[#f95940] underline text-[14px]">
                         Contáctanos
                       </a>
                     </div>

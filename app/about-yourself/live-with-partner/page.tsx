@@ -39,7 +39,7 @@ const LiveWithPartnerPage: FC = () => {
                         onClick={(e) => handleClick(e, index)}
                         className={`text-style cursor-pointer px-4 py-6 ${
                           activeIndex === index
-                            ? 'bg-[#0171e3] text-white'
+                            ? 'bg-[#f95940] text-white'
                             : ''
                         }`}
                       >
@@ -69,7 +69,7 @@ const LiveWithPartnerPage: FC = () => {
                 </div>
                 <button
                   onClick={() => router.push('/about-yourself/children')}
-                  className='text-[14px] text-[#FFFFFF] font-[600] bg-[#0171e3] px-4 py-4 rounded-[100px] uppercase mt-4'
+                  className='text-[14px] text-[#FFFFFF] font-[600] bg-[#f95940] px-4 py-4 rounded-[100px] uppercase mt-4'
                 >
                   CONTINUAR
                 </button>

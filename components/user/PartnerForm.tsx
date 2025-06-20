@@ -200,11 +200,11 @@ const PartnerForm: FC<PartnerFormProps> = ({
             <div className="flex flex-col lg:flex-row gap-8 lg:gap-24 mb-8">
               <div className="lg:w-1/3">
                 <div className="flex items-center gap-2 mb-2.5">
-                  <div className="inline-flex items-center h-[32px] bg-[#047aff] bg-opacity-10 px-[12px] py-[6px] rounded-md">
-                    <span className="text-[#047aff] text-[14px] font-[400]">SITUACIÓN CIVIL</span>
+                  <div className="inline-flex items-center h-[32px] bg-[#f95940] bg-opacity-10 px-[12px] py-[6px] rounded-md">
+                    <span className="text-[#f95940] text-[14px] font-[400]">SITUACIÓN CIVIL</span>
                   </div>
-                  <Link href="#" className="inline-flex items-center h-[32px] text-[#047aff] hover:text-[#0456b0]">
-                    <span className="w-5 h-5 inline-flex items-center justify-center rounded-full border border-[#047aff] text-sm">?</span>
+                  <Link href="#" className="inline-flex items-center h-[32px] text-[#f95940] hover:text-[#0456b0]">
+                    <span className="w-5 h-5 inline-flex items-center justify-center rounded-full border border-[#f95940] text-sm">?</span>
                   </Link>
                 </div>
                 <h1 className="text-[32px] sm:text-[38px] font-[500] tracking-[-1.5px] leading-[1.2] sm:leading-[52px] mb-[15px]">
@@ -212,7 +212,7 @@ const PartnerForm: FC<PartnerFormProps> = ({
                   <span
                     style={{
                       backgroundImage:
-                        "linear-gradient(to left, #047aff 30%, #0d4ba3 100%)",
+                        "linear-gradient(to left, #f95940 30%, #f95940 100%)",
                     }}
                     className="inline-block text-transparent bg-clip-text"
                   >
@@ -240,8 +240,8 @@ const PartnerForm: FC<PartnerFormProps> = ({
                         <div
                           className={`px-6 py-4 rounded-xl border ${
                             activeIndex === index
-                              ? 'bg-[#e5f1ff] border-[#047aff]'
-                              : 'border-gray-200 hover:border-[#047aff]'
+                              ? 'bg-[#e5f1ff] border-[#f95940]'
+                              : 'border-gray-200 hover:border-[#f95940]'
                           }`}
                         >
                           <h3 className={`text-[17px] font-[400] ${
@@ -265,10 +265,10 @@ const PartnerForm: FC<PartnerFormProps> = ({
                     !partner && (
                       <div
                         onClick={handlePartnerClick}
-                        className="bg-white rounded-xl border border-gray-200 hover:border-[#047aff] transition-colors cursor-pointer mb-8"
+                        className="bg-white rounded-xl border border-gray-200 hover:border-[#f95940] transition-colors cursor-pointer mb-8"
                       >
-                        <div className="flex items-center justify-center gap-2 py-4 text-[#047aff] font-medium">
-                          <div className="bg-[#047aff] rounded-full p-1">
+                        <div className="flex items-center justify-center gap-2 py-4 text-[#f95940] font-medium">
+                          <div className="bg-[#f95940] rounded-full p-1">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" width="16" height="16" className="fill-white">
                               <path d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z" />
                             </svg>
@@ -303,7 +303,7 @@ const PartnerForm: FC<PartnerFormProps> = ({
                       <div className="flex gap-2">
                         <button
                           onClick={handleEditPartner}
-                          className="text-blue-600 hover:text-blue-800"
+                          className="text-[#f95940] hover:text-blue-800"
                         >
                           <PencilSimple size={20} weight="regular" />
                         </button>

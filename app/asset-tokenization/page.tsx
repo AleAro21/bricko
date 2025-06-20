@@ -4,7 +4,7 @@ import { FC, useState, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import DashboardLayout from '@/components/common/DashboardLayout';
 import { motion } from 'framer-motion';
-import { House, Car, Buildings, UploadSimple, Info, CaretRight, Warning, Question, Scroll } from 'phosphor-react';
+import { House, Car, Buildings, UploadSimple, Info, CaretRight, Warning, Question, Scroll,  } from 'phosphor-react';
 import PrimaryButton from '@/components/reusables/PrimaryButton';
 import ProgressIndicator from "@/components/reusables/ProgressIndicator";
 import AddressAutocomplete, { AddressData } from "@/components/common/address/AddressAutocomplete";
@@ -33,8 +33,8 @@ interface Asset {
 const assetTypes = [
   { id: 'house', name: 'Casa', icon: House },
   { id: 'apartment', name: 'Dpt.', icon: Buildings },
-  { id: 'car', name: 'Vehículo', icon: Car },
-  { id: 'other', name: 'Pagaré', icon: Scroll },
+  { id: 'car', name: 'Oficina', icon: Buildings },
+  { id: 'other', name: 'Terreno', icon: Scroll },
 ];
 
 const defaultCenter = {
@@ -231,15 +231,15 @@ const AssetTokenizationClient: FC = () => {
                   {/* Left Column */}
                   <div className="space-y-8">
                     <div>
-                      <div className="inline-flex items-center h-[32px] bg-[#047aff] bg-opacity-10 px-[12px] py-[6px] rounded-md mb-2.5">
-                        <span className="text-[#047aff] text-[14px] font-[400]">TOKENIZACIÓN</span>
+                      <div className="inline-flex items-center h-[32px] bg-[#f95940] bg-opacity-10 px-[12px] py-[6px] rounded-md mb-2.5">
+                        <span className="text-[#f95940] text-[14px] font-[400]">TOKENIZACIÓN</span>
                       </div>
                       <div className="flex items-center space-x-8 mb-[15px]">
                         <h1 className="text-[32px] sm:text-[38px] font-[500] tracking-[-1.5px] leading-[1.2] sm:leading-[52px]">
                           <span className="text-[#1d1d1f]">Tokeniza tu </span>
                           <span
                             style={{
-                              backgroundImage: "linear-gradient(to left, #047aff 30%, #0d4ba3 100%)",
+                              backgroundImage: "linear-gradient(to left, #f95940 30%, #f95940 100%)",
                             }}
                             className="inline-block text-transparent bg-clip-text"
                           >
@@ -249,7 +249,7 @@ const AssetTokenizationClient: FC = () => {
                         <div className="flex items-center">
                           <Question 
                             weight="regular"
-                            className="text-blue-500 w-7 h-7 cursor-pointer hover:opacity-80 transition-opacity"
+                            className="text-[#f95940] w-7 h-7 cursor-pointer hover:opacity-80 transition-opacity"
                             onClick={() => setShowModal(true)}
                           />
                         </div>
@@ -268,19 +268,19 @@ const AssetTokenizationClient: FC = () => {
                           </h3>
                           <ul className="space-y-3 text-[17px] text-gray-700">
                             <li className="flex items-start gap-2">
-                              <span className="text-blue-500 mt-1">•</span>
+                              <span className="text-[#f95940] mt-1">•</span>
                               <span>Mayor liquidez y facilidad de transferencia de la propiedad</span>
                             </li>
                             <li className="flex items-start gap-2">
-                              <span className="text-blue-500 mt-1">•</span>
+                              <span className="text-[#f95940] mt-1">•</span>
                               <span>Transparencia y seguridad garantizada por la blockchain</span>
                             </li>
                             <li className="flex items-start gap-2">
-                              <span className="text-blue-500 mt-1">•</span>
+                              <span className="text-[#f95940] mt-1">•</span>
                               <span>Reducción de costos de intermediación y gestión</span>
                             </li>
                             <li className="flex items-start gap-2">
-                              <span className="text-blue-500 mt-1">•</span>
+                              <span className="text-[#f95940] mt-1">•</span>
                               <span>Acceso a inversiones fraccionadas en activos reales</span>
                             </li>
                           </ul>
@@ -296,7 +296,7 @@ const AssetTokenizationClient: FC = () => {
 
                         <br />
                         <div className="flex items-start gap-3 mb-6">
-                          <Info weight="fill" className="text-blue-500 w-5 h-5 mt-1" />
+                          <Info weight="fill" className="text-[#f95940] w-5 h-5 mt-1" />
                           <p className="text-sm text-gray-600">
                             Selecciona el tipo de activo que deseas tokenizar y proporciona la información necesaria.
                             El activo será dividido en {FIXED_TOKENS} tokens de igual valor.
@@ -317,7 +317,7 @@ const AssetTokenizationClient: FC = () => {
                                     onClick={() => setAsset(prev => ({ ...prev, type: type.id }))}
                                     className={`p-4 rounded-lg border-2 transition-all ${
                                       asset.type === type.id
-                                        ? 'border-blue-500 bg-blue-50'
+                                        ? 'border-[#f95940] bg-[#f95940]/20'
                                         : 'border-gray-200 hover:border-gray-300'
                                     }`}
                                   >
@@ -418,7 +418,7 @@ const AssetTokenizationClient: FC = () => {
                             <div
                               onClick={() => fileInputRef.current?.click()}
                               className={`border-2 border-dashed rounded-lg p-6 text-center cursor-pointer transition-all ${
-                                asset.document ? 'border-blue-500 bg-blue-50' : 'border-gray-300 hover:border-gray-400'
+                                asset.document ? 'border-blue-500 bg-[#f95940]/20' : 'border-gray-300 hover:border-gray-400'
                               }`}
                             >
                               {asset.document ? (
@@ -466,21 +466,21 @@ const AssetTokenizationClient: FC = () => {
                         <div className="space-y-4 mb-6">
                           <div className="p-4 bg-gray-50 rounded-lg">
                             <p className="text-sm text-gray-500 mb-1">Valor del activo (MXN)</p>
-                            <p className="text-xl font-semibold text-blue-600">
+                            <p className="text-xl font-semibold text-[#f95940]">
                               {asset.value || '$0.00'}
                             </p>
                           </div>
 
                           <div className="p-4 bg-gray-50 rounded-lg">
                             <p className="text-sm text-gray-500 mb-1">Número de tokens</p>
-                            <p className="text-xl font-semibold text-blue-600">
+                            <p className="text-xl font-semibold text-[#f95940]">
                               {FIXED_TOKENS}
                             </p>
                           </div>
 
-                          <div className="p-4 bg-blue-50 rounded-lg">
+                          <div className="p-4 bg-[#f95940]/20 rounded-lg">
                             <p className="text-sm text-gray-500 mb-1">Valor por token</p>
-                            <p className="text-xl font-semibold text-blue-600">
+                            <p className="text-xl font-semibold text-[#f95940]">
                               {calculateTokenValue()}
                             </p>
                           </div>

@@ -20,13 +20,13 @@ const PaymentMethodSelector: FC<PaymentMethodSelectorProps> = ({ onMethodSelect 
         onClick={() => handleMethodChange('card')}
         className={`cursor-pointer rounded-lg p-4 transition-all duration-200 ${
           selectedMethod === 'card'
-            ? 'bg-blue-50 border-2 border-[#047aff]'
+            ? 'bg-[#f95940]/20 border-2 border-[#f95940]'
             : 'bg-white border-2 border-gray-100 hover:border-gray-200'
         }`}
       >
         <div className="flex items-center gap-3">
           <div className={`rounded-full p-2 ${
-            selectedMethod === 'card' ? 'bg-[#047aff] text-white' : 'bg-gray-100 text-gray-600'
+            selectedMethod === 'card' ? 'bg-[#f95940] text-white' : 'bg-gray-100 text-gray-600'
           }`}>
             <CreditCard size={24} weight="bold" />
           </div>
@@ -36,7 +36,7 @@ const PaymentMethodSelector: FC<PaymentMethodSelectorProps> = ({ onMethodSelect 
           </div>
           <div className="flex items-center justify-center w-6 h-6 rounded-full border-2 transition-all duration-200 ${
             selectedMethod === 'card'
-              ? 'border-[#047aff] bg-[#047aff]'
+              ? 'border-[#f95940] bg-[#f95940]'
               : 'border-gray-300'
           }">
             {selectedMethod === 'card' && (
@@ -51,13 +51,13 @@ const PaymentMethodSelector: FC<PaymentMethodSelectorProps> = ({ onMethodSelect 
         onClick={() => handleMethodChange('oxxo')}
         className={`cursor-pointer rounded-lg p-4 transition-all duration-200 ${
           selectedMethod === 'oxxo'
-            ? 'bg-blue-50 border-2 border-[#047aff]'
+            ? 'bg-[#f95940]/20 border-2 border-[#f95940]'
             : 'bg-white border-2 border-gray-100 hover:border-gray-200'
         }`}
       >
         <div className="flex items-center gap-3">
           <div className={`rounded-full p-2 ${
-            selectedMethod === 'oxxo' ? 'bg-[#047aff] text-white' : 'bg-gray-100 text-gray-600'
+            selectedMethod === 'oxxo' ? 'bg-[#f95940] text-white' : 'bg-gray-100 text-gray-600'
           }`}>
             <Barcode size={24} weight="bold" />
           </div>
@@ -67,7 +67,7 @@ const PaymentMethodSelector: FC<PaymentMethodSelectorProps> = ({ onMethodSelect 
           </div>
           <div className="flex items-center justify-center w-6 h-6 rounded-full border-2 transition-all duration-200 ${
             selectedMethod === 'oxxo'
-              ? 'border-[#047aff] bg-[#047aff]'
+              ? 'border-[#f95940] bg-[#f95940]'
               : 'border-gray-300'
           }">
             {selectedMethod === 'oxxo' && (

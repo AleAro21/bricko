@@ -40,21 +40,21 @@ const InheritanceTypeModal: FC<InheritanceTypeModalProps> = ({
       title: 'Herederos legales',
       description:
         'Distribuye tus bienes según la ley sin definir beneficiarios ni activos. Una opción tradicional y automática.',
-      icon: <Users size={24} weight="regular" color="#047aff" />,
+      icon: <Users size={24} weight="regular" color="#f95940" />,
     },
     {
       type: "HU",
       title: 'Heredero universal',
       description:
         'Asigna todos los activos a un único heredero. Centraliza la herencia para una distribución simplificada.',
-      icon: <User size={24} weight="regular" color="#047aff" />,
+      icon: <User size={24} weight="regular" color="#f95940" />,
     },
     {
       type: "HP",
       title: 'Carga manual',
       description:
         'Personaliza la asignación de cada bien y beneficiario. Ideal para estructuras patrimoniales complejas.',
-      icon: <HandPointing size={24} weight="regular" color="#047aff" />,
+      icon: <HandPointing size={24} weight="regular" color="#f95940" />,
     },
   ];
 
@@ -109,15 +109,15 @@ const InheritanceTypeModal: FC<InheritanceTypeModalProps> = ({
                 <motion.div
                   key={option.type}
                   whileHover={{ scale: 1.02 }}
-                  className="bg-white rounded-xl p-4 sm:p-6 cursor-pointer border border-gray-200 hover:border-[#047aff] hover:shadow-lg transition-all relative"
+                  className="bg-white rounded-xl p-4 sm:p-6 cursor-pointer border border-gray-200 hover:border-[#f95940] hover:shadow-lg transition-all relative"
                   onClick={() => handleSelect(option.type as "HP" | "HL" | "HU")}
                 >
                   <div className="absolute top-2 right-2 sm:top-4 sm:right-4">
-                    <span className="w-5 h-5 inline-flex items-center justify-center rounded-full border border-[#047aff] text-[#047aff] text-sm cursor-help">
+                    <span className="w-5 h-5 inline-flex items-center justify-center rounded-full border border-[#f95940] text-[#f95940] text-sm cursor-help">
                       ?
                     </span>
                   </div>
-                  <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-[#047aff] bg-opacity-10 flex items-center justify-center mb-3 sm:mb-4">
+                  <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-[#f95940] bg-opacity-10 flex items-center justify-center mb-3 sm:mb-4">
                     {option.icon}
                   </div>
                   <h3 className="text-[18px] sm:text-[20px] font-medium text-[#1d1d1f] mb-1 sm:mb-2">

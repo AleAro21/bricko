@@ -63,7 +63,7 @@ export default function InteractiveSection() {
       <div className="mb-8 sm:mb-[30px]">
         <h1 className="text-[32px] sm:text-[46px] font-[500] tracking-[-1.5px] leading-[1.2] sm:leading-[52px] mb-[15px]">
           <span className="text-[#1d1d1f]">Cuentanos de </span>
-          <span className="bg-gradient-to-r from-[#3d9bff] to-[#047aff] inline-block text-transparent bg-clip-text">ti</span>
+          <span className="bg-gradient-to-r from-[#3d9bff] to-[#f95940] inline-block text-transparent bg-clip-text">ti</span>
         </h1>
         <p className="text-[18px] sm:text-[20px] font-[400] tracking-[-0.1px] leading-[1.3] text-[#1d1d1f] text-start mb-6 sm:mb-[55px]">
           Selecciona las opciones que mejor describan tu situación

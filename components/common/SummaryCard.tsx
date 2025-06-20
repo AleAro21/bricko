@@ -12,7 +12,7 @@ const SummaryCard: React.FC<SummaryCardProps> = ({ icon, title, description, hre
   const CardContent = () => (
     <div className="h-full bg-white rounded-xl p-6 transition-all duration-300 hover:shadow-lg">
       <div className="flex flex-col h-full">
-        <div className="text-[#047aff] w-8 h-8 flex items-center justify-center mb-4">
+        <div className="text-[#f95940] w-8 h-8 flex items-center justify-center mb-4">
           {icon}
         </div>
         <h3 className="text-[18px] font-[500] text-[#1d1d1f] mb-2">{title}</h3>

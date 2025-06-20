@@ -17,20 +17,20 @@ const PaymentMethod: FC<PaymentMethodProps> = ({ method, selected, onSelect }) =
       onClick={onSelect}
       className={`rounded-xl cursor-pointer transition-all duration-300 ${
         selected 
-          ? "border-2 border-[#047aff] bg-white shadow-md" 
+          ? "border-2 border-[#f95940] bg-white shadow-md" 
           : "bg-white hover:bg-[#f8faff] border border-gray-100"
       }`}
     >
       <div className="p-5 flex items-center gap-4">
-        <div className={`p-3 rounded-full ${selected ? "bg-[#047aff]/10" : "bg-[#047aff]/5"}`}>
+        <div className={`p-3 rounded-full ${selected ? "bg-[#f95940]/10" : "bg-[#f95940]/5"}`}>
           {method === "card" ? (
-            <CreditCard weight="regular" size={24} className="text-[#047aff]" />
+            <CreditCard weight="regular" size={24} className="text-[#f95940]" />
           ) : (
-            <Bank weight="regular" size={24} className="text-[#047aff]" />
+            <Bank weight="regular" size={24} className="text-[#f95940]" />
           )}
         </div>
         <div>
-          <h3 className={`text-[17px] font-[500] ${selected ? "text-[#047aff]" : "text-[#1d1d1f]"}`}>{title}</h3>
+          <h3 className={`text-[17px] font-[500] ${selected ? "text-[#f95940]" : "text-[#1d1d1f]"}`}>{title}</h3>
           <p className="text-[14px] text-gray-500">
             {description}
           </p>

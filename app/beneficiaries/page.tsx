@@ -89,15 +89,15 @@ const BeneficiariesClient: FC = () => {
                 {/* Left Column */}
                 <div className="space-y-8">
                   <div>
-                    <div className="inline-flex items-center h-[32px] bg-[#047aff] bg-opacity-10 px-[12px] py-[6px] rounded-md mb-2.5">
-                      <span className="text-[#047aff] text-[14px] font-[400]">BENEFICIARIOS</span>
+                    <div className="inline-flex items-center h-[32px] bg-[#f95940] bg-opacity-10 px-[12px] py-[6px] rounded-md mb-2.5">
+                      <span className="text-[#f95940] text-[14px] font-[400]">BENEFICIARIOS</span>
                     </div>
                     <div className="flex items-center space-x-8 mb-[15px]">
                       <h1 className="text-[32px] sm:text-[38px] font-[500] tracking-[-1.5px] leading-[1.2] sm:leading-[52px]">
                         <span className="text-[#1d1d1f]">Asignación de </span>
                         <span
                           style={{
-                            backgroundImage: "linear-gradient(to left, #047aff 30%, #0d4ba3 100%)",
+                            backgroundImage: "linear-gradient(to left, #f95940 30%, #f95940 100%)",
                           }}
                           className="inline-block text-transparent bg-clip-text"
                         >
@@ -107,7 +107,7 @@ const BeneficiariesClient: FC = () => {
                       <div className="flex items-center">
                         <Question 
                           weight="regular"
-                          className="text-blue-500 w-7 h-7 cursor-pointer hover:opacity-80 transition-opacity"
+                          className="text-[#f95940] w-7 h-7 cursor-pointer hover:opacity-80 transition-opacity"
                           onClick={() => setShowModal(true)}
                         />
                       </div>
@@ -126,19 +126,19 @@ const BeneficiariesClient: FC = () => {
                         </h3>
                         <ul className="space-y-3 text-[17px] text-gray-700">
                           <li className="flex items-start gap-2">
-                            <span className="text-blue-500 mt-1">•</span>
+                            <span className="text-[#f95940] mt-1">•</span>
                             <span>Distribución: Puedes asignar los tokens entre 1 y 5 beneficiarios</span>
                           </li>
                           <li className="flex items-start gap-2">
-                            <span className="text-blue-500 mt-1">•</span>
+                            <span className="text-[#f95940] mt-1">•</span>
                             <span>Porcentaje: El total de tokens debe sumar 1000, representando el 100% del activo ({formatCurrency(assetValue)})</span>
                           </li>
                           <li className="flex items-start gap-2">
-                            <span className="text-blue-500 mt-1">•</span>
+                            <span className="text-[#f95940] mt-1">•</span>
                             <span>Beneficiarios: Deben ser personas mayores de edad y no puedes incluirte a ti mismo</span>
                           </li>
                           <li className="flex items-start gap-2">
-                            <span className="text-blue-500 mt-1">•</span>
+                            <span className="text-[#f95940] mt-1">•</span>
                             <span>Modificaciones: Podrás actualizar la distribución de tokens en el futuro si es necesario</span>
                           </li>
                         </ul>
@@ -153,7 +153,7 @@ const BeneficiariesClient: FC = () => {
                       />
                       <br />
                       <div className="flex items-start gap-3 mb-6">
-                        <Info weight="fill" className="text-blue-500 w-5 h-5 mt-1" />
+                        <Info weight="fill" className="text-[#f95940] w-5 h-5 mt-1" />
                         <p className="text-sm text-gray-600">
                           Designa a las personas que recibirán los tokens de tu activo y beneficios del seguro.
                           Puedes agregar hasta 4 beneficiarios y distribuir los {totalTokens} tokens entre ellos.
@@ -231,7 +231,7 @@ const BeneficiariesClient: FC = () => {
                         {beneficiaries.length < 5 && (
                           <button
                             onClick={addBeneficiary}
-                            className="w-full py-3 border-2 border-dashed border-gray-300 rounded-lg text-gray-500 hover:border-blue-500 hover:text-blue-500 transition-colors"
+                            className="w-full py-3 border-2 border-dashed border-gray-300 rounded-lg text-gray-500 hover:border-blue-500 hover:text-[#f95940] transition-colors"
                           >
                             <Plus size={24} className="mx-auto" />
                           </button>
@@ -264,7 +264,7 @@ const BeneficiariesClient: FC = () => {
                         {beneficiaries.map((beneficiary, index) => (
                           <div key={beneficiary.id} className="flex items-center justify-between py-2 border-b">
                             <div className="flex items-center gap-3">
-                              <Coins className="text-blue-500 w-5 h-5" />
+                              <Coins className="text-[#f95940] w-5 h-5" />
                               <div>
                                 <p className="font-medium">
                                   {beneficiary.name || `Beneficiario ${index + 1}`}
@@ -275,7 +275,7 @@ const BeneficiariesClient: FC = () => {
                               </div>
                             </div>
                             <div className="text-right">
-                              <p className="font-medium text-blue-500">
+                              <p className="font-medium text-[#f95940]">
                                 {beneficiary.tokens} tokens
                               </p>
                               <p className="text-sm text-gray-500">
@@ -314,9 +314,9 @@ const BeneficiariesClient: FC = () => {
                       </p>
                     </div>
 
-                    <div className="bg-blue-50 rounded-xl p-6">
+                    <div className="bg-[#f95940]/20 rounded-xl p-6">
                       <div className="flex items-start gap-3">
-                        <Info weight="fill" className="text-blue-600 flex-shrink-0 w-5 h-5 mt-1" />
+                        <Info weight="fill" className="text-[#f95940] flex-shrink-0 w-5 h-5 mt-1" />
                         <div>
                           <h3 className="text-[16px] font-[500] text-[#1d1d1f] mb-2">
                             Tokens garantizados

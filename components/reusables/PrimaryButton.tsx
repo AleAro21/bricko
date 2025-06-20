@@ -21,7 +21,7 @@ const PrimaryButton: FC<PrimaryButtonProps> = ({
       type={type}
       onClick={onClick}
       disabled={disabled}
-      className={`w-[200px] h-[45px] text-center text-[14px] text-[#FFFFFF] font-[400] bg-[#0171e3] rounded-lg transition-colors duration-200 hover:bg-[#0156aa] ${disabledStyles} ${className}`}
+      className={`w-[200px] h-[45px] text-center text-[14px] text-[#FFFFFF] font-[400] bg-[#f95140] rounded-lg transition-colors duration-200 hover:bg-[#f95940] ${disabledStyles} ${className}`}
       {...props}
     >
       {children}

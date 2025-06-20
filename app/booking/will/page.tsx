@@ -48,8 +48,8 @@ const BookingWillPage: FC = () => {
               <div className='flex flex-col lg:flex-row gap-8 lg:gap-24 h-full'>
                 {/* Left column - Title section */}
                 <div className="hidden lg:block lg:w-1/3">
-                  <div className="inline-flex items-center h-[32px] bg-[#047aff] bg-opacity-10 px-[12px] py-[6px] rounded-md mb-2.5 mt-5">
-                    <span className="text-[#047aff] text-[14px] font-[400]">TESTAMENTO TELEFÓNICO</span>
+                  <div className="inline-flex items-center h-[32px] bg-[#f95940] bg-opacity-10 px-[12px] py-[6px] rounded-md mb-2.5 mt-5">
+                    <span className="text-[#f95940] text-[14px] font-[400]">TESTAMENTO TELEFÓNICO</span>
                   </div>
 
                   <h1 className="text-[32px] sm:text-[38px] font-[500] tracking-[-1.5px] leading-[1.2] sm:leading-[52px] mb-[15px]">
@@ -57,7 +57,7 @@ const BookingWillPage: FC = () => {
                     <span
                       style={{
                         backgroundImage:
-                          "linear-gradient(to left, #047aff 30%, #0d4ba3 100%)",
+                          "linear-gradient(to left, #f95940 30%, #f95940 100%)",
                       }}
                       className="inline-block text-transparent bg-clip-text"
                     >
@@ -123,7 +123,7 @@ const BookingWillPage: FC = () => {
                         <button
                           type="submit"
                           disabled={isLoading}
-                          className="w-full text-[14px] text-white font-[600] bg-[#047aff] px-6 py-2.5 rounded-[100px] hover:bg-[#0366d6] transition-colors duration-200"
+                          className="w-full text-[14px] text-white font-[600] bg-[#f95940] px-6 py-2.5 rounded-[100px] hover:bg-[#0366d6] transition-colors duration-200"
                         >
                           {isLoading ? <Spinner size={24} /> : 'Enviar'}
                         </button>
@@ -131,11 +131,11 @@ const BookingWillPage: FC = () => {
 
                       <p className="text-[14px] text-gray-500 text-center mt-4">
                         Al hacer clic en "Enviar", aceptas nuestros{' '}
-                        <a href="#" className="text-[#047aff] hover:underline">
+                        <a href="#" className="text-[#f95940] hover:underline">
                           Términos y Condiciones
                         </a>{' '}
                         y nuestra{' '}
-                        <a href="#" className="text-[#047aff] hover:underline">
+                        <a href="#" className="text-[#f95940] hover:underline">
                           Política de Privacidad
                         </a>
                         .

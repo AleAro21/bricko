@@ -1,6 +1,6 @@
 import React from 'react';
 import Image from 'next/image';
-import logo from '../../assets/greylogo.svg';
+import logo from '@/public/Bricko.png'; // Changed from .svg to .png
 
 interface FooterLink {
   href: string;
@@ -32,12 +32,12 @@ const Footer: React.FC = () => {
           <Image 
             src={logo} 
             alt="Testador Logo" 
-            width={100} 
-            height={50} 
+            width={150} 
+            height={100} 
             className='max-w-[100px] max-h-[50px] my-auto' 
           />
           <p className='text-[14px] text-[#1F202780] font-[300]'>
-            © {currentYear} GNP Seguros
+            © {currentYear} Bricko
           </p>
         </div>
         <div className="flex items-center gap-4">

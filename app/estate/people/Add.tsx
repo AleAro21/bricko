@@ -45,8 +45,8 @@ const Add: FC<AddProps> = ({ setShowModal, showModal, onAddHeir }) => {
   return (
     <Modal setShowModal={setShowModal} showModal={showModal}>
       <div className="w-full min-w-[400px] max-w-2xl mx-auto">
-        <div className="inline-flex items-center h-[32px] bg-[#047aff] bg-opacity-10 px-[12px] py-[6px] rounded-md mb-2.5">
-          <span className="text-[#047aff] text-[14px] font-[400]">NUEVO HEREDERO</span>
+        <div className="inline-flex items-center h-[32px] bg-[#f95940] bg-opacity-10 px-[12px] py-[6px] rounded-md mb-2.5">
+          <span className="text-[#f95940] text-[14px] font-[400]">NUEVO HEREDERO</span>
         </div>
 
         <h2 className="text-[22px] font-[500] text-[#1d1d1f] mb-6">
@@ -57,27 +57,27 @@ const Add: FC<AddProps> = ({ setShowModal, showModal, onAddHeir }) => {
           <form className="space-y-6" onSubmit={handleSubmit}>
             <div>
               <label htmlFor="name" className="block text-[17px] font-[400] text-[#1d1d1f] mb-2.5">
-                Nombre completo <span className="text-[#047aff]">*</span>
+                Nombre completo <span className="text-[#f95940]">*</span>
               </label>
               <input
                 type="text"
                 id="name"
                 name="name"
                 required
-                className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:border-[#047aff] transition-all text-[16px]"
+                className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:border-[#f95940] transition-all text-[16px]"
                 placeholder="Nombre del heredero"
               />
             </div>
 
             <div>
               <label htmlFor="relationship" className="block text-[17px] font-[400] text-[#1d1d1f] mb-2.5">
-                Relación <span className="text-[#047aff]">*</span>
+                Relación <span className="text-[#f95940]">*</span>
               </label>
               <select
                 id="relationship"
                 name="relationship"
                 required
-                className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:border-[#047aff] transition-all text-[16px]"
+                className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:border-[#f95940] transition-all text-[16px]"
                 defaultValue=""
               >
                 <option value="" disabled>Seleccionar relación</option>
@@ -91,7 +91,7 @@ const Add: FC<AddProps> = ({ setShowModal, showModal, onAddHeir }) => {
 
             <div>
               <label htmlFor="percentage" className="block text-[17px] font-[400] text-[#1d1d1f] mb-2.5">
-                Porcentaje de herencia <span className="text-[#047aff]">*</span>
+                Porcentaje de herencia <span className="text-[#f95940]">*</span>
               </label>
               <input
                 type="number"
@@ -100,7 +100,7 @@ const Add: FC<AddProps> = ({ setShowModal, showModal, onAddHeir }) => {
                 required
                 min="0"
                 max="100"
-                className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:border-[#047aff] transition-all text-[16px]"
+                className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:border-[#f95940] transition-all text-[16px]"
                 placeholder="0"
               />
             </div>
@@ -113,7 +113,7 @@ const Add: FC<AddProps> = ({ setShowModal, showModal, onAddHeir }) => {
                 type="text"
                 id="backupHeir"
                 name="backupHeir"
-                className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:border-[#047aff] transition-all text-[16px]"
+                className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:border-[#f95940] transition-all text-[16px]"
                 placeholder="Nombre del heredero de respaldo"
               />
             </div>

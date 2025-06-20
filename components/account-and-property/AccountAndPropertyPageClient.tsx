@@ -68,8 +68,8 @@ const CustomTooltip: FC<CustomTooltipProps> = ({ active, payload }) => {
     return (
       <div className="bg-white p-4 rounded-lg shadow-md border border-gray-100">
         <p className="text-[#1d1d1f] font-medium">{payload[0].name}</p>
-        <p className="text-[#047aff] font-normal">{formatCurrency(payload[0].value)}</p>
-        <p className="text-[#047aff] font-normal">{payload[0].payload.percentage.toFixed(1)}%</p>
+        <p className="text-[#f95940] font-normal">{formatCurrency(payload[0].value)}</p>
+        <p className="text-[#f95940] font-normal">{payload[0].payload.percentage.toFixed(1)}%</p>
       </div>
     );
   }
@@ -199,17 +199,17 @@ const AccountAndPropertyPageClient: FC<AccountAndPropertyPageClientProps> = ({
               {/* Page Header */}
               <div>
                 <div className="flex items-center gap-2 mb-2.5">
-                  <div className="inline-flex items-center h-[32px] bg-[#047aff] bg-opacity-10 px-[12px] py-[6px] rounded-md">
-                    <span className="text-[#047aff] text-[14px] font-normal">CUENTAS Y PROPIEDADES</span>
+                  <div className="inline-flex items-center h-[32px] bg-[#f95940] bg-opacity-10 px-[12px] py-[6px] rounded-md">
+                    <span className="text-[#f95940] text-[14px] font-normal">CUENTAS Y PROPIEDADES</span>
                   </div>
-                  <Link href="#" className="inline-flex items-center h-[32px] text-[#047aff] hover:text-[#0456b0]">
-                    <span className="w-5 h-5 inline-flex items-center justify-center rounded-full border border-[#047aff] text-sm">?</span>
+                  <Link href="#" className="inline-flex items-center h-[32px] text-[#f95940] hover:text-[#0456b0]">
+                    <span className="w-5 h-5 inline-flex items-center justify-center rounded-full border border-[#f95940] text-sm">?</span>
                   </Link>
                 </div>
                 <h1 className="text-[32px] sm:text-[38px] font-medium tracking-[-1.5px] leading-[1d1d1f] sm:leading-[52px] mb-[15px]">
                   <span className="text-[#1d1d1f]">Enumere sus </span>
                   <span
-                    style={{ backgroundImage: "linear-gradient(to left, #047aff 30%, #0d4ba3 100%)" }}
+                    style={{ backgroundImage: "linear-gradient(to left, #f95940 30%, #f95940 100%)" }}
                     className="inline-block text-transparent bg-clip-text"
                   >
                     cuentas y propiedades
@@ -231,12 +231,12 @@ const AccountAndPropertyPageClient: FC<AccountAndPropertyPageClientProps> = ({
                   className="bg-white rounded-2xl shadow-md hover:shadow-lg transition-all cursor-pointer overflow-hidden"
                 >
                   <div className="flex items-center justify-center gap-2 py-8">
-                    <div className="w-8 h-8 rounded-full bg-[#047aff] flex items-center justify-center">
+                    <div className="w-8 h-8 rounded-full bg-[#f95940] flex items-center justify-center">
                       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" width="16" height="16" className="fill-white">
                         <path d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z" />
                       </svg>
                     </div>
-                    <span className="text-[#047aff] font-medium">Agregar activos</span>
+                    <span className="text-[#f95940] font-medium">Agregar activos</span>
                   </div>
                 </div>
               )}
@@ -282,8 +282,8 @@ const AccountAndPropertyPageClient: FC<AccountAndPropertyPageClientProps> = ({
                           key={contact.id}
                           className={`p-4 rounded-lg border transition-all cursor-pointer ${
                             selectedLegalHeirId === contact.id
-                              ? 'border-[#047aff] bg-[#047aff] bg-opacity-5'
-                              : 'border-gray-200 hover:border-[#047aff] hover:bg-gray-50'
+                              ? 'border-[#f95940] bg-[#f95940] bg-opacity-5'
+                              : 'border-gray-200 hover:border-[#f95940] hover:bg-gray-50'
                           }`}
                           onClick={() => contact.id && setSelectedLegalHeirId(contact.id)}
                         >
@@ -308,7 +308,7 @@ const AccountAndPropertyPageClient: FC<AccountAndPropertyPageClientProps> = ({
                               name="universalHeir"
                               checked={selectedLegalHeirId === contact.id}
                               onChange={() => contact.id && setSelectedLegalHeirId(contact.id)}
-                              className="w-4 h-4 text-[#047aff] border-gray-300 focus:ring-[#047aff]"
+                              className="w-4 h-4 text-[#f95940] border-gray-300 focus:ring-[#f95940]"
                             />
                           </div>
                         </div>

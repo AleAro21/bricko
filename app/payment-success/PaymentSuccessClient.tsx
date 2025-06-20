@@ -55,7 +55,7 @@ const PaymentSuccessClient: FC = () => {
                 </p>
 
                 <div className="flex justify-center items-center gap-3">
-                  <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-[#047aff]"></div>
+                  <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-[#f95940]"></div>
                   <span className="text-[15px] text-gray-600">Preparando documento...</span>
                 </div>
               </div>

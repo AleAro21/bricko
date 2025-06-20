@@ -19,8 +19,8 @@ export default function PasswordPage() {
             <div className="flex flex-col lg:flex-row gap-8 lg:gap-24 h-full">
               {/* Left column - Title section (hidden on mobile) */}
               <div className="hidden lg:block lg:w-1/3">
-                <div className="inline-flex items-center h-[32px] bg-[#047aff] bg-opacity-10 px-[12px] py-[6px] rounded-md mb-2.5 mt-5">
-                  <span className="text-[#047aff] text-[14px] font-[400]">
+                <div className="inline-flex items-center h-[32px] bg-[#f95940] bg-opacity-10 px-[12px] py-[6px] rounded-md mb-2.5 mt-5">
+                  <span className="text-[#f95940] text-[14px] font-[400]">
                     CREA TU CONTRASEÑA
                   </span>
                 </div>
@@ -29,7 +29,7 @@ export default function PasswordPage() {
                   <span
                     style={{
                       backgroundImage:
-                        "linear-gradient(to left, #047aff 30%, #0d4ba3 100%)",
+                        "linear-gradient(to left, #f95940 30%, #f95940 100%)",
                     }}
                     className="inline-block text-transparent bg-clip-text"
                   >

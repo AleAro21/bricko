@@ -57,8 +57,8 @@ const PreviewPage: FC = () => {
                 <ArrowLeft size={24} className="text-gray-600" />
               </button> */}
               <div>
-                <div className="inline-flex items-center h-[32px] bg-[#047aff] bg-opacity-10 px-[12px] py-[6px] rounded-md mb-2">
-                  <span className="text-[#047aff] text-[14px] font-[400]">VISTA PREVIA</span>
+                <div className="inline-flex items-center h-[32px] bg-[#f95940] bg-opacity-10 px-[12px] py-[6px] rounded-md mb-2">
+                  <span className="text-[#f95940] text-[14px] font-[400]">VISTA PREVIA</span>
                 </div>
                 <h1 className="text-[28px] sm:text-[32px] font-[500] tracking-[-1px] leading-[1.2]">
                   Revisa tu testamento
@@ -156,7 +156,7 @@ const PreviewPage: FC = () => {
                 <div className="bg-white rounded-2xl p-6 shadow-lg">
                   <div className="flex items-start gap-3">
                     <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center">
-                      <Eye size={20} className="text-blue-600" />
+                      <Eye size={20} className="text-[#f95940]" />
                     </div>
                     <div>
                       <h3 className="text-[16px] font-[500] text-[#1d1d1f] mb-1">Importante</h3>

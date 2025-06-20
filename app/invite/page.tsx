@@ -28,7 +28,7 @@ const InvitePage: FC = () => {
   const socialButtons = [
     { color: 'bg-green-500', platform: 'WhatsApp' },
     { color: 'bg-sky-400', platform: 'Twitter' },
-    { color: 'bg-blue-500', platform: 'Facebook' }
+    { color: 'bg-[#f95940]/200', platform: 'Facebook' }
   ];
 
   return (

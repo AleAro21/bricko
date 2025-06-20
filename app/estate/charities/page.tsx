@@ -58,13 +58,13 @@ const CharitiesPage: FC = () => {
               {/* Left Column - Title and Description */}
               <div className="space-y-8">
                 <div>
-                  <div className="inline-flex items-center h-[32px] bg-[#047aff] bg-opacity-10 px-[12px] py-[6px] rounded-md mb-2.5">
-                    <span className="text-[#047aff] text-[14px] font-[400]">ORGANIZACIONES BENÉFICAS</span>
+                  <div className="inline-flex items-center h-[32px] bg-[#f95940] bg-opacity-10 px-[12px] py-[6px] rounded-md mb-2.5">
+                    <span className="text-[#f95940] text-[14px] font-[400]">ORGANIZACIONES BENÉFICAS</span>
                   </div>
 
                   <h1 className="text-[32px] sm:text-[38px] font-[500] tracking-[-1.5px] leading-[1.2] sm:leading-[52px] mb-[15px]">
                     <span className="text-[#1d1d1f]">¿Le gustaría incluir una </span>
-                    <span className="bg-gradient-to-r from-[#3d9bff] to-[#047aff] inline-block text-transparent bg-clip-text">
+                    <span className="bg-gradient-to-r from-[#3d9bff] to-[#f95940] inline-block text-transparent bg-clip-text">
                       donación benéfica?
                     </span>
                   </h1>
@@ -101,8 +101,8 @@ const CharitiesPage: FC = () => {
                           index !== 0 ? 'border-t border-gray-100' : ''
                         } ${
                           includeCharities === option.value
-                            ? 'bg-[#047aff] text-white'
-                            : 'hover:bg-[#047aff] hover:bg-opacity-5'
+                            ? 'bg-[#f95940] text-white'
+                            : 'hover:bg-[#f95940] hover:bg-opacity-5'
                         }`}
                       >
                         <h3 className="text-[17px] font-[500]">
@@ -125,11 +125,11 @@ const CharitiesPage: FC = () => {
                           viewBox="0 0 448 512"
                           width="24"
                           height="24"
-                          className="fill-[#047aff]"
+                          className="fill-[#f95940]"
                         >
                           <path d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z" />
                         </svg>
-                        <span className="text-[#047aff] font-[500]">Agregar Organización Benéfica</span>
+                        <span className="text-[#f95940] font-[500]">Agregar Organización Benéfica</span>
                       </div>
                     </div>
 
@@ -144,7 +144,7 @@ const CharitiesPage: FC = () => {
                             <div className="w-full bg-[#f5f5f7] rounded-full h-2.5">
                               <div 
                                 className={`h-2.5 rounded-full ${
-                                  totalPercentage > 100 ? 'bg-[#D00E01]' : 'bg-[#047aff]'
+                                  totalPercentage > 100 ? 'bg-[#D00E01]' : 'bg-[#f95940]'
                                 }`}
                                 style={{ width: `${Math.min(totalPercentage, 100)}%` }}
                               ></div>
@@ -180,7 +180,7 @@ const CharitiesPage: FC = () => {
                                         type="number"
                                         value={charity.percentage}
                                         onChange={(e) => handlePercentageChange(charity.id, Number(e.target.value))}
-                                        className="w-20 px-4 py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:border-[#047aff] transition-all text-[16px]"
+                                        className="w-20 px-4 py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:border-[#f95940] transition-all text-[16px]"
                                         min="0"
                                         max="100"
                                         step="1"

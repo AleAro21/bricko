@@ -186,15 +186,15 @@ const OTPInput: React.FC<OTPInputProps> = ({ length = 6, onComplete }) => {
           <div className="px-4 sm:px-5 flex-grow">
             <div className="flex flex-col lg:flex-row gap-8 lg:gap-24 h-full">
               <div className="lg:w-1/3">
-                <div className="inline-flex items-center h-[32px] bg-[#047aff] bg-opacity-10 px-[12px] py-[6px] rounded-md mb-2.5 mt-5">
-                  <span className="text-[#047aff] text-[14px] font-[400]">VERIFICACIÓN EN 2 PASOS</span>
+                <div className="inline-flex items-center h-[32px] bg-[#f95940] bg-opacity-10 px-[12px] py-[6px] rounded-md mb-2.5 mt-5">
+                  <span className="text-[#f95940] text-[14px] font-[400]">VERIFICACIÓN EN 2 PASOS</span>
                 </div>
                 <h1 className="text-[32px] sm:text-[38px] font-[500] tracking-[-1.5px] leading-[1.2] sm:leading-[52px] mb-[15px]">
                     <span className="text-[#1d1d1f]">Ingresa tu código de </span>
                     <span
                       style={{
                         backgroundImage:
-                          "linear-gradient(to left, #047aff 30%, #0d4ba3 100%)",
+                          "linear-gradient(to left, #f95940 30%, #f95940 100%)",
                       }}
                       className="inline-block text-transparent bg-clip-text"
                     >
@@ -215,7 +215,7 @@ const OTPInput: React.FC<OTPInputProps> = ({ length = 6, onComplete }) => {
                     exit={{ opacity: 0, y: -20 }}
                     className="flex items-center space-x-2 mb-8"
                   >
-                    <div className="text-[#047aff]">
+                    <div className="text-[#f95940]">
                       <Envelope size={24} weight="regular" />
                     </div>
                     <span className="text-[#1d1d1f] text-[17px] font-[400]">
@@ -228,7 +228,7 @@ const OTPInput: React.FC<OTPInputProps> = ({ length = 6, onComplete }) => {
                       <input
                         id={`otp-${index}`}
                         key={index}
-                        className="w-12 h-12 border rounded-lg text-center text-xl focus:outline-none focus:border-[#047aff] border-gray-300 transition-all"
+                        className="w-12 h-12 border rounded-lg text-center text-xl focus:outline-none focus:border-[#f95940] border-gray-300 transition-all"
                         type="text"
                         maxLength={1}
                         value={data}
@@ -245,7 +245,7 @@ const OTPInput: React.FC<OTPInputProps> = ({ length = 6, onComplete }) => {
                         `Reenviar código en 00:${timer < 10 ? `0${timer}` : timer}`
                       ) : (
                         <span
-                          className="text-[#047aff] cursor-pointer hover:underline"
+                          className="text-[#f95940] cursor-pointer hover:underline"
                           onClick={handleResendCode}
                         >
                           Reenviar código
@@ -254,7 +254,7 @@ const OTPInput: React.FC<OTPInputProps> = ({ length = 6, onComplete }) => {
                     </p>
                     <button
                       onClick={rotateVerificationMethod}
-                      className="text-[#047aff] text-[14px] hover:underline transition-colors"
+                      className="text-[#f95940] text-[14px] hover:underline transition-colors"
                     >
                       Cambiar método de verificación
                     </button>
@@ -280,7 +280,7 @@ const OTPInput: React.FC<OTPInputProps> = ({ length = 6, onComplete }) => {
                         <span className="text-[#1d1d1f] text-[14px]">¿Necesitas ayuda?</span>
                         <a
                           href="mailto:ayuda@testamento.mx"
-                          className="text-[#047aff] text-[14px] hover:underline"
+                          className="text-[#f95940] text-[14px] hover:underline"
                         >
                           Contáctanos
                         </a>
@@ -316,7 +316,7 @@ const OTPInput: React.FC<OTPInputProps> = ({ length = 6, onComplete }) => {
                               resetTimer();
                             }}
                           >
-                            <div className="text-[#047aff] mr-3">{method.icon}</div>
+                            <div className="text-[#f95940] mr-3">{method.icon}</div>
                             <span className="text-[#1d1d1f] text-[14px]">
                               Mandar por {method.label}
                             </span>

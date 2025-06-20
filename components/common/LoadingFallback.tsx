@@ -11,8 +11,8 @@ const LoadingFallback = () => {
         transition={{ duration: 0.3 }}
         className="flex flex-col items-center"
       >
-        <Spinner size={60} color="#047aff" />
-        <p className="mt-4 text-[#047aff] font-medium text-lg">Cargando...</p>
+        <Spinner size={60} color="#f95940" />
+        <p className="mt-4 text-[#f95940] font-medium text-lg">Cargando...</p>
       </motion.div>
     </div>
   );

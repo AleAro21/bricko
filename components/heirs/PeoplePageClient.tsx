@@ -215,13 +215,13 @@ const PeoplePageClient: FC<PeoplePageClientProps> = ({
             <div className="space-y-8">
               <div>
                 <div className="flex items-center gap-2 mb-2.5">
-                  <div className="inline-flex items-center h-[32px] bg-[#047aff] bg-opacity-10 px-[12px] py-[6px] rounded-md">
-                    <span className="text-[#047aff] text-[14px] font-medium">
+                  <div className="inline-flex items-center h-[32px] bg-[#f95940] bg-opacity-10 px-[12px] py-[6px] rounded-md">
+                    <span className="text-[#f95940] text-[14px] font-medium">
                       DISTRIBUCIÓN POR ACTIVO
                     </span>
                   </div>
-                  <Link href="#" className="inline-flex items-center h-[32px] text-[#047aff] hover:text-[#0456b0]">
-                    <span className="w-5 h-5 inline-flex items-center justify-center rounded-full border border-[#047aff] text-sm">
+                  <Link href="#" className="inline-flex items-center h-[32px] text-[#f95940] hover:text-[#0456b0]">
+                    <span className="w-5 h-5 inline-flex items-center justify-center rounded-full border border-[#f95940] text-sm">
                       ?
                     </span>
                   </Link>
@@ -229,7 +229,7 @@ const PeoplePageClient: FC<PeoplePageClientProps> = ({
                 <h1 className="text-[32px] sm:text-[38px] font-medium tracking-[-1.5px] leading-[1.2] sm:leading-[52px] mb-[15px]">
                   Asigna el % de cada activo a cada{" "}
                   <span
-                    style={{ backgroundImage: "linear-gradient(to left, #047aff 30%, #0d4ba3 100%)" }}
+                    style={{ backgroundImage: "linear-gradient(to left, #f95940 30%, #f95940 100%)" }}
                     className="inline-block text-transparent bg-clip-text"
                   >
                     heredero
@@ -260,7 +260,7 @@ const PeoplePageClient: FC<PeoplePageClientProps> = ({
                                 Number(e.target.value)
                               )
                             }
-                            className="w-20 px-3 py-2 rounded-lg border border-gray-300 focus:outline-none focus:border-[#047aff] transition-all text-[16px]"
+                            className="w-20 px-3 py-2 rounded-lg border border-gray-300 focus:outline-none focus:border-[#f95940] transition-all text-[16px]"
                             min="0"
                             max="100"
                             step="1"
@@ -297,7 +297,7 @@ const PeoplePageClient: FC<PeoplePageClientProps> = ({
                   <select
                     value={selectedAssetId}
                     onChange={(e) => setSelectedAssetId(e.target.value)}
-                    className="mb-4 px-3 py-2 border rounded-md focus:outline-none focus:border-[#047aff]"
+                    className="mb-4 px-3 py-2 border rounded-md focus:outline-none focus:border-[#f95940]"
                   >
                     {localAssets.map((asset) => (
                       <option key={asset.id} value={asset.id}>
@@ -329,7 +329,7 @@ const PeoplePageClient: FC<PeoplePageClientProps> = ({
                             return (
                               <div className="bg-white p-4 rounded-lg shadow-md border border-gray-100">
                                 <p className="text-[#1d1d1f] font-medium">{payload[0].name}</p>
-                                <p className="text-[#047aff] font-normal">{payload[0].value.toFixed(1)}%</p>
+                                <p className="text-[#f95940] font-normal">{payload[0].value.toFixed(1)}%</p>
                               </div>
                             );
                           }

@@ -109,13 +109,13 @@ const Add: FC<AddProps> = ({ showModal, setShowModal, setPets, pets, isEditing, 
           {/* Name Field */}
           <div>
             <label className="block text-sm font-medium text-[#6e6e73] mb-1">
-              Nombre <span className="text-[#047aff]">*</span>
+              Nombre <span className="text-[#f95940]">*</span>
             </label>
             <input
               type="text"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:border-[#047aff]"
+              className="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:border-[#f95940]"
               placeholder="Nombre de la mascota"
             />
           </div>
@@ -123,12 +123,12 @@ const Add: FC<AddProps> = ({ showModal, setShowModal, setPets, pets, isEditing, 
           {/* Species Field */}
           <div>
             <label className="block text-sm font-medium text-[#6e6e73] mb-1">
-              Especie <span className="text-[#047aff]">*</span>
+              Especie <span className="text-[#f95940]">*</span>
             </label>
             <select
               value={species}
               onChange={(e) => setSpecies(e.target.value)}
-              className="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:border-[#047aff]"
+              className="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:border-[#f95940]"
             >
               <option value="">Seleccionar especie</option>
               {speciesOptions.map((option) => (
@@ -142,13 +142,13 @@ const Add: FC<AddProps> = ({ showModal, setShowModal, setPets, pets, isEditing, 
           {/* Date of Birth Field */}
           <div>
             <label className="block text-sm font-medium text-[#6e6e73] mb-1">
-              Fecha de Nacimiento <span className="text-[#047aff]">*</span>
+              Fecha de Nacimiento <span className="text-[#f95940]">*</span>
             </label>
             <input
               type="date"
               value={dateOfBirth}
               onChange={(e) => setDateOfBirth(e.target.value)}
-              className="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:border-[#047aff]"
+              className="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:border-[#f95940]"
             />
           </div>
 
@@ -161,7 +161,7 @@ const Add: FC<AddProps> = ({ showModal, setShowModal, setPets, pets, isEditing, 
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
               rows={3}
-              className="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:border-[#047aff]"
+              className="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:border-[#f95940]"
               placeholder="Características especiales, necesidades, etc."
             />
           </div>
@@ -181,7 +181,7 @@ const Add: FC<AddProps> = ({ showModal, setShowModal, setPets, pets, isEditing, 
           </button>
           <button
             onClick={handleSubmit}
-            className="px-6 py-2 bg-[#047aff] text-white rounded-lg hover:bg-[#0456b0] transition-colors disabled:opacity-50"
+            className="px-6 py-2 bg-[#f95940] text-white rounded-lg hover:bg-[#0456b0] transition-colors disabled:opacity-50"
             disabled={loading}
           >
             {loading ? 'Guardando...' : isEditing ? 'Guardar' : 'Agregar'}

@@ -252,7 +252,7 @@ const GradientCanvas: React.FC = () => {
     gl.uniform1f(uNoiseSpeedLocation, 0.2);  
     gl.uniform1f(uNoiseFreqLocation, 2.0);    
 
-    // Base color: #047aff normalized
+    // Base color: #f95940 normalized
     gl.uniform3fv(uBaseColorLocation, [4/255, 122/255, 255/255]);
     // Stripe color: #3d9bff normalized with slight white blend
     gl.uniform3fv(uStripeColorLocation, [61/255, 155/255, 255/255]);

@@ -117,7 +117,7 @@ const FriendsFamilyTrusteePage: FC = () => {
                         onClick={(e) => handleClick(e, index)}
                         className={`text-style cursor-pointer px-4 py-6 ${
                           activeIndex === index
-                            ? "bg-[#0171e3] text-white"
+                            ? "bg-[#f95940] text-white"
                             : ""
                         }`}
                       >

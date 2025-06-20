@@ -30,13 +30,13 @@ export const SortableExecutor: FC<SortableExecutorProps> = ({ executor, contact,
             ref={setNodeRef}
             style={style}
             className={`border-b border-gray-100 pb-4 last:border-b-0 last:pb-0 ${
-                isDragging ? 'bg-blue-50 rounded-lg' : ''
+                isDragging ? 'bg-[#f95940]/20 rounded-lg' : ''
             }`}
             {...attributes}
         >
             <div className="flex justify-between items-center">
                 <div className="flex items-center gap-4">
-                    <div className="flex-shrink-0 w-8 h-8 bg-[#047aff] rounded-full flex items-center justify-center">
+                    <div className="flex-shrink-0 w-8 h-8 bg-[#f95940] rounded-full flex items-center justify-center">
                         <span className="text-white font-medium">
                             {index + 1}
                         </span>

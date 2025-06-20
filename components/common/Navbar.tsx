@@ -107,7 +107,7 @@ const Navbar: React.FC = () => {
                       <Link
                         href={item.href}
                         key={item.name}
-                        className="text-[14px] font-[400] text-[#1d1d1f] hover:text-[#047aff] transition-colors duration-200"
+                        className="text-[14px] font-[400] text-[#1d1d1f] hover:text-[#f95940] transition-colors duration-200"
                       >
                         {item.name}
                       </Link>
@@ -213,7 +213,7 @@ const Navbar: React.FC = () => {
                                               className={`
                                                 flex items-center gap-3 px-4 py-2 text-[14px] font-[400] cursor-pointer
                                                 ${active
-                                                  ? 'bg-gradient-to-r from-blue-50 to-blue-100 text-[#047aff]'
+                                                  ? 'bg-gradient-to-r from-blue-50 to-blue-100 text-[#f95940]'
                                                   : 'text-[#1d1d1f]'
                                                 }
                                               `}
@@ -227,7 +227,7 @@ const Navbar: React.FC = () => {
                                               className={`
                                                 flex items-center gap-3 px-4 py-2 text-[14px] font-[400] cursor-pointer
                                                 ${active
-                                                  ? 'bg-gradient-to-r from-blue-50 to-blue-100 text-[#047aff]'
+                                                  ? 'bg-gradient-to-r from-blue-50 to-blue-100 text-[#f95940]'
                                                   : 'text-[#1d1d1f]'
                                                 }
                                               `}

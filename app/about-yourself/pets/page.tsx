@@ -267,17 +267,17 @@ const PetsPage: FC = () => {
               {/* Left column - Title section */}
               <div className="lg:w-1/3">
                 <div className="flex items-center gap-2 mb-2.5">
-                  <div className="inline-flex items-center h-[32px] bg-[#047aff] bg-opacity-10 px-[12px] py-[6px] rounded-md">
-                    <span className="text-[#047aff] text-[14px] font-[400]">MASCOTAS</span>
+                  <div className="inline-flex items-center h-[32px] bg-[#f95940] bg-opacity-10 px-[12px] py-[6px] rounded-md">
+                    <span className="text-[#f95940] text-[14px] font-[400]">MASCOTAS</span>
                   </div>
-                  <Link href="#" className="inline-flex items-center h-[32px] text-[#047aff] hover:text-[#0456b0]">
-                    <span className="w-5 h-5 inline-flex items-center justify-center rounded-full border border-[#047aff] text-sm">?</span>
+                  <Link href="#" className="inline-flex items-center h-[32px] text-[#f95940] hover:text-[#0456b0]">
+                    <span className="w-5 h-5 inline-flex items-center justify-center rounded-full border border-[#f95940] text-sm">?</span>
                   </Link>
                 </div>
 
                 <h1 className='text-[32px] sm:text-[38px] font-[500] tracking-[-1.5px] leading-[1.2] sm:leading-[52px] mb-[15px]'>
                   <span className='text-[#1d1d1f]'>¿Tienes </span>
-                  <span className='bg-gradient-to-r from-[#3d9bff] to-[#047aff] inline-block text-transparent bg-clip-text'>mascotas</span>
+                  <span className='bg-gradient-to-r from-[#3d9bff] to-[#f95940] inline-block text-transparent bg-clip-text'>mascotas</span>
                   <span className='text-[#1d1d1f]'>?</span>
                 </h1>
 
@@ -309,7 +309,7 @@ const PetsPage: FC = () => {
                           <div className="flex gap-2">
                             <button
                               onClick={() => handleEditPet(pet)}
-                              className="text-blue-600 hover:text-blue-800"
+                              className="text-[#f95940] hover:text-blue-800"
                             >
                               <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                                 <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
@@ -347,7 +347,7 @@ const PetsPage: FC = () => {
                     <div className="absolute inset-0 bg-white bg-opacity-80 flex items-center justify-center z-50 rounded-2xl">
                       <div className="text-center">
                         <Spinner size={50} />
-                        <p className="mt-4 text-[#047aff] font-medium">
+                        <p className="mt-4 text-[#f95940] font-medium">
                           {loading ? 'Guardando...' : 'Cargando...'}
                         </p>
                       </div>
@@ -364,8 +364,8 @@ const PetsPage: FC = () => {
                         <div
                           className={`px-6 py-4 rounded-xl border ${
                             activeIndex === index
-                              ? 'bg-[#047aff] border-[#047aff]'
-                              : 'border-gray-200 hover:border-[#047aff]'
+                              ? 'bg-[#f95940] border-[#f95940]'
+                              : 'border-gray-200 hover:border-[#f95940]'
                           }`}
                         >
                           <h3
@@ -394,10 +394,10 @@ const PetsPage: FC = () => {
                   {selectedOption?.value === 'yes' && (
                     <div
                       onClick={handleAddPet}
-                      className="bg-white rounded-xl border border-gray-200 hover:border-[#047aff] transition-colors cursor-pointer mt-4"
+                      className="bg-white rounded-xl border border-gray-200 hover:border-[#f95940] transition-colors cursor-pointer mt-4"
                     >
-                      <div className="flex items-center justify-center gap-2 py-4 text-[#047aff] font-medium">
-                        <div className="bg-[#047aff] rounded-full p-1">
+                      <div className="flex items-center justify-center gap-2 py-4 text-[#f95940] font-medium">
+                        <div className="bg-[#f95940] rounded-full p-1">
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
                             viewBox="0 0 448 512"

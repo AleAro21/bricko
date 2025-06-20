@@ -42,7 +42,7 @@ const CharityModal: FC<CharityModalProps> = ({ setShowModal, showModal }) => {
           <button
             type="button"
             onClick={() => setShowModal(false)}
-            className="w-full bg-[#047aff] text-white px-4 py-2.5 rounded-lg hover:bg-[#0171e3] transition-colors duration-200"
+            className="w-full bg-[#f95940] text-white px-4 py-2.5 rounded-lg hover:bg-[#f95940] transition-colors duration-200"
           >
             Agregar
           </button>

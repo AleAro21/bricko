@@ -50,7 +50,7 @@ const WillsPage = () => {
                   </p>
                   <button
                     onClick={() => router.push('/summary')}
-                    className='w-full text-[14px] text-[#FFFFFF] font-[600] bg-[#0171e3] px-4 py-4 rounded-[100px] uppercase mt-4'
+                    className='w-full text-[14px] text-[#FFFFFF] font-[600] bg-[#f95940] px-4 py-4 rounded-[100px] uppercase mt-4'
                   >
                     EMPEZAR
                   </button>

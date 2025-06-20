@@ -47,7 +47,7 @@ interface StepCardProps extends Step {
 }
 
 const getProgressColor = (progress: number): string => {
-  if (progress === 100) return "#047aff";
+  if (progress === 100) return "#f95940";
   if (progress >= 11) return "#f97316";
   return "#ef4444";
 };
@@ -95,12 +95,12 @@ const StepCard: FC<StepCardProps> = ({
       <div className="absolute top-0 left-0 z-10">
         <div
           className={`inline-flex items-center h-[32px] ${
-            isOptional ? "bg-gray-200" : "bg-[#047aff] bg-opacity-10"
+            isOptional ? "bg-gray-200" : "bg-[#f95940] bg-opacity-10"
           } px-[15px] py-[5px] rounded-t-md`}
         >
           <span
             className={`${
-              isOptional ? "text-gray-600" : "text-[#047aff]"
+              isOptional ? "text-gray-600" : "text-[#f95940]"
             } text-[14px] font-[600]`}
           >
             {isOptional ? "Opcional" : `Paso ${stepNumber}`}
@@ -115,7 +115,7 @@ const StepCard: FC<StepCardProps> = ({
           <div className="flex items-start gap-5 flex-1 min-w-0">
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-5 mb-5 flex-wrap">
-                <div className="text-[#047aff] w-8 h-8 flex items-center justify-center flex-shrink-0">
+                <div className="text-[#f95940] w-8 h-8 flex items-center justify-center flex-shrink-0">
                   {icon}
                 </div>
                 <h3 className="text-[20px] sm:text-[24px] text-[#000000] font-[500] mb-0 tracking-[0.1px] leading-[1.3] break-words">
@@ -130,13 +130,13 @@ const StepCard: FC<StepCardProps> = ({
           <div className="flex flex-col items-end gap-5 mt-4 sm:mt-0">
             {progress === 100 ? (
               <div className="flex items-center gap-5">
-                <div className="w-6 h-6 rounded-full bg-[#047aff] flex items-center justify-center">
+                <div className="w-6 h-6 rounded-full bg-[#f95940] flex items-center justify-center">
                   <Check weight="bold" className="text-white w-4 h-4" />
                 </div>
-                <PencilSimple className="text-[#047aff] w-5 h-5" />
+                <PencilSimple className="text-[#f95940] w-5 h-5" />
               </div>
             ) : progress === 0 ? (
-              <div className="flex items-center gap-2 text-[#047aff]">
+              <div className="flex items-center gap-2 text-[#f95940]">
                 <Clock className="w-4 h-4" />
                 <span className="text-[12px] font-medium whitespace-nowrap">{duration}</span>
               </div>
@@ -166,10 +166,10 @@ const PaymentSection: FC<PaymentSectionProps> = ({ onClick, disabled, progress }
       onClick={!disabled ? onClick : undefined}
       className={`mt-5 rounded-xl group ${disabled ? "cursor-not-allowed opacity-50" : "cursor-pointer"}`}
     >
-      <div className="p-[1px] bg-gradient-to-br from-[#047aff] via-[#3d9bff] to-[#047aff] rounded-xl">
+      <div className="p-[1px] bg-gradient-to-br from-[#f95940] via-[#3d9bff] to-[#f95940] rounded-xl">
         <div className="bg-white rounded-[11px] p-[25px] hover:bg-gradient-to-br hover:from-[#f8faff] hover:to-white transition-all duration-500">
           <div className="flex items-start gap-5 flex-wrap">
-            <div className={`bg-gradient-to-br ${disabled ? "from-[#047aff]/70 to-[#3d9bff]/70" : "from-[#047aff] to-[#3d9bff]"} p-[15px] rounded-xl shadow-md group-hover:scale-105 transition-transform duration-300`}>
+            <div className={`bg-gradient-to-br ${disabled ? "from-[#f95940]/70 to-[#3d9bff]/70" : "from-[#f95940] to-[#3d9bff]"} p-[15px] rounded-xl shadow-md group-hover:scale-105 transition-transform duration-300`}>
               <LockSimple weight="regular" className="text-white w-6 h-6" />
             </div>
             <div className="flex-1 min-w-0">
@@ -183,7 +183,7 @@ const PaymentSection: FC<PaymentSectionProps> = ({ onClick, disabled, progress }
                       Termina tu testamento para poder legalizarlo y compartirlo con tus seres queridos.
                     </p>
                     <div className="flex items-center gap-3 text-[14px] font-[300] text-[#1d1d1f]/80 mb-2">
-                      <ShieldCheck weight="fill" className="text-[#047aff] w-5 h-5" />
+                      <ShieldCheck weight="fill" className="text-[#f95940] w-5 h-5" />
                       <span>Protege el futuro de tu familia</span>
                     </div>
                     <p className="text-[12px] mt-5 font-medium text-blue-700 mb-0">
@@ -201,8 +201,8 @@ const PaymentSection: FC<PaymentSectionProps> = ({ onClick, disabled, progress }
                   disabled={disabled}
                   className={`${
                     disabled
-                      ? "bg-gradient-to-r from-[#047aff]/70 to-[#3d9bff]/70"
-                      : "bg-gradient-to-r from-[#047aff] to-[#3d9bff] hover:shadow-md"
+                      ? "bg-gradient-to-r from-[#f95940]/70 to-[#3d9bff]/70"
+                      : "bg-gradient-to-r from-[#f95940] to-[#3d9bff] hover:shadow-md"
                   } text-white px-[25px] py-[10px] rounded-lg font-medium text-sm transition-all duration-300 flex items-center gap-5`}
                 >
                   Proceder al pago
@@ -375,11 +375,11 @@ const SummaryPageClient: FC<SummaryPageClientProps> = ({ progressMapping }) => {
                 {totalProgress === 100 && (
                   <div 
                     onClick={() => router.push('/preview')}
-                    className="mb-5 p-4 bg-blue-50 rounded-xl cursor-pointer hover:bg-blue-100 transition-colors"
+                    className="mb-5 p-4 bg-[#f95940]/20 rounded-xl cursor-pointer hover:bg-blue-100 transition-colors"
                   >
                     <div className="flex items-center gap-3">
                       <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center">
-                        <Eye size={24} className="text-blue-600" />
+                        <Eye size={24} className="text-[#f95940]" />
                       </div>
                       <div>
                         <h3 className="text-[16px] font-[500] text-[#1d1d1f] mb-1">Vista Previa Disponible</h3>

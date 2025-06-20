@@ -41,11 +41,11 @@ const CategoryCard: FC<{
     className="relative flex flex-col items-start p-8 rounded-xl transition-all duration-500 cursor-pointer w-full min-h-[150px] bg-white/90 backdrop-blur-sm shadow-md hover:shadow-lg hover:scale-[1.02]"
   >
     <div className="flex items-center justify-between w-full mb-3">
-      <div className="w-10 h-10 flex items-center justify-center text-[#047aff]">
+      <div className="w-10 h-10 flex items-center justify-center text-[#f95940]">
         {icon}
       </div>
-      <div className="px-3 py-1 rounded-full bg-[#047aff] bg-opacity-10">
-        <span className="text-[#047aff] text-sm font-medium">{count}</span>
+      <div className="px-3 py-1 rounded-full bg-[#f95940] bg-opacity-10">
+        <span className="text-[#f95940] text-sm font-medium">{count}</span>
       </div>
     </div>
     <h3 className="text-[24px] font-[500] mb-2 pr-2 tracking-[0.1px] leading-[1.3]">{title}</h3>
@@ -96,15 +96,15 @@ const ContactCard: FC<{
           <h3 className="text-xl font-medium text-[#1d1d1f]">
             {contact.name} {contact.fatherLastName}
           </h3>
-          <span className="text-sm text-[#047aff] bg-[#047aff]/10 px-2 py-1 rounded-full mr-2">
+          <span className="text-sm text-[#f95940] bg-[#f95940]/10 px-2 py-1 rounded-full mr-2">
             {relationshipLabels[contact.relationToUser] || 'Otro'}
           </span>
-          <span className="text-sm text-[#047aff] bg-[#047aff]/10 px-2 py-1 rounded-full">
+          <span className="text-sm text-[#f95940] bg-[#f95940]/10 px-2 py-1 rounded-full">
             {ageLabel}
           </span>
         </div>
         <div className="flex gap-2">
-          <button onClick={() => onEdit(contact)} className="p-2 text-gray-600 hover:text-[#047aff] transition-colors">
+          <button onClick={() => onEdit(contact)} className="p-2 text-gray-600 hover:text-[#f95940] transition-colors">
             <Pencil size={20} />
           </button>
           <button onClick={() => onDelete(contact.id!)} className="p-2 text-gray-600 hover:text-red-500 transition-colors">
@@ -141,10 +141,10 @@ const PetCard: FC<{
     <div className="flex justify-between items-start mb-4">
       <div>
         <h3 className="text-xl font-medium text-[#1d1d1f]">{pet.name}</h3>
-        <span className="text-sm text-[#047aff] bg-[#047aff]/10 px-2 py-1 rounded-full">{pet.species}</span>
+        <span className="text-sm text-[#f95940] bg-[#f95940]/10 px-2 py-1 rounded-full">{pet.species}</span>
       </div>
       <div className="flex gap-2">
-        <button onClick={() => onEdit(pet)} className="p-2 text-gray-600 hover:text-[#047aff] transition-colors">
+        <button onClick={() => onEdit(pet)} className="p-2 text-gray-600 hover:text-[#f95940] transition-colors">
           <Pencil size={20} />
         </button>
         <button onClick={() => onDelete(pet.id)} className="p-2 text-gray-600 hover:text-red-500 transition-colors">
@@ -250,7 +250,7 @@ const PeoplePageClient: FC<PeoplePageProps> = ({ user, contacts, pets, categorie
         </p>
         <button
           onClick={() => handleAddClick(selectedCategory === 'pets' ? 'pet' : (selectedCategory === 'children' ? 'child' : 'trusted'))}
-          className="inline-flex items-center gap-2 bg-[#047aff] text-white px-4 py-2 rounded-lg hover:bg-[#0456b0] transition-colors"
+          className="inline-flex items-center gap-2 bg-[#f95940] text-white px-4 py-2 rounded-lg hover:bg-[#0456b0] transition-colors"
         >
           <UserPlus size={20} />
           <span>
@@ -265,7 +265,7 @@ const PeoplePageClient: FC<PeoplePageProps> = ({ user, contacts, pets, categorie
     if (loading) {
       return (
         <div className="text-center py-8">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#047aff] mx-auto"></div>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#f95940] mx-auto"></div>
           <p className="mt-4 text-gray-600">Cargando...</p>
         </div>
       );
@@ -335,7 +335,7 @@ const PeoplePageClient: FC<PeoplePageProps> = ({ user, contacts, pets, categorie
       <div className="space-y-6">
         <button
           onClick={() => setSelectedCategory(null)}
-          className="flex items-center gap-2 text-[#047aff] hover:text-[#0456b0] transition-colors"
+          className="flex items-center gap-2 text-[#f95940] hover:text-[#0456b0] transition-colors"
         >
           <CaretLeft size={20} />
           <span>Volver a categorías</span>
@@ -359,14 +359,14 @@ const PeoplePageClient: FC<PeoplePageProps> = ({ user, contacts, pets, categorie
             {/* Header Section */}
             <div>
               <div className="flex items-center justify-between mb-2.5">
-                <div className="inline-flex items-center h-[32px] bg-[#047aff] bg-opacity-10 px-[12px] py-[6px] rounded-md">
-                  <span className="text-[#047aff] text-[14px] font-[400]">
+                <div className="inline-flex items-center h-[32px] bg-[#f95940] bg-opacity-10 px-[12px] py-[6px] rounded-md">
+                  <span className="text-[#f95940] text-[14px] font-[400]">
                     {selectedCategory ? categories.find(c => c.id === selectedCategory)?.title.toUpperCase() : 'CONTACTOS'}
                   </span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <Link href="#" className="inline-flex items-center h-[32px] text-[#047aff] hover:text-[#0456b0]">
-                    <span className="w-5 h-5 inline-flex items-center justify-center rounded-full border border-[#047aff] text-sm">?</span>
+                  <Link href="#" className="inline-flex items-center h-[32px] text-[#f95940] hover:text-[#0456b0]">
+                    <span className="w-5 h-5 inline-flex items-center justify-center rounded-full border border-[#f95940] text-sm">?</span>
                   </Link>
                   <p className="text-[14px] text-[#000000]">Artículo relacionado</p>
                 </div>
@@ -376,7 +376,7 @@ const PeoplePageClient: FC<PeoplePageProps> = ({ user, contacts, pets, categorie
                 <div>
                   <h1 className="text-[32px] sm:text-[38px] font-[500] tracking-[-1.5px] leading-[1.2] sm:leading-[52px] mb-[15px]">
                     <span className="text-[#1d1d1f]">Gestiona tus </span>
-                    <span className="bg-gradient-to-r from-[#3d9bff] to-[#047aff] inline-block text-transparent bg-clip-text">
+                    <span className="bg-gradient-to-r from-[#3d9bff] to-[#f95940] inline-block text-transparent bg-clip-text">
                       {selectedCategory ? categories.find(c => c.id === selectedCategory)?.title.toLowerCase() : 'contactos'}
                     </span>
                   </h1>
@@ -397,7 +397,7 @@ const PeoplePageClient: FC<PeoplePageProps> = ({ user, contacts, pets, categorie
                         handleAddClick('pet');
                       }
                     }}
-                    className="flex items-center gap-2 bg-[#047aff] text-white px-4 py-2 rounded-lg hover:bg-[#0456b0] transition-colors"
+                    className="flex items-center gap-2 bg-[#f95940] text-white px-4 py-2 rounded-lg hover:bg-[#0456b0] transition-colors"
                   >
                     <UserPlus size={20} />
                     <span>

@@ -81,8 +81,8 @@ const DigitalAssetsPageClient: FC<DigitalAssetsPageClientProps> = ({
       return (
         <div className="bg-white p-4 rounded-lg shadow-md border border-gray-100">
           <p className="text-[#1d1d1f] font-medium">{payload[0].name}</p>
-          <p className="text-[#047aff] font-normal">{`${value} activo${value !== 1 ? 's' : ''}`}</p>
-          <p className="text-[#047aff] font-normal">{payload[0].payload.percentage.toFixed(1)}%</p>
+          <p className="text-[#f95940] font-normal">{`${value} activo${value !== 1 ? 's' : ''}`}</p>
+          <p className="text-[#f95940] font-normal">{payload[0].payload.percentage.toFixed(1)}%</p>
         </div>
       );
     }
@@ -138,17 +138,17 @@ const DigitalAssetsPageClient: FC<DigitalAssetsPageClientProps> = ({
               <div className="space-y-8">
                 <div>
                   <div className="flex items-center gap-2 mb-2.5">
-                    <div className="inline-flex items-center h-[32px] bg-[#047aff] bg-opacity-10 px-[12px] py-[6px] rounded-md">
-                      <span className="text-[#047aff] text-[14px] font-normal">ACTIVOS DIGITALES</span>
+                    <div className="inline-flex items-center h-[32px] bg-[#f95940] bg-opacity-10 px-[12px] py-[6px] rounded-md">
+                      <span className="text-[#f95940] text-[14px] font-normal">ACTIVOS DIGITALES</span>
                     </div>
-                    <Link href="#" className="inline-flex items-center h-[32px] text-[#047aff] hover:text-[#0456b0]">
-                      <span className="w-5 h-5 inline-flex items-center justify-center rounded-full border border-[#047aff] text-sm">?</span>
+                    <Link href="#" className="inline-flex items-center h-[32px] text-[#f95940] hover:text-[#0456b0]">
+                      <span className="w-5 h-5 inline-flex items-center justify-center rounded-full border border-[#f95940] text-sm">?</span>
                     </Link>
                   </div>
                   <h1 className="text-[32px] sm:text-[38px] font-medium tracking-[-1.5px] leading-[1d1d1f] sm:leading-[52px] mb-[15px]">
                     <span className="text-[#1d1d1f]">¿Tiene algún </span>
                     <span
-                      style={{ backgroundImage: "linear-gradient(to left, #047aff 30%, #0d4ba3 100%)" }}
+                      style={{ backgroundImage: "linear-gradient(to left, #f95940 30%, #f95940 100%)" }}
                       className="inline-block text-transparent bg-clip-text"
                     >
                       activo digital
@@ -166,12 +166,12 @@ const DigitalAssetsPageClient: FC<DigitalAssetsPageClientProps> = ({
                   className="bg-white rounded-2xl shadow-md hover:shadow-lg transition-all cursor-pointer overflow-hidden"
                 >
                   <div className="flex items-center justify-center gap-2 py-8">
-                    <div className="w-8 h-8 rounded-full bg-[#047aff] flex items-center justify-center">
+                    <div className="w-8 h-8 rounded-full bg-[#f95940] flex items-center justify-center">
                       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" width="16" height="16" className="fill-white">
                         <path d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z" />
                       </svg>
                     </div>
-                    <span className="text-[#047aff] font-medium">Agregar Activo Digital</span>
+                    <span className="text-[#f95940] font-medium">Agregar Activo Digital</span>
                   </div>
                 </div>
 
@@ -186,7 +186,7 @@ const DigitalAssetsPageClient: FC<DigitalAssetsPageClientProps> = ({
                           return (
                             <div key={asset.id} className="border-b border-gray-100 last:border-b-0 pb-4 last:pb-0">
                               <div className="flex items-start gap-4">
-                                <div className="p-3 bg-[#047aff] bg-opacity-10 rounded-lg text-[#047aff]">
+                                <div className="p-3 bg-[#f95940] bg-opacity-10 rounded-lg text-[#f95940]">
                                   {assetTypeIcons[assetType]}
                                 </div>
                                 <div className="flex-1">
@@ -287,7 +287,7 @@ const DigitalAssetsPageClient: FC<DigitalAssetsPageClientProps> = ({
                     </p>
                     <ul className="space-y-3">
                       <li className="flex items-start gap-3">
-                        <div className="flex-shrink-0 w-5 h-5 rounded-full bg-[#047aff] flex items-center justify-center mt-0.5">
+                        <div className="flex-shrink-0 w-5 h-5 rounded-full bg-[#f95940] flex items-center justify-center mt-0.5">
                           <svg className="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
                           </svg>
@@ -297,7 +297,7 @@ const DigitalAssetsPageClient: FC<DigitalAssetsPageClientProps> = ({
                         </span>
                       </li>
                       <li className="flex items-start gap-3">
-                        <div className="flex-shrink-0 w-5 h-5 rounded-full bg-[#047aff] flex items-center justify-center mt-0.5">
+                        <div className="flex-shrink-0 w-5 h-5 rounded-full bg-[#f95940] flex items-center justify-center mt-0.5">
                           <svg className="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
                           </svg>
@@ -307,7 +307,7 @@ const DigitalAssetsPageClient: FC<DigitalAssetsPageClientProps> = ({
                         </span>
                       </li>
                       <li className="flex items-start gap-3">
-                        <div className="flex-shrink-0 w-5 h-5 rounded-full bg-[#047aff] flex items-center justify-center mt-0.5">
+                        <div className="flex-shrink-0 w-5 h-5 rounded-full bg-[#f95940] flex items-center justify-center mt-0.5">
                           <svg className="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
                           </svg>
@@ -317,7 +317,7 @@ const DigitalAssetsPageClient: FC<DigitalAssetsPageClientProps> = ({
                         </span>
                       </li>
                       <li className="flex items-start gap-3">
-                        <div className="flex-shrink-0 w-5 h-5 rounded-full bg-[#047aff] flex items-center justify-center mt-0.5">
+                        <div className="flex-shrink-0 w-5 h-5 rounded-full bg-[#f95940] flex items-center justify-center mt-0.5">
                           <svg className="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
                           </svg>

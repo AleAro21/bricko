@@ -20,14 +20,14 @@ const ProgressIndicator: FC<ProgressIndicatorProps> = ({
           </p>
         )}
         <div className="flex items-center gap-1">
-          <span className="text-sm font-semibold text-[#047aff]">{currentSection}</span>
+          <span className="text-sm font-semibold text-[#f95940]">{currentSection}</span>
           <span className="text-sm text-gray-400">/</span>
           <span className="text-sm text-gray-600">{totalSections}</span>
         </div>
       </div>
       <div className="w-full h-1.5 bg-gray-100 rounded-full overflow-hidden">
         <div 
-          className="h-full bg-gradient-to-r from-[#047aff] to-[#0d4ba3] transition-all duration-500 ease-out rounded-full"
+          className="h-full bg-gradient-to-r from-[#f95940] to-[#f95940] transition-all duration-500 ease-out rounded-full"
           style={{ 
             width: `${(currentSection / totalSections) * 100}%`,
           }}

@@ -20,7 +20,7 @@ const CheckIcon: React.FC<CheckIconProps> = ({ className }) => (
     className={className}
   >
     <path
-      fill="#047aff"
+      fill="#f95940"
       d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM369 209L241 337c-9.4 9.4-24.6 9.4-33.9 0l-64-64c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0l47 47L335 175c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9z"
     />
   </svg>
@@ -33,7 +33,7 @@ interface BenefitItemProps {
 
 const BenefitItem: React.FC<BenefitItemProps> = ({ title, description }) => (
   <div className="flex items-start gap-3 py-4">
-    <div className="flex-shrink-0 w-6 h-6 rounded-full bg-[#047aff] flex items-center justify-center mt-0.5">
+    <div className="flex-shrink-0 w-6 h-6 rounded-full bg-[#f95940] flex items-center justify-center mt-0.5">
       <svg
         className="w-3.5 h-3.5 text-[#FFFFFF]"
         fill="none"
@@ -62,7 +62,7 @@ interface ContinueButtonProps {
 
 const ContinueButton: React.FC<ContinueButtonProps> = ({ href, text }) => (
   <Link href={href}>
-    <button className="w-full text-[14px] text-white font-[600] bg-[#047aff] px-6 py-2.5 rounded-[100px] hover:bg-[#0366d6] transition-colors duration-200">
+    <button className="w-full text-[14px] text-white font-[600] bg-[#f95940] px-6 py-2.5 rounded-[100px] hover:bg-[#0366d6] transition-colors duration-200">
       {text}
     </button>
   </Link>
@@ -104,8 +104,8 @@ const Benefits: React.FC = () => {
               <div className='flex flex-col lg:flex-row gap-8 lg:gap-24 h-full'>
                 {/* Left column - Title section */}
                 <div className="hidden lg:block lg:w-1/3">
-                  <div className="inline-flex items-center h-[32px] bg-[#047aff] bg-opacity-10 px-[12px] py-[6px] rounded-md mb-2.5 mt-5">
-                    <span className="text-[#047aff] text-[14px] font-[400]">TESTAMENTO DIGITAL</span>
+                  <div className="inline-flex items-center h-[32px] bg-[#f95940] bg-opacity-10 px-[12px] py-[6px] rounded-md mb-2.5 mt-5">
+                    <span className="text-[#f95940] text-[14px] font-[400]">TESTAMENTO DIGITAL</span>
                   </div>
 
                   <h1 className="text-[32px] sm:text-[38px] font-[500] tracking-[-1.5px] leading-[1.2] sm:leading-[52px] mb-[15px]">
@@ -113,7 +113,7 @@ const Benefits: React.FC = () => {
                     <span
                       style={{
                         backgroundImage:
-                          "linear-gradient(to left, #047aff 30%, #0d4ba3 100%)",
+                          "linear-gradient(to left, #f95940 30%, #f95940 100%)",
                       }}
                       className="inline-block text-transparent bg-clip-text"
                     >

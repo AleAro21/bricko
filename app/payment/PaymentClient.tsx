@@ -107,28 +107,28 @@ const PaymentClient: FC = () => {
               </h3>
               <ul className="space-y-3">
                 <li className="flex items-start gap-2">
-                  <span className="text-blue-500 mt-1">•</span>
+                  <span className="text-[#f95940] mt-1">•</span>
                   <div>
                     <span className="font-medium">Tiempo:</span>
                     <p className="text-gray-600">6-24 meses en promedio</p>
                   </div>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-blue-500 mt-1">•</span>
+                  <span className="text-[#f95940] mt-1">•</span>
                   <div>
                     <span className="font-medium">Costos legales:</span>
                     <p className="text-gray-600">5-10% del valor del activo ({formatCurrency(assetValue * 0.05)} - {formatCurrency(assetValue * 0.1)})</p>
                   </div>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-blue-500 mt-1">•</span>
+                  <span className="text-[#f95940] mt-1">•</span>
                   <div>
                     <span className="font-medium">Gastos notariales:</span>
                     <p className="text-gray-600">2-4% del valor del activo ({formatCurrency(assetValue * 0.02)} - {formatCurrency(assetValue * 0.04)})</p>
                   </div>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-blue-500 mt-1">•</span>
+                  <span className="text-[#f95940] mt-1">•</span>
                   <div>
                     <span className="font-medium">Otros gastos:</span>
                     <p className="text-gray-600">Impuestos, trámites, certificaciones, etc.</p>
@@ -172,15 +172,15 @@ const PaymentClient: FC = () => {
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16">
                 <div className="space-y-8">
                   <div>
-                    <div className="inline-flex items-center h-[32px] bg-[#047aff] bg-opacity-10 px-[12px] py-[6px] rounded-md mb-2.5">
-                      <span className="text-[#047aff] text-[14px] font-[400]">PAGO</span>
+                    <div className="inline-flex items-center h-[32px] bg-[#f95940] bg-opacity-10 px-[12px] py-[6px] rounded-md mb-2.5">
+                      <span className="text-[#f95940] text-[14px] font-[400]">PAGO</span>
                     </div>
                     <div className="flex items-center gap-2 mb-[15px]">
                       <h1 className="text-[32px] sm:text-[38px] font-[500] tracking-[-1.5px] leading-[1.2] sm:leading-[52px]">
                         <span className="text-[#1d1d1f]">Finaliza tu </span>
                         <span
                           style={{
-                            backgroundImage: "linear-gradient(to left, #047aff 30%, #0d4ba3 100%)",
+                            backgroundImage: "linear-gradient(to left, #f95940 30%, #f95940 100%)",
                           }}
                           className="inline-block text-transparent bg-clip-text"
                         >
@@ -189,7 +189,7 @@ const PaymentClient: FC = () => {
                       </h1>
                       <Question 
                         weight="regular"
-                        className="text-blue-500 w-7 h-7 cursor-pointer hover:opacity-80 transition-opacity"
+                        className="text-[#f95940] w-7 h-7 cursor-pointer hover:opacity-80 transition-opacity"
                         onClick={() => setShowModal(true)}
                       />
                     </div>
@@ -197,7 +197,7 @@ const PaymentClient: FC = () => {
                     {/* Asset Value Summary */}
                     <div className="bg-gradient-to-r from-blue-50 to-blue-100 rounded-xl p-6 mb-8">
                       <div className="flex items-start gap-3">
-                        <Calculator size={24} className="text-blue-600 flex-shrink-0" />
+                        <Calculator size={24} className="text-[#f95940] flex-shrink-0" />
                         <div>
                           <h3 className="text-[16px] font-[500] text-[#1d1d1f] mb-2">
                             Resumen de tu Activo
@@ -248,9 +248,9 @@ const PaymentClient: FC = () => {
                       isInsurance={true}
                     />
 
-                    <div className="mt-6 bg-blue-50 rounded-xl p-6">
+                    <div className="mt-6 bg-[#f95940]/20 rounded-xl p-6">
                       <div className="flex items-start gap-3">
-                        <Users size={24} className="text-blue-600 flex-shrink-0" />
+                        <Users size={24} className="text-[#f95940] flex-shrink-0" />
                         <div>
                           <h3 className="text-[16px] font-[500] text-[#1d1d1f] mb-2">
                             Protección Familiar Garantizada

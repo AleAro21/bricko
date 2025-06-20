@@ -189,12 +189,12 @@ const AddChild: FC<AddChildProps> = ({
           <div className="space-y-4">
             <div>
               <label className="block text-sm font-medium text-[#6e6e73] mb-1">
-                Padre/Madre <span className="text-[#047aff]">*</span>
+                Padre/Madre <span className="text-[#f95940]">*</span>
               </label>
               <select
                 value={parentType === 'new' ? 'new' : selectedParentId}
                 onChange={handleParentSelect}
-                className="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:border-[#047aff]"
+                className="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:border-[#f95940]"
               >
                 <option value="">Seleccione un padre/madre</option>
                 {contacts.map((contact) => (
@@ -213,7 +213,7 @@ const AddChild: FC<AddChildProps> = ({
                 placeholder="Nombre"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                className="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:border-[#047aff]"
+                className="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:border-[#f95940]"
               />
             </div>
 
@@ -224,7 +224,7 @@ const AddChild: FC<AddChildProps> = ({
                 placeholder="Apellido Paterno"
                 value={fatherLastName}
                 onChange={(e) => setFatherLastName(e.target.value)}
-                className="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:border-[#047aff]"
+                className="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:border-[#f95940]"
               />
             </div>
 
@@ -235,17 +235,17 @@ const AddChild: FC<AddChildProps> = ({
                 placeholder="Apellido Materno"
                 value={motherLastName}
                 onChange={(e) => setMotherLastName(e.target.value)}
-                className="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:border-[#047aff]"
+                className="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:border-[#f95940]"
               />
             </div>
             <div>
               <label className="block text-sm font-medium text-[#6e6e73] mb-1">
-                Género <span className="text-[#047aff]">*</span>
+                Género <span className="text-[#f95940]">*</span>
               </label>
               <select
                 value={gender}
                 onChange={(e) => setGender(e.target.value)}
-                className="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:border-[#047aff]"
+                className="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:border-[#f95940]"
               >
                 <option value="none">Seleccione un género</option>
                 <option value="male">Masculino</option>
@@ -255,24 +255,24 @@ const AddChild: FC<AddChildProps> = ({
 
             <div>
               <label className="block text-sm font-medium text-[#6e6e73] mb-1">
-                Fecha de Nacimiento <span className="text-[#047aff]">*</span>
+                Fecha de Nacimiento <span className="text-[#f95940]">*</span>
               </label>
               <input
                 type="date"
                 value={birthDate}
                 onChange={(e) => setBirthDate(e.target.value)}
-                className="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:border-[#047aff]"
+                className="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:border-[#f95940]"
               />
             </div>
 
             <div>
               <label className="block text-sm font-medium text-[#6e6e73] mb-1">
-                País de Nacimiento <span className="text-[#047aff]">*</span>
+                País de Nacimiento <span className="text-[#f95940]">*</span>
               </label>
               <select
                 value={country}
                 onChange={(e) => setCountry(e.target.value)}
-                className="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:border-[#047aff]"
+                className="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:border-[#f95940]"
               >
                 {COUNTRIES.map((c) => (
                   <option key={c.code} value={c.code}>
@@ -285,28 +285,28 @@ const AddChild: FC<AddChildProps> = ({
             {country === 'MX' && (
               <div>
                 <label className="block text-sm font-medium text-[#6e6e73] mb-1">
-                  Identificación (CURP) <span className="text-[#047aff]">*</span>
+                  Identificación (CURP) <span className="text-[#f95940]">*</span>
                 </label>
                 <input
                   type="text"
                   placeholder="ID de Gobierno"
                   value={governmentId}
                   onChange={(e) => setGovernmentId(e.target.value)}
-                  className="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:border-[#047aff]"
+                  className="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:border-[#f95940]"
                 />
               </div>
             )}
 
             <div>
               <label className="block text-sm font-medium text-[#6e6e73] mb-1">
-                Correo Electrónico <span className="text-[#047aff]">*</span>
+                Correo Electrónico <span className="text-[#f95940]">*</span>
               </label>
               <input
                 type="email"
                 placeholder="Correo Electrónico"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:border-[#047aff]"
+                className="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:border-[#f95940]"
               />
             </div>
           </div>
@@ -315,7 +315,7 @@ const AddChild: FC<AddChildProps> = ({
             <div className="flex justify-end gap-4">
               <button
                 onClick={handleSubmit}
-                className="px-6 py-2 bg-[#047aff] text-white rounded-lg hover:bg-[#0456b0] transition-colors"
+                className="px-6 py-2 bg-[#f95940] text-white rounded-lg hover:bg-[#0456b0] transition-colors"
               >
                 {isEditing ? 'Guardar' : 'Agregar'}
               </button>

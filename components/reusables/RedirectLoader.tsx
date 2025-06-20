@@ -35,7 +35,7 @@ const RedirectLoader: React.FC = () => {
       }}
     >
       {/* Render a big blue spinner */}
-      <Spinner size={100} color="#047aff" />
+      <Spinner size={100} color="#f95940" />
     </div>
   );
 };

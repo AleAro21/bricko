@@ -172,63 +172,63 @@ const Add: FC<AddProps> = ({
         <div className="space-y-4">
           <div>
             <label className="block text-sm font-medium text-[#6e6e73] mb-1">
-              Nombre <span className="text-[#047aff]">*</span>
+              Nombre <span className="text-[#f95940]">*</span>
             </label>
             <input
               type="text"
               placeholder="Nombre"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:border-[#047aff]"
+              className="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:border-[#f95940]"
             />
           </div>
           <div>
             <label className="block text-sm font-medium text-[#6e6e73] mb-1">
-              Apellido Paterno <span className="text-[#047aff]">*</span>
+              Apellido Paterno <span className="text-[#f95940]">*</span>
             </label>
             <input
               type="text"
               placeholder="Apellido Paterno"
               value={fatherLastName}
               onChange={(e) => setFatherLastName(e.target.value)}
-              className="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:border-[#047aff]"
+              className="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:border-[#f95940]"
             />
           </div>
 
           <div>
             <label className="block text-sm font-medium text-[#6e6e73] mb-1">
-              Apellido Materno <span className="text-[#047aff]">*</span>
+              Apellido Materno <span className="text-[#f95940]">*</span>
             </label>
             <input
               type="text"
               placeholder="Apellido Materno"
               value={motherLastName}
               onChange={(e) => setMotherLastName(e.target.value)}
-              className="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:border-[#047aff]"
+              className="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:border-[#f95940]"
             />
           </div>
 
           <div>
             <label className="block text-sm font-medium text-[#6e6e73] mb-1">
-              Correo Electrónico <span className="text-[#047aff]">*</span>
+              Correo Electrónico <span className="text-[#f95940]">*</span>
             </label>
             <input
               type="email"
               placeholder="Correo Electrónico"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:border-[#047aff]"
+              className="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:border-[#f95940]"
             />
           </div>
 
           <div>
             <label className="block text-sm font-medium text-[#6e6e73] mb-1">
-              Género <span className="text-[#047aff]">*</span>
+              Género <span className="text-[#f95940]">*</span>
             </label>
             <select
               value={gender}
               onChange={(e) => setGender(e.target.value)}
-              className="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:border-[#047aff]"
+              className="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:border-[#f95940]"
             >
               <option value="none">Seleccione un género</option>
               <option value="male">Masculino</option>
@@ -238,24 +238,24 @@ const Add: FC<AddProps> = ({
 
           <div>
             <label className="block text-sm font-medium text-[#6e6e73] mb-1">
-              Fecha de Nacimiento <span className="text-[#047aff]">*</span>
+              Fecha de Nacimiento <span className="text-[#f95940]">*</span>
             </label>
             <input
               type="date"
               value={birthDate}
               onChange={(e) => setBirthDate(e.target.value)}
-              className="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:border-[#047aff]"
+              className="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:border-[#f95940]"
             />
           </div>
 
           <div>
             <label className="block text-sm font-medium text-[#6e6e73] mb-1">
-              País de Nacimiento <span className="text-[#047aff]">*</span>
+              País de Nacimiento <span className="text-[#f95940]">*</span>
             </label>
             <select
               value={country}
               onChange={(e) => setCountry(e.target.value)}
-              className="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:border-[#047aff]"
+              className="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:border-[#f95940]"
             >
               {COUNTRIES.map((c) => (
                 <option key={c.code} value={c.code}>
@@ -268,26 +268,26 @@ const Add: FC<AddProps> = ({
           {country === 'MX' && (
             <div>
               <label className="block text-sm font-medium text-[#6e6e73] mb-1">
-                Identificación (CURP) <span className="text-[#047aff]">*</span>
+                Identificación (CURP) <span className="text-[#f95940]">*</span>
               </label>
               <input
                 type="text"
                 placeholder="ID de Gobierno"
                 value={governmentId}
                 onChange={(e) => setGovernmentId(e.target.value)}
-                className="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:border-[#047aff]"
+                className="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:border-[#f95940]"
               />
             </div>
           )}
 
           <div>
             <label className="block text-sm font-medium text-[#6e6e73] mb-1">
-              Relación <span className="text-[#047aff]">*</span>
+              Relación <span className="text-[#f95940]">*</span>
             </label>
             <select
               value={relationship}
               onChange={(e) => setRelationship(e.target.value)}
-              className="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:border-[#047aff]"
+              className="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:border-[#f95940]"
             >
               <option value="none">Seleccione una relación</option>
               <option value="sibling">Hermano/a</option>
@@ -303,7 +303,7 @@ const Add: FC<AddProps> = ({
         <div className="flex justify-end gap-4 mt-6">
           <button
             onClick={handleSubmit}
-            className="px-6 py-2 bg-[#047aff] text-white rounded-lg hover:bg-[#0456b0] transition-colors disabled:opacity-50"
+            className="px-6 py-2 bg-[#f95940] text-white rounded-lg hover:bg-[#0456b0] transition-colors disabled:opacity-50"
             disabled={loading}
           >
             {loading ? 'Guardando...' : buttonText}

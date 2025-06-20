@@ -102,8 +102,8 @@ const BasicAddressForm: FC<BasicAddressFormProps> = ({ initialAddress, userId })
           <div className="flex flex-col lg:flex-row gap-8 lg:gap-24 h-full py-12">
             <div className="lg:w-1/3">
               <div className="flex items-center justify-between mb-2.5">
-                <div className="inline-flex items-center h-[32px] bg-[#047aff] bg-opacity-10 px-[12px] py-[6px] rounded-md">
-                  <span className="text-[#047aff] text-[14px] font-[400]">DATOS PERSONALES</span>
+                <div className="inline-flex items-center h-[32px] bg-[#f95940] bg-opacity-10 px-[12px] py-[6px] rounded-md">
+                  <span className="text-[#f95940] text-[14px] font-[400]">DATOS PERSONALES</span>
                 </div>
               </div>
               <h1 className="text-[32px] sm:text-[38px] font-[500] tracking-[-1.5px] leading-[1.2] sm:leading-[52px] mb-[15px]">
@@ -111,7 +111,7 @@ const BasicAddressForm: FC<BasicAddressFormProps> = ({ initialAddress, userId })
                 <span
                   style={{
                     backgroundImage:
-                      "linear-gradient(to left, #047aff 30%, #0d4ba3 100%)",
+                      "linear-gradient(to left, #f95940 30%, #f95940 100%)",
                   }}
                   className="inline-block text-transparent bg-clip-text"
                 >
@@ -122,8 +122,8 @@ const BasicAddressForm: FC<BasicAddressFormProps> = ({ initialAddress, userId })
                 Necesitamos tu dirección para completar el testamento.
               </p>
               <div className="flex justify-end items-center gap-2 mb-5">
-                <Link href="#" className="inline-flex items-center h-[32px] text-[#047aff] hover:text-[#0456b0]">
-                  <span className="w-5 h-5 inline-flex items-center justify-center rounded-full border border-[#047aff] text-sm">?</span>
+                <Link href="#" className="inline-flex items-center h-[32px] text-[#f95940] hover:text-[#0456b0]">
+                  <span className="w-5 h-5 inline-flex items-center justify-center rounded-full border border-[#f95940] text-sm">?</span>
                 </Link>
                 <p className="text-[14px] text-[#000000]">Articulo relacionado</p>
               </div>
@@ -146,7 +146,7 @@ const BasicAddressForm: FC<BasicAddressFormProps> = ({ initialAddress, userId })
                       <div className="space-y-4">
                         <div>
                           <label htmlFor="address-input" className="block text-[17px] font-[400] text-[#1d1d1f] mb-2.5">
-                            Dirección<span className="text-[#047aff]">*</span>
+                            Dirección<span className="text-[#f95940]">*</span>
                           </label>
                           <AddressAutocomplete
                             key={formValues.street}
@@ -157,40 +157,40 @@ const BasicAddressForm: FC<BasicAddressFormProps> = ({ initialAddress, userId })
                         </div>
                         <div>
                           <label htmlFor="city" className="block text-[17px] font-[400] text-[#1d1d1f] mb-2.5">
-                            Ciudad <span className="text-[#047aff]">*</span>
+                            Ciudad <span className="text-[#f95940]">*</span>
                           </label>
                           <input
                             type="text"
                             id="city"
                             value={formValues.city}
                             onChange={handleManualChange}
-                            className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:border-[#047aff] transition-all"
+                            className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:border-[#f95940] transition-all"
                             required
                           />
                         </div>
                         <div>
                           <label htmlFor="state" className="block text-[17px] font-[400] text-[#1d1d1f] mb-2.5">
-                            Estado <span className="text-[#047aff]">*</span>
+                            Estado <span className="text-[#f95940]">*</span>
                           </label>
                           <input
                             type="text"
                             id="state"
                             value={formValues.state}
                             onChange={handleManualChange}
-                            className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:border-[#047aff] transition-all"
+                            className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:border-[#f95940] transition-all"
                             required
                           />
                         </div>
                         <div>
                           <label htmlFor="zipCode" className="block text-[17px] font-[400] text-[#1d1d1f] mb-2.5">
-                            Código Postal <span className="text-[#047aff]">*</span>
+                            Código Postal <span className="text-[#f95940]">*</span>
                           </label>
                           <input
                             type="text"
                             id="zipCode"
                             value={formValues.zipCode}
                             onChange={handleManualChange}
-                            className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:border-[#047aff] transition-all"
+                            className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:border-[#f95940] transition-all"
                             required
                           />
                         </div>

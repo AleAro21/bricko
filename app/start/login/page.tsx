@@ -90,15 +90,15 @@ const LoginPage = () => {
               <div className="flex flex-col lg:flex-row gap-8 lg:gap-24 h-full">
                 {/* Left column - Title section (hidden on mobile) */}
                 <div className="hidden lg:block lg:w-1/3">
-                  <div className="inline-flex items-center h-[32px] bg-[#047aff] bg-opacity-10 px-[12px] py-[6px] rounded-md mb-2.5 mt-5">
-                    <span className="text-[#047aff] text-[14px] font-[400]">INICIAR SESIÓN</span>
+                  <div className="inline-flex items-center h-[32px] bg-[#f95940] bg-opacity-10 px-[12px] py-[6px] rounded-md mb-2.5 mt-5">
+                    <span className="text-[#f95940] text-[14px] font-[400]">INICIAR SESIÓN</span>
                   </div>
                   <h1 className="text-[32px] sm:text-[38px] font-[500] tracking-[-1.5px] leading-[1.2] sm:leading-[52px] mb-[15px]">
                     <span className="text-[#1d1d1f]">Administra tu </span>
                     <span
                       style={{
                         backgroundImage:
-                          "linear-gradient(to left, #047aff 30%, #0d4ba3 100%)",
+                          "linear-gradient(to left, #f95940 30%, #f95940 100%)",
                       }}
                       className="inline-block text-transparent bg-clip-text"
                     >
@@ -112,7 +112,7 @@ const LoginPage = () => {
                       "Elige quién y cuándo lo recibe",
                     ].map((text, index) => (
                       <li key={index} className="flex items-start gap-3">
-                        <div className="flex-shrink-0 w-6 h-6 rounded-full bg-[#047aff] flex items-center justify-center mt-0.5">
+                        <div className="flex-shrink-0 w-6 h-6 rounded-full bg-[#f95940] flex items-center justify-center mt-0.5">
                           <svg
                             className="w-3.5 h-3.5 text-[#FFFFFF]"
                             fill="none"
@@ -193,7 +193,7 @@ const LoginPage = () => {
                         <button
                           type="button"
                           onClick={() => router.push("/forgot-password")}
-                          className="text-[14px] text-blue-500 hover:underline"
+                          className="text-[14px] text-[#f95940] hover:underline"
                           disabled={isLoading}
                         >
                           Olvidé mi contraseña
@@ -211,7 +211,7 @@ const LoginPage = () => {
                           className="text-[14px] text-[#1d1d1f] hover:underline"
                           disabled={isLoading}
                         >
-                          No tengo cuenta <span className="text-blue-500">Registrar</span>
+                          No tengo cuenta <span className="text-[#f95940]">Registrar</span>
                         </button>
                       </div>
                       <div className="flex items-center my-5">
@@ -224,7 +224,7 @@ const LoginPage = () => {
                       </div>
                       <div className="text-center text-sm text-gray-500 mt-5">
                         ¿Problemas para iniciar sesión?{" "}
-                        <a href="mailto:ayuda@testamento.mx" className="text-blue-500 underline">
+                        <a href="mailto:ayuda@testamento.mx" className="text-[#f95940] underline">
                           Contáctanos
                         </a>
                       </div>

@@ -3,7 +3,7 @@
 import { FC, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
-import logo from '../../assets/greylogo.svg';
+import logo from '@/public/Bricko.png';
 import {
   Download,
   Eye,
@@ -124,8 +124,8 @@ const DocumentView: FC = () => {
           <div className="w-full max-w-6xl mx-auto flex flex-col min-h-[75vh] mb-4">
             <div className="py-4 px-4 sm:px-5">
               <div className="flex items-center justify-between mb-2.5">
-                <div className="inline-flex items-center h-[32px] bg-[#047aff] bg-opacity-10 px-[12px] py-[6px] rounded-md">
-                  <span className="text-[#047aff] text-[14px] font-[400]">MI PORTAFOLIO</span>
+                <div className="inline-flex items-center h-[32px] bg-[#f95940] bg-opacity-10 px-[12px] py-[6px] rounded-md">
+                  <span className="text-[#f95940] text-[14px] font-[400]">MI PORTAFOLIO</span>
                 </div>
               </div>
             </div>
@@ -136,7 +136,7 @@ const DocumentView: FC = () => {
                   <span className="text-[#1d1d1f]">Tokenizaste tu </span>
                   <span
                     style={{
-                      backgroundImage: "linear-gradient(to left, #047aff 30%, #0d4ba3 100%)",
+                      backgroundImage: "linear-gradient(to left, #f95940 30%, #f95940 100%)",
                     }}
                     className="inline-block text-transparent bg-clip-text"
                   >
@@ -149,22 +149,22 @@ const DocumentView: FC = () => {
                 </p>
 
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 max-w-3xl mx-auto">
-                  <div className="bg-blue-50 rounded-xl p-4">
+                  <div className="bg-[#f95940]/20 rounded-xl p-4">
                     <p className="text-sm text-gray-600 mb-1">Tokens Totales</p>
-                    <p className="text-xl font-semibold text-blue-600">{totalTokens}</p>
+                    <p className="text-xl font-semibold text-[#f95940]">{totalTokens}</p>
                   </div>
-                  <div className="bg-blue-50 rounded-xl p-4">
+                  <div className="bg-[#f95940]/20 rounded-xl p-4">
                     <p className="text-sm text-gray-600 mb-1">Valor por Token</p>
-                    <p className="text-xl font-semibold text-blue-600">
+                    <p className="text-xl font-semibold text-[#f95940]">
                       {new Intl.NumberFormat('es-MX', {
                         style: 'currency',
                         currency: 'MXN'
                       }).format(tokenValue)}
                     </p>
                   </div>
-                  <div className="bg-blue-50 rounded-xl p-4">
+                  <div className="bg-[#f95940]/20 rounded-xl p-4">
                     <p className="text-sm text-gray-600 mb-1">Valor del Activo</p>
-                    <p className="text-xl font-semibold text-blue-600">
+                    <p className="text-xl font-semibold text-[#f95940]">
                       {new Intl.NumberFormat('es-MX', {
                         style: 'currency',
                         currency: 'MXN'
@@ -193,8 +193,8 @@ const DocumentView: FC = () => {
                       <div key={doc.id} className="bg-white rounded-2xl shadow-lg min-h-[200px] flex flex-col">
                         <div className="flex-1 p-6">
                           <div className="flex items-start gap-4 h-full">
-                            <div className="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center flex-shrink-0">
-                              <doc.icon size={24} className="text-blue-600" />
+                            <div className="w-12 h-12 rounded-full bg-[#f95940]/20 flex items-center justify-center flex-shrink-0">
+                              <doc.icon size={24} className="text-[#f95940]" />
                             </div>
                             <div className="flex-1 min-h-[120px] flex flex-col">
                               <div>
@@ -240,9 +240,9 @@ const DocumentView: FC = () => {
                       </div>
                     </div>
 
-                    <div className="bg-gradient-to-r from-blue-50 to-blue-100 rounded-2xl p-6">
+                    <div className="bg-gradient-to-r from-[#f95940]/20 to-[#f95940]/20 rounded-2xl p-6">
                       <div className="flex items-start gap-3">
-                        <ShieldStar size={24} className="text-blue-600" />
+                        <ShieldStar size={24} className="text-[#f95940]" />
                         <div>
                           <h3 className="text-[16px] font-[500] text-[#1d1d1f] mb-2">
                             Seguro Activo
@@ -265,15 +265,15 @@ const DocumentView: FC = () => {
                       <div key={index} className="bg-white rounded-2xl shadow-lg min-h-[200px] flex flex-col">
                         <div className="flex-1 p-6">
                           <div className="flex items-start gap-4 h-full">
-                            <div className="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center flex-shrink-0">
-                              <User size={24} className="text-blue-600" />
+                            <div className="w-12 h-12 rounded-full bg-[#f95940]/20 flex items-center justify-center flex-shrink-0">
+                              <User size={24} className="text-[#f95940]" />
                             </div>
                             <div className="flex-1 min-h-[120px] flex flex-col">
                               <div>
                                 <div className="flex items-center justify-between mb-2">
                                   <h3 className="text-[18px] font-[500] text-[#1d1d1f]">{beneficiary.name}</h3>
                                   <div className="flex gap-2">
-                                    <span className="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-1 rounded">
+                                    <span className="bg-[#f95940]/20 text-[#f95940] text-xs font-medium px-2.5 py-1 rounded">
                                       {beneficiary.tokens} tokens
                                     </span>
                                     <span className="bg-green-100 text-green-800 text-xs font-medium px-2.5 py-1 rounded">
@@ -286,7 +286,7 @@ const DocumentView: FC = () => {
                               <div className="space-y-2 mt-auto">
                                 {beneficiary.benefits.map((benefit, benefitIndex) => (
                                   <div key={benefitIndex} className="flex items-center gap-2 text-sm text-gray-600">
-                                    <CheckCircle size={16} className="text-blue-500" />
+                                    <CheckCircle size={16} className="text-[#f95940]" />
                                     <span>{benefit}</span>
                                   </div>
                                 ))}
@@ -298,9 +298,9 @@ const DocumentView: FC = () => {
                     ))}
                   </div>
 
-                  <div className="bg-gradient-to-r from-blue-50 to-blue-100 rounded-2xl p-6">
+                  <div className="bg-gradient-to-r from-[#f95940]/20 to-[#f95940]/20 rounded-2xl p-6">
                     <div className="flex items-start gap-3">
-                      <Users size={24} className="text-blue-600" />
+                      <Users size={24} className="text-[#f95940]" />
                       <div>
                         <h3 className="text-[16px] font-[500] text-[#1d1d1f] mb-2">
                           Protección Integral
@@ -344,7 +344,7 @@ const DocumentView: FC = () => {
                 <div className="flex gap-4 max-w-md mx-auto">
                   <button
                     onClick={() => window.open(selectedDoc.url, '_blank')}
-                    className="flex-1 flex items-center justify-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                    className="flex-1 flex items-center justify-center gap-2 px-6 py-3 bg-[#f95940]/20 text-white rounded-lg hover:bg-[#f95940]/20 transition-colors"
                   >
                     <Eye size={20} />
                     <span>Ver completo</span>
