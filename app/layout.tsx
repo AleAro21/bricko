@@ -10,7 +10,7 @@ import './globals.css';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata = {
-  title: 'Testamento',
+  title: 'Bricko',
   description: 'Create Your Will',
 };
 
@@ -24,9 +24,8 @@ export default function RootLayout({ children }: RootLayoutProps) {
       <head>
         <link
           rel="icon"
-          href="/icon?<generated>"
-          type="image/<generated>"
-          sizes="<generated>"
+          href="/B.png"
+          type="image/png"
         />
       </head>
       <body className={inter.className}>
