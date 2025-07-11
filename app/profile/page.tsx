@@ -4,12 +4,12 @@ import { FC, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import DashboardLayout from '@/components/common/DashboardLayout';
 import { motion } from 'framer-motion';
-import { 
-  Coins, 
-  TrendUp, 
-  TrendDown, 
-  Eye, 
-  ArrowsClockwise, 
+import {
+  Coins,
+  TrendUp,
+  TrendDown,
+  Eye,
+  ArrowsClockwise,
   Download,
   Calendar,
   MapPin,
@@ -184,9 +184,9 @@ const ProfileClient: FC = () => {
         >
           <main className="container mx-auto flex flex-col flex-grow overflow-hidden">
             <div className="w-full max-w-7xl mx-auto flex flex-col min-h-[75vh] mb-4 px-4 sm:px-5 py-8">
-              
+
               {/* Header */}
-              <div className="mb-8">
+              <div className="mb-0">
                 <div className="inline-flex items-center h-[32px] bg-[#f95940] bg-opacity-10 px-[12px] py-[6px] rounded-md mb-2.5">
                   <span className="text-[#f95940] text-[14px] font-[400]">MI PORTAFOLIO</span>
                 </div>
@@ -238,8 +238,7 @@ const ProfileClient: FC = () => {
 
                   <div className="bg-white rounded-xl p-6 shadow-lg border border-gray-100">
                     <div className="flex items-center justify-between mb-4">
-                      <Coins className="w-8 h-8 text-green-500" />
-                      <Bell className="w-5 h-5 text-gray-400" />
+                      <Coins className="w-8 h-8 text-[#f95940]" />
                     </div>
                     <p className="text-gray-600 text-sm mb-1">Ingresos Mensuales</p>
                     <p className="text-2xl font-bold text-[#1d1d1f]">{formatCurrency(monthlyIncome)}</p>
@@ -248,8 +247,7 @@ const ProfileClient: FC = () => {
 
                   <div className="bg-white rounded-xl p-6 shadow-lg border border-gray-100">
                     <div className="flex items-center justify-between mb-4">
-                      <Buildings className="w-8 h-8 text-blue-500" />
-                      <Star className="w-5 h-5 text-yellow-400" />
+                      <Buildings className="w-8 h-8 text-[#f95940]" />
                     </div>
                     <p className="text-gray-600 text-sm mb-1">Propiedades</p>
                     <p className="text-2xl font-bold text-[#1d1d1f]">{MOCK_HOLDINGS.length}</p>
@@ -260,8 +258,7 @@ const ProfileClient: FC = () => {
 
                   <div className="bg-white rounded-xl p-6 shadow-lg border border-gray-100">
                     <div className="flex items-center justify-between mb-4">
-                      <Receipt className="w-8 h-8 text-purple-500" />
-                      <TrendUp className="w-5 h-5 text-green-500" />
+                      <Receipt className="w-8 h-8 text-[#f95940]" />
                     </div>
                     <p className="text-gray-600 text-sm mb-1">Rendimientos Totales</p>
                     <p className="text-2xl font-bold text-[#1d1d1f]">{formatCurrency(totalReturns)}</p>
@@ -273,22 +270,20 @@ const ProfileClient: FC = () => {
                 <div className="flex border-b mb-8">
                   <button
                     onClick={() => setActiveTab('portfolio')}
-                    className={`flex items-center gap-2 px-6 py-3 text-sm font-medium transition-colors ${
-                      activeTab === 'portfolio'
+                    className={`flex items-center gap-2 px-6 py-3 text-sm font-medium transition-colors ${activeTab === 'portfolio'
                         ? 'border-b-2 border-[#f95940] text-[#f95940]'
                         : 'text-gray-600 hover:text-[#f95940]'
-                    }`}
+                      }`}
                   >
                     <House className="w-4 h-4" />
                     Mis Propiedades
                   </button>
                   <button
                     onClick={() => setActiveTab('transactions')}
-                    className={`flex items-center gap-2 px-6 py-3 text-sm font-medium transition-colors ${
-                      activeTab === 'transactions'
+                    className={`flex items-center gap-2 px-6 py-3 text-sm font-medium transition-colors ${activeTab === 'transactions'
                         ? 'border-b-2 border-[#f95940] text-[#f95940]'
                         : 'text-gray-600 hover:text-[#f95940]'
-                    }`}
+                      }`}
                   >
                     <Receipt className="w-4 h-4" />
                     Transacciones
@@ -334,7 +329,7 @@ const ProfileClient: FC = () => {
                         const ownershipPercentage = (holding.tokensOwned / holding.totalTokens) * 100;
                         const gainLoss = holding.currentValue - holding.purchaseValue;
                         const gainLossPercentage = (gainLoss / holding.purchaseValue) * 100;
-                        
+
                         return (
                           <motion.div
                             key={holding.id}
@@ -380,14 +375,12 @@ const ProfileClient: FC = () => {
                                 </div>
                                 <div>
                                   <p className="text-xs text-gray-500 mb-1">Ganancia/Pérdida</p>
-                                  <p className={`font-semibold ${
-                                    gainLoss >= 0 ? 'text-green-600' : 'text-red-600'
-                                  }`}>
+                                  <p className={`font-semibold ${gainLoss >= 0 ? 'text-green-600' : 'text-red-600'
+                                    }`}>
                                     {gainLoss >= 0 ? '+' : ''}{formatCurrency(gainLoss)}
                                   </p>
-                                  <p className={`text-xs ${
-                                    gainLoss >= 0 ? 'text-green-600' : 'text-red-600'
-                                  }`}>
+                                  <p className={`text-xs ${gainLoss >= 0 ? 'text-green-600' : 'text-red-600'
+                                    }`}>
                                     ({gainLossPercentage >= 0 ? '+' : ''}{gainLossPercentage.toFixed(1)}%)
                                   </p>
                                 </div>
@@ -416,7 +409,7 @@ const ProfileClient: FC = () => {
                                   <Eye className="w-4 h-4" />
                                   Ver
                                 </button>
-                                <button 
+                                <button
                                   onClick={() => handleSellTokens(holding.id)}
                                   className="flex-1 flex items-center justify-center gap-2 px-3 py-2 bg-[#f95940] text-white rounded-lg hover:bg-[#f95940]/90 transition-colors text-sm"
                                 >
@@ -455,10 +448,9 @@ const ProfileClient: FC = () => {
                           <div key={transaction.id} className="p-6 hover:bg-gray-50 transition-colors">
                             <div className="flex items-center justify-between">
                               <div className="flex items-center gap-4">
-                                <div className={`w-12 h-12 rounded-full flex items-center justify-center ${
-                                  transaction.type === 'purchase' ? 'bg-blue-100' : 
-                                  transaction.type === 'sale' ? 'bg-red-100' : 'bg-green-100'
-                                }`}>
+                                <div className={`w-12 h-12 rounded-full flex items-center justify-center ${transaction.type === 'purchase' ? 'bg-blue-100' :
+                                    transaction.type === 'sale' ? 'bg-red-100' : 'bg-green-100'
+                                  }`}>
                                   {transaction.type === 'purchase' ? (
                                     <Plus className={`w-6 h-6 text-blue-600`} />
                                   ) : transaction.type === 'sale' ? (
@@ -469,8 +461,8 @@ const ProfileClient: FC = () => {
                                 </div>
                                 <div>
                                   <p className="font-semibold text-[#1d1d1f] mb-1">
-                                    {transaction.type === 'purchase' ? 'Compra de tokens' : 
-                                     transaction.type === 'sale' ? 'Venta de tokens' : 'Pago de dividendos'}
+                                    {transaction.type === 'purchase' ? 'Compra de tokens' :
+                                      transaction.type === 'sale' ? 'Venta de tokens' : 'Pago de dividendos'}
                                   </p>
                                   <p className="text-sm text-gray-600">
                                     {transaction.propertyTitle}
@@ -482,18 +474,16 @@ const ProfileClient: FC = () => {
                                 </div>
                               </div>
                               <div className="text-right">
-                                <p className={`text-lg font-semibold ${
-                                  transaction.type === 'dividend' ? 'text-green-600' : 
-                                  transaction.type === 'sale' ? 'text-green-600' : 'text-red-600'
-                                }`}>
+                                <p className={`text-lg font-semibold ${transaction.type === 'dividend' ? 'text-green-600' :
+                                    transaction.type === 'sale' ? 'text-green-600' : 'text-red-600'
+                                  }`}>
                                   {transaction.type === 'purchase' ? '-' : '+'}
                                   {formatCurrency(transaction.amount)}
                                 </p>
-                                <div className={`inline-flex items-center px-2 py-1 rounded-full text-xs ${
-                                  transaction.status === 'completed' 
-                                    ? 'bg-green-100 text-green-800' 
+                                <div className={`inline-flex items-center px-2 py-1 rounded-full text-xs ${transaction.status === 'completed'
+                                    ? 'bg-green-100 text-green-800'
                                     : 'bg-yellow-100 text-yellow-800'
-                                }`}>
+                                  }`}>
                                   {transaction.status === 'completed' ? 'Completado' : 'Pendiente'}
                                 </div>
                               </div>
