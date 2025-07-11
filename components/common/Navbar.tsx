@@ -18,7 +18,9 @@ import {
   Envelope,
   Share,
   Clock,
-  SignOut
+  SignOut,
+  List,
+  X
 } from "phosphor-react";
 import logo from '@/public/Bricko.png';
 
@@ -92,18 +94,21 @@ const Navbar: React.FC = () => {
         <>
           <div className="max-w-6xl mx-auto px-4 sm:px-5">
             <div className="relative flex h-16 items-center justify-between">
-              <div className="flex items-center justify-between sm:items-stretch sm:justify-start">
-                <div className="hidden sm:block">
+              {/* Logo */}
+              <div className="flex items-center">
+                <Link href="/" className="flex items-center">
+                  <Image
+                    src={logo}
+                    width={150}
+                    height={150}
+                    alt="Logo"
+                    className="h-8 w-auto"
+                  />
+                </Link>
+                
+                {/* Desktop Navigation - only visible on desktop */}
+                <div className="hidden sm:ml-8 sm:block">
                   <div className="flex items-center space-x-8">
-                    <Link href="/" className="flex items-center">
-                      <Image
-                        src={logo}
-                        width={150}
-                        height={150}
-                        alt="Logo"
-                        className="h-8 w-auto"
-                      />
-                    </Link>
                     {navigation.map((item) => (
                       <Link
                         href={item.href}
@@ -116,9 +121,25 @@ const Navbar: React.FC = () => {
                   </div>
                 </div>
               </div>
-              <div className="flex items-center justify-end">
+
+              {/* Right side - Mobile menu button + Profile */}
+              <div className="flex items-center">
+                {/* Mobile menu button */}
+                <div className="sm:hidden">
+                  <Disclosure.Button className="relative inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-gray-100 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500">
+                    <span className="absolute -inset-0.5" />
+                    <span className="sr-only">Open main menu</span>
+                    {open ? (
+                      <X className="block h-6 w-6" aria-hidden="true" />
+                    ) : (
+                      <List className="block h-6 w-6" aria-hidden="true" />
+                    )}
+                  </Disclosure.Button>
+                </div>
+
+                {/* Profile dropdown */}
                 <Menu as="div" className="relative ml-3">
-                  {({ open }) => (
+                  {({ open: menuOpen }) => (
                     <>
                       <motion.div
                         whileHover={{ scale: 1.05 }}
@@ -135,7 +156,7 @@ const Navbar: React.FC = () => {
                         </Menu.Button>
                       </motion.div>
                       <AnimatePresence>
-                        {open && (
+                        {menuOpen && (
                           <>
                             <motion.div
                               initial={{ opacity: 0 }}
@@ -200,7 +221,6 @@ const Navbar: React.FC = () => {
                                 {accountItems.map((item, index) => (
                                   <Menu.Item key={item.name}>
                                     {({ active }) => {
-                                      const Component = item.onClick ? 'div' : Link;
                                       return (
                                         <motion.div
                                           initial={{ opacity: 0, x: -10 }}
@@ -253,6 +273,32 @@ const Navbar: React.FC = () => {
               </div>
             </div>
           </div>
+
+          {/* Mobile menu panel - shows navigation items on mobile */}
+          <Disclosure.Panel className="sm:hidden">
+            {({ close }) => (
+              <motion.div
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: 'auto' }}
+                exit={{ opacity: 0, height: 0 }}
+                transition={{ duration: 0.2 }}
+                className="bg-white border-t border-gray-100"
+              >
+                <div className="space-y-1 px-2 pb-3 pt-2">
+                  {navigation.map((item) => (
+                    <Link
+                      key={item.name}
+                      href={item.href}
+                      onClick={() => close()}
+                      className="block rounded-md px-3 py-2 text-base font-medium text-[#1d1d1f] hover:bg-gray-50 hover:text-[#f95940] transition-colors duration-200"
+                    >
+                      {item.name}
+                    </Link>
+                  ))}
+                </div>
+              </motion.div>
+            )}
+          </Disclosure.Panel>
         </>
       )}
     </Disclosure>
