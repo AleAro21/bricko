@@ -11,7 +11,7 @@ const inter = Inter({ subsets: ['latin'] });
 
 export const metadata = {
   title: 'Bricko',
-  description: 'Create Your Will',
+  description: 'Bienes tokenizados',
 };
 
 type RootLayoutProps = {
