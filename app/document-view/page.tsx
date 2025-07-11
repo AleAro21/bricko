@@ -236,7 +236,7 @@ const DocumentView: FC = () => {
                           <p className="text-[14px] text-gray-600">
                             Tus tokens están respaldados por un activo real y verificado.
                           </p>
-                        </div>
+                        </div>p
                       </div>
                     </div>
 

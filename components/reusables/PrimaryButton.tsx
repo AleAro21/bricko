@@ -3,7 +3,7 @@ import { FC, ButtonHTMLAttributes } from 'react';
 interface PrimaryButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   type?: 'submit' | 'button' | 'reset';
   children: React.ReactNode;
-  onClick?: () => void;
+  onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void;
   className?: string;
 }
 

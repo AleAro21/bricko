@@ -20,6 +20,7 @@ import {
   Clock,
   SignOut
 } from "phosphor-react";
+import logo from '@/public/Bricko.png';
 
 Amplify.configure(awsConfig);
 
@@ -52,8 +53,8 @@ const Navbar: React.FC = () => {
   }
 
   const navigation: NavigationItem[] = [
-    { name: 'Testamento', href: '/summary', current: false },
-    { name: 'Personas', href: '/people', current: false },
+    { name: 'Dashboard', href: '/dashboard', current: false },
+    { name: 'Mi perfil', href: '/profile', current: false },
   ];
 
   const accountItems: AccountItem[] = [
@@ -96,7 +97,7 @@ const Navbar: React.FC = () => {
                   <div className="flex items-center space-x-8">
                     <Link href="/" className="flex items-center">
                       <Image
-                        src={blacklogo}
+                        src={logo}
                         width={150}
                         height={150}
                         alt="Logo"
